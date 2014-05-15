@@ -305,7 +305,7 @@ class OneFileLoginApplication
 	
 	//uros
 	private function getSearchConfigs($project) {
-		if (file_exists(PROJECT_PATH.$project).'.json') {
+		if (file_exists(PROJECT_PATH.$project.'.json') {
 			try {
 				$filestr = file_get_contents(PROJECT_PATH.$project.'.json',true);
 				return $filestr;
