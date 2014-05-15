@@ -1,0 +1,82 @@
+.ux-virtualkeyboard-icon {
+    background-image:url(../img/icons/small/keyboard.png) ! important;
+}
+.ux-accented-icon {
+    background-image:url(../img/icons/small/accented.png) ! important;
+}
+.x-keyboard .x-toolbar{
+    border-width: 1px;
+}
+.x-keyboard .x-panel-body{
+    padding:5px;
+}
+
+.x-keyboard .x-panel-body tbody tr td {
+    margin:0px;
+    padding:0px 6px 3px 6px;
+}
+.x-keyboard .x-panel-body tbody tr td div {
+    text-align:center;
+    position:relative;
+    height:0px;
+}
+table.keys {
+    height:20px;
+    white-space:nowrap;
+    width:100%;
+    border-spacing: 0 2px 2px 0;
+}
+table.keyboardInputCenter {
+    width:auto;
+    margin:0 auto;
+}
+
+#spacebar{width:150px;}
+
+table.keys tbody tr td {
+    vertical-align:middle;
+    text-align: center;
+    padding:0px 5px;
+    white-space:pre;
+    /*font:normal 11px 'Lucida Console',monospace;*/
+    font: .69em Arial, sans-serif;
+    border-top:1px solid #99BBE8;
+    border-right:1px solid #15428B;
+    border-bottom:1px solid #15428B;
+    border-left:1px solid #99BBE8;
+    background-color:#D0DEF0;
+    cursor:default;
+    min-width:0.75em;
+    -moz-user-select: none;
+}
+table.keys tbody tr td.last {
+    width:99%;
+    margin:10px;
+}
+table.keys tbody tr td.alive {
+    background-color:#ccccdd;
+}
+table.keys tbody tr td.target {
+    background-color:#ddddcc;
+}
+table.keys tbody tr td.hover {
+    border-top:1px solid #99BBE8;
+    border-right:1px solid #15428B;
+    border-bottom:1px solid #15428B;
+    border-left:1px solid #99BBE8;
+    background-color:#99BBE8;
+}
+table.keys tbody tr td.pressed,
+table.keys tbody tr td.dead {
+    border-top:1px solid #15428B;
+    border-right:1px solid #99BBE8;
+    border-bottom:1px solid #99BBE8;
+    border-left:1px solid #15428B;
+    background-color:#99BBE8;
+}
+
+.keyboardInputInitiator {
+    margin-left:3px;
+    vertical-align:middle;
+    cursor:pointer;
+}
