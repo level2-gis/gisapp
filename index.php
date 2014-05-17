@@ -48,6 +48,7 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css" />
 		<link rel="stylesheet" type="text/css" href="client/site/css/popup.css" />
 		<link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css" />
+		<link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css" />
 		
 		<script type="text/javascript">
 			
