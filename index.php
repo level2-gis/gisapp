@@ -81,6 +81,7 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
 		<script type="text/javascript" src="client/site/js/Translations.js"></script>
+		<script type="text/javascript" src="client/site/js/PagingStore.js"></script>
 		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js"></script>
 		<script type="text/javascript" src="client/site/js/Customizations.js"></script>
 		<script type="text/javascript" src="client/site/js/GetUrlParams.js"></script>
