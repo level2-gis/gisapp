@@ -10,9 +10,10 @@
  * @author Panique
  * @link https://github.com/panique/php-login-one-file/
  * @license http://opensource.org/licenses/MIT MIT License
+ *
+ * modifications Uros Preloznik
  */
- 
- //modification Uros
+
 require_once("settings.php");
 
 class OneFileLoginApplication
@@ -285,6 +286,7 @@ class OneFileLoginApplication
         if ($result_row) {
 			return $result_row->check_user_project;
 		}
+        else
 			return 'TR.loginFailMessage';
 	}
 	
@@ -299,6 +301,7 @@ class OneFileLoginApplication
 			if ($result_row) {
 				return $result_row->data;
 			}
+            else
 				return 'TR.loginFailMessage';
 		}
 	}

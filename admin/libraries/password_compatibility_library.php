@@ -67,8 +67,8 @@ if (!defined('PASSWORD_DEFAULT')) {
                 case 'object':
                     if (method_exists($options['salt'], '__tostring')) {
                         $salt = (string) $options['salt'];
-                        break;
                     }
+                    break;
                 case 'array':
                 case 'resource':
                 default:
