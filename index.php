@@ -6,16 +6,16 @@ session_start();
 
 if(isset($_GET['lang'])) {
 	$def_lang = strtolower($_GET['lang']);
-	if ($def_lang=='si' OR $def_lang=='en' OR $def_lang=='de') {
+	if ($def_lang=='sl' OR $def_lang=='en' OR $def_lang=='de') {
 		//OK
 	}
 	else {
-		$def_lang = "si";
+		$def_lang = "sl";
 	}
 	
 }
 else
-	$def_lang = "si";
+	$def_lang = "sl";
 
 if (!isset($_SESSION['lang']))  {
 	$_SESSION['lang'] = $def_lang;
@@ -78,7 +78,8 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
-		<script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
+        <script type="text/javascript" src="admin/languages/ext-lang-<?php echo $def_lang?>.js"></script>
+        <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
 		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
 		<script type="text/javascript" src="client/site/js/Translations.js"></script>
@@ -92,7 +93,8 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js"></script>
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
-		<script type="text/javascript" src="client/site/js/WebgisInit.js"></script>
+        <script type="text/javascript" src="client/site/js/LayerActions.js"></script>
+        <script type="text/javascript" src="client/site/js/WebgisInit.js"></script>
 	<style type="text/css">
 	#dpiDetection {
 	  height: 1in;

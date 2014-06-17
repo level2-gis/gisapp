@@ -166,7 +166,7 @@ Ext.ux.form.LoginDialog = function (config) {
             store           : new Ext.data.SimpleStore({
                 fields: ['languageCode', 'languageName', 'countryFlag'],
                 data: [
-                    ['si', 'slovenščina', 'ux-flag-si'],
+                    ['sl', 'slovenščina', 'ux-flag-si'],
 					['en', 'English', 'ux-flag-en'],
 					['de', 'Deutsch', 'ux-flag-de']
 					                ]

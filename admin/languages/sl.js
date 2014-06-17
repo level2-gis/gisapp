@@ -16,12 +16,5 @@ var TR = {
 	noProjectText: 'Vnesi ustrezno ime projekta in ponovno naloži stran.',
 	wrongPassword: 'Napačno geslo.',
 	noUser: 'Uporabnik ne obstaja.',
-	noPermission: 'Nimate pravic za uporabo projekta',
-    extPagingBeforePageText: 'stran',
-    extPagingAfterPageText: 'od {0}',
-    extPagingFirstText: 'prva stran',
-    extPagingLastText: 'zadnja stran',
-    extPagingNextText: 'naslednja stran',
-    extPagingPrevText: 'prejšnja stran',
-    extPagingRefreshText: 'osveži'
+	noPermission: 'Nimate pravic za uporabo projekta'  
 }

@@ -16,12 +16,5 @@ var TR = {
     noProjectText: 'Add correct project name and reload the page.',
     wrongPassword: 'Wrong password.',
     noUser: 'User doesn\'t exist.',
-    noPermission: 'You don\'t have permissions to use this project.',
-    extPagingBeforePageText: 'Page',
-    extPagingAfterPageText: 'of {0}',
-    extPagingFirstText: 'First Page',
-    extPagingLastText: 'Last Page',
-    extPagingNextText: 'Next Page',
-    extPagingPrevText: 'Previous Page',
-    extPagingRefreshText: 'Refresh'
+    noPermission: 'You don\'t have permissions to use this project.'
 }
