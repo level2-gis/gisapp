@@ -27,7 +27,7 @@ if (isset($_SESSION['user_is_logged_in'])) {
 	$user = "".$_SESSION['user_name'];
 	$project = "".$_SESSION['project'];
 	$data = json_decode($_SESSION['data']);
-	
+
 	//PAZI!!!čez json_decode in encode ne gre, ne vem zakaj, to je sedaj varnostni problem
 	$search = str_replace(array("\r","\n"),"",$_SESSION['search']);
 	
@@ -63,10 +63,11 @@ if (isset($_SESSION['user_is_logged_in'])) {
 			projectData.client_display_name = '<?php echo $data->client_display_name?>';
 			projectData.base_layers = eval(<?php echo json_encode($data->base_layers)?>);
             projectData.extra_layers = eval(<?php echo json_encode($data->extra_layers)?>);
+            projectData.tables_onstart = eval(<?php echo json_encode($data->tables_onstart)?>);
             projectData.overview_layer = '<?php echo $data->overview_layer[0]?>';
 			projectData.search = eval(<?php echo $search?>);
 			projectData.project = '<?php echo $project?>';
-			
+
 			//TODO zrihtaj preko cssja!
 			var userLogoImg = '/gisapp/admin/resources/images/user_gray.png';
 
