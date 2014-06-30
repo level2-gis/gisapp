@@ -16,5 +16,10 @@ var TR = {
 	noProjectText: 'Vnesi ustrezno ime projekta in ponovno naloži stran.',
 	wrongPassword: 'Napačno geslo.',
 	noUser: 'Uporabnik ne obstaja.',
-	noPermission: 'Nimate pravic za uporabo projekta'  
+	noPermission: 'Nimate pravic za uporabo projekta',
+    clearFilter: 'Pobriši vse filtre',
+    editData: 'Uredi podatke',
+    editDisabled: 'Urejanje onemogočeno',
+    editDelete: 'Briši',
+    editSave: 'Shrani'
 }
