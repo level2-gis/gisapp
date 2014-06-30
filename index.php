@@ -82,7 +82,10 @@ if (isset($_SESSION['user_is_logged_in'])) {
         <script type="text/javascript" src="admin/languages/ext-lang-<?php echo $def_lang?>.js"></script>
         <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
 		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js"></script>
-		<script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
+
+<!--        <script type="text/javascript" src="client/site/libs/openlayers/LayerSwitcher.js"></script>-->
+
+        <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
 		<script type="text/javascript" src="client/site/js/Translations.js"></script>
 		<script type="text/javascript" src="client/site/js/PagingStore.js"></script>
 		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js"></script>
@@ -91,7 +94,8 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
 		<script type="text/javascript" src="client/site/js/GUI.js"></script>
 		<script type="text/javascript" src="client/site/js/QGISExtensions.js"></script>
-		<script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js"></script>
+        <script type="text/javascript" src="client/site/js/QGISEditor.js"></script>
+        <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js"></script>
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
         <script type="text/javascript" src="client/site/js/LayerActions.js"></script>
