@@ -44,7 +44,9 @@ class OneFileLoginApplication
      */
     public function __construct()
     {
-        //if ($this->performMinimumRequirementsCheck()) {
+        
+		$this->performMinimumRequirementsCheck();
+		//if ($this->performMinimumRequirementsCheck()) {
         //    //$this->runApplication();
         //}
     }
