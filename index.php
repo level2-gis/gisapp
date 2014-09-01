@@ -75,31 +75,29 @@ if (isset($_SESSION['user_is_logged_in'])) {
 	
 		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js"></script>
 	
-		<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=true"></script>
+
 		<script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
         <script type="text/javascript" src="admin/languages/ext-lang-<?php echo $def_lang?>.js"></script>
         <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
 		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js"></script>
-        <script type="text/javascript" src="client/site/libs/openlayers/WMTS.js"></script>
-<!--        <script type="text/javascript" src="client/site/libs/openlayers/LayerSwitcher.js"></script>-->
-
         <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
-		<script type="text/javascript" src="client/site/js/Translations.js"></script>
-		<script type="text/javascript" src="client/site/js/PagingStore.js"></script>
-		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js"></script>
-		<script type="text/javascript" src="client/site/js/Customizations.js"></script>
-		<script type="text/javascript" src="client/site/js/GetUrlParams.js"></script>
-		<script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
-		<script type="text/javascript" src="client/site/js/GUI.js"></script>
-		<script type="text/javascript" src="client/site/js/QGISExtensions.js"></script>
-        <script type="text/javascript" src="client/site/js/QGISEditor.js"></script>
-        <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js"></script>
-		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js"></script>
-		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
-        <script type="text/javascript" src="client/site/js/LayerActions.js"></script>
-        <script type="text/javascript" src="client/site/js/WebgisInit.js"></script>
+		<script type="text/javascript" src="client/site/js/Translations.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/PagingStore.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/Customizations.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/GetUrlParams.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/TriStateTree.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/GUI.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=20140901"></script>
+        <script type="text/javascript" src="client/site/js/QGISEditor.js?v=20140901"></script>
+        <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js?v=20140901"></script>
+        <script type="text/javascript" src="client/site/js/LayerActions.js?v=20140901"></script>
+        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=20140901"></script>
 	<style type="text/css">
 	#dpiDetection {
 	  height: 1in;

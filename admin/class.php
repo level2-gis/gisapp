@@ -44,8 +44,9 @@ class OneFileLoginApplication
      */
     public function __construct()
     {
-        
-		$this->performMinimumRequirementsCheck();
+        if(php_uname('s') != 'Windows NT') {
+			$this->performMinimumRequirementsCheck();
+		}
 		//if ($this->performMinimumRequirementsCheck()) {
         //    //$this->runApplication();
         //}
