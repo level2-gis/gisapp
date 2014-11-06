@@ -27,10 +27,15 @@ if (isset($_SESSION['user_is_logged_in'])) {
 	$user = "".$_SESSION['user_name'];
 	$project = "".$_SESSION['project'];
 	$data = json_decode($_SESSION['data']);
+	$settings = json_decode($_SESSION['settings']);
 
-	//PAZI!!!čez json_decode in encode ne gre, ne vem zakaj, to je sedaj varnostni problem
-	$search = str_replace(array("\r","\n"),"",$_SESSION['search']);
-	
+    if(!property_exists($settings,"search")) {
+        $settings->search = null;
+    }
+    if(!property_exists($settings,"layerSpecifics")) {
+        $settings->layerSpecifics = null;
+    }
+
 	//OK open application
 	?>
 	
@@ -65,8 +70,9 @@ if (isset($_SESSION['user_is_logged_in'])) {
             projectData.extra_layers = eval(<?php echo json_encode($data->extra_layers)?>);
             projectData.tables_onstart = eval(<?php echo json_encode($data->tables_onstart)?>);
             projectData.overview_layer = '<?php echo $data->overview_layer[0]?>';
-			projectData.search = eval(<?php echo $search?>);
-			projectData.project = '<?php echo $project?>';
+			projectData.search = eval(<?php echo json_encode($settings->search)?>);
+            projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics)?>);
+            projectData.project = '<?php echo $project?>';
 
 			//TODO zrihtaj preko cssja!
 			var userLogoImg = '/gisapp/admin/resources/images/user_gray.png';
@@ -90,14 +96,14 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<script type="text/javascript" src="client/site/js/Customizations.js?v=20140901"></script>
 		<script type="text/javascript" src="client/site/js/GetUrlParams.js?v=20140901"></script>
 		<script type="text/javascript" src="client/site/js/TriStateTree.js?v=20140901"></script>
-		<script type="text/javascript" src="client/site/js/GUI.js?v=20140907"></script>
-		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=20140907"></script>
+		<script type="text/javascript" src="client/site/js/GUI.js?v=20141106"></script>
+		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=20141106"></script>
         <script type="text/javascript" src="client/site/js/QGISEditor.js?v=20140901"></script>
         <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js?v=20140901"></script>
-		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=20140901"></script>
+		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=20141106"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js?v=20140901"></script>
-        <script type="text/javascript" src="client/site/js/LayerActions.js?v=20140901"></script>
-        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=20140907"></script>
+        <script type="text/javascript" src="client/site/js/LayerActions.js?v=20141106"></script>
+        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=20141106"></script>
 	<style type="text/css">
 	#dpiDetection {
 	  height: 1in;

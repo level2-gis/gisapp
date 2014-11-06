@@ -243,17 +243,17 @@ class OneFileLoginApplication
 				$check=$this->checkUserProject();
 				if ($check=='OK') {
 					//get additional project info
-					$project_data = $this->getProjectData($_POST['project']);
+					$project_data = $this->getProjectDataFromDB($_POST['project']);
 					//search configs
-					$project_search = $this->getSearchConfigs($_POST['project']);
-					if($project_search!==false) {
+					$project_settings = $this->getProjectConfigs($_POST['project']);
+					if($project_settings!==false) {
 						// write user data into PHP SESSION [a file on your server]
 						$_SESSION['user_name'] = $result_row->user_name;
 						$_SESSION['user_email'] = $result_row->user_email;
 						$_SESSION['user_is_logged_in'] = true;
 						$_SESSION['project'] = $_POST['project'];
 						$_SESSION['data'] = $project_data;
-						$_SESSION['search'] = $project_search;
+						$_SESSION['settings'] = $project_settings;
 						$this->user_is_logged_in = true;
 						
 						//update lastlogin and count
@@ -294,7 +294,7 @@ class OneFileLoginApplication
 	}
 	
 	//uros
-	private function getProjectData($project) {
+	private function getProjectDataFromDB($project) {
 		if ($this->createDatabaseConnection()) {
 			$sql = 'SELECT row_to_json(get_project_data(:project)) AS data;';
 			$query = $this->db_connection->prepare($sql);
@@ -310,7 +310,7 @@ class OneFileLoginApplication
 	}
 	
 	//uros
-	private function getSearchConfigs($project) {
+	private function getProjectConfigs($project) {
 		if (file_exists(PROJECT_PATH.$project.'.json')) {
 			try {
 				$filestr = file_get_contents(PROJECT_PATH.$project.'.json',true);
