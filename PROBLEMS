@@ -1,7 +1,8 @@
 CLIENT
+- BUG: ÄŒe so vsi sloji off vrne getfatureinfo server error. BW da se sploh dela request, preveri to tudi v master in naredi fix
 
 QGIS-SERVER
 - pozicija label pri parcelah ni ok, v primeru da je znotraj parcele druga parcela (recimo stavbe)
-- 8bitni PNG, v trenutni verziji (2.2) ne riše prav. Testiraj tako da daš v URL parameter: &format=image%2Fpng%3B%20mode%3D8bit
-- za SHP sloj server ne vrne niè za getfeatureinfo èe imaš filter (prikaz tabele ali search panel)
-- export v XLSX format bo možen z verzijo GDAL 1.10.0 in posebno expat library
+- 8bitni PNG, v trenutni verziji (2.2) ne riï¿½e prav. Testiraj tako da daï¿½ v URL parameter: &format=image%2Fpng%3B%20mode%3D8bit
+- za SHP sloj server ne vrne niï¿½ za getfeatureinfo ï¿½e imaï¿½ filter (prikaz tabele ali search panel)
+- export v XLSX format bo moï¿½en z verzijo GDAL 1.10.0 in posebno expat library
