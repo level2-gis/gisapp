@@ -67,10 +67,12 @@ if (isset($_SESSION['user_is_logged_in'])) {
 			
 			projectData.client_name = '<?php echo $data->client_name?>';
 			projectData.client_display_name = '<?php echo $data->client_display_name?>';
-			projectData.base_layers = eval(<?php echo json_encode($data->base_layers)?>);
-            projectData.extra_layers = eval(<?php echo json_encode($data->extra_layers)?>);
-            projectData.tables_onstart = eval(<?php echo json_encode($data->tables_onstart)?>);
-            projectData.overview_layer = '<?php echo $data->overview_layer[0]?>';
+
+//			  projectData.base_layers = eval(<?php echo json_encode($data->base_layers)?>);
+//            projectData.extra_layers = eval(<?php //echo json_encode($data->extra_layers)?>//);
+//            projectData.tables_onstart = eval(<?php //echo json_encode($data->tables_onstart)?>//);
+//            projectData.overview_layer = '<?php //echo $data->overview_layer[0]?>//';
+
 			projectData.search = eval(<?php echo json_encode($settings->search)?>);
             projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics)?>);
             projectData.gis_projects = eval(<?php echo json_encode($gis_projects)?>);
