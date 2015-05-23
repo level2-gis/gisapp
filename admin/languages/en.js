@@ -21,5 +21,9 @@ var TR = {
     editData: 'Edit data',
     editDisabled: 'Editing disabled',
     editDelete: 'Delete',
-    editSave: 'Save'
+    editSave: 'Save',
+    mapBasic: 'Map',
+    mapSatellite: 'Satellite',
+    mapHybrid: 'Hybrid',
+    mapTerrain: 'Terrain'
 }

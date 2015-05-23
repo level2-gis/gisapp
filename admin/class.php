@@ -307,7 +307,7 @@ class OneFileLoginApplication
     }
 
     //uros
-    private function getGisProjectsFromDB($user)
+    public function getGisProjectsFromDB($user)
     {
         if ($this->createDatabaseConnection()) {
             $sql = 'SELECT row_to_json(get_gis_projects(:user)) AS data;';

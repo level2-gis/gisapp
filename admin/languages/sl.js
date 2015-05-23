@@ -21,5 +21,9 @@ var TR = {
     editData: 'Uredi podatke',
     editDisabled: 'Urejanje onemogočeno',
     editDelete: 'Briši',
-    editSave: 'Shrani'
+    editSave: 'Shrani',
+    mapBasic: 'Osnovna karta',
+    mapSatellite: 'Satelit',
+    mapHybrid: 'Hibridni prikaz',
+    mapTerrain: 'Topografska karta'
 }
