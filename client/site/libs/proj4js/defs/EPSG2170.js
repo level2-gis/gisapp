@@ -1,0 +1,2 @@
+// Slovenia modified GK projection
+Proj4js.defs["EPSG:2170"] = "+title=y/x:D48/GK +proj=tmerc +lat_0=0 +lon_0=15 +k=0.9999 +x_0=500000 +y_0=-5000000 +ellps=bessel +towgs84=426.9,142.6,460.1,4.91,4.49,-12.42,17.1 +units=m +no_defs";

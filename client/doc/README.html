@@ -1,0 +1,1222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.org">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<TITLE>Quantum GIS (QGIS) Web Client</TITLE>
+
+<!-- CSS include failed for style.css -->
+
+</HEAD>
+<BODY>
+
+<DIV CLASS="header" ID="header">
+<H1>Quantum GIS (QGIS) Web Client</H1>
+<H2>Installation  and Configuration Guide</H2>
+<H3>Thursday May 22, 2014</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<P>
+Last Updated: Thursday May 22, 2014
+Last Change : Thursday May 22, 2014
+</P>
+<DIV CLASS="toc">
+
+  <OL>
+  <LI><A HREF="#toc1">For the terminally lazy</A>
+  <LI><A HREF="#toc2">Purpose</A>
+  <LI><A HREF="#toc3">Installation</A>
+  <LI><A HREF="#toc4">Configuration of Client</A>
+    <UL>
+    <LI><A HREF="#toc5">4.1. Per Project Startup Options</A>
+    <LI><A HREF="#toc6">4.2. Configuration of search panels</A>
+    <LI><A HREF="#toc7">4.3. Configuration of the theme switcher</A>
+    <LI><A HREF="#toc8">4.4. Configuring of background layers</A>
+    <LI><A HREF="#toc9">4.5. Extending the interface</A>
+    <LI><A HREF="#toc10">4.6. Customize languages</A>
+    </UL>
+  <LI><A HREF="#toc11">URL Rewriting</A>
+  <LI><A HREF="#toc12">Configuration of the search</A>
+    <UL>
+    <LI><A HREF="#toc13">6.1. PHP Search</A>
+    <LI><A HREF="#toc14">6.2. WSGI Search</A>
+    </UL>
+  <LI><A HREF="#toc15">License</A>
+  <LI><A HREF="#toc16">Developers and Contributors</A>
+  <LI><A HREF="#toc17">Acknowledgements</A>
+  </OL>
+
+</DIV>
+
+<A NAME="toc1"></A>
+<H1>1. For the terminally lazy</H1>
+
+<div class="code"><PRE>
+sudo apt-get install apache2 libapache2-mod-fcgid
+cp apache-conf/qgis-web-client.conf.tmpl apache-conf/qgis-web-client.conf
+</PRE></div>
+
+<P>
+Update the paths in the copied file then:
+</P>
+
+<div class="code"><PRE>
+cd /etc/apache2/sites-available/
+ln -s &lt;path to apache-conf/qgis-web-client.conf&gt; .
+sudo a2enmod rewrite
+sudo a2ensite qgis-web-client.conf
+sudo /etc/init.d/apache2 reload
+</PRE></div>
+
+<OL>
+<LI>Check the symlink in cgi-bin is correct.
+<LI>Check the QGIS libs are in your /etc/ld.so.conf path
+<LI>Copy site/index.xml and check paths match your system OR
+  Modify index.html and point your browser to that
+</OL>
+
+<A NAME="toc2"></A>
+<H1>2. Purpose</H1>
+
+<P>
+A WMS based webgis client that makes use of QGIS specific WMS extensions (e.g.
+highlighting, printing, metadata, etc.). QGIS webclient reads the configuration
+from the WMS GetCapabilities command and builds the layer tree accordingly.
+Supports legend graphic, feature info requests and printing.
+</P>
+<P>
+The client builds on existing Web-GIS libraries OpenLayers and GeoExt, as well
+as ExtJS 3 for the GUI widgets.
+</P>
+<P>
+All major browsers should be supported.
+</P>
+
+<A NAME="toc3"></A>
+<H1>3. Installation</H1>
+
+<P>
+Requirements (Server):
+</P>
+
+<UL>
+<LI>Apache2 - Webserver (Ubuntu: apache2)
+<LI>mod-fcgid (Ubuntu: libapache2-mod-fcgid)
+<LI>QGIS and QGIS Server (best installed from source)
+</UL>
+
+<P>
+On ubuntu you can meet these requirements by simply doing:
+</P>
+
+<div class="code"><PRE>
+sudo apt-get install libapache2-mod-fcgid
+</PRE></div>
+
+<P>
+The QGIS server compilation and installation will be covered in the QGIS manual.
+</P>
+<P>
+For searching:
+</P>
+
+<UL>
+<LI>python-wsgi for searching (Ubuntu: libapache2-mod-wsgi)
+<LI>psycopg2 PostgreSQL db driver (Ubuntu: python-psycopg2)
+<LI>webob - Python module providing WSGI request and response objects (Ubuntu:
+  python-webob)
+<P></P>
+The client part needs to be git cloned with the following command:
+git clone <A HREF="https://github.com/qgis/qgis-web-client.git">https://github.com/qgis/qgis-web-client.git</A>
+</UL>
+
+<A NAME="toc4"></A>
+<H1>4. Configuration of Client</H1>
+
+<P>
+Global Settings for all projects (make a copy from one of the templates
+provided):
+</P>
+
+<div class="code"><PRE>
+site/js/GlobalOptions.js
+</PRE></div>
+
+<P>
+Translations (additional languages):
+</P>
+
+<div class="code"><PRE>
+site/js/Translations.js
+</PRE></div>
+
+<P>
+Project settings and index:
+</P>
+
+<div class="code"><PRE>
+site/index.xml or site/index.html
+</PRE></div>
+
+<P>
+Stylesheet of project index:
+</P>
+
+<div class="code"><PRE>
+site/gis-project_listing.xsl
+</PRE></div>
+
+<P>
+Thumbnails for individual projects (if you take the index.xml route):
+</P>
+
+<div class="code"><PRE>
+thumbnails/projectname.png
+</PRE></div>
+
+<A NAME="toc5"></A>
+<H2>4.1. Per Project Startup Options</H2>
+
+<P>
+These options are usually defined in the file site/index.xml. The stylesheet then generates
+the startup URL parameter options. On the client, the file 'site/js/GetUrlParams.js'
+is responsible for the proper handling of the startup options. The following options are available:
+</P>
+
+<div class="code"><PRE>
+lang
+</PRE></div>
+
+<P>
+An optional language parameter. Normally, this parameter is defined in the file 'site/js/GlobalOptions.js'.
+Optionally this can be overwritten on a per project base. Allowed values are two-character language codes
+that must be present in the file 'site/js/Translations.js' or 'site/js/Translations_custom.js' if a custom tranlsations
+file is used.
+</P>
+
+<div class="code"><PRE>
+visibleLayers
+</PRE></div>
+
+<P>
+A comma-separated list of layers that should be set visible on the project start.
+</P>
+
+<div class="code"><PRE>
+visibleBackgroundLayer
+</PRE></div>
+
+<P>
+Optionally the name of the background layer that should be set visible on project start. You must have background layers enabled in
+GlobalOptions.js by setting enableBGMaps to true and a background layer must exist with this name. If either 
+of these prerequisites is not met nothing happens and the parameter is simply ignored.
+</P>
+
+<div class="code"><PRE>
+format
+</PRE></div>
+
+<P>
+This optional parameter allows a per project definition of the file format. Valid values are
+'image/png', 'image/jpeg' and 'image/png;mode=8bit'. Defaults to 'image/png' if no format is given per project.
+For correct specification of 'image/png;mode=8bit' in a URL please encode it correctly: 'image%2fpng%3b%20mode%3d8bit'.
+If you specify this in site/js/GISProjectListing.js you do not need to encode it.
+</P>
+
+<div class="code"><PRE>
+fullColorLayers
+</PRE></div>
+
+<P>
+An optional comma-separated list of layers that need to be in full color (24bit). This parameter is only
+relevant if the project default image format is set to 'image/png' or 'image/png;mode=8bit'.
+If any of the layers in the fullColorLayers parameter list is set visible, the format changes to 'image/jpeg'.
+</P>
+
+<div class="code"><PRE>
+maxExtent
+</PRE></div>
+
+<P>
+The maximum extent of the project. This parameter is used if the 'Full View' navigation button is clicked.
+If the 'startExtent' parameter is not specified, 'maxExtent' will also be used as the 'startExtent'.
+The format is: left,bottom,right,top in map units.
+</P>
+
+<div class="code"><PRE>
+startExtent
+</PRE></div>
+
+<P>
+The initial extent on project load if the project should start with a given, but not the maximum extent
+(e.g. for zooming to a specific project area). Not to be confused with the 'maxExtent' parameter.
+The format is: left,bottom,right,top in map units.
+</P>
+
+<div class="code"><PRE>
+searchtables
+</PRE></div>
+
+<P>
+An optional list of additional search tables specific to the project. The format is 'schemaname.tablename'.
+These additional search tables will be used for the search field at the top-right corner of the Webclient-GUI.
+The default search tables are hard-coded in the file 'wsgi/search.wsgi', in the 'searchtables' array.
+</P>
+
+<A NAME="toc6"></A>
+<H2>4.2. Configuration of search panels</H2>
+
+<P>
+There are two types of search panels supported, using a direct WMS
+GetFeatureInfo request or using URL rewriting with a much shorter search URL.
+</P>
+<P>
+The search panels are configured in 'site/js/GlobalOptions.js'.
+</P>
+<P>
+The following options are available:
+</P>
+
+<div class="code"><PRE>
+mapSearchPanelOutputRegion
+</PRE></div>
+
+<P>
+SearchPanel search results output configuration (string), possible values:
+default,right,bottom,popup
+By default, search results will be shown in left panel, under the
+search form. Sometimes this is not desired, here you can choose to
+show the results in one of the other panels, like BottomPanel and
+RightPanel. These additional panels are hidden by default because
+their expansion and collapse trigger a map resize-&gt;reload cycle that
+can slow down the application.
+Example:
+</P>
+
+<div class="code"><PRE>
+var mapSearchPanelOutputRegion = 'popup';
+</PRE></div>
+
+<H3>4.2.1. Using WMS GetFeatureInfo</H3>
+
+<div class="code"><PRE>
+var simpleWmsSearch = {
+  title: "Search continent",
+  query: 'simpleWmsSearch',
+  useWmsRequest: true,
+  queryLayer: "Country",
+  formItems: [
+    {
+      xtype: 'textfield',
+      name: 'name',
+      fieldLabel: "Name",
+      allowBlank: false,
+      blankText: "Please enter a name (e.g. 'africa')"
+    }
+  ],
+  gridColumns: [
+    {header: 'Name', dataIndex: 'name', menuDisabled: 'true'}
+  ],
+  selectionLayer: 'Country',
+  selectionZoom: 0
+};
+</PRE></div>
+
+<UL>
+<LI><CODE>title</CODE>: title of the search tab
+<LI><CODE>query</CODE>: identifier for this search
+<LI><CODE>useWmsRequest</CODE>: enabled for WMS GetFeatureInfo request
+<LI><CODE>queryLayer</CODE>: name of query layer
+<LI><CODE>formItems</CODE>: list of Ext.form.FormPanel item configs
+ <UL>
+ <LI><CODE>xtype</CODE>: form field type
+ <LI><CODE>name</CODE>: name of query layer attribute
+ <LI><CODE>fieldLabel</CODE>: visible text for this field
+ <LI><CODE>blankText</CODE>: popup text for blank fields
+ </UL>
+<LI><CODE>gridColumns</CODE>: list of Ext.grid.GridPanel column configs to show search
+  results
+<LI><CODE>selectionLayer</CODE>: name of layer for marking selected results (the same as
+  <CODE>queryLayer</CODE>)
+<LI><CODE>selectionZoom</CODE>: zoom level for jump-to when selecting results
+</UL>
+
+<P>
+Request URL:
+</P>
+<P>
+When performing a search query using the above configuration,
+the following get request will be made.
+</P>
+<P>
+``<A HREF="http://localhost/wms/helloworld?SERVICE=WMS&amp;VERSION=1.1.1&amp;">http://localhost/wms/helloworld?SERVICE=WMS&amp;VERSION=1.1.1&amp;</A>
+REQUEST=GetFeatureInfo&amp;LAYERS=Country&amp;QUERY_LAYERS=Country&amp;
+FEATURE_COUNT=10&amp;INFO_FORMAT=text/xml&amp;SRS=EPSG:4326&amp;
+FILTER=Country:"name"+=+'africa'``
+</P>
+
+<H3>4.2.2. Using URL Rewriting</H3>
+
+<P>
+For security and neatness, you may prefer to use rewritten URLs (so that your
+internal server file paths are not revealed. In that case your options file
+would contain something like this:
+</P>
+
+<div class="code"><PRE>
+var urlRewriteSearch = {
+  title: "Search letter",
+  query: 'samplesearch',
+  formItems: [
+    {
+      xtype: 'hidden',
+      name: 'query',
+      value: 'samplesearch'
+    },
+    {
+      xtype: 'textfield',
+      name: 'colour',
+      fieldLabel: "Colour",
+      allowBlank: false,
+      blankText: "Please enter a colour (e.g. 'orange')"
+    }
+  ],
+  gridColumns: [
+    {header: 'PKUID', dataIndex: 'pkuid', menuDisabled: 'true'},
+    {header: 'Colour', dataIndex: 'colour', menuDisabled: 'true'}
+  ],
+  selectionLayer: 'Hello',
+  selectionZoom: 1
+};
+</PRE></div>
+
+<UL>
+<LI><CODE>title</CODE>: title of the search tab
+<LI><CODE>query</CODE>: identifier for this search
+<LI><CODE>formItems</CODE>: list of Ext.form.FormPanel item configs, the <CODE>query</CODE> form
+  field is required to match the rewrite rule (value is the same as <CODE>query</CODE>)
+ <UL>
+ <LI><CODE>xtype</CODE>: form field type
+ <LI><CODE>name</CODE>: name of query layer attribute
+ <LI><CODE>fieldLabel</CODE>: visible text for this field
+ <LI><CODE>blankText</CODE>: popup text for blank fields
+ </UL>
+<LI><CODE>gridColumns</CODE>: list of Ext.grid.GridPanel column configs to show search
+  results
+<LI><CODE>selectionLayer</CODE>: name of layer for marking selected results
+<LI><CODE>selectionZoom</CODE>: zoom level for jump-to when selecting results
+<P></P>
+For every search of this type you have to add a URL rewrite rule in the Apache
+config. *Note:* Linebreaks added for formatting - they should be removed in your
+config file.
+<P></P>
+<div class="code"><PRE>
+RewriteCond %{QUERY_STRING} ^(?:.*)query=samplesearch&amp;*(?:.*)$
+RewriteCond %{QUERY_STRING} ^(?:(?:.*)&amp;)?colour=([^&amp;]*)(?:.*)$
+RewriteRule ^/wms/(.+)$ /cgi-bin/qgis_mapserv.fcgi?map=/
+&lt;path-to-qgis-server-projects&gt;/$1.qgs&amp;SERVICE=WMS&amp;VERSION=1.1.1&amp;
+REQUEST=GetFeatureInfo&amp;LAYERS=Hello&amp;QUERY_LAYERS=Hello&amp;FEATURE_COUNT=20&amp;
+INFO_FORMAT=text/xml&amp;SRS=EPSG:4326&amp;FILTER=Hello:"colour"\ =\ '%1' [PT]
+</PRE></div>
+
+<P></P>
+The first RewriteCond matches the <CODE>query</CODE> id of the search panel config. The
+second RewriteCond extracts the values of the search request parameters.
+<P></P>
+The RewriteRule composes the actual WMS GetFeatureInfo request to QGIS mapserver.
+</UL>
+
+<P>
+Request URL:
+</P>
+<P>
+<CODE>http://localhost/wms/helloworld?query=samplesearch&amp;colour=orange</CODE>
+</P>
+
+<H3>4.2.3. Add search panels to projects</H3>
+
+<P>
+In order for your search panel to appear in the web UI, you must
+enumerate them in your GlobalOptions.js for example (with url rewriting):
+</P>
+
+<div class="code"><PRE>
+var mapSearchPanelConfigs = {
+  "helloworld": [simpleWmsSearch, urlRewriteSearch]
+};
+</PRE></div>
+
+<P>
+Example (no rewriting):
+</P>
+
+<div class="code"><PRE>
+var mapSearchPanelConfigs = {
+  "../projects/helloworld.qgs": [simpleWmsSearch, urlRewriteSearch]
+};
+</PRE></div>
+
+<P>
+Search panels are added to a project by adding a new key for the map name
+with a list of search panel configs to <CODE>mapSearchPanelConfigs</CODE>.  If there is
+no search panel configuration for a project, the search will be hidden in the
+GUI.
+</P>
+<P>
+The map name is whatever is passed in the get request for your .qgs file. For
+example if your url includes this:
+</P>
+
+<div class="code"><PRE>
+http://localhost/cgi-bin/qgis_mapserv.fcgi?map=../projects/helloworld.qgs
+</PRE></div>
+
+<P>
+then your mapSearchPanelConfigs should reflect ../projects/helloworld.qgs as
+the key for the search list.
+</P>
+
+<A NAME="toc7"></A>
+<H2>4.3. Configuration of the theme switcher</H2>
+
+<P>
+The theme switcher allows to change to a diffent QGIS project (or map theme)
+without having to leave the application and using the map extent. To
+enable/disable the theme switcher you have to set the variable
+</P>
+
+<div class="code"><PRE>
+var mapThemeSwitcherActive = true;
+</PRE></div>
+
+<P>
+in the site/js/GlobalOptions.js file to true|false. In addition you should
+place thumbnail images of your map into the directory site/thumbnails where
+the file name equals the projectname. All thumbnails should be 300x200 pixels
+in size and in .png format. If you .qgs project is called 'helloworld.qgs' then
+your thumbnail should be called 'helloworld.png'.
+</P>
+<P>
+In addition you need to make entries for topics and projects in the file
+'site/js/GISProjectListing.js'. Please use the given file as a template.
+The file is in JSON format and starts with a few central parameters.
+</P>
+
+<H3>4.3.1. Central theme switcher parameters</H3>
+
+<div class="code"><PRE>
+path
+</PRE></div>
+
+<P>
+The 'path' is the URL part used at the start of the application telling the QGIS Webclient where
+to find the QGIS projects (see also Apache URL rewriting). This path
+may be overwritten in some projects if you password-protect them in a separate Apache location.
+</P>
+
+<div class="code"><PRE>
+mapserver
+</PRE></div>
+
+<P>
+This is the path to the WMS server used for WMS requests (e.g. for GetCapabilities, GetFeatureInfo, etc. requests).
+Again, this parameter may be overwritten in some projects if you want to password-protect the WMS
+in a separate Apache location.
+</P>
+
+<div class="code"><PRE>
+thumbnails
+</PRE></div>
+
+<P>
+The URL where QGIS web client can find the project thumbnail images.
+</P>
+
+<div class="code"><PRE>
+title
+</PRE></div>
+
+<P>
+The overall title of your Web-GIS. This will be later appended with the name
+of your project, separated by a dash. It appears in the title bar of the browser
+window and in the title bar of the web application.
+</P>
+
+<H3>4.3.2. Per topic theme switcher parameters</H3>
+
+<P>
+You can group your projects into topics. A topic only has a single parameter
+with the name of the topic. In a topic element you can have several project
+entries in a JSON array called project.
+</P>
+
+<div class="code"><PRE>
+name
+</PRE></div>
+
+<P>
+The name of the topic.
+</P>
+
+<H3>4.3.3. Per project theme switcher parameters</H3>
+
+<P>
+In a topic you can have several project entries. A project can overwrite the global
+'path' and 'mapserver' entries.
+</P>
+
+<div class="code"><PRE>
+name
+</PRE></div>
+
+<P>
+The name of the project or map. Will be displayed in the theme switcher below the thumbnail and
+in the title strings of the application.
+</P>
+
+<div class="code"><PRE>
+path
+</PRE></div>
+
+<P>
+Optional. Overrides the central settings in case you need to password-protect certain
+projects. The 'path' is the URL part used at the start of the application telling the
+QGIS Webclient where to find the QGIS projects (see also Apache URL rewriting).
+</P>
+
+<div class="code"><PRE>
+mapserver
+</PRE></div>
+
+<P>
+Optional. Overrides the central settings in case you need to password-protect certain
+projects. This is the path to the WMS server used for WMS requests (e.g. for GetCapabilities,
+GetFeatureInfo, etc. requests).
+</P>
+
+<div class="code"><PRE>
+projectpath
+</PRE></div>
+
+<P>
+The projectpath (directory) or part of the Apache rewrite expression necessary to find
+the project file. This parameter is mandatory.
+</P>
+
+<div class="code"><PRE>
+projectfile
+</PRE></div>
+
+<P>
+The QGIS project file or part of the Apache rewrite expression necessary to find
+the project file. This parameter is mandatory. Depending on the Apache rewrite expression
+you may have to omit the .qgis extension.
+</P>
+
+<div class="code"><PRE>
+format
+</PRE></div>
+
+<P>
+Optional. The image format that QGIS web client should request. Valid values are: 'image/jpeg',
+'image/png' or 'image/png;mode=8bit'. If omitted, the value is taken from site/js/GlobalOptions.js.
+If it is not defined there either, the value defaults to 'image/png'.
+</P>
+
+<div class="code"><PRE>
+visibleLayers
+</PRE></div>
+
+<P>
+Optional. A comma separated list of layers that should be visible after loading the projects.
+A future QGIS Webclient version will also read the layer visibility directly from the GetProjectSettings
+command.
+</P>
+
+<div class="code"><PRE>
+fullColorLayers
+</PRE></div>
+
+<P>
+Optional. A comma separated list of layers that would trigger a format change from 'image/png' to 'image/jpeg'.
+Per defaul, the project would use 'image/png' or 'image/png;mode=8bit' but if the user toggles the visibility
+of a layer with orthophoto data or satellit images, the format will change to 'image/jpeg'.
+</P>
+
+<div class="code"><PRE>
+updateInterval
+</PRE></div>
+
+<P>
+Optional. A prosa text indicating how often the project will get data update. E.g. daily, weekly,
+monthly, weekly or occasional.
+</P>
+
+<div class="code"><PRE>
+lastUpdate
+</PRE></div>
+
+<P>
+Optional. The date of the last data update, e.g. '2012-10-23'.
+</P>
+
+<div class="code"><PRE>
+responsible
+</PRE></div>
+
+<P>
+Optional. The organization and/or person responsible for the project
+and the data involved.
+</P>
+
+<div class="code"><PRE>
+startExtent
+</PRE></div>
+
+<P>
+Optional. The bounding box (left,bottom,right,top in map units) used when starting the project.
+If not specified, maxExtent or the extent from the GetProjectSettings is used.
+</P>
+
+<div class="code"><PRE>
+maxExtent
+</PRE></div>
+
+<P>
+Optional. The maximum bounding box (left,bottom,right,top in map units) of the project.
+If not specified the extent from the GetProjectSettings is used.
+</P>
+
+<div class="code"><PRE>
+showFeatureInfoLayerTitle
+</PRE></div>
+
+<P>
+Optional. Boolean (true|false). Defines whether the layer title is displayed or not at the top
+of the popup bubble displaying the feature info results. Influences both the hover and the click popups.
+</P>
+
+<div class="code"><PRE>
+tags
+</PRE></div>
+
+<P>
+Optional. Tags or keywords displayed in the tooltips in the theme switcher.
+The tags are also used in the search filter used in the theme switcher.
+</P>
+
+<A NAME="toc8"></A>
+<H2>4.4. Configuring of background layers</H2>
+
+<P>
+You can use any <A HREF="http://dev.openlayers.org/releases/OpenLayers-2.13.1/doc/apidocs/files/OpenLayers/Layer-js.html">OpenLayers.Layer</A> subclass as background layer. This layer must be added to <CODE>baseLayers</CODE>. You should do this in <CODE>customBeforeMapInit()</CODE> in Customizations.js. Example:
+</P>
+
+<div class="code"><PRE>
+// called before map initialization
+function customBeforeMapInit() {
+    // define base layer
+    var myBaseLayer = new OpenLayers.Layer.WMS("myBaseLayerName",
+        "myBaseLayerWmsUrl", {
+            layers: "myLayer",
+            format: format,
+            dpi: screenDpi,
+            VERSION: "1.3.0"
+        },
+        {
+            buffer:0,
+            singleTile:true,
+            ratio:1,
+            transitionEffect:"resize",
+            isBaseLayer: true, // important!
+            projection:authid // requests the base layer in the projection defined in GlobalOptions
+        }
+    );
+
+    // now add to baseLayers array
+    baseLayers.push(myBaseLayer);
+}
+</PRE></div>
+
+<A NAME="toc9"></A>
+<H2>4.5. Extending the interface</H2>
+
+<P>
+You can add buttons to implements additional functions (editing, advanced identify, etc.).
+See the example in site/js/Customizations.js.
+</P>
+
+<A NAME="toc10"></A>
+<H2>4.6. Customize languages</H2>
+
+<P>
+In order to provide shorter loading times you can reduce the languages in <CODE>Translations.js</CODE> to those you really need.
+For this purpose the Python script <CODE>site/js/build/translations.py</CODE> is shipped with QGIS Web Client.
+</P>
+<P>
+Write the languages you
+need into <CODE>site/js/build/translations.cfg</CODE> and run the script, i.e. in a shell change to <CODE>site/js/build</CODE> and enter
+</P>
+
+<div class="code"><PRE>
+python translations.py
+</PRE></div>
+
+<P>
+A new file <CODE>site/js/Translations_custom.js</CODE> is created. Copy this file to your server and adapt <CODE>qgiswebclient.html</CODE> accordingly.
+</P>
+
+<A NAME="toc11"></A>
+<H1>5. URL Rewriting</H1>
+
+<P>
+Using a standard installation of QGIS server, GlobalOptions.js will have a WMS
+server configuration like
+</P>
+
+<div class="code"><PRE>
+var serverAndCGI = "/cgi-bin/qgis_mapserv.fcgi";
+</PRE></div>
+
+<P>
+A sample URL for QGIS Web Client installed in /var/www/qgis-web-client:
+</P>
+
+<div class="code"><PRE>
+http://localhost/qgis-web-client/qgiswebclient.html?map=/opt/geodata/maps/NaturalEarth.qgs&amp;visibleLayers=HYP_50M_SR_W
+</PRE></div>
+
+<P>
+With the following rules for Apache mod_rewrite you can shorten the URLs to
+</P>
+
+<div class="code"><PRE>
+var serverAndCGI = "/wms";
+</PRE></div>
+
+<P>
+and
+</P>
+
+<div class="code"><PRE>
+http://localhost/maps/NaturalEarth?visibleLayers=HYP_50M_SR_W
+</PRE></div>
+
+<P>
+Rules in VirtualHost configuration:
+</P>
+
+<div class="code"><PRE>
+# Forbid direct access
+RewriteRule ^/cgi-bin/.*$ - [F]
+
+# Search with SearchPanel (e.g. Address)
+RewriteCond %{QUERY_STRING} ^(?:.*)query=address&amp;*(?:.*)$
+RewriteCond %{QUERY_STRING} ^(?:(?:.*)&amp;)?street=([^&amp;]*)(?:(?:.*)&amp;)+number=([^&amp;]*)(?:.*)$
+RewriteRule ^/wms/(.+)$ /cgi-bin/qgis_mapserv.fcgi?map=/opt/geodata/maps/$1.qgs&amp;SERVICE=WMS&amp;VERSION=1.1.1&amp;REQUEST=GetFeatureInfo&amp;LAYERS=addresses&amp;QUERY_LAYERS=addresses&amp;FEATURE_COUNT=10&amp;INFO_FORMAT=text/xml&amp;SRS=EPSG:21781&amp;FILTER=addresses:"street"\ =\ '%1' AND "number"\ =\ %2 [PT]
+
+# Rewrite /wms/mapname to qgis_mapserv.fcgi?map=mappath/mapname.qgs
+RewriteRule ^/wms/(.+)$ /cgi-bin/qgis_mapserv.fcgi?map=/opt/geodata/maps/$1.qgs [QSA,PT]
+# Rewrite /maps/mapname to qgis-web-client main page. mapname will be extracted for wms calls in Javascript code.
+RewriteRule ^/maps/([^\.]+)$ /qgis-web-client/site/qgiswebclient.html [PT]
+# Rewrite /maps/* to qgis-web-client/site (e.g. /maps/gis_icons/mActionZoomNext.png -&gt; /qgis-web-client/site/gis_icons/mActionZoomNext.png)
+RewriteRule ^/maps/(.*) /qgis-web-client/site/$1 [PT]
+</PRE></div>
+
+<P>
+For supporting qgs files in subdirectories (e.g. /maps/subdir/mapnampe) replace last rule with:
+</P>
+
+<div class="code"><PRE>
+RewriteRule ^/maps/[^/]+/(.*) /qgis-web-client/site/$1 [PT]
+</PRE></div>
+
+<P>
+For adding zones in different subdirecories (e.g. maps and maps-protected) add the following rules:
+</P>
+
+<div class="code"><PRE>
+RewriteRule ^/wms-protected/(.+)$ /cgi-bin/qgis_mapserv.fcgi?map=/opt/geodata/maps-protected/$1.qgs [QSA,PT]
+RewriteRule ^/maps-protected/([^\.]+)$ /qgis-web-client/site/qgiswebclient.html [PT]
+RewriteRule ^/maps-protected/(.*) /qgis-web-client/site/$1 [PT]
+</PRE></div>
+
+<A NAME="toc12"></A>
+<H1>6. Configuration of the search</H1>
+
+<P>
+Searching is handled by two separate scripts: "search" lists
+back a hit list while the user is typing in the searchbox. It groups the
+results and returns a bounding box of the result. "getSearchGeom" returns
+the actual wkt geometry for a selected search result.
+</P>
+<P>
+These scripts are provided in two flavors: PHP and WSGI (Python). 
+The PHP version should run out-of-the-box
+with just a few lines of configuration. There is no need to alter the DB
+table structure in order to use PHP search scripts because all needed informations are read from
+the project file. Another notable difference is that layer names are used instead of
+table names, this is in order to not disclose internal DB details. The PHP scripts are available
+under the <CODE>php</CODE> folder. 
+</P>
+<P>
+The Python wsgi search scripts provide an advanced, more configurable and 
+more detailed search solution. They draw their results directly from dedicated relations
+in a PostGIS database. The WSGI scripts are available
+under the <CODE>wsgi</CODE> folder. It is recommended to
+install the wsgi scripts in a separate directory, e.g. /home/www/wsgi, a place
+that is not reachable by regular web traffic.
+</P>
+
+<A NAME="toc13"></A>
+<H2>6.1. PHP Search</H2>
+
+<H3>6.1.1. Available PHP scripts</H3>
+
+<H4>6.1.1.1. Search</H4>
+
+<P>
+The "search.php" scripts works as described above.
+Accepted parameters:
+</P>
+
+<UL>
+<LI>map (map name or path)
+<LI>query (search text)
+<LI>searchtables (optional: layer names to search in)
+</UL>
+
+<P>
+The companion is "search_geom.php".
+</P>
+
+<UL>
+<LI>map (map name or path)
+<LI>searchtable (layer name)
+<LI>displaytext (the matched string)
+</UL>
+
+<H4>6.1.1.2. Unique list</H4>
+
+<P>
+This simple script returns the unique values of a given column of a given PostgreSQL layer.
+Accepted parameters:
+</P>
+
+<UL>
+<LI>map (map name or path)
+<LI>layer (layer name)
+<LI>field (column name)
+</UL>
+
+<P>
+The script returns a json array of unique values and can be useful to implement select combo boxes for the search panels.
+</P>
+
+<H4>6.1.1.3. Get legend</H4>
+
+<P>
+This script has no wsgi counterpart, it works with recent QGIS Server versions (2.0.1 and newer) and can be used to build a template-based HTML legend instead of the image provided by GetLegendGraphic calls.
+</P>
+<P>
+To use this feature you must activate it in <CODE>GlobalOptions.js</CODE>, search for the commented line below:
+</P>
+
+<div class="code"><PRE>
+var interactiveLegendGetLegendURL = '../php/get_legend.php?map=' + project_map + '&amp;';
+</PRE></div>
+
+<P>
+Legends generated by this script can be cached for speed, see the paragraph on configuration below.
+</P>
+<P>
+Accepted parameters:
+</P>
+
+<UL>
+<LI>map (map name or path)
+<LI>layer (layer name)
+</UL>
+
+<H3>6.1.2. PHP configuration file</H3>
+
+<P>
+Configuration for the services is stored in  `config.php`.
+</P>
+<P>
+Example:
+</P>
+
+<div class="code"><PRE>
+/****************************
+ * Map rewrite configuration
+ */
+// Prefix map name with path
+#define('MAP_PATH_REWRITE', '/home/xxx/public_html/QGIS-Web-Client/projects/');
+// Append .qgs to the map name
+#define('MAP_PATH_APPEND_QGS', true);
+
+
+/**************************************
+ * search configuration
+ */
+// Configuration for searchable layers
+$searchlayers_config = array(
+    // Key is layer name
+    'Country' =&gt; array(
+        // SQL for text search: where to search
+        'search_column' =&gt; 'name'
+    )
+);
+
+// Default search tables
+define('DEFAULT_SEARCH_LAYERS', 'Country');
+// Limit search results
+define('SEARCH_LIMIT', 100);
+
+
+/**************************************
+ *  Get legend configuration
+ */
+// Cache expiry time in seconds 0=never cache
+define('GET_LEGEND_CACHE_EXPIRY', 60*60);
+// Cache directory, defaults to dirname(__FILE__) . '/legend_cache'
+define('GET_LEGEND_CACHE_DIRECTORY', null);
+// Defaults to current URL + '../cgi-bin/qgis_mapserv.fcgi?'
+define('WMS_ONLINE_RESOURCE', null);
+
+/* End configuration */
+</PRE></div>
+
+<P>
+QGIS Web Client needs to know where to find the scripts, since most
+configuration is read from the project file, this must be passed in the
+query string, the file where this parameters are set is
+<CODE>GlobalOptions.js</CODE> see the example below:
+</P>
+
+<div class="code"><PRE>
+// Adds project_map, read value from query string
+var project_map = Ext.urlDecode(window.location.search.substring(1)).map;
+
+var searchBoxQueryURL = '../php/search.php?map=' + project_map;
+var searchBoxGetGeomURL = '../php/search_geom.php?map=' + project_map;
+</PRE></div>
+
+<H3>6.1.3. TODO</H3>
+
+<P>
+Permalinks: the permalinks script is not yet implemented in PHP.
+</P>
+
+<A NAME="toc14"></A>
+<H2>6.2. WSGI Search</H2>
+
+<H3>6.2.1. Configuration of mod_wsgi</H3>
+
+<P>
+You need to enable mod_wsgi as root. (Ubuntu: a2enmod mod_wsgi).
+</P>
+<P>
+You need to configure apache with the following lines (e.g. in file
+/etc/apache2/sites-available/default):
+</P>
+
+<div class="code"><PRE>
+#mod_wsgi
+WSGIDaemonProcess gis processes=5 threads=15 display-name=%{GROUP}
+WSGIScriptAlias /wsgi/ /home/www/wsgi/
+WSGIScriptAliasMatch ^/wsgi/([^/]+) /home/www/wsgi/$1.wsgi
+</PRE></div>
+
+<H3>6.2.2. Adaption of the wsgi scripts to your settings and needs</H3>
+
+<H4>6.2.2.1. DB connection</H4>
+
+<P>
+In the file <CODE>qwc_connect.py</CODE> please edit the first line containing the db connection string. 
+</P>
+
+<div class="code"><PRE>
+DB_CONN_STRING="host='myhost' dbname='mydb' port='5432' user='myuser' password='secret'"
+</PRE></div>
+
+<P>
+This connection will be used in all wsgi scripts.
+</P>
+<P>
+Adapt the parameters according to your server/db. It is highly recommended to
+<B>connect with a database user having limited rights only</B> (e.g. select rights on relevant tables only).
+</P>
+
+<H4>6.2.2.2. Search type to be used</H4>
+
+<P>
+The search can use PostgreSQL's tsvector data type.
+"A tsvector value is a sorted list of distinct lexemes, which are words that have been normalized to
+merge different variants of the same word."
+from the <A HREF="http://www.postgresql.org/docs/9.0/interactive/datatype-textsearch.html#DATATYPE-TSVECTOR">PostgreSQL doc</A>.
+Thus tsvector skips all the fill words and reduces nouns to their single form, a behaviour useful
+for searching texts. However as we are normally dealing with <B>place names</B> here we want them to stay as they are.
+If you use a language where the single form is a lot different from the plural form but your name contains a plural
+you will not get a suitable result. If you want to use the tsvector search option you should activate the lines
+</P>
+
+<div class="code"><PRE>
+sql += "searchstring_tsvector @@ to_tsquery(\'not_your_language\', %s)"
+data += (querystrings[j]+":*",)
+</PRE></div>
+
+<P>
+<I>not_your_language</I> is to be replaced with an entry e.g. <I>finnish</I> if you have German place names.
+Thus plural forms and fillwords are kept as they are. Be aware of side effects!
+Be sure to fill the field <I>searchstring_tsvector</I> with <CODE>`to_tsvector('not_your_language', 'yourstring')`</CODE>.
+</P>
+<P>
+The use of
+</P>
+
+<div class="code"><PRE>
+sql += "searchstring::tsvector @@ lower(%s)::tsquery"
+data += (querystrings[j]+":*",)
+</PRE></div>
+
+<P>
+is <B>discouraged</B> as it does not find a place name like <I>Stoke-sub-Hamden</I> when you enter <I>Stoke</I>.
+</P>
+<P>
+If you do not want to use tsvector at all you can enable the full string comparison on the field <I>searchstring</I>
+(activated by default).
+</P>
+
+<div class="code"><PRE>
+sql += "searchstring ILIKE %s"
+data += ("%" + querystrings[j] + "%",)
+</PRE></div>
+
+<P>
+This method however is slower than tsvector but not relevantly at least if you only have a couple 1000 datasets.
+</P>
+
+<H3>6.2.3. PostgreSQL table setup for searching</H3>
+
+<div class="code"><PRE>
+CREATE TABLE cadastre.searchtable
+(
+  searchstring text, --the search string (all lower case), e.g. "zürichstrasse 46, 8610 uster"
+  displaytext text NOT NULL, --the display text for the search combobox, e.g. "Zürichstrasse 46, 8610 Uster (address)"
+  search_category text, --should have a leading two digit number:, e.g.
+                        --"03_parcels", where 03 is the order of the search categories, the number
+                        --should be unique across all search tables
+  the_geom geometry,    --the actual geometry
+  geometry_type text,   --the geometry type as returned by ST_GeometryType(the_geom)
+  searchstring_tsvector tsvector, -- be sure to fill this with to_tsvector()
+  showlayer varchar(256), -- holds the layer name to be set visible if user chooses a respective result
+  CONSTRAINT searchtable_pkey PRIMARY KEY (displaytext)
+)
+WITH (
+  OIDS=FALSE
+);
+GRANT SELECT ON TABLE cadastre.searchtable TO qwc_user;
+
+-- Index: cadastre.in_cadastre_searchstring_tsvector_gin
+
+CREATE INDEX in_cadastre_searchstring_tsvector_gin
+  ON cadastre.searchtable
+  USING gin
+  (searchstring_tsvector);
+</PRE></div>
+
+<P>
+The above search table can also be a view or materialized view. One can combine
+several search tables by specifying the <CODE>`searchtables=searchtable1,searchtable_n`</CODE>
+parameter when requesting the <I>search.wsgi</I> script. Any searchtable passed to <I>search.wsgi</I> may only contain
+the letters <I>A to Z, a to z</I> and the underscore. Double quoting the search table throws an error, thus searchtables' names must
+contain lower characters only.
+</P>
+<P>
+Using views is generally slower than properly indexed tables, check for yourself what works best.
+</P>
+
+<A NAME="toc15"></A>
+<H1>7. License</H1>
+
+<P>
+The QGIS web client is released under a BSD license.
+</P>
+<P>
+Copyright (2010-2012), The QGIS Project
+All rights reserved.
+</P>
+<P>
+Redistribution and use in source and binary forms, with or without modification, are permitted
+provided that the following conditions are met:
+</P>
+
+<UL>
+<LI>Redistributions of source code must retain the above copyright notice, this list of conditions
+  and the following disclaimer.
+<LI>Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+  and the following disclaimer in the documentation and/or other materials provided with the distribution.
+<P></P>
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+THE POSSIBILITY OF SUCH DAMAGE.
+</UL>
+
+<A NAME="toc16"></A>
+<H1>8. Developers and Contributors</H1>
+
+<P>
+Developers:
+</P>
+
+<UL>
+<LI>Jürgen Fischer
+<LI>Marco Hugentobler
+<LI>Pirmin Kalberer
+<LI>Andreas Neumann
+<LI>Alessandro Pasotti
+<LI>Niccolo Rigacci
+<LI>Denis Rouzaud
+<LI>Bernhard Ströbl
+<LI>Tim Sutton
+<LI>Mathias Walker
+</UL>
+
+<P>
+Translators:
+</P>
+
+<UL>
+<LI>Giovanni Allegri
+<LI>Germán Carrillo
+<LI>Paolo Cavallini
+<LI>Diana Galindo
+<LI>Mayeul Kauffmann
+<LI>Samuel Mesa
+<LI>Alessandro Pasotti
+<LI>Nelson Silva
+<LI>Pavlo Taranov
+<LI>Tudor Bărăscu
+<LI>Uroš Preložnik
+</UL>
+
+<A NAME="toc17"></A>
+<H1>9. Acknowledgements</H1>
+
+<P>
+We'd like to thank the OpenLayers, GeoExt and ExtJS teams for providing their base libraries
+we build upon.
+</P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.6 (http://txt2tags.org) -->
+<!-- cmdline: txt2tags -o README.html -t html README.t2t -->
+</BODY></HTML>
