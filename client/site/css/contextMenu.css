@@ -5,27 +5,27 @@
 }
 
 .x-table-icon {
-    background-image:url(../../../gis_icons/contextmenu/table.png);
+    background-image:url(../gis_icons/contextmenu/table.png);
 }
 
 .x-zoom-icon {
-    background-image:url(../../../gis_icons/contextmenu/zoom.png);
+    background-image:url(../gis_icons/contextmenu/zoom.png);
 }
 
 .x-export-icon {
-    background-image:url(../../../gis_icons/contextmenu/export.png);
+    background-image:url(../gis_icons/contextmenu/export.png);
 }
 
 /* Here are new styles */
 
 .x-edit-icon {
-    background-image:url(../../../gis_icons/mActionToggleEditing.png);
+    background-image:url(../gis_icons/mActionToggleEditing.png);
 }
 
 .x-clearfilter-icon {
-    background-image:url(../../../gis_icons/filter_delete.png);
+    background-image:url(../gis_icons/filter_delete.png);
 }
 
-.icon-save { background-image: url(../../../gis_icons/save.gif) !important; background-repeat: no-repeat; }
+.icon-save { background-image: url(../gis_icons/save.gif) !important; background-repeat: no-repeat; }
 
-.icon-delete { background-image: url(../../../gis_icons/editor_delete.png) !important; background-repeat: no-repeat; }
+.icon-delete { background-image: url(../gis_icons/editor_delete.png) !important; background-repeat: no-repeat; }

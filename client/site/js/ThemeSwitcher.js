@@ -124,7 +124,7 @@ ThemeSwitcher.prototype.openOrInitialize = function () {
 
 ThemeSwitcher.prototype.initialize = function () {
 	me = this;
-	var template = themeSwitcherTemplate?themeSwitcherTemplate:new Ext.XTemplate('<ul>', '<tpl for=".">', '<li class="project">', '<img width="300" height="200" class="thumbnail" src="client/site/thumbnails/{thumbnail}" title="{tooltip}" />', '<tpl if="pwprotected==\'yes\'">', '<img class="pwProtected" src="gis_icons/lockIcon.png" width="32" height="32" />','</tpl>','<strong>{projname}', '<tpl if="pwprotected==\'yes\'">', ' - ' + themeSwitcherTooltipPwProtectedString[lang], '</tpl>', '</strong>', '</li>', '</tpl>', '</ul>');
+	var template = themeSwitcherTemplate?themeSwitcherTemplate:new Ext.XTemplate('<ul>', '<tpl for=".">', '<li class="project">', '<img width="300" height="200" class="thumbnail" src="client/site/thumbnails/{thumbnail}" title="{tooltip}" />', '<tpl if="pwprotected==\'yes\'">', '<img class="pwProtected" src='+iconDirectory+'"lockIcon.png" width="32" height="32" />','</tpl>','<strong>{projname}', '<tpl if="pwprotected==\'yes\'">', ' - ' + themeSwitcherTooltipPwProtectedString[lang], '</tpl>', '</strong>', '</li>', '</tpl>', '</ul>');
 
 	//add data view for grid thumbnails view
 	this.projectDataView = new Ext.DataView({
@@ -220,7 +220,7 @@ ThemeSwitcher.prototype.initialize = function () {
 					}
 				}, {
 					xtype: 'button',
-					icon: 'gis_icons/mActionUndo.png',
+					icon: iconDirectory+'mActionUndo.png',
 					scale: 'medium',
 					tooltipType: 'qtip',
 					tooltip: resetThemeSearchFieldTooltipString[lang],

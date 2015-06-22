@@ -18,6 +18,7 @@ var enableHoverPopup = false;
 var useGeodesicMeasurement = true;
 var useGeoNamesSearchBox = true;
 var geoNamesUserName = 'uprel';
+var iconDirectory = 'client/site/gis_icons/';
 
 //URL for custom search scripts
 var searchBoxQueryURL = null; // "/wsgi/search.wsgi?query=";
@@ -164,7 +165,7 @@ var mapSearchPanelOutputRegion = 'default' ; // Possible values: default,right,b
 //note that you have to also link a GISProjectListing.js file containing a valid
 //project listing structure - the root object is called 'gis_projects'
 //have a look at the template file and documentation for the correct json structure
-var mapThemeSwitcherActive = true;
+var mapThemeSwitcherActive = false;
 //you can provide an alternative template for the theme-switcher - see also file ThemeSwitcher.js (ThemeSwitcher.prototype.initialize)
 var themeSwitcherTemplate = null;
 

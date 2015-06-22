@@ -1,2 +1,0 @@
-To je zaèasna lokacija da ni treba popravljati vseh poti do lokacije ikon. je pa podvojeno stanje z gisclientom.
-Dokler želimo obdržati èimmanj sprememb z qgis web clientom, enkrat potem pa to porihtati

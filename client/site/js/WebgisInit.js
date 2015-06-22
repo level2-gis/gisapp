@@ -771,7 +771,7 @@ function postLoading() {
 
         //zoom extent
         var zoomExtent = new Ext.Button({
-            icon: 'gis_icons/mActionZoomFullExtent.png',
+            icon: iconDirectory+'mActionZoomFullExtent.png',
             id: 'navZoomFullExtent',
             scale: 'medium',
             map: geoExtMap.map,
@@ -783,7 +783,7 @@ function postLoading() {
 
         //zoom box
         var zoomBoxAction = new GeoExt.Action({
-            icon: 'gis_icons/mActionZoomBox.png',
+            icon: iconDirectory+'mActionZoomBox.png',
             id: 'navZoomBoxButton',
             scale: 'medium',
             control: new OpenLayers.Control.ZoomBox({
@@ -801,7 +801,7 @@ function postLoading() {
         Ext.getCmp('navZoomBoxButton').on('toggle', mapToolbarHandler);
 
         var zoomToPreviousAction = new GeoExt.Action({
-            icon: 'gis_icons/mActionZoomLast.png',
+            icon: iconDirectory+'mActionZoomLast.png',
             scale: 'medium',
             control: navHistoryCtrl.previous,
             disabled: true,
@@ -812,7 +812,7 @@ function postLoading() {
         myTopToolbar.insert(2, zoomToPreviousAction);
         //zoom next
         var zoomToNextAction = new GeoExt.Action({
-            icon: 'gis_icons/mActionZoomNext.png',
+            icon: iconDirectory+'mActionZoomNext.png',
             scale: 'medium',
             control: navHistoryCtrl.next,
             disabled: true,
@@ -824,7 +824,7 @@ function postLoading() {
 
         //streetViewBtn
         var streetView = new Ext.Button({
-            icon: 'gis_icons/mActionStreetView.png',
+            icon: iconDirectory+'mActionStreetView.png',
             id: 'streetViewBtn',
             scale: 'medium',
             tooltip: 'GoogleStreetView',
@@ -837,7 +837,7 @@ function postLoading() {
 
         //geolocate control
         var geoLocateAction = new GeoExt.Action({
-            icon: 'gis_icons/mActionLocate.png',
+            icon: iconDirectory+'mActionLocate.png',
             id: 'geoLocate',
             scale: 'medium',
             control: new OpenLayers.Control.Geolocate({
