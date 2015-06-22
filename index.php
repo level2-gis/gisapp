@@ -109,7 +109,6 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<script type="text/javascript" src="client/site/js/TriStateTree.js?v=20140901"></script>
 		<script type="text/javascript" src="client/site/js/GUI.js?v=20150523"></script>
 		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=20150523"></script>
-        <script type="text/javascript" src="client/site/js/QGISEditor.js?v=20140901"></script>
         <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js?v=20140901"></script>
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=20141106"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js?v=20140901"></script>
