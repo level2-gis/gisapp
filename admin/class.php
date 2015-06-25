@@ -309,17 +309,7 @@ class OneFileLoginApplication
     //uros
     public function getGisProjectsFromDB($user)
     {
-        if ($this->createDatabaseConnection()) {
-            $sql = 'SELECT row_to_json(get_gis_projects(:user)) AS data;';
-            $query = $this->db_connection->prepare($sql);
-            $query->bindValue(':user', $user);
-            $query->execute();
-            $result_row = $query->fetchObject();
-            if ($result_row) {
-                return $result_row->data;
-            } else
-                return 'TR.loginFailMessage';
-        }
+        return json_encode (new stdClass); //empty json object
     }
 
     //uros

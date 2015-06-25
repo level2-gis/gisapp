@@ -1,6 +1,6 @@
 //This file is used instead of GlobalOptions.js
 
-var lang = "en"; //for available codes see array availableLanguages in file GlobalOptions.js
+var lang = "en";
 var helpfile = "help_en.html";
 
 if(GLOBAL_SERVER_OS == 'Windows NT') {
@@ -17,7 +17,6 @@ var showMetaDataInLegend = true;
 var enableHoverPopup = false;
 var useGeodesicMeasurement = true;
 var useGeoNamesSearchBox = true;
-var geoNamesUserName = 'uprel';
 var iconDirectory = 'client/site/gis_icons/';
 
 //URL for custom search scripts
@@ -36,97 +35,6 @@ var permaLinkURLShortener = null; // "/wsgi/createShortPermalink.wsgi";
 
 var enableBGMaps = true;
 var enableExtraLayers = false;
-
-projectData.setBaseLayers = function() {
-    var baseLayers = [];
-    //find client projects
-    for(var i = 0; i < projectData.gis_projects.topics.length; i++) {
-		var topic = projectData.gis_projects.topics[i];
-        if(topic.client == this.client_name) {
-            for(var j = 0; j < topic.projects.length; j++) {
-                var project = topic.projects[j];
-                if (project.projectfile == this.project) {
-                    if(project.base_layers != null) {
-                        for (var k = 0; k < project.base_layers.length; k++) {
-                            baseLayers.push(eval(project.base_layers[k]));
-                        }
-                    }
-                    break;
-                }
-            }
-            break;
-        }
-	}
-
-    if(baseLayers.length>0) enableBGMaps=true;
-
-    return baseLayers;
-};
-
-projectData.extraLayers = function() {
-    var extraLayers = [];
-    //find client projects
-    for(var i = 0; i < projectData.gis_projects.topics.length; i++) {
-        var topic = projectData.gis_projects.topics[i];
-        if(topic.client == this.client_name) {
-            for(var j = 0; j < topic.projects.length; j++) {
-                var project = topic.projects[j];
-                if (project.projectfile == this.project) {
-                    if(project.extra_layers != null) {
-                        for (var k = 0; k < project.extra_layers.length; k++) {
-                            extraLayers.push(eval(project.extra_layers[k]));
-                        }
-                    }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-
-    if(extraLayers.length>0) enableExtraLayers=true;
-
-    return extraLayers;
-};
-
-projectData.tablesOnStart = function() {
-    var tablesOnStart = [];
-    //find client projects
-    for(var i = 0; i < projectData.gis_projects.topics.length; i++) {
-        var topic = projectData.gis_projects.topics[i];
-        if(topic.client == this.client_name) {
-            for(var j = 0; j < topic.projects.length; j++) {
-                var project = topic.projects[j];
-                if (project.projectfile == this.project) {
-                    if(project.tables_onstart != null) {
-                        for (var k = 0; k < project.tables_onstart.length; k++) {
-                            tablesOnStart.push(project.tables_onstart[k]);
-                        }
-                    }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-
-    return tablesOnStart;
-};
-
-projectData.overViewLayer = function() {
-    //find client projects
-    for(var i = 0; i < projectData.gis_projects.topics.length; i++) {
-        var topic = projectData.gis_projects.topics[i];
-        if(topic.client == this.client_name) {
-            for(var j = 0; j < topic.projects.length; j++) {
-                var project = topic.projects[j];
-                if (project.projectfile == this.project) {
-                    return eval(project.overview_layer[0]);
-                }
-            }
-        }
-    }
-}
 
 var mediaurl = '';
 var suppressEmptyValues = true;

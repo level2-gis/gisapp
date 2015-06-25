@@ -941,7 +941,7 @@ function postLoading() {
                     countryString: projectData.geoNames.countryString,
                     tpl: '<tpl for="."><div class="x-combo-list-item"><h3>{name}</h3>{adminName1} - {countryName}</div></tpl>',
                     continentCode: projectData.geoNames.continentCode,
-                    username: geoNamesUserName
+                    username: projectData.geoNames.userName
                 });
                 //disabling button for resetting search, not needed, not working
                 // var emptySearchFieldButton = new Ext.Button({

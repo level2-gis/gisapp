@@ -71,18 +71,59 @@ if (isset($_SESSION['user_is_logged_in'])) {
 			projectData.client_name = '<?php echo $data->client_name?>';
 			projectData.client_display_name = '<?php echo $data->client_display_name?>';
 
-//			  projectData.base_layers = eval(<?php echo json_encode($data->base_layers)?>);
-//            projectData.extra_layers = eval(<?php //echo json_encode($data->extra_layers)?>//);
-//            projectData.tables_onstart = eval(<?php //echo json_encode($data->tables_onstart)?>//);
-//            projectData.overview_layer = '<?php //echo $data->overview_layer[0]?>//';
-
 			projectData.search = eval(<?php echo json_encode($settings->search)?>);
             projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics)?>);
             projectData.geoNames = eval(<?php echo json_encode($settings->geoNames)?>);
             projectData.gis_projects = eval(<?php echo json_encode($gis_projects)?>);
             projectData.project = '<?php echo $project?>';
 
-			//TODO zrihtaj preko cssja!
+            projectData.setBaseLayers = function () {
+                var bl = eval(<?php echo json_encode($data->base_layers)?>);
+                var baseLayers = [];
+
+                if (bl != null) {
+                    for (var k = 0; k < bl.length; k++) {
+                        baseLayers.push(eval(bl[k]));
+                    }
+                }
+
+                if (baseLayers.length > 0) enableBGMaps = true;
+
+                return baseLayers;
+            };
+
+            projectData.extraLayers = function() {
+                var el = eval(<?php echo json_encode($data->extra_layers)?>);
+                var extraLayers = [];
+
+                if(el != null) {
+                    for (var k = 0; k < el.length; k++) {
+                        extraLayers.push(eval(el[k]));
+                    }
+                }
+
+                if (extraLayers.length > 0) enableExtraLayers = true;
+
+                return extraLayers;
+            };
+
+            projectData.tablesOnStart = function () {
+                var t = eval(<?php echo json_encode($data->tables_onstart)?>);
+                var tablesOnStart = [];
+
+                if (t != null) {
+                    for (var k = 0; k < t.length; k++) {
+                        tablesOnStart.push(t[k]);
+                    }
+                }
+                return tablesOnStart;
+            };
+
+            projectData.overViewLayer = function() {
+                return eval('<?php echo $data->overview_layer[0]?>');
+            };
+
+            //TODO zrihtaj preko cssja!
 			var userLogoImg = '/gisapp/admin/resources/images/user_gray.png';
 
 		</script>
