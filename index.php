@@ -144,7 +144,7 @@ if (isset($_SESSION['user_is_logged_in'])) {
         <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
 		<script type="text/javascript" src="client/site/js/Translations.js?v=20150523"></script>
 		<script type="text/javascript" src="client/site/js/PagingStore.js?v=20140901"></script>
-		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=20141126"></script>
+		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=20150625"></script>
 		<script type="text/javascript" src="client/site/js/Customizations.js?v=20150523"></script>
 		<script type="text/javascript" src="client/site/js/GetUrlParams.js?v=20140901"></script>
 		<script type="text/javascript" src="client/site/js/TriStateTree.js?v=20140901"></script>
@@ -154,7 +154,7 @@ if (isset($_SESSION['user_is_logged_in'])) {
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=20141106"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js?v=20140901"></script>
         <script type="text/javascript" src="client/site/js/LayerActions.js?v=20141126"></script>
-        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=20150523"></script>
+        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=20150625"></script>
 	<style type="text/css">
 	#dpiDetection {
 	  height: 1in;
