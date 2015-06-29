@@ -12,7 +12,7 @@ var TR = {
     loginRememberMeLabel: 'Remember me on this computer',
     loginForgotPasswordLabel: '',
     logoutLabel:'logout',
-    noProject: 'Project doesn\t exist.',
+    noProject: 'Project doesn\'t exist.',
     noProjectText: 'Add correct project name and reload the page.',
     wrongPassword: 'Wrong password.',
     noUser: 'User doesn\'t exist.',
