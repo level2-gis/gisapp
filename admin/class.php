@@ -84,19 +84,19 @@ class OneFileLoginApplication
 
 
         if ($this->getUserLoginStatus()) {
+            $this->showPageLoggedIn();
 
-            // check if superuser wants to register new (etc.)
+        } else {
             if (isset($_GET["action"]) && $_GET["action"] == "register") {
                 $this->doRegistration();
                 $this->showPageRegistration();
             } else {
-                $this->showPageLoggedIn();
-            }
-        } else {
-            $this->showPageLoginForm();
-        }
 
+                $this->showPageLoginForm();
+            }
+        }
     }
+
 
     /**
      * Creates a PDO database connection (in this case to a SQLite flat-file database)
@@ -415,7 +415,7 @@ class OneFileLoginApplication
             $registration_success_state = $query->execute();
 
             if ($registration_success_state) {
-                $this->feedback = "Your account has been created successfully. You can now log in.";
+                $this->feedback = "Your account has been created successfully.";
                 return true;
             } else {
                 $this->feedback = "Sorry, your registration failed. Please go back and try again.";
@@ -448,8 +448,9 @@ class OneFileLoginApplication
         echo 'Hello ' . $_SESSION['user_name'] . ', you are logged in.<br/><br/>';
         echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?action=logout">Log out</a>';
 
-        if ($_SESSION['user_name'] == SUPERUSER)
-            echo '</br><a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">SUPERUSER: Register new account</a>';
+        //TODO cleanup this. Superuser not need to register anymmore
+        //if ($_SESSION['user_name'] == SUPERUSER)
+        //    echo '</br><a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">SUPERUSER: Register new account</a>';
 
 
         echo "<h3> PHP List All Session Variables</h3>";
@@ -479,7 +480,7 @@ class OneFileLoginApplication
         echo '<input type="submit"  name="login" value="Log in" />';
         echo '</form>';
 
-        //echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">Register new account</a>';
+        echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">Register new account</a>';
     }
 
     /**
