@@ -4,8 +4,7 @@
 
 -- Dumped from database version 9.3.9
 -- Dumped by pg_dump version 9.3.9
-
--- This script does not create database!
+-- Started on 2015-06-30 21:55:02 CEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -15,7 +14,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 180 (class 3079 OID 83973)
+-- TOC entry 180 (class 3079 OID 11789)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -32,7 +31,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- TOC entry 181 (class 3079 OID 83978)
+-- TOC entry 181 (class 3079 OID 84763)
 -- Name: intarray; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -51,7 +50,7 @@ COMMENT ON EXTENSION intarray IS 'functions, operators, and index support for 1-
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 203 (class 1255 OID 84089)
+-- TOC entry 239 (class 1255 OID 84874)
 -- Name: check_user_project(text, text); Type: FUNCTION; Schema: public; Owner: pguser
 --
 
@@ -81,7 +80,7 @@ ALTER FUNCTION public.check_user_project(uname text, project text) OWNER TO pgus
 
 --
 -- TOC entry 2123 (class 0 OID 0)
--- Dependencies: 203
+-- Dependencies: 239
 -- Name: FUNCTION check_user_project(uname text, project text); Type: COMMENT; Schema: public; Owner: pguser
 --
 
@@ -89,7 +88,7 @@ COMMENT ON FUNCTION check_user_project(uname text, project text) IS 'IN uname, p
 
 
 --
--- TOC entry 204 (class 1255 OID 84091)
+-- TOC entry 240 (class 1255 OID 84875)
 -- Name: get_project_data(text); Type: FUNCTION; Schema: public; Owner: pguser
 --
 
@@ -122,7 +121,7 @@ ALTER FUNCTION public.get_project_data(project text) OWNER TO pguser;
 
 --
 -- TOC entry 2124 (class 0 OID 0)
--- Dependencies: 204
+-- Dependencies: 240
 -- Name: FUNCTION get_project_data(project text); Type: COMMENT; Schema: public; Owner: pguser
 --
 
@@ -134,7 +133,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 170 (class 1259 OID 84093)
+-- TOC entry 170 (class 1259 OID 84876)
 -- Name: clients; Type: TABLE; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -149,7 +148,7 @@ CREATE TABLE clients (
 ALTER TABLE public.clients OWNER TO pguser;
 
 --
--- TOC entry 171 (class 1259 OID 84099)
+-- TOC entry 171 (class 1259 OID 84882)
 -- Name: clients_id_seq; Type: SEQUENCE; Schema: public; Owner: pguser
 --
 
@@ -173,7 +172,7 @@ ALTER SEQUENCE clients_id_seq OWNED BY clients.id;
 
 
 --
--- TOC entry 172 (class 1259 OID 84101)
+-- TOC entry 172 (class 1259 OID 84884)
 -- Name: layers; Type: TABLE; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -190,7 +189,7 @@ CREATE TABLE layers (
 ALTER TABLE public.layers OWNER TO pguser;
 
 --
--- TOC entry 173 (class 1259 OID 84107)
+-- TOC entry 173 (class 1259 OID 84890)
 -- Name: layers_id_seq; Type: SEQUENCE; Schema: public; Owner: pguser
 --
 
@@ -214,7 +213,7 @@ ALTER SEQUENCE layers_id_seq OWNED BY layers.id;
 
 
 --
--- TOC entry 174 (class 1259 OID 84109)
+-- TOC entry 174 (class 1259 OID 84892)
 -- Name: projects; Type: TABLE; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -232,7 +231,7 @@ CREATE TABLE projects (
 ALTER TABLE public.projects OWNER TO pguser;
 
 --
--- TOC entry 175 (class 1259 OID 84115)
+-- TOC entry 175 (class 1259 OID 84898)
 -- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: pguser
 --
 
@@ -256,7 +255,7 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 
 
 --
--- TOC entry 176 (class 1259 OID 84117)
+-- TOC entry 176 (class 1259 OID 84900)
 -- Name: themes; Type: TABLE; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -269,7 +268,7 @@ CREATE TABLE themes (
 ALTER TABLE public.themes OWNER TO pguser;
 
 --
--- TOC entry 177 (class 1259 OID 84123)
+-- TOC entry 177 (class 1259 OID 84906)
 -- Name: themes_id_seq; Type: SEQUENCE; Schema: public; Owner: pguser
 --
 
@@ -293,7 +292,7 @@ ALTER SEQUENCE themes_id_seq OWNED BY themes.id;
 
 
 --
--- TOC entry 178 (class 1259 OID 84125)
+-- TOC entry 178 (class 1259 OID 84908)
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -312,7 +311,7 @@ CREATE TABLE users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
--- TOC entry 179 (class 1259 OID 84132)
+-- TOC entry 179 (class 1259 OID 84915)
 -- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -336,7 +335,7 @@ ALTER SEQUENCE users_user_id_seq OWNED BY users.user_id;
 
 
 --
--- TOC entry 1968 (class 2604 OID 84134)
+-- TOC entry 1968 (class 2604 OID 84917)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: pguser
 --
 
@@ -344,7 +343,7 @@ ALTER TABLE ONLY clients ALTER COLUMN id SET DEFAULT nextval('clients_id_seq'::r
 
 
 --
--- TOC entry 1969 (class 2604 OID 84135)
+-- TOC entry 1969 (class 2604 OID 84918)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: pguser
 --
 
@@ -352,7 +351,7 @@ ALTER TABLE ONLY layers ALTER COLUMN id SET DEFAULT nextval('layers_id_seq'::reg
 
 
 --
--- TOC entry 1970 (class 2604 OID 84136)
+-- TOC entry 1970 (class 2604 OID 84919)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: pguser
 --
 
@@ -360,7 +359,7 @@ ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq':
 
 
 --
--- TOC entry 1971 (class 2604 OID 84137)
+-- TOC entry 1971 (class 2604 OID 84920)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: pguser
 --
 
@@ -368,7 +367,7 @@ ALTER TABLE ONLY themes ALTER COLUMN id SET DEFAULT nextval('themes_id_seq'::reg
 
 
 --
--- TOC entry 1973 (class 2604 OID 84138)
+-- TOC entry 1973 (class 2604 OID 84921)
 -- Name: user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -376,7 +375,25 @@ ALTER TABLE ONLY users ALTER COLUMN user_id SET DEFAULT nextval('users_user_id_s
 
 
 --
--- TOC entry 2106 (class 0 OID 84101)
+-- TOC entry 2104 (class 0 OID 84876)
+-- Dependencies: 170
+-- Data for Name: clients; Type: TABLE DATA; Schema: public; Owner: pguser
+--
+
+INSERT INTO clients VALUES (1, 'demo', 'DEMO', 1);
+
+
+--
+-- TOC entry 2130 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: clients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: pguser
+--
+
+SELECT pg_catalog.setval('clients_id_seq', 1, false);
+
+
+--
+-- TOC entry 2106 (class 0 OID 84884)
 -- Dependencies: 172
 -- Data for Name: layers; Type: TABLE DATA; Schema: public; Owner: pguser
 --
@@ -396,13 +413,29 @@ SELECT pg_catalog.setval('layers_id_seq', 4, true);
 
 
 --
--- TOC entry 2110 (class 0 OID 84117)
+-- TOC entry 2108 (class 0 OID 84892)
+-- Dependencies: 174
+-- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: pguser
+--
+
+
+
+--
+-- TOC entry 2132 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: pguser
+--
+
+SELECT pg_catalog.setval('projects_id_seq', 1, false);
+
+
+--
+-- TOC entry 2110 (class 0 OID 84900)
 -- Dependencies: 176
 -- Data for Name: themes; Type: TABLE DATA; Schema: public; Owner: pguser
 --
 
 INSERT INTO themes VALUES (1, 'xtheme-blue.css');
-INSERT INTO themes VALUES (2, 'xtheme-gray.css');
 
 
 --
@@ -414,13 +447,34 @@ INSERT INTO themes VALUES (2, 'xtheme-gray.css');
 SELECT pg_catalog.setval('themes_id_seq', 1, false);
 
 
+--
+-- TOC entry 2112 (class 0 OID 84908)
+-- Dependencies: 178
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2134 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_user_id_seq', 1, true);
+
+
+--
+-- TOC entry 1975 (class 2606 OID 84923)
+-- Name: clients_name_key; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
+--
 
 ALTER TABLE ONLY clients
     ADD CONSTRAINT clients_name_key UNIQUE (name);
 
 
 --
--- TOC entry 1977 (class 2606 OID 84142)
+-- TOC entry 1977 (class 2606 OID 84925)
 -- Name: clients_pkey; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -429,7 +483,7 @@ ALTER TABLE ONLY clients
 
 
 --
--- TOC entry 1979 (class 2606 OID 84144)
+-- TOC entry 1979 (class 2606 OID 84927)
 -- Name: layers_layer_name_key; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -438,7 +492,7 @@ ALTER TABLE ONLY layers
 
 
 --
--- TOC entry 1981 (class 2606 OID 84146)
+-- TOC entry 1981 (class 2606 OID 84929)
 -- Name: layers_pkey; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -447,7 +501,7 @@ ALTER TABLE ONLY layers
 
 
 --
--- TOC entry 1983 (class 2606 OID 84148)
+-- TOC entry 1983 (class 2606 OID 84931)
 -- Name: projects_name_key; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -456,7 +510,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- TOC entry 1985 (class 2606 OID 84150)
+-- TOC entry 1985 (class 2606 OID 84933)
 -- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -465,7 +519,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- TOC entry 1987 (class 2606 OID 84152)
+-- TOC entry 1987 (class 2606 OID 84935)
 -- Name: themes_name_key; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -474,7 +528,7 @@ ALTER TABLE ONLY themes
 
 
 --
--- TOC entry 1989 (class 2606 OID 84154)
+-- TOC entry 1989 (class 2606 OID 84937)
 -- Name: themes_pkey; Type: CONSTRAINT; Schema: public; Owner: pguser; Tablespace: 
 --
 
@@ -483,7 +537,7 @@ ALTER TABLE ONLY themes
 
 
 --
--- TOC entry 1991 (class 2606 OID 84156)
+-- TOC entry 1991 (class 2606 OID 84939)
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -492,7 +546,7 @@ ALTER TABLE ONLY users
 
 
 --
--- TOC entry 1993 (class 2606 OID 84158)
+-- TOC entry 1993 (class 2606 OID 84941)
 -- Name: users_user_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -501,7 +555,7 @@ ALTER TABLE ONLY users
 
 
 --
--- TOC entry 1994 (class 2606 OID 84159)
+-- TOC entry 1994 (class 2606 OID 84942)
 -- Name: clients_theme_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: pguser
 --
 
@@ -510,7 +564,7 @@ ALTER TABLE ONLY clients
 
 
 --
--- TOC entry 1995 (class 2606 OID 84164)
+-- TOC entry 1995 (class 2606 OID 84947)
 -- Name: projects_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: pguser
 --
 
@@ -519,7 +573,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- TOC entry 1996 (class 2606 OID 84169)
+-- TOC entry 1996 (class 2606 OID 84952)
 -- Name: projects_overview_layer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: pguser
 --
 
@@ -537,4 +591,11 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2015-06-30 21:55:02 CEST
+
+--
+-- PostgreSQL database dump complete
+--
 
