@@ -497,14 +497,14 @@ class OneFileLoginApplication
         echo '<h2>Registration</h2>';
 
         echo '<form method="post" action="' . $_SERVER['SCRIPT_NAME'] . '?action=register" name="registerform">';
-        echo '<label for="login_input_username">Username (only letters and numbers, 2 to 64 characters)</label>';
-        echo '<input id="login_input_username" type="text" pattern="[a-zA-Z0-9]{2,64}" name="user_name" required />';
-        echo '<label for="login_input_email">User\'s email</label>';
-        echo '<input id="login_input_email" type="email" name="user_email" required />';
-        echo '<label for="login_input_password_new">Password (min. 6 characters)</label>';
-        echo '<input id="login_input_password_new" class="login_input" type="password" name="user_password_new" pattern=".{6,}" required autocomplete="off" />';
-        echo '<label for="login_input_password_repeat">Repeat password</label>';
-        echo '<input id="login_input_password_repeat" class="login_input" type="password" name="user_password_repeat" pattern=".{6,}" required autocomplete="off" />';
+        echo '<label for="login_input_username">Username (only letters and numbers, 2 to 64 characters)</label></br>';
+        echo '<input id="login_input_username" type="text" pattern="[a-zA-Z0-9]{2,64}" name="user_name" required /></br>';
+        echo '<label for="login_input_email">User\'s email</label></br>';
+        echo '<input id="login_input_email" type="email" name="user_email" required /></br>';
+        echo '<label for="login_input_password_new">Password (min. 6 characters)</label></br>';
+        echo '<input id="login_input_password_new" class="login_input" type="password" name="user_password_new" pattern=".{6,}" required autocomplete="off" /></br>';
+        echo '<label for="login_input_password_repeat">Repeat password</label></br>';
+        echo '<input id="login_input_password_repeat" class="login_input" type="password" name="user_password_repeat" pattern=".{6,}" required autocomplete="off" /></br></br>';
         echo '<input type="submit" name="register" value="Register" />';
         echo '</form>';
 
