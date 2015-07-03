@@ -76,8 +76,6 @@ end;
 $_$;
 
 
-ALTER FUNCTION public.check_user_project(uname text, project text) OWNER TO pguser;
-
 --
 -- TOC entry 2123 (class 0 OID 0)
 -- Dependencies: 239
@@ -117,7 +115,6 @@ end;
 $_$;
 
 
-ALTER FUNCTION public.get_project_data(project text) OWNER TO pguser;
 
 --
 -- TOC entry 2124 (class 0 OID 0)
@@ -145,7 +142,6 @@ CREATE TABLE clients (
 );
 
 
-ALTER TABLE public.clients OWNER TO pguser;
 
 --
 -- TOC entry 171 (class 1259 OID 84882)
@@ -160,7 +156,6 @@ CREATE SEQUENCE clients_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.clients_id_seq OWNER TO pguser;
 
 --
 -- TOC entry 2125 (class 0 OID 0)
@@ -186,7 +181,6 @@ CREATE TABLE layers (
 );
 
 
-ALTER TABLE public.layers OWNER TO pguser;
 
 --
 -- TOC entry 173 (class 1259 OID 84890)
@@ -200,8 +194,6 @@ CREATE SEQUENCE layers_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.layers_id_seq OWNER TO pguser;
 
 --
 -- TOC entry 2126 (class 0 OID 0)
@@ -228,7 +220,6 @@ CREATE TABLE projects (
 );
 
 
-ALTER TABLE public.projects OWNER TO pguser;
 
 --
 -- TOC entry 175 (class 1259 OID 84898)
@@ -243,7 +234,6 @@ CREATE SEQUENCE projects_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.projects_id_seq OWNER TO pguser;
 
 --
 -- TOC entry 2127 (class 0 OID 0)
@@ -265,7 +255,6 @@ CREATE TABLE themes (
 );
 
 
-ALTER TABLE public.themes OWNER TO pguser;
 
 --
 -- TOC entry 177 (class 1259 OID 84906)
@@ -280,7 +269,6 @@ CREATE SEQUENCE themes_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.themes_id_seq OWNER TO pguser;
 
 --
 -- TOC entry 2128 (class 0 OID 0)
