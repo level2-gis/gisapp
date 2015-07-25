@@ -128,20 +128,13 @@ function exportHandler(item) {
     var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
     var myFormat = item.container.menuItemId;
 
-    switch(myFormat) {
-        case 'SHP':
-            exportData(myLayerName,myFormat);
-            break;
-        case 'DXF':
-            exportData(myLayerName,myFormat);
-            break;
-        case 'CSV':
-            exportData(myLayerName,myFormat);
-            break;
-        default :
-            Ext.Msg.alert ('Error',myFormat+' not supported yet.');
-            break;
+    var exportExtent = item.ownerCt.getComponent('currentExtent');
 
+    if(exportExtent.checked==false) {
+        Ext.Msg.alert ('Error','Sorry, currently exporting only with map extent. Try again!');
+        exportExtent.setChecked(true);
+    } else {
+        exportData(myLayerName, myFormat);
     }
 }
 

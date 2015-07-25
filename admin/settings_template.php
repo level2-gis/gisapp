@@ -9,8 +9,7 @@
     //project location
     define('PROJECT_PATH','/home/user/GIS/projects/');
 
-    //superuser, has options for registering new users
-    //don't change this!!
+    //superuser, currently irrelevant
     define('SUPERUSER','gisadmin');
 
     //other settings

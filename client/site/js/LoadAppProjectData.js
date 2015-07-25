@@ -16,7 +16,7 @@ var grayLayerNameWhenOutsideScale = true;
 var showMetaDataInLegend = true;
 var enableHoverPopup = false;
 var useGeodesicMeasurement = true;
-var useGeoNamesSearchBox = true;
+var useGeoNamesSearchBox = projectData.geoNames == null ? false : true;
 var iconDirectory = 'client/site/gis_icons/';
 
 //URL for custom search scripts

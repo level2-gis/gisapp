@@ -1025,7 +1025,7 @@ function postLoading() {
         // if (wmsMapName in mapSearchPanelConfigs) {
         // searchPanelConfigs = mapSearchPanelConfigs[wmsMapName];
         // }
-        if (searchPanelConfigs.length > 0) {
+        if (searchPanelConfigs != null && searchPanelConfigs.length > 0) {
             // add QGIS search panels
             var searchTabPanel = Ext.getCmp('SearchTabPanel');
             for (var i = 0; i < searchPanelConfigs.length; i++) {
