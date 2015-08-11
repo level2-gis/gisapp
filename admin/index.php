@@ -1,8 +1,8 @@
 <?php
 
-require_once("class.php");
+require_once("class.Login.php");
 
-$login = new OneFileLoginApplication();
+$login = new Login();
 $login->runApplication();
 
 $login->feedback

@@ -15,8 +15,9 @@
  */
 
 require_once("settings.php");
+require_once("class.GisAppLoader.php");
 
-class OneFileLoginApplication
+class Login
 {
 
 
@@ -41,12 +42,9 @@ class OneFileLoginApplication
      */
     public function __construct()
     {
-        if (php_uname('s') != 'Windows NT') {
-            $this->performMinimumRequirementsCheck();
-        }
-        //if ($this->performMinimumRequirementsCheck()) {
-        //    //$this->runApplication();
-        //}
+//        if ($this->performMinimumRequirementsCheck()) {
+//            $this->runApplication();
+//        }
     }
 
     /**
@@ -208,124 +206,88 @@ class OneFileLoginApplication
      */
     private function checkPasswordCorrectnessAndLogin()
     {
-        // remember: the user can log in with username or email address
-        $sql = 'SELECT user_name, user_email, user_password_hash
+        $user = $_POST['user_name'];
+        $project = $_POST['project'];
+        $email = "";
+        $pass = false;
+
+        $gisApp = new GisAppLoader($user, $project, $this->db_connection);
+
+        //check if we have guest user
+        if (strtolower($user == 'guest')) {
+            //no user and password verify
+            $pass = true;
+        } else {
+            // remember: the user can log in with username or email address
+            $sql = 'SELECT user_name, user_email, user_password_hash
                 FROM users
                 WHERE user_name = :user_name OR user_email = :user_name
                 LIMIT 1';
-        $query = $this->db_connection->prepare($sql);
-        $query->bindValue(':user_name', $_POST['user_name']);
-        $query->execute();
-
-        // Btw that's the weird way to get num_rows in PDO with SQLite:
-        // if (count($query->fetchAll(PDO::FETCH_NUM)) == 1) {
-        // Holy! But that's how it is. $result->numRows() works with SQLite pure, but not with SQLite PDO.
-        // This is so crappy, but that's how PDO works.
-        // As there is no numRows() in SQLite/PDO (!!) we have to do it this way:
-        // If you meet the inventor of PDO, punch him. Seriously.
-        $result_row = $query->fetchObject();
-        if ($result_row) {
-            // using PHP 5.5's password_verify() function to check password
-            // on windows there is no check since it is developing setup with older version
-            if (php_uname('s') == 'Windows NT') {
-                $pass = true;
-            } else {
-                $pass = password_verify($_POST['user_password'], $result_row->user_password_hash);
-            }
-            if ($pass) {
-                //aditional check if project and user exists and user has permission to use project
-                $check = $this->checkUserProject();
-                if ($check == 'OK') {
-                    //get additional project info
-                    $project_data = $this->getProjectDataFromDB($_POST['project']);
-
-                    //get all GIS projects for user for themeswitcher
-                    $gis_projects = $this->getGisProjectsFromDB($_POST['user_name']);
-
-                    //search configs
-                    $project_settings = $this->getProjectConfigs($_POST['project']);
-                    if ($project_settings !== false) {
-                        // write user data into PHP SESSION [a file on your server]
-                        $_SESSION['user_name'] = $result_row->user_name;
-                        $_SESSION['user_email'] = $result_row->user_email;
-                        $_SESSION['user_is_logged_in'] = true;
-                        $_SESSION['project'] = $_POST['project'];
-                        $_SESSION['data'] = $project_data;
-                        $_SESSION['settings'] = $project_settings;
-                        $_SESSION['gis_projects'] = $gis_projects;
-                        $this->user_is_logged_in = true;
-
-                        //update lastlogin and count
-                        $this->db_connection->exec("UPDATE users SET last_login=now(),count_login = count_login + 1 WHERE user_name='" . $result_row->user_name . "';");
-
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    $this->feedback = $check;
-                }
-            } else {
-                $this->feedback = 'TR.wrongPassword';
-            }
-        } else {
-            $this->feedback = 'TR.noUser';
-        }
-        // default return
-        return false;
-    }
-
-    //uros
-    private function checkUserProject()
-    {
-        $sql = 'SELECT check_user_project(:user_name,:project);';
-        $query = $this->db_connection->prepare($sql);
-        $query->bindValue(':user_name', $_POST['user_name']);
-        $query->bindValue(':project', $_POST['project']);
-        $query->execute();
-        $result_row = $query->fetchObject();
-        if ($result_row) {
-            return $result_row->check_user_project;
-        } else
-            return 'TR.loginFailMessage';
-    }
-
-    //uros
-    private function getProjectDataFromDB($project)
-    {
-        if ($this->createDatabaseConnection()) {
-            $sql = 'SELECT row_to_json(get_project_data(:project)) AS data;';
             $query = $this->db_connection->prepare($sql);
-            $query->bindValue(':project', $project);
+            $query->bindValue(':user_name', $user);
             $query->execute();
+
+            // Btw that's the weird way to get num_rows in PDO with SQLite:
+            // if (count($query->fetchAll(PDO::FETCH_NUM)) == 1) {
+            // Holy! But that's how it is. $result->numRows() works with SQLite pure, but not with SQLite PDO.
+            // This is so crappy, but that's how PDO works.
+            // As there is no numRows() in SQLite/PDO (!!) we have to do it this way:
+            // If you meet the inventor of PDO, punch him. Seriously.
             $result_row = $query->fetchObject();
             if ($result_row) {
-                return $result_row->data;
-            } else
-                return 'TR.loginFailMessage';
+                // using PHP 5.5's password_verify() function to check password
+                $pass = password_verify($_POST['user_password'], $result_row->user_password_hash);
+                $email = $result_row->user_email;
+            } else {
+                $this->feedback = 'TR.noUser';
+                return false;
+            }
         }
-    }
 
-    //uros
-    public function getGisProjectsFromDB($user)
-    {
-        return json_encode (new stdClass); //empty json object
-    }
 
-    //uros
-    private function getProjectConfigs($project)
-    {
-        if (file_exists(PROJECT_PATH . $project . '.json')) {
-            try {
-                $filestr = file_get_contents(PROJECT_PATH . $project . '.json', true);
-                return $filestr;
-            } catch (Exception $e) {
-                $this->feedback = $e->getMessage();
+        if ($pass) {
+            //aditional check if project and user exists and user has permission to use project
+            $check = $gisApp->checkUserProject();
+            if ($check == 'OK') {
+                //get additional project info
+                $project_data = $gisApp->getProjectDataFromDB();
+
+                //get all GIS projects for user for themeswitcher
+                $gis_projects = $gisApp->getGisProjectsFromDB();
+
+                //search configs
+                $project_settings = $gisApp->getProjectConfigs();
+                if ($project_settings !== false) {
+                    // write user data into PHP SESSION
+                    $_SESSION['user_name'] = $user;
+                    $_SESSION['user_email'] = $email;
+                    $_SESSION['user_is_logged_in'] = true;
+                    $_SESSION['project'] = $project;
+                    $_SESSION['data'] = $project_data;
+                    $_SESSION['settings'] = $project_settings;
+                    $_SESSION['gis_projects'] = $gis_projects;
+                    $this->user_is_logged_in = true;
+
+                    //update lastlogin and count
+                    if(!$user) {
+                        $this->db_connection->exec("UPDATE users SET last_login=now(),count_login = count_login + 1 WHERE user_name='" . $user . "';");
+                    }
+
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                $this->feedback = $check;
                 return false;
             }
         } else {
-            return json_encode (new stdClass); //empty json object
+            $this->feedback = 'TR.wrongPassword';
+            return false;
         }
+
+        // default return
+        return false;
     }
 
     /**
@@ -350,11 +312,14 @@ class OneFileLoginApplication
             && !empty($_POST['user_password_new'])
             && !empty($_POST['user_password_repeat'])
             && ($_POST['user_password_new'] === $_POST['user_password_repeat'])
+            && strtolower($_POST['user_name']) != 'guest'
         ) {
             // only this case return true, only this case is valid
             return true;
         } elseif (empty($_POST['user_name'])) {
             $this->feedback = "Empty Username";
+        } elseif (strtolower($_POST['user_name']) == 'guest') {
+            $this->feedback = "Guest is not allowed username";
         } elseif (empty($_POST['user_password_new']) || empty($_POST['user_password_repeat'])) {
             $this->feedback = "Empty Password";
         } elseif ($_POST['user_password_new'] !== $_POST['user_password_repeat']) {
@@ -512,5 +477,3 @@ class OneFileLoginApplication
     }
 }
 
-// run the application
-$application = new OneFileLoginApplication();

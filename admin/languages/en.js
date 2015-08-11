@@ -1,11 +1,12 @@
 var TR = {
     appName: 'Spatial info. system - ',
     loginTitle: 'Login',
-    loginMessage: 'Access to this location is restricted to authorized users only.' +
+    loginMessage: 'Access for authorized users.' +
         '<br />Please type your username and password.',
     loginFailMessage: 'Unable to log in',
     loginWaitMessage: 'Please wait...',
     loginButton: 'Login',
+    guestButton: 'Guest',
     loginUsernameLabel: 'Username',
     loginPasswordLabel: 'Password',
     loginLanguageLabel: 'Language',
@@ -17,6 +18,7 @@ var TR = {
     wrongPassword: 'Wrong password.',
     noUser: 'User doesn\'t exist.',
     noPermission: 'You don\'t have permissions to use this project.',
+    noPublicAccess: 'Public access is not allowed with this project.',
     clearFilter: 'Clear all filters',
     editData: 'Edit data',
     editDisabled: 'Editing disabled',

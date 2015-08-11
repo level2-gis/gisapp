@@ -26,6 +26,7 @@ Ext.ux.form.LoginDialog = function (config) {
     var css = '.ux-auth-header-icon {background: url("' + this.basePath + '/small/locked.png") 0 4px no-repeat !important;}'
         + '.ux-auth-header {background:transparent url("' + this.basePath + '/large/lock.png") no-repeat center right;padding:10px;padding-right:45px;font-weight:bold;}'
         + '.ux-auth-login {background-image: url("' + this.basePath + '/medium/key.png") !important;}'
+        + '.ux-auth-guest {background-image: url("' + this.basePath + '/medium/guest.png") !important;}'
         + '.ux-auth-close {background-image: url("' + this.basePath + '/medium/close.png") !important;}'
         + '.ux-auth-warning {background:url("'+ this.basePath + '/small/warning.png") no-repeat center left; padding: 2px; padding-left:20px; font-weight:bold;}'
         + '.ux-auth-header .error {color:red;}'
@@ -203,6 +204,14 @@ Ext.ux.form.LoginDialog = function (config) {
 
     // Default buttons and keys
     var buttons = [{
+        //id          : this._guestButtonId,
+        text        : this.guestButton,
+        iconCls     : 'ux-auth-guest',
+        width       : 90,
+        handler     : this.guestSubmit,
+        scale       : 'medium',
+        scope       : this
+    },{
         id          : this._loginButtonId,
         text        : this.loginButton,
         iconCls     : 'ux-auth-login',
@@ -304,6 +313,11 @@ Ext.extend (Ext.ux.form.LoginDialog, Ext.util.Observable, {
      * @type {String}
      */
     loginButton : 'Login',
+
+
+    guestButton : 'Guest',
+
+
 
     /**
      * Cancel button
@@ -545,6 +559,14 @@ Ext.extend (Ext.ux.form.LoginDialog, Ext.util.Observable, {
         }
     },
 
+    guestSubmit : function () {
+        var form = this._formPanel.getForm();
+        form.setValues({
+            user_name: "guest",
+            user_password: "guest"
+        });
+        this.submit();
+    },
 
     /**
      * Submit login details to the server
@@ -629,6 +651,6 @@ Ext.extend (Ext.ux.form.LoginDialog, Ext.util.Observable, {
 				
 		this.setMessage (this.message + '<br /><span class="error">' + msg + '</span>');
 		this.fireEvent('failure', this, action, msg);
-	},
+	}
 
 });

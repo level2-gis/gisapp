@@ -1,11 +1,12 @@
 var TR = {
 	appName: 'Prostorski info. sistem - ',
 	loginTitle: 'Prijava',
-	loginMessage: 'Dostop je omogočen samo pooblaščenim osebam.' +
+	loginMessage: 'Dostop za pooblaščene osebe.' +
 			'<br />Prosimo vnesite uporabniško ime in geslo.',
 	loginFailMessage: 'Prijava ni uspela',
 	loginWaitMessage: 'Prosimo počakajte...',
 	loginButton: 'Prijava',
+    guestButton: 'Gost',
 	loginUsernameLabel: 'uporabniško ime',
 	loginPasswordLabel: 'geslo',
 	loginLanguageLabel: 'jezik',
@@ -17,6 +18,7 @@ var TR = {
 	wrongPassword: 'Napačno geslo.',
 	noUser: 'Uporabnik ne obstaja.',
 	noPermission: 'Nimate pravic za uporabo projekta',
+    noPublicAccess: 'Javni dostop ni omogočen za ta projekt.',
     clearFilter: 'Pobriši vse filtre',
     editData: 'Uredi podatke',
     editDisabled: 'Urejanje onemogočeno',

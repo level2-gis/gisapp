@@ -6,7 +6,7 @@
  * Time: 16:35
  */
 
-require_once("class.php");
+require_once("class.Login.php");
 
 if(isset($_REQUEST['user'])) {
     $user = $_REQUEST['user'];
@@ -15,7 +15,7 @@ else {
     die('No user!');
 }
 
-$app = new OneFileLoginApplication();
+$app = new Login();
 
 $projects = $app->getGisProjectsFromDB($user);
 

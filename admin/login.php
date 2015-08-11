@@ -4,9 +4,9 @@ $server_os = php_uname('s');
 
 session_start();
 
-require_once("class.php");
+require_once("class.Login.php");
 
-$login = new OneFileLoginApplication();
+$login = new Login();
 
 $pp='';
 if (isset($_SESSION['project'])) {

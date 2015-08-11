@@ -212,7 +212,7 @@ else {
 			GLOBAL_SERVER_OS = '<?php echo $server_os?>';
 		</script>
 		
-		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js"></script>
+		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=20150811"></script>
 
 		<script type="text/javascript" src="admin/logindialog/js/overrides.js"></script>
 
@@ -220,8 +220,8 @@ else {
         <script type="text/javascript" src="admin/logindialog/js/plugins/virtualkeyboard.js"></script>
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.Crypto.SHA1.js"></script>
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.IconCombo.js"></script>
-		<script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.LoginDialog.js"></script>
-        <script type="text/javascript" src="admin/logindialog/js/login.js"></script>
+		<script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.LoginDialog.js?v=20150811"></script>
+        <script type="text/javascript" src="admin/logindialog/js/login.js?v=20150811"></script>
 				
 		</head>
 		<body></body>
