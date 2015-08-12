@@ -42,6 +42,8 @@ class Login
      */
     public function __construct()
     {
+        $this->performMinimumRequirementsCheck();
+        
 //        if ($this->performMinimumRequirementsCheck()) {
 //            $this->runApplication();
 //        }
