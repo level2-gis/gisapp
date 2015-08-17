@@ -27,7 +27,7 @@ Fully translated
 * Slovenian
 
 Partial translate
-* German (look at #7)
+* German ([look](gisapp/issues/7))
 
 New translation
 Read this **[page](../../wiki/6.-Translations)**
