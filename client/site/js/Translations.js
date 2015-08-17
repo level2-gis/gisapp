@@ -1657,35 +1657,35 @@ printMapDisabledTooltipString["pl"] = "Drukowanie zablokowane - żaden szablon n
 
 //Send permalink
 var sendPermalinkTooltipString = new Array();
-sendPermalinkTooltipString["en"] = "Email a link to this map";
-sendPermalinkTooltipString["es"] = "Email a link to this map"; //FIXME
-sendPermalinkTooltipString["de"] = "Einen Link auf diese Karte per Email verschicken";
-sendPermalinkTooltipString["fr"] = "Partager le lien de cette carte";
-sendPermalinkTooltipString["it"] = "Inviare un'email con un collegamento a questa mappa";
-sendPermalinkTooltipString["pt_PT"] = "Enviar mapa através E-Mail";
-sendPermalinkTooltipString["uk"] = "Email a link to this map"; //FIXME
-sendPermalinkTooltipString["hu"] = "Email egy linkkel erre a térképre";
-sendPermalinkTooltipString["ro"] = "Trimite un link către această hartă";
-sendPermalinkTooltipString["ru"] = "Послать ссылку на карту по E-mail";
-sendPermalinkTooltipString["sl"] = "pošiljanje povezave na trenutno karto po e-pošti";
-sendPermalinkTooltipString["nl"] = "Email een link naar deze kaart";
-sendPermalinkTooltipString["pl"] = "Udostępnij łącze do mapy przez e-mail";
+sendPermalinkTooltipString["en"] = "Create permalink to current map";
+sendPermalinkTooltipString["es"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["de"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["fr"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["it"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["pt_PT"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["uk"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["hu"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["ro"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["ru"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["sl"] = "povezava na trenutno karto";
+sendPermalinkTooltipString["nl"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["pl"] = "Create permalink to current map"; //FIXME
 
 //Send permalink
 var sendPermalinkLinkFromString = new Array();
-sendPermalinkLinkFromString["en"] = "Link from ";
-sendPermalinkLinkFromString["es"] = "Link from "; //FIXME
-sendPermalinkLinkFromString["de"] = "Link von ";
-sendPermalinkLinkFromString["fr"] = "Lien de ";
-sendPermalinkLinkFromString["it"] = "Collegamento da ";
-sendPermalinkLinkFromString["pt_PT"] = "Link de ";
-sendPermalinkLinkFromString["uk"] = "Link from "; //FIXME
-sendPermalinkLinkFromString["hu"] = "Link from ";
-sendPermalinkLinkFromString["ro"] = "Link de la ";
-sendPermalinkLinkFromString["ru"] = "Ссылка из ";
-sendPermalinkLinkFromString["sl"] = "povezava od ";
-sendPermalinkLinkFromString["nl"] = "Link van ";
-sendPermalinkLinkFromString["pl"] = "Łącze do mapy z ";
+sendPermalinkLinkFromString["en"] = "Link to current map";
+sendPermalinkLinkFromString["es"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["de"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["fr"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["it"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["pt_PT"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["uk"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["hu"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["ro"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["ru"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["sl"] = "Povezava do trenutne karte";
+sendPermalinkLinkFromString["nl"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["pl"] = "Link to current map"; //FIXME
 
 //Show Help
 var showHelpTooltipString = new Array();

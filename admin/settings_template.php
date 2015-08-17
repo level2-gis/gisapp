@@ -15,4 +15,5 @@
     //other settings
     define('OGR2OGR','ogr2ogr');
 	define('TEMP_PATH','/var/tmp/');
+    define('GISAPPURL','/gisapp/');
 ?>

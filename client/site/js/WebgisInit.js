@@ -210,8 +210,7 @@ function postLoading() {
     //set root node to active layer of layertree
     layerTree.selectPath(layerTree.root.firstChild.getPath());
 
-    //TODO UROS check permalinkparams comment out
-    //applyPermalinkParams();
+    applyPermalinkParams();
 
     //now set all visible layers and document/toolbar title
     //var layerNode;
@@ -2042,8 +2041,8 @@ function createPermalink(){
     if (!norewrite){
         var servername = location.href.split(/\/+/)[1];
         permalink = "http://"+servername;
-        if (gis_projects) {
-            permalink += gis_projects.path;
+        if (projectData.gis_projects) {
+            permalink += projectData.gis_projects.path;
         }
         else {
             permalink += "/";
@@ -2091,8 +2090,12 @@ function createPermalink(){
         permalinkParams.initialLayerOrder = layerOrderPanel.orderedLayers().toString();
     }
 
+    //language
+    permalinkParams.lang = lang;
+
     // selection
-    permalinkParams.selection = thematicLayer.params.SELECTION;
+    if(typeof(thematicLayer.params.SELECTION) != 'undefined')
+        permalinkParams.selection = thematicLayer.params.SELECTION;
 
     if (permaLinkURLShortener) {
         permalink = encodeURIComponent(permalink + decodeURIComponent(Ext.urlEncode(permalinkParams)));
@@ -2153,15 +2156,15 @@ function applyPermalinkParams() {
         //see if project is defined in GIS ProjectListing
         //and has an opacities property
         //TODO UROS: tule brezveze zanka da primerja z project titlom, ker imam že povezavo na projekt alias=projectFile
-        if (gis_projects) {
-            for (var i=0;i<gis_projects.topics.length;i++) {
-                for (var j=0;j<gis_projects.topics[i].projects.length;j++) {
-                    if (gis_projects.topics[i].projects[j].name == layerTree.root.firstChild.text) {
-                        opacities = gis_projects.topics[i].projects[j].opacities;
-                    }
-                }
-            }
-        }
+        //if (projectData.gis_projects) {
+        //    for (var i=0;i<projectData.gis_projects.topics.length;i++) {
+        //        for (var j=0;j<projectData.gis_projects.topics[i].projects.length;j++) {
+        //            if (projectData.gis_projects.topics[i].projects[j].name == layerTree.root.firstChild.text) {
+        //                opacities = projectData.gis_projects.topics[i].projects[j].opacities;
+        //            }
+        //        }
+        //    }
+        //}
     }
     if (opacities) {
         for (layer in opacities) {
@@ -2302,17 +2305,23 @@ function openPermaLink(permalink) {
     //var mailWindow = window.open(mailToText);
     //if (mailWindow){
     //    mailWindow.close();
-    if (win){
-        win.close();
+
+    if (typeof(PermaLinkWin) != 'undefined'){
+        PermaLinkWin.close();
     }
 
-    var win = new Ext.Window({
-        title: sendPermalinkLinkFromString[lang]+titleBarText+layerTree.root.firstChild.text,
-        html: permalink,
-        width: 200
+    PermaLinkWin = new Ext.Window({
+        title: sendPermalinkLinkFromString[lang],    //+titleBarText+layerTree.root.firstChild.text,
+        width: 200,
+        layout: 'fit',
+        items: [{
+            xtype: 'textarea',
+            grow: true,
+            value: permalink,
+            anchor: '100%',
+            selectOnFocus: true
+        }]
     }).show();
-
-    //} // can be null, if e.g. popus are blocked
 }
 
 function receiveShortPermalinkFromDB(result, request) {

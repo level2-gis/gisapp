@@ -8,7 +8,7 @@
  * @version 1.0, 05/03/2009 - ExtJS 3.x
  * @version 1.1, 07/18/2009 - ExtJS 3.x
  *
- * Uros 28/04/2014: added extraparam, TODO languages in separate file+default language override property
+ * Uros : added extraparam, language value parameter, guest access, changelanguage
  */
 
 Ext.namespace('Ext.ux.form');
@@ -173,12 +173,23 @@ Ext.ux.form.LoginDialog = function (config) {
 					                ]
             }),
             valueField: 'languageCode',
-            value: GLOBAL_LANG,
+            value: this.language,
             displayField: 'languageName',
             iconClsField: 'countryFlag',
             triggerAction: 'all',
             editable: false,
-            mode: 'local'
+            mode: 'local',
+            listeners: {
+                select: function(combo, record, index) {
+                    //TODO fix this, not OK, must be generic look extraparamvalue
+                    if (this.value != this.originalValue) {
+                        urlParams.lang = this.value;
+                        var startParams = Ext.urlEncode(urlParams);
+
+                        window.location.href = map + "?" + startParams;
+                    }
+                }
+            }
         }, {
             xtype       : 'checkbox',
             id          : this._rememberMeId,
@@ -381,6 +392,14 @@ Ext.extend (Ext.ux.form.LoginDialog, Ext.util.Observable, {
      * @type {String}
      */
     languageField : 'lang',
+
+
+    /**
+     * Selected language (2 letter code)
+     *
+     * @type {String}
+     */
+    language : 'en',
 
     /**
      * RememberMe field label

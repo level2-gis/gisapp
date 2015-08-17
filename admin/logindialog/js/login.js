@@ -3,7 +3,8 @@ var urlString = "";
 var map = "";
 var urlParams = {};
 var guest = false;
-var langsel = 'en'; //default
+var langsel = GLOBAL_LANG; //default
+var startParams = "";
 
 if (document.documentURI) {
 	//all browsers except older IE
@@ -60,11 +61,15 @@ else {
                         var result = Ext.util.JSON.decode(response.responseText);
 
                         if(result.success) {
+
+                            urlParams.lang = langsel;
+                            startParams = Ext.urlEncode(urlParams);
+
                             if(GLOBAL_SERVER_OS == 'Windows NT') {
-                                window.location.href = "index.php?map=" + fullPath + "&lang="+langsel;
+                                window.location.href = "index.php?map=" + fullPath + "&"+startParams;
                             }
                             else {
-                                window.location.href = map + "?lang="+langsel;
+                                window.location.href = map + "?" + startParams;
                             }
                         }
                         else {
@@ -89,6 +94,7 @@ else {
                     extraParamField: 'project',
                     extraParamValue: map,
                     enableVirtualKeyboard: true,
+                    language: langsel,
                     onSuccess : function (form, action) {
                         if (this.fireEvent('success', this, action)) {
                             // enable buttons
@@ -97,12 +103,16 @@ else {
                                 Ext.getCmp(this._cancelButtonId).enable();
                             }
 
-                            var langsel = form.items.items[2].value;
+                            //TODO fix this, bad practice
+                            langsel = form.items.items[2].value;
+                            urlParams.lang = langsel;
+                            startParams = Ext.urlEncode(urlParams);
+
                             if(GLOBAL_SERVER_OS == 'Windows NT') {
-                                window.location.href = "index.php?map=" + fullPath + "&lang="+langsel;
+                                window.location.href = "index.php?map=" + fullPath + "&"+startParams;
                             }
                             else {
-                                window.location.href = map + "?lang="+langsel;
+                                window.location.href = map + "?"+startParams;
                             }
                             this.hide();
                         }

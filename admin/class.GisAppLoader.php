@@ -52,7 +52,7 @@ class GisAppLoader
 
     public function getGisProjectsFromDB()
     {
-        return json_encode(new stdClass); //empty json object
+        return json_encode(array('path' => GISAPPURL));
     }
 
     public function getProjectConfigs()
@@ -69,5 +69,4 @@ class GisAppLoader
             return json_encode(new stdClass); //empty json object
         }
     }
-
 }

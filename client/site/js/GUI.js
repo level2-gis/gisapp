@@ -302,7 +302,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							enableToggle: false,
 							allowDepress: false,
 							scale: 'medium',
-							icon: iconDirectory+'mActionMailSend.png',
+							icon: iconDirectory+'mActionPermalink.png',
 							tooltipType: 'qtip',
 							tooltip: sendPermalinkTooltipString[lang],
 							id: 'SendPermalink'
