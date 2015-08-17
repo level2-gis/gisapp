@@ -29,8 +29,7 @@ Fully translated
 Partial translate
 * German ([look](https://github.com/uprel/gisapp/issues/7))
 
-New translation
-Read this **[page](../../wiki/6.-Translations)**
+Read this **[page](../../wiki/6.-Translations)** for new translation
 
 ##Contributing
 You are welcome to contribute to the project by testing, translating, submitting code, documenting... 
