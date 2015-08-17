@@ -1,5 +1,5 @@
 Extended QGIS Web Client (EQWC)
-======
+===============================
 
 This is modified and extended version of **[QGIS Web client](https://github.com/qgis/QGIS-Web-Client)**
 
@@ -15,34 +15,27 @@ This is modified and extended version of **[QGIS Web client](https://github.com/
 
 **[Longer Description](http://level2.si/index.php/2015/06/14/whats-new-in-extended-qgis-web-client/)**
 
-SETUP
-======
+##Setup
 Read **[Wiki](../../wiki)**
 
-DEMO
-======
+##Demo
 Visit **[Demo by Level2](http://level2.si/gisapp/eu_demo)**
 
-TRANSLATIONS
-======
-##Fully translated
+##Translations
+Fully translated
 * English
 * Slovenian
 
-##Partial translate
+Partial translate
 * German (look at #7)
 
-##New translation
+New translation
 Read this **[page](../../wiki/6.-Translations)**
 
-CONTRIBUTING
-======
+##Contributing
 You are welcome to contribute to the project by testing, translating, submitting code, documenting... 
 Read this [tutorial about making changes to repositories](https://help.github.com/articles/fork-a-repo/).
 
-CONTACT
-======
+##Contact
 **Uros Preloznik**<br>
 uros@level2.si
-
-
