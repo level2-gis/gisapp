@@ -1,3 +1,10 @@
+/**
+ * German translation for administration part of Extended Qgis Web Client
+ *
+ * Translators:
+ *
+ * Date:
+ */
 var TR = {
     appName: 'Spatial info. system - ',
     loginTitle: 'Login',
@@ -28,4 +35,4 @@ var TR = {
     mapSatellite: 'Satellite',
     mapHybrid: 'Hybrid',
     mapTerrain: 'Terrain'
-}
+};

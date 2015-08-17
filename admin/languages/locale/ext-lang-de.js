@@ -358,9 +358,3 @@ if(Ext.form.RadioGroup){
     blankText : "Du mußt einen Eintrag aus der Gruppe auswählen"
   });
 }
-
-if(Ext.ux.grid.GridFilters) {
-    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
-        menuFilterText: 'Filters'
-    });
-}

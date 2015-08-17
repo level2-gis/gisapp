@@ -1,3 +1,10 @@
+/**
+ * Slovene translation for administration part of Extended Qgis Web Client
+ *
+ * Translators: Uros Preloznik
+ *
+ * Date: 2015-08-17
+ */
 var TR = {
 	appName: 'Prostorski info. sistem - ',
 	loginTitle: 'Prijava',
@@ -28,4 +35,4 @@ var TR = {
     mapSatellite: 'Satelit',
     mapHybrid: 'Hibridni prikaz',
     mapTerrain: 'Topografska karta'
-}
+};

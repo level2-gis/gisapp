@@ -19,44 +19,47 @@ at http://www.sencha.com/contact.
 Build date: 2013-04-03 15:07:25
 */
 /**
- * List compiled by mystix on the extjs.com forums.
- * Thank you Mystix!
+ * List compiled by KillerNay on the extjs.com forums.
+ * Thank you KillerNay!
  *
- * English Translations
- * updated to 2.2 by Condor (8 Aug 2008)
+ * Thailand Translations
  */
 
-Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Loading...</div>';
+Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">¡ÓÅÑ§âËÅŽ...</div>';
 
-if(Ext.data.Types){
-    Ext.data.Types.stripRe = /[\$,%]/g;
-}
-
-if(Ext.DataView){
-  Ext.DataView.prototype.emptyText = "";
+if(Ext.View){
+  Ext.View.prototype.emptyText = "";
 }
 
 if(Ext.grid.GridPanel){
-  Ext.grid.GridPanel.prototype.ddText = "{0} selected row{1}";
+  Ext.grid.GridPanel.prototype.ddText = "{0} àÅ×Í¡áÅéÇ·Ñé§ËÁŽá¶Ç";
+}
+
+if(Ext.TabPanelItem){
+  Ext.TabPanelItem.prototype.closeText = "»ÔŽá·çº¹Õé";
+}
+
+if(Ext.form.Field){
+  Ext.form.Field.prototype.invalidText = "€èÒ¢Í§ªèÍ§¹ÕéäÁè¶Ù¡µéÍ§";
 }
 
 if(Ext.LoadMask){
-  Ext.LoadMask.prototype.msg = "Loading...";
+  Ext.LoadMask.prototype.msg = "¡ÓÅÑ§âËÅŽ...";
 }
 
 Date.monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
+  "Á¡ÃÒ€Á",
+  "¡ØÁŸÒÓŸÑ¹žì",
+  "ÁÕ¹Ò€Á",
+  "àÁÉÒÂ¹",
+  "ŸÄÉÀÒ€Á",
+  "ÁÔ¶Ø¹ÒÂ¹",
+  "¡Ä¡¯Ò€Á",
+  "ÊÔ§ËÒ€Á",
+  "¡Ñ¹ÂÒÂ¹",
+  "µØÅÒ€Á",
+  "ŸÄÈšÔ¡ÒÂ¹",
+  "žÑ¹ÇÒ€Á"
 ];
 
 Date.getShortMonthName = function(month) {
@@ -64,18 +67,18 @@ Date.getShortMonthName = function(month) {
 };
 
 Date.monthNumbers = {
-  Jan : 0,
-  Feb : 1,
-  Mar : 2,
-  Apr : 3,
-  May : 4,
-  Jun : 5,
-  Jul : 6,
-  Aug : 7,
-  Sep : 8,
-  Oct : 9,
-  Nov : 10,
-  Dec : 11
+  "Á€" : 0,
+  "¡Ÿ" : 1,
+  "ÁÕ€" : 2,
+  "àÁÂ" : 3,
+  "Ÿ€" : 4,
+  "ÁÔÂ" : 5,
+  "¡€" : 6,
+  "Ê€" : 7,
+  "¡Â" : 8,
+  "µ€" : 9,
+  "ŸÂ" : 10,
+  "ž€" : 11
 };
 
 Date.getMonthNumber = function(name) {
@@ -83,27 +86,25 @@ Date.getMonthNumber = function(name) {
 };
 
 Date.dayNames = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
+  "ÍÒ·ÔµÂì",
+  "šÑ¹·Ãì",
+  "ÍÑ§€ÒÃ",
+  "ŸØ×ž",
+  "ŸÄËÑÊºŽÕ",
+  "ÈØ¡Ãì",
+  "àÊÒÃì"
 ];
 
 Date.getShortDayName = function(day) {
   return Date.dayNames[day].substring(0, 3);
 };
 
-Date.parseCodes.S.s = "(?:st|nd|rd|th)";
-
 if(Ext.MessageBox){
   Ext.MessageBox.buttonText = {
-    ok     : "OK",
-    cancel : "Cancel",
-    yes    : "Yes",
-    no     : "No"
+    ok     : "µ¡Å§",
+    cancel : "Â¡àÅÔ¡",
+    yes    : "ãªè",
+    no     : "äÁèãªè"
   };
 }
 
@@ -117,44 +118,36 @@ if(Ext.util.Format){
 
 if(Ext.DatePicker){
   Ext.apply(Ext.DatePicker.prototype, {
-    todayText         : "Today",
+    todayText         : "ÇÑ¹¹Õé",
     minText           : "This date is before the minimum date",
     maxText           : "This date is after the maximum date",
     disabledDaysText  : "",
     disabledDatesText : "",
     monthNames        : Date.monthNames,
     dayNames          : Date.dayNames,
-    nextText          : 'Next Month (Control+Right)',
-    prevText          : 'Previous Month (Control+Left)',
-    monthYearText     : 'Choose a month (Control+Up/Down to move years)',
+    nextText          : 'àŽ×Í¹¶ÑŽä» (Control+Right)',
+    prevText          : 'àŽ×Í¹¡èÍ¹Ë¹éÒ (Control+Left)',
+    monthYearText     : 'àÅ×Í¡àŽ×Í¹ (Control+Up/Down to move years)',
     todayTip          : "{0} (Spacebar)",
     format            : "m/d/y",
-    okText            : "&#160;OK&#160;",
-    cancelText        : "Cancel",
+    okText            : "&#160;µ¡Å§&#160;",
+    cancelText        : "Â¡àÅÔ¡",
     startDay          : 0
   });
 }
 
 if(Ext.PagingToolbar){
   Ext.apply(Ext.PagingToolbar.prototype, {
-    beforePageText : "Page",
+    beforePageText : "Ë¹éÒ",
     afterPageText  : "of {0}",
-    firstText      : "First Page",
-    prevText       : "Previous Page",
-    nextText       : "Next Page",
-    lastText       : "Last Page",
-    refreshText    : "Refresh",
-    displayMsg     : "Displaying {0} - {1} of {2}",
-    emptyMsg       : 'No data to display'
+    firstText      : "Ë¹éÒáÃ¡",
+    prevText       : "¡èÍ¹Ë¹éÒ",
+    nextText       : "¶ÑŽä»",
+    lastText       : "Ë¹éÒÊØŽ·éÒÂ",
+    refreshText    : "ÃÕà¿Ãª",
+    displayMsg     : "¡ÓÅÑ§áÊŽ§ {0} - {1} šÒ¡ {2}",
+    emptyMsg       : 'äÁèÁÕ¢éÍÁÙÅáÊŽ§'
   });
-}
-
-if(Ext.form.BasicForm){
-    Ext.form.BasicForm.prototype.waitTitle = "Please Wait..."
-}
-
-if(Ext.form.Field){
-  Ext.form.Field.prototype.invalidText = "The value in this field is invalid";
 }
 
 if(Ext.form.TextField){
@@ -169,8 +162,6 @@ if(Ext.form.TextField){
 
 if(Ext.form.NumberField){
   Ext.apply(Ext.form.NumberField.prototype, {
-    decimalSeparator : ".",
-    decimalPrecision : 2,
     minText : "The minimum value for this field is {0}",
     maxText : "The maximum value for this field is {0}",
     nanText : "{0} is not a valid number"
@@ -179,8 +170,8 @@ if(Ext.form.NumberField){
 
 if(Ext.form.DateField){
   Ext.apply(Ext.form.DateField.prototype, {
-    disabledDaysText  : "Disabled",
-    disabledDatesText : "Disabled",
+    disabledDaysText  : "»ÔŽ",
+    disabledDatesText : "»ÔŽ",
     minText           : "The date in this field must be after {0}",
     maxText           : "The date in this field must be before {0}",
     invalidText       : "{0} is not a valid date - it must be in the format {1}",
@@ -192,7 +183,7 @@ if(Ext.form.DateField){
 
 if(Ext.form.ComboBox){
   Ext.apply(Ext.form.ComboBox.prototype, {
-    loadingText       : "Loading...",
+    loadingText       : "¡ÓÅÑ§âËÅŽ...",
     valueNotFoundText : undefined
   });
 }
@@ -288,6 +279,8 @@ if(Ext.grid.GridView){
   Ext.apply(Ext.grid.GridView.prototype, {
     sortAscText  : "Sort Ascending",
     sortDescText : "Sort Descending",
+    lockText     : "Lock Column",
+    unlockText   : "Unlock Column",
     columnsText  : "Columns"
   });
 }
@@ -304,30 +297,8 @@ if(Ext.grid.PropertyColumnModel){
   Ext.apply(Ext.grid.PropertyColumnModel.prototype, {
     nameText   : "Name",
     valueText  : "Value",
-    dateFormat : "m/j/Y",
-    trueText: "true",
-    falseText: "false"
+    dateFormat : "m/j/Y"
   });
-}
-
-if(Ext.grid.BooleanColumn){
-   Ext.apply(Ext.grid.BooleanColumn.prototype, {
-      trueText  : "true",
-      falseText : "false",
-      undefinedText: '&#160;'
-   });
-}
-
-if(Ext.grid.NumberColumn){
-    Ext.apply(Ext.grid.NumberColumn.prototype, {
-        format : '0,000.00'
-    });
-}
-
-if(Ext.grid.DateColumn){
-    Ext.apply(Ext.grid.DateColumn.prototype, {
-        format : 'm/d/Y'
-    });
 }
 
 if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
@@ -335,32 +306,4 @@ if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
     splitTip            : "Drag to resize.",
     collapsibleSplitTip : "Drag to resize. Double click to hide."
   });
-}
-
-if(Ext.form.TimeField){
-  Ext.apply(Ext.form.TimeField.prototype, {
-    minText : "The time in this field must be equal to or after {0}",
-    maxText : "The time in this field must be equal to or before {0}",
-    invalidText : "{0} is not a valid time",
-    format : "g:i A",
-    altFormats : "g:ia|g:iA|g:i a|g:i A|h:i|g:i|H:i|ga|ha|gA|h a|g a|g A|gi|hi|gia|hia|g|H"
-  });
-}
-
-if(Ext.form.CheckboxGroup){
-  Ext.apply(Ext.form.CheckboxGroup.prototype, {
-    blankText : "You must select at least one item in this group"
-  });
-}
-
-if(Ext.form.RadioGroup){
-  Ext.apply(Ext.form.RadioGroup.prototype, {
-    blankText : "You must select one item in this group"
-  });
-}
-
-if(Ext.ux.grid.GridFilters) {
-    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
-        menuFilterText: 'Filters'
-    });
 }
