@@ -22,14 +22,13 @@ Read **[Wiki](../../wiki)**
 Visit **[Demo by Level2](http://level2.si/gisapp/eu_demo)**
 
 ##Translations
-Fully translated
+Available languages:
 * English
 * Slovenian
+* German (Needs additional translate - [look](https://github.com/uprel/gisapp/issues/7))
 
-Partial translate
-* German ([look](https://github.com/uprel/gisapp/issues/7))
-
-Read this **[page](../../wiki/6.-Translations)** for new translation
+New language:
+Read this **[page](../../wiki/6.-Translations)**
 
 ##Contributing
 You are welcome to contribute to the project by testing, translating, submitting code, documenting... 
