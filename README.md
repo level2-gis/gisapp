@@ -28,7 +28,7 @@ Available languages:
 * German (Needs additional translate - [look](https://github.com/uprel/gisapp/issues/7))
 
 New language:
-Read this **[page](../../wiki/6.-Translations)**
+* Read this **[page](../../wiki/6.-Translations)**
 
 ##Contributing
 You are welcome to contribute to the project by testing, translating, submitting code, documenting... 
