@@ -8,7 +8,7 @@
  * @version 1.0, 05/03/2009 - ExtJS 3.x
  * @version 1.1, 07/18/2009 - ExtJS 3.x
  *
- * Uros : added extraparam, language value parameter, guest access, changelanguage
+ * Uros : added extraparam, language value parameter, guest access, changelanguage, languagestore
  */
 
 Ext.namespace('Ext.ux.form');
@@ -166,11 +166,7 @@ Ext.ux.form.LoginDialog = function (config) {
             fieldLabel      : this.languageLabel,
             store           : new Ext.data.SimpleStore({
                 fields: ['languageCode', 'languageName', 'countryFlag'],
-                data: [
-                    ['sl', 'slovenščina', 'ux-flag-si'],
-					['en', 'English', 'ux-flag-en'],
-					['de', 'Deutsch', 'ux-flag-de']
-					                ]
+                data: this.languageStore
             }),
             valueField: 'languageCode',
             value: this.language,
@@ -400,6 +396,14 @@ Ext.extend (Ext.ux.form.LoginDialog, Ext.util.Observable, {
      * @type {String}
      */
     language : 'en',
+
+    /**
+     * Available languages
+     *
+     */
+    languageStore : [
+        ['en', 'English', 'ux-flag-en']
+    ],
 
     /**
      * RememberMe field label
