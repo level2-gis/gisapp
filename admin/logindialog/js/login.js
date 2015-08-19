@@ -95,6 +95,7 @@ else {
                     extraParamValue: map,
                     enableVirtualKeyboard: true,
                     language: langsel,
+                    languageStore: gisAppLanguages,
                     onSuccess : function (form, action) {
                         if (this.fireEvent('success', this, action)) {
                             // enable buttons

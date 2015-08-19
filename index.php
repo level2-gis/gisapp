@@ -213,7 +213,7 @@ else {
 		</script>
 		
 		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=20150811"></script>
-
+        <script type="text/javascript" src="admin/languages/_lang.js?v=20150819"></script>
 		<script type="text/javascript" src="admin/logindialog/js/overrides.js"></script>
 
         <script type="text/javascript" src="admin/logindialog/js/virtualkeyboard.js"></script>
@@ -221,7 +221,7 @@ else {
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.Crypto.SHA1.js"></script>
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.IconCombo.js"></script>
 		<script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.LoginDialog.js?v=20150817"></script>
-        <script type="text/javascript" src="admin/logindialog/js/login.js?v=20150817"></script>
+        <script type="text/javascript" src="admin/logindialog/js/login.js?v=20150819"></script>
 				
 		</head>
 		<body></body>
