@@ -69,7 +69,7 @@ var layoutHeaderCfg = {
 		{
 			tag: 'div',
 			id: 'panel_header_user',
-			html: '<a></a>'+GLOBAL_USER+'&nbsp;'
+			html: '<a></a>'+projectData.user+'&nbsp;'
 		}		
 	]
 };

@@ -65,9 +65,10 @@ if (isset($_SESSION['user_is_logged_in'])) {
 			var projectData = {};
 			
 			//bind PHP --> JS
-			GLOBAL_USER = '<?php echo $user?>';
+
 			GLOBAL_SERVER_OS = '<?php echo $server_os?>';
-			
+
+            projectData.user = '<?php echo $user?>';
 			projectData.client_name = '<?php echo $data->client_name?>';
 			projectData.client_display_name = '<?php echo $data->client_display_name?>';
 
@@ -123,8 +124,8 @@ if (isset($_SESSION['user_is_logged_in'])) {
                 return eval('<?php echo $data->overview_layer[0]?>');
             };
 
-            //TODO zrihtaj preko cssja!
-			var userLogoImg = '/gisapp/admin/resources/images/user_gray.png';
+            //TODO use in css!
+			var userLogoImg = projectData.gis_projects.path+'admin/resources/images/user_gray.png';
 
 		</script>
 	
@@ -144,11 +145,11 @@ if (isset($_SESSION['user_is_logged_in'])) {
         <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
 		<script type="text/javascript" src="client/site/js/Translations.js?v=20150817"></script>
 		<script type="text/javascript" src="client/site/js/PagingStore.js?v=20140901"></script>
-		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=20150717"></script>
+		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=20150906"></script>
 		<script type="text/javascript" src="client/site/js/Customizations.js?v=20150523"></script>
 		<script type="text/javascript" src="client/site/js/GetUrlParams.js?v=20140901"></script>
 		<script type="text/javascript" src="client/site/js/TriStateTree.js?v=20140901"></script>
-		<script type="text/javascript" src="client/site/js/GUI.js?v=20150817"></script>
+		<script type="text/javascript" src="client/site/js/GUI.js?v=20150906"></script>
 		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=20150523"></script>
         <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js?v=20140901"></script>
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=20141106"></script>

@@ -12,8 +12,12 @@
     //superuser, currently irrelevant
     define('SUPERUSER','gisadmin');
 
+    //qgis server
+    define('QGISSERVERURL','http://localhost/cgi-bin/qgis_mapserv.fcgi');
+
     //other settings
     define('OGR2OGR','ogr2ogr');
 	define('TEMP_PATH','/var/tmp/');
-    define('GISAPPURL','/gisapp/');
+    define('GISAPPURL','/gisapp/'); //for now this one should not change!
+
 ?>

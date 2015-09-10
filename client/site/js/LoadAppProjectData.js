@@ -7,7 +7,7 @@ if(GLOBAL_SERVER_OS == 'Windows NT') {
 	var serverAndCGI = "/qgis/qgis_mapserv.fcgi";
 }
 else {
-	var serverAndCGI = "/wms";
+	var serverAndCGI = "/proxy";
 }
 
 var useGetProjectSettings = true;
@@ -81,7 +81,7 @@ var themeSwitcherTemplate = null;
 var titleBarText = TR.appName; // will be appended with project title
 
 // header logo image and link
-var headerLogoImg = '/gisapp/admin/resources/images/headerLogoImg.png'; // path to image, set null for no logo
+var headerLogoImg = projectData.gis_projects.path+'admin/resources/images/headerLogoImg.png'; // path to image, set null for no logo
 var headerLogoHeight = 24; // logo image height in pixels
 var headerLogoLink = ''; // logo links to this URL
 var headerTermsOfUseText = TR.logoutLabel; // set null for no link
