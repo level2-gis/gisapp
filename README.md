@@ -6,6 +6,7 @@ This is modified and extended version of **[QGIS Web client](https://github.com/
 ##Modifications and new features:
 * user authorization with optional guest access
 * server side (database for storing info about projects, baselayers, WMS layers and users; user authentication, specific project settings)
+* QGIS server proxy (caching and validating requests)
 * layer context menu with Zoom to layer extent, Open attribute data, Data Export
 * geolocation button
 * Google StreetView integration
