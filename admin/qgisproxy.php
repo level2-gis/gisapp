@@ -34,13 +34,13 @@ function QgisServerRequest($client, $request, $query_arr)
 
 try {
 
-    $request = new Request('GET', QGISSERVERURL);
+    $new_request = new Request('GET', QGISSERVERURL);
 
     //session check
     session_start();
 
     if (!(isset($_SESSION['user_is_logged_in']))) {
-        throw new Exception\ClientException("Session time out or unathorized access!",$request);
+        throw new Exception\ClientException("Session time out or unathorized access!",$new_request);
     }
 
     //caching certain requests
@@ -75,7 +75,7 @@ try {
 
 
         if($content==null){
-            $response = QgisServerRequest($client, $request, $query_arr);
+            $response = QgisServerRequest($client, $new_request, $query_arr);
             $contentType = $response->getHeaderLine('Content-Type');
             $contentLength = $response->getHeaderLine('Content-Length');
             $content = $response->getBody()->__toString();
@@ -85,16 +85,34 @@ try {
     }
     else {
         //no caching request
-        $response = QgisServerRequest($client, $request, $query_arr);
+        $response = QgisServerRequest($client, $new_request, $query_arr);
         $contentType = $response->getHeaderLine('Content-Type');
         $contentLength = $response->getHeaderLine('Content-Length');
         $content = $response->getBody();
     }
 
-    //header("Content-Length: " . $contentLength);
-    header("Content-Type: " . $contentType);
+    //get client headers
+    $client_headers = apache_request_headers();
 
-    echo $content;
+    //generate etag
+    $new_etag = md5($content);
+
+    //check if client send etag and compare it
+    if (isset($client_headers['If-None-Match']) and strcmp($new_etag, $client_headers['If-None-Match'])==0) {
+        //return code 304 not modified without content
+        header('HTTP/1.1 304 Not Modified');
+        header("Cache-control: max-age=0");
+        header("Etag: ".$new_etag);
+        exit();
+    }
+    else {
+        //header("Content-Length: " . $contentLength);
+        header("Content-Type: " . $contentType);
+        header("Cache-control: max-age=0");
+        header("Etag: ".$new_etag);
+
+        echo $content;
+    }
 
 } catch (Exception\RequestException $e) {
     if($e->hasResponse()) {
