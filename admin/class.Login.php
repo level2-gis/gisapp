@@ -421,7 +421,7 @@ class Login
 
 
         echo "<h3> PHP List All Session Variables</h3>";
-        echo session_id()."<br/>";
+        echo "sess_id: ".session_id()."<br/><br/>";
         foreach ($_SESSION as $key => $val)
             echo $key . ": " . $val . "<br/><br/>";
 

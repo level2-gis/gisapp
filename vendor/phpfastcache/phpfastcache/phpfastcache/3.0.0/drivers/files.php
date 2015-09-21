@@ -59,7 +59,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
             } elseif(!is_writeable($path)) {
                 if(!chmod($path,$this->__setChmodAuto())) {
-	                die("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION! MAKE SURE PHP/Apache/WebServer have Write Permission");
+					throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
         }
@@ -147,6 +147,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
         $total = 0;
         $removed = 0;
+        $content = array();
         while($file=@readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir
@@ -160,6 +161,14 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                         $file_path = $path."/".$file."/".$f;
                         $size = @filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
+
+                        if(strpos($f,".") === false) {
+                            $key = $f;
+                        }
+                        else {
+                            $key = explode(".", $f)[0];
+                        }
+                        $content[$key] = array("size"=>$size,"write_time"=>$object["write_time"]);
                         if($this->isExpired($object)) {
                             @unlink($file_path);
                             $removed = $removed + $size;
@@ -176,6 +185,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                 "Removed"   => $removed,
                 "Current"   => $res['size'],
        );
+        $res["data"] = $content;
        return $res;
     }
 
@@ -233,7 +243,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     function isExpired($object) {
 
-        if(isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
+        if(isset($object['expired_time']) && time() >= $object['expired_time']) {
             return true;
         } else {
             return false;

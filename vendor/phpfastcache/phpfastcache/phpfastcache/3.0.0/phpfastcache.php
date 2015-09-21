@@ -73,6 +73,13 @@ class phpFastCache {
 			"timeout"   =>  ""
 		),
 
+        "ssdb"         =>  array(
+			"host"  => "127.0.0.1",
+			"port"  =>  8888,
+			"password"  =>  "",
+			"timeout"   =>  ""
+		),
+
 		"extensions"    =>  array(),
 	);
 
@@ -180,7 +187,7 @@ class phpFastCache {
                     @chmod($full_path,self::__setChmodAuto($config));
                 }
                 if(!@file_exists($full_path) || !@is_writable($full_path)) {
-                    die("Sorry, Please create ".$full_path." and SET Mode 0777 or any Writable Permission!");
+					throw new Exception("PLEASE CREATE OR CHMOD ".$full_path." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
 
@@ -231,7 +238,7 @@ class phpFastCache {
                     chmod($path,0777);
                 }
                 catch(Exception $e) {
-                    die(" NEED WRITEABLE ".$path);
+					throw new Exception("PLEASE CHMOD ".$path." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
             if(!@file_exists($path."/.htaccess")) {
@@ -242,7 +249,7 @@ allow from 127.0.0.1";
 
                 $f = @fopen($path."/.htaccess","w+");
                 if(!$f) {
-                    die(" CANT CREATE HTACCESS TO PROTECT FOLDER - PLZ CHMOD 0777 FOR ".$path);
+					throw new Exception("PLEASE CHMOD ".$path." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
                 fwrite($f,$html);
                 fclose($f);
