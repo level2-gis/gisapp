@@ -81,4 +81,4 @@ if ($layername != "null") {
 header('Content-type: application/json');
 header('Content-length: ' . strlen($result));
 echo $result;
-?>
+

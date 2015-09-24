@@ -18,8 +18,9 @@ urlString = urlString.replace(/\+/g, ' ');
 if(GLOBAL_SERVER_OS == 'Windows NT') {
 	var fullPath = Ext.urlDecode(window.location.search.substring(1)).map;
 	map = fullPath.substr(fullPath.lastIndexOf('/')+1,fullPath.length);
-	if (map.indexOf('.qgs')>-1)
-		map = map.slice(0,map.length-4);
+	if (map.indexOf('.qgs')>-1) {
+        map = map.slice(0, map.length - 4);
+    }
 }
 else {
 	var urlArray = urlString.split('?');

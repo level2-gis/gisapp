@@ -47,4 +47,4 @@ try {
 } catch (PDOException $e) {
     err500('db error: ' . $e->getMessage());
 }
-?>
+
