@@ -1,4 +1,8 @@
 //GetProject (code from GetUrlParam)
+
+/* global GLOBAL_SERVER_OS */
+/* global GLOBAL_LANG */
+
 var urlString = "";
 var map = "";
 var urlParams = {};

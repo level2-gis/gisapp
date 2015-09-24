@@ -2,6 +2,8 @@
 // CONTEXT MENU STUFF
 // *******************
 
+/* global projectData */
+
 function buildLayerContextMenu(node) {
 
     // prepare the generic context menu for Layer

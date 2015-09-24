@@ -1,13 +1,14 @@
 //This file is used instead of GlobalOptions.js
 
+/* global GLOBAL_SERVER_OS */
+/* global projectData */
+
 var lang = "en";
 var helpfile = "help_en.html";
+var serverAndCGI = "/proxy"
 
 if(GLOBAL_SERVER_OS == 'Windows NT') {
-	var serverAndCGI = "/qgis/qgis_mapserv.fcgi";
-}
-else {
-	var serverAndCGI = "/proxy";
+	serverAndCGI = "/qgis/qgis_mapserv.fcgi";
 }
 
 var useGetProjectSettings = true;
@@ -16,7 +17,7 @@ var grayLayerNameWhenOutsideScale = true;
 var showMetaDataInLegend = true;
 var enableHoverPopup = false;
 var useGeodesicMeasurement = true;
-var useGeoNamesSearchBox = projectData.geoNames == null ? false : true;
+var useGeoNamesSearchBox = projectData.geoNames != null;
 var iconDirectory = 'client/site/gis_icons/';
 
 //URL for custom search scripts
@@ -25,7 +26,7 @@ var searchBoxGetGeomURL = null; // "/wsgi/getSearchGeom.wsgi";
 
 var autoActivateSearchGeometryLayer = true;
 
-//TODO To paše drugam config.php ali pa na konec klienta
+//TODO what to do here
 // PHP based search scripts (postgis layers only)
 //var searchBoxQueryURL = 'client/php/search.php?map=' + projectData.project;
 //var searchBoxGetGeomURL = 'client/php/search_geom.php?map=' + projectData.project;
@@ -122,7 +123,7 @@ var MapOptions = {
   projection: new OpenLayers.Projection(authid),
   units: "m",
   numZoomLevels:23,
-  fractionalZoom: enableBGMaps ? false : true,
+  fractionalZoom: !enableBGMaps,
   transitionEffect:"resize",
   zoomDuration: 1,
   controls: []
