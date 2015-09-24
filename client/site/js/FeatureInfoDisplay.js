@@ -169,7 +169,7 @@ function showFeatureInfoHover(evt) {
                                      .replace(/>/g, "&gt;")
                                      .replace(/"/g, "&quot;")
                                      .replace(/'/g, "&#039;");
-                    })
+                    });
                     text += tooltipText+"<br/>";
                 } else if (tooltipAttributeName.indexOf('[%') !== -1){ // Look into displayField for template tags...
                     var tooltipText = tooltipAttributeName;

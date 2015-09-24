@@ -14,8 +14,13 @@
  * modifications Uros Preloznik
  */
 
+namespace GisApp;
+
+use \PDO;
+use GisApp\DbLoader;
+
 require_once("settings.php");
-require_once("class.GisAppLoader.php");
+require_once("class.DbLoader.php");
 
 class Login
 {
@@ -213,7 +218,7 @@ class Login
         $email = "";
         $pass = false;
 
-        $gisApp = new GisAppLoader($user, $project, $this->db_connection);
+        $gisApp = new DbLoader($user, $project, $this->db_connection);
 
         //check if we have guest user
         if (strtolower($user == 'guest')) {

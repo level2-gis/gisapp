@@ -19,8 +19,11 @@
 */
 //Modifications: Uros Preloznik
 
+use GisApp\Helpers;
+
 require_once('helpers.php');
 require_once('../../admin/settings.php');
+require_once("../../admin/class.Helpers.php");
 
 if(isset($_REQUEST['map0_extent'])){
     $extent =  explode(",", $_REQUEST['map0_extent']);
@@ -68,7 +71,7 @@ else {
 }
 
 $now = date("Ymd_His");
-$layerAlias = normalize($layername);
+$layerAlias = Helpers::normalize($layername);
 $fileName = TEMP_PATH . $layerAlias . '_' . $now;
 $fileNameZip = $layerAlias . '_' . $now . '.zip';
 

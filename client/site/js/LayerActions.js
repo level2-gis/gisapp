@@ -3,6 +3,8 @@
 // *******************
 
 /* global projectData */
+/* global Ext */
+/* global lang */
 
 function buildLayerContextMenu(node) {
 
@@ -100,7 +102,7 @@ function buildLayerContextMenu(node) {
                             if(this.checked) {
                                 var m = this.parentMenu.parentMenu.getComponent('mapFilter');
                                 m.setChecked(true);
-                            };
+                            }
                             var t = Ext.getCmp('table_'+node.text);
                             if(typeof t == 'object') {
                                 t.destroy();

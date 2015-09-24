@@ -3,14 +3,18 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception;
 use GuzzleHttp\Psr7\Request;
+use GisApp\Helpers;
 
 require '../vendor/autoload.php';
+require_once("class.Helpers.php");
 require_once("settings.php");
 
 //parameters
-$query = $_SERVER['QUERY_STRING'];
-$query_arr = array();
-parse_str($query,$query_arr);
+//$query = $_SERVER['QUERY_STRING'];
+//$query_arr = array();
+//parse_str($query,$query_arr);
+
+$query_arr = filter_input_array(INPUT_GET,FILTER_SANITIZE_STRING);
 
 //we have to extend map parameter with path to projects, but first store it into own variable and remove .qgs
 $map = "";
@@ -39,22 +43,6 @@ function QgisServerRequest($client, $request, $query_arr)
     return $response;
 }
 
-//Taken from helpers.php
-function normalize ($string) {
-    $table = array(
-        'Š'=>'S', 'š'=>'s', 'Đ'=>'Dj', 'đ'=>'dj', 'Ž'=>'Z', 'ž'=>'z', 'Č'=>'C', 'č'=>'c', 'Ć'=>'C', 'ć'=>'c',
-        'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
-        'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O',
-        'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss',
-        'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e',
-        'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o',
-        'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b',
-        'ÿ'=>'y', 'Ŕ'=>'R', 'ŕ'=>'r', '.'=>''
-    );
-
-    return strtr($string, $table);
-}
-
 try {
 
     $new_request = new Request('GET', QGISSERVERURL);
@@ -72,14 +60,14 @@ try {
     $contentType = null;
     $cacheKey = null;
     $contentLength = 0;
-    $s = "_x_"; //separator for key generating
+    $sep = "_x_"; //separator for key generating
     switch ($query_arr["REQUEST"]) {
         case "GetProjectSettings":
-            $cacheKey = $map.$s."XML".$s.$query_arr["REQUEST"];
+            $cacheKey = $map.$sep."XML".$sep.$query_arr["REQUEST"];
             $contentType = "text/xml";
             break;
         case "GetLegendGraphics":
-            $cacheKey = $map. $s."PNG".$s .$query_arr["REQUEST"].$s. normalize($_REQUEST['LAYERS']);
+            $cacheKey = $map. $sep."PNG".$sep .$query_arr["REQUEST"].$sep. Helpers::normalize($query_arr['LAYERS']);
             $contentType = "image/png";
             break;
         case "GetFeatureInfo":
@@ -87,7 +75,7 @@ try {
             $count = $query_arr['FEATURE_COUNT'];
             if(is_numeric($count)) {
                 if(intval($count)>100) {
-                    $cacheKey= $map. $s."XML".$s .$query_arr["REQUEST"].$s. normalize($_REQUEST['FILTER']);
+                    $cacheKey= $map. $sep."XML".$sep .$query_arr["REQUEST"].$sep. Helpers::normalize($query_arr['FILTER']);
                 }
             }
             break;

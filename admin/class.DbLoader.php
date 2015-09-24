@@ -6,9 +6,11 @@
  * Time: 6:19
  */
 
+namespace GisApp;
+
 require_once("settings.php");
 
-class GisAppLoader
+class DbLoader
 {
     function __construct($user, $project, $db)
     {
