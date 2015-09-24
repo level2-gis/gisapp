@@ -2,10 +2,12 @@
 
 /* global GLOBAL_SERVER_OS */
 /* global projectData */
+/* global TR */
+/* global OpenLayers */
 
 var lang = "en";
 var helpfile = "help_en.html";
-var serverAndCGI = "/proxy"
+var serverAndCGI = "/proxy";
 
 if(GLOBAL_SERVER_OS == 'Windows NT') {
 	serverAndCGI = "/qgis/qgis_mapserv.fcgi";
