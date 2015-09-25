@@ -28,21 +28,6 @@ $query_arr["map"] = PROJECT_PATH . $query_arr["map"];
 
 $client = new Client();
 
-/**
- * @param $client
- * @param $request
- * @param $query_arr
- * @return mixed
- */
-function QgisServerRequest($client, $request, $query_arr)
-{
-    $response = $client->send($request, ['query' => $query_arr]);
-    //$code = $response->getStatusCode();
-    //$reason = $response->getReasonPhrase();
-
-    return $response;
-}
-
 try {
 
     $new_request = new Request('GET', QGISSERVERURL);
@@ -50,7 +35,7 @@ try {
     //session check
     session_start();
 
-    if (!(isset($_SESSION['user_is_logged_in']))) {
+    if (!(Helpers::isValidUserProj($map))) {
         throw new Exception\ClientException("Session time out or unathorized access!",$new_request);
     }
 
@@ -87,7 +72,7 @@ try {
 
 
         if($content==null){
-            $response = QgisServerRequest($client, $new_request, $query_arr);
+            $response = $client->send($new_request, ['query' => $query_arr]);
             $contentType = $response->getHeaderLine('Content-Type');
             $contentLength = $response->getHeaderLine('Content-Length');
             $content = $response->getBody()->__toString();
@@ -102,7 +87,7 @@ try {
     }
     else {
         //no caching request
-        $response = QgisServerRequest($client, $new_request, $query_arr);
+        $response = $client->send($new_request, ['query' => $query_arr]);
         $contentType = $response->getHeaderLine('Content-Type');
         $contentLength = $response->getHeaderLine('Content-Length');
         $content = $response->getBody();
@@ -115,12 +100,11 @@ try {
     $new_etag = md5($content);
 
     //check if client send etag and compare it
-    if (isset($client_headers['If-None-Match']) and strcmp($new_etag, $client_headers['If-None-Match'])==0) {
+    if (isset($client_headers['If-None-Match']) && strcmp($new_etag, $client_headers['If-None-Match'])==0) {
         //return code 304 not modified without content
         header('HTTP/1.1 304 Not Modified');
         header("Cache-control: max-age=0");
         header("Etag: ".$new_etag);
-        exit();
     }
     else {
         //header("Content-Length: " . $contentLength);

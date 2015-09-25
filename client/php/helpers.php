@@ -196,7 +196,7 @@ function get_legend($mapname, $layername){
         }
         $cache_file = $cache_folder.'/'.md5($mapname.$layername);
         $filemtime = @filemtime($cache_file);  // returns FALSE if file does not exist
-        if (!$filemtime or (time() - $filemtime >= GET_LEGEND_CACHE_EXPIRY)){
+        if (!$filemtime || (time() - $filemtime >= GET_LEGEND_CACHE_EXPIRY)){
             file_put_contents($cache_file, serialize(build_legend($mapname, $layername)));
         }
         return unserialize(file_get_contents($cache_file));                

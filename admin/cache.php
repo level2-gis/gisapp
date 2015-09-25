@@ -38,14 +38,14 @@ echo "<pre>";
 $stats = $cache->stats();
 $path = $cache->getPath();
 
-print_r("Cache size in bytes: ".$stats["size"]); //size of cached objects in bytes
-print_r("\nPath to store files: ".$path);
-print_r("\nCache content (key, size, write time):");
+print("Cache size in bytes: ".$stats["size"]); //size of cached objects in bytes
+print("\nPath to store files: ".$path);
+print("\nCache content (key, size, write time):");
 
 foreach ($stats["data"] as $key => $el) {
     $cmd_clear = '<a href="' . $_SERVER['SCRIPT_NAME'] . '?clear='.$key.'">clear </a>';
     //$cmd_view = '<a href="' . $_SERVER['SCRIPT_NAME'] . '?view='.$key.'">view </a>';
-    print_r('</br>'.$cmd_clear.'<b>'.$key.'</b>,'.$el['size'].','.date('c',$el['write_time']));
+    print('</br>'.$cmd_clear.'<b>'.$key.'</b>,'.$el['size'].','.date('c',$el['write_time']));
 }
 
 //TODO bug, doesn't work on files

@@ -2,11 +2,11 @@
 
 use GisApp\Login;
 
+require_once("class.Login.php");
+
 $server_os = php_uname('s');
 
 session_start();
-
-require_once("class.Login.php");
 
 $login = new Login();
 
@@ -26,7 +26,6 @@ if (isset($_GET["action"])) {
 		else {
 			header("Location: ../".$pp);
 		}
-		exit();
 	}
 }
 else {

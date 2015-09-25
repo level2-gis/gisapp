@@ -1,12 +1,16 @@
 <?php
 
+use GisApp\Helpers;
+
+require_once("admin/class.Helpers.php");
+
 $server_os = php_uname('s');
 
 session_start();
 
 if(isset($_GET['lang'])) {
 	$def_lang = strtolower($_GET['lang']);
-	if ($def_lang=='sl' OR $def_lang=='en' OR $def_lang=='de') {
+	if ($def_lang=='sl' || $def_lang=='en' || $def_lang=='de') {
 		//OK
 	}
 	else {
@@ -21,7 +25,7 @@ if (!isset($_SESSION['lang']))  {
 	$_SESSION['lang'] = $def_lang;
 }
 
-if (isset($_SESSION['user_is_logged_in'])) {
+if (Helpers::isValidUserProj(null)) {
 
 	//Setting some global variables
 	$user = "".$_SESSION['user_name'];
