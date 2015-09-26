@@ -213,8 +213,8 @@ class Login
      */
     private function checkPasswordCorrectnessAndLogin()
     {
-        $user = $_POST['user_name'];
-        $project = $_POST['project'];
+        $user = filter_input(INPUT_POST,'user_name',FILTER_SANITIZE_STRING);
+        $project = filter_input(INPUT_POST,'project',FILTER_SANITIZE_STRING);
         $email = "";
         $pass = false;
 
@@ -225,10 +225,9 @@ class Login
             //no user and password verify
             $pass = true;
         } else {
-            // remember: the user can log in with username or email address
             $sql = 'SELECT user_name, user_email, user_password_hash
                 FROM users
-                WHERE user_name = :user_name OR user_email = :user_name
+                WHERE user_name = :user_name
                 LIMIT 1';
             $query = $this->db_connection->prepare($sql);
             $query->bindValue(':user_name', $user);
@@ -276,9 +275,10 @@ class Login
                     $this->user_is_logged_in = true;
 
                     //update lastlogin and count
-                    if(!$user) {
-                        $this->db_connection->exec("UPDATE users SET last_login=now(),count_login = count_login + 1 WHERE user_name='" . $user . "';");
-                    }
+                    $sql = "UPDATE users SET last_login=now(),count_login = count_login + 1 WHERE user_name = :user_name";
+                    $query = $this->db_connection->prepare($sql);
+                    $query->bindValue(':user_name', $user);
+                    $query->execute();
 
                     return true;
                 } else {
