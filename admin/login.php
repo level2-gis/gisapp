@@ -16,8 +16,9 @@ if (isset($_SESSION['project'])) {
 }
 
 //check action parameter
-if (isset($_GET["action"])) { 
-	if($_GET["action"] == "logout") {
+$action = filter_input(INPUT_GET,"action",FILTER_SANITIZE_STRING);
+if ($action != null) {
+	if($action == "logout") {
 		//logout
 		$login->doLogout();
 		if($server_os=='Windows NT') {
@@ -30,8 +31,8 @@ if (isset($_GET["action"])) {
 }
 else {
 	//login   				
-	$loginUsername = isset($_POST["user_name"]) ? $_POST["user_name"] : "";
-	$loginPass = isset($_POST["user_password"]) ? $_POST["user_password"] : ""; 
+	$loginUsername = filter_input(INPUT_POST,"user_name",FILTER_SANITIZE_STRING);
+    $loginPass = filter_input(INPUT_POST,"user_password",FILTER_SANITIZE_STRING);
 	
 	$login->doLoginWithPostData();
 	 

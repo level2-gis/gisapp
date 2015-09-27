@@ -167,7 +167,7 @@ function exportData(layer,format) {
     var bbox = geoExtMap.map.calculateBounds();
     //Ext.Msg.alert('Info',layer+' ' + bbox);
 
-    var exportUrl = "./client/php/export.php?" + Ext.urlEncode({
+    var exportUrl = "./admin/export.php?" + Ext.urlEncode({
             map:projectData.project,
             SRS:authid,
             map0_extent:bbox,
@@ -175,21 +175,40 @@ function exportData(layer,format) {
             format:format
         });
 
-    var body = Ext.getBody();
-    var frame = body.createChild({
-        tag	:'iframe',
-        cls	:'x-hidden',
-        id		:'hiddenform-iframe',
-        name	:'iframe',
-        src	:exportUrl
+    Ext.Ajax.request({
+        url: exportUrl,
+        disableCaching : false,
+        params: {
+          cmd: 'prepare'
+        },
+        method: 'GET',
+        success: function (response) {
+
+            var result = Ext.util.JSON.decode(response.responseText);
+
+            if(result.success) {
+                var key = result.message;
+                var body = Ext.getBody();
+                var frame = body.createChild({
+                    tag: 'iframe',
+                    cls: 'x-hidden',
+                    id: 'hiddenform-iframe',
+                    name: 'iframe',
+                    src: exportUrl + "&cmd=get&key="+key
+                });
+            }
+            else {
+                Ext.Msg.alert("Error",result.message);
+            }
+        },
+        //this doesn't fire, why?
+        failure: function(response, opts) {
+            Ext.Msg.alert('Error','server-side failure with status code ' + response.status);
+        }
     });
 
-    //TODO Uros: treba je narediti dvofazno, korak 1 generira export in pošlje json result status in message(url), 2. korak pa na osnovi statusa izvede download ali obvesti o napaki
-    // frame.on('load',
-    // function(e, t, o){
-    // alert(o.test);
-    // }
-    // , null, {test:'hello'});
+
+
 }
 
 function openAttTable() {

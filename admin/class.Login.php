@@ -17,7 +17,6 @@
 namespace GisApp;
 
 use \PDO;
-use GisApp\DbLoader;
 
 require_once("settings.php");
 require_once("class.DbLoader.php");
