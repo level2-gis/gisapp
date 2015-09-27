@@ -13,25 +13,27 @@ require_once("settings.php");
 //$cache = phpFastCache("files", $config);
 $cache = phpFastCache("files");
 
-$test = $cache->fallback;
+$script = filter_input(INPUT_SERVER,"SCRIPT_NAME",FILTER_SANITIZE_STRING);
+$clear = filter_input(INPUT_GET,"CLEAR",FILTER_SANITIZE_STRING);
 
-if (isset($_GET["clear"])) {
+//$test = $cache->fallback;
 
-    $clear = $_GET["clear"];
+if ($clear != null) {
     if ($clear == 'all') {
         $cache->clean();
     }
     else {
         $cache->delete($clear);
     }
-    header("Location:" . $_SERVER['SCRIPT_NAME']);
+    header("Location:" . $script);
 } else {
-    echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?clear=all">Clear all cache</a>';
+    echo '<a href="' . $script . '?clear=all">Clear all cache</a>';
 }
+
 //TODO
-if (isset($_GET["view"])) {
-    $view = $_GET["view"];
-}
+//if (isset($_GET["view"])) {
+//    $view = $_GET["view"];
+//}
 
 // Stats
 echo "<pre>";
@@ -43,8 +45,8 @@ print("\nPath to store files: ".$path);
 print("\nCache content (key, size, write time):");
 
 foreach ($stats["data"] as $key => $el) {
-    $cmd_clear = '<a href="' . $_SERVER['SCRIPT_NAME'] . '?clear='.$key.'">clear </a>';
-    //$cmd_view = '<a href="' . $_SERVER['SCRIPT_NAME'] . '?view='.$key.'">view </a>';
+    $cmd_clear = '<a href="' . $script . '?clear='.$key.'">clear </a>';
+    //$cmd_view = '<a href="' . $script . '?view='.$key.'">view </a>';
     print('</br>'.$cmd_clear.'<b>'.$key.'</b>,'.$el['size'].','.date('c',$el['write_time']));
 }
 

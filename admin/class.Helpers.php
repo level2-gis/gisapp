@@ -103,9 +103,9 @@ class Helpers
     /**
      * Load .qgs file
      */
-    public static function get_project($map){
+    public static function getQgsProject($map){
         if(file_exists($map) && is_readable($map)){
-            $project = @simplexml_load_file($map);
+            $project = simplexml_load_file($map);
             if(!$project){
                 return self::msg(false,'project not valid');
             }
@@ -119,7 +119,7 @@ class Helpers
      * Load a layer instance from the project
      *
      */
-    public static function get_layer($layername, $project){
+    public static function getLayer($layername, $project){
         // Caching
         static $layers = array();
         if(array_key_exists($layername, $layers)){
@@ -136,7 +136,7 @@ class Helpers
     /**
      * Get layer connection and geom info
      */
-    public static function get_layer_info($layer, $project){
+    public static function getLayerInfo($layer){
         // Cache
         static $pg_layer_infos = array();
 

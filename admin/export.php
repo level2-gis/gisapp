@@ -21,22 +21,22 @@ function prepareFile($layername, $map, $query_arr, $format)
     $fileExt = "zip";
 
     $makeZip = true;
-    $fsize = -1;
+    //$fsize = -1;
 
     // Get project
-    $project = Helpers::get_project(PROJECT_PATH . $map . '.qgs');
+    $project = Helpers::getQgsProject(PROJECT_PATH . $map . '.qgs');
     if (!($project["status"])) {
         throw new Exception ($project["message"]);
     }
 
     // Get layer
-    $layer = Helpers::get_layer($layername, $project["message"]);
+    $layer = Helpers::getLayer($layername, $project["message"]);
     if (!($layer["status"])) {
         throw new Exception ($layer["message"]);
     }
 
     // Get layer info
-    $lay_info = Helpers::get_layer_info($layer["message"], $project["message"]);
+    $lay_info = Helpers::getLayerInfo($layer["message"]);
     if (!($lay_info["status"])) {
         throw new Exception ($lay_info["message"]);
     }
@@ -72,8 +72,8 @@ function prepareFile($layername, $map, $query_arr, $format)
         throw new Exception('Format not supported');
     }
 
-    putenv('CPL_LOG_ERRORS=ON');
-    putenv('CPL_LOG=/var/tmp/ogr_errors.log');
+    //putenv('CPL_LOG_ERRORS=ON');
+    //putenv('CPL_LOG=/var/tmp/ogr_errors.log');
 
     //I removed _a_srs parameter, something not right in QGIS ' -a_srs EPSG:'.$srid.
     $mycmd = OGR2OGR . ' -f "' . $format_name . '" "' . $fileName . '.' . strtolower($format) . '" ' . $options . ' "' . $conn . '" -sql "SELECT * FROM ' . $table . ' WHERE ' . $geom . ' && ST_Transform(ST_MakeEnvelope(' . $xmin . ', ' . $ymin . ', ' . $xmax . ', ' . $ymax . ', ' . $srid . '),' . $source_srid . ')" -progress';
