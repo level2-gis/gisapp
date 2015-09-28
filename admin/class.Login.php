@@ -195,9 +195,12 @@ class Login
      */
     private function checkLoginFormDataNotEmpty()
     {
-        if (!empty($_POST['user_name']) && !empty($_POST['user_password'])) {
+        $user = filter_input(INPUT_POST,'user_name',FILTER_SANITIZE_STRING);
+        $pass = filter_input(INPUT_POST,'user_password',FILTER_SANITIZE_STRING);
+
+        if (!empty($user) && !empty($pass)) {
             return true;
-        } elseif (empty($_POST['user_name'])) {
+        } elseif (empty($user)) {
             $this->feedback = "Username field was empty.";
         } elseif (empty($_POST['user_password'])) {
             $this->feedback = "Password field was empty.";
@@ -291,9 +294,6 @@ class Login
             $this->feedback = 'TR.wrongPassword';
             return false;
         }
-
-        // default return
-        return false;
     }
 
     /**
@@ -412,12 +412,14 @@ class Login
      */
     private function showPageLoggedIn()
     {
+        $scr = filter_input(INPUT_SERVER,["SCRIPT_NAME"]);
+
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
         }
 
         echo 'Hello ' . $_SESSION['user_name'] . ', you are logged in.<br/><br/>';
-        echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?action=logout">Log out</a>';
+        echo '<a href="' . $scr . '?action=logout">Log out</a>';
 
         //TODO cleanup this. Superuser not need to register anymmore
         //if ($_SESSION['user_name'] == SUPERUSER)
@@ -438,13 +440,15 @@ class Login
      */
     private function showPageLoginForm()
     {
+        $scr = filter_input(INPUT_SERVER,["SCRIPT_NAME"]);
+
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
         }
 
         echo '<h3>Login</h3>';
 
-        echo '<form method="post" action="' . $_SERVER['SCRIPT_NAME'] . '" name="loginform">';
+        echo '<form method="post" action="' . $scr . '" name="loginform">';
         echo '<label for="login_input_username">Username (or email)</label> ';
         echo '<input id="login_input_username" type="text" name="user_name" required /> ';
         echo '<label for="login_input_password">Password</label> ';
@@ -452,7 +456,7 @@ class Login
         echo '<input type="submit"  name="login" value="Log in" />';
         echo '</form>';
 
-        echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">Register new account</a>';
+        echo '<a href="' . $scr . '?action=register">Register new account</a>';
     }
 
     /**
@@ -462,13 +466,15 @@ class Login
      */
     private function showPageRegistration()
     {
+        $scr = filter_input(INPUT_SERVER,["SCRIPT_NAME"]);
+
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
         }
 
         echo '<h2>Registration</h2>';
 
-        echo '<form method="post" action="' . $_SERVER['SCRIPT_NAME'] . '?action=register" name="registerform">';
+        echo '<form method="post" action="' . $scr . '?action=register" name="registerform">';
         echo '<label for="login_input_username">Username (only letters and numbers, 2 to 64 characters)</label></br>';
         echo '<input id="login_input_username" type="text" pattern="[a-zA-Z0-9]{2,64}" name="user_name" required /></br>';
         echo '<label for="login_input_email">User\'s email</label></br>';
@@ -480,7 +486,7 @@ class Login
         echo '<input type="submit" name="register" value="Register" />';
         echo '</form>';
 
-        echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '">Homepage</a>';
+        echo '<a href="' . $scr . '">Homepage</a>';
     }
 }
 

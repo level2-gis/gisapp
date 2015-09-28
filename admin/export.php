@@ -57,19 +57,23 @@ function prepareFile($layername, $map, $query_arr, $format)
     $srid = substr(strrchr($query_arr['SRS'], ':'), 1);
     $options = "";
 
-    if ($format == 'SHP') {
-        $format_name = 'ESRI Shapefile';
-        $options = "-lco ENCODING=UTF-8";
-    } else if ($format == 'DXF') {
-        $format_name = $format;
-        //$options = '-select field_list=""';
-    } else if ($format == 'CSV') {
-        $format_name = $format;
-        $options = "-lco SEPARATOR=SEMICOLON";
-        $makeZip = false;
-        $fileExt = 'csv';
-    } else {
-        throw new Exception('Format not supported');
+    switch ($format) {
+        case 'SHP':
+            $format_name = 'ESRI Shapefile';
+            $options = "-lco ENCODING=UTF-8";
+            break;
+        case 'DXF':
+            $format_name = $format;
+            //$options = '-select field_list=""';
+            break;
+        case 'CSV':
+            $format_name = $format;
+            $options = "-lco SEPARATOR=SEMICOLON";
+            $makeZip = false;
+            $fileExt = 'csv';
+            break;
+        default:
+            throw new Exception('Format not supported');
     }
 
     //putenv('CPL_LOG_ERRORS=ON');
@@ -83,7 +87,7 @@ function prepareFile($layername, $map, $query_arr, $format)
 
     $output = shell_exec($mycmd);
 
-    $fullFileNameZip = $fileName .".". $fileExt;
+    $fullFileNameZip = $fileName . "." . $fileExt;
 
     if ($makeZip) {
 
@@ -167,17 +171,17 @@ try {
     $cmd = $query_arr["cmd"];
     $ctype = "application/zip";
 
-    if($format == 'CSV') {
+    if ($format == 'CSV') {
         $ctype = "text/csv";
     }
 
     //check if user is guest
     session_start();
     $user = null;
-    if(isset($_SESSION["user_name"])) {
+    if (isset($_SESSION["user_name"])) {
         $user = $_SESSION["user_name"];
     }
-    if($user!=null && $user == 'guest') {
+    if ($user != null && $user == 'guest') {
         throw new Exception("Guest users are not allowed to export data!");
     }
 
@@ -187,10 +191,9 @@ try {
     }
 
     //check command
-    if($cmd == 'prepare') {
+    if ($cmd == 'prepare') {
         echo json_encode(["success" => true, "message" => prepareFile($layername, $map, $query_arr, $format)]);
-    }
-    elseif ($cmd == 'get') {
+    } elseif ($cmd == 'get') {
         $key = $query_arr["key"];
         sendFile($ctype, $key);
     }

@@ -116,8 +116,12 @@ class Helpers
     }
 
     /**
+     *
      * Load a layer instance from the project
      *
+     * @param $layername
+     * @param $project
+     * @return array
      */
     public static function getLayer($layername, $project){
         // Caching
@@ -134,7 +138,11 @@ class Helpers
     }
 
     /**
+     *
      * Get layer connection and geom info
+     *
+     * @param $layer
+     * @return array
      */
     public static function getLayerInfo($layer){
         // Cache
@@ -160,11 +168,11 @@ class Helpers
             $ds_parms['sql'] = $matches[1];
         }
         foreach(explode(' ', $datasource) as $token){
-            $kv = explode('=', $token);
-            if(count($kv) == 2){
-                $ds_parms[$kv[0]] = $kv[1];
+            $kvn = explode('=', $token);
+            if(count($kvn) == 2){
+                $ds_parms[$kvn[0]] = $kvn[1];
             } else { // Parse (geom)
-                if(preg_match('/\(([^\)]+)\)/', $kv[0], $matches)){
+                if(preg_match('/\(([^\)]+)\)/', $kvn[0], $matches)){
                     $ds_parms['geom_column'] = $matches[1];
                 }
                 // ... maybe other parms ...
