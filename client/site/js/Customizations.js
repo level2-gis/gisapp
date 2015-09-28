@@ -1,4 +1,7 @@
 // customInit() is called before any map initialization
+
+/* global projectData */
+
 function customInit() {
 
      // I create a new control click event class
@@ -289,7 +292,7 @@ function customMapToolbarHandler(btn, evt) {
 function customActionLayerTreeCheck(n) {
     if (n.isLeaf()) {
         if (n.attributes.checked) {
-            toAdd = Ext.get ( "legend_"+n.text.replace(" ", "-") );
+            var toAdd = Ext.get ( "legend_"+n.text.replace(" ", "-") );
             if (toAdd) {
             } else {
                 var legendUrl = wmsURI + Ext.urlEncode({
@@ -322,9 +325,10 @@ function customActionLayerTreeCheck(n) {
                 );
             }
         } else {
-            toRemove = Ext.get ( "legend_"+n.text.replace(" ", "-") )
-            if (toRemove)
+            var toRemove = Ext.get ( "legend_"+n.text.replace(" ", "-") );
+            if (toRemove) {
                 toRemove.remove();
+            }
 
         }
     }

@@ -2,6 +2,8 @@
 
 /* global GLOBAL_SERVER_OS */
 /* global GLOBAL_LANG */
+/* global Ext */
+/* global TR */
 
 var urlString = "";
 var map = "";
@@ -85,7 +87,7 @@ else {
             }
             else
             {
-                Ext.QuickTips.init();
+                Ext.QuickTips.init(true);
 
                 var loginDialog = new Ext.ux.form.LoginDialog({
                     url: 'admin/login.php',
