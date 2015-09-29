@@ -1,7 +1,5 @@
 // customInit() is called before any map initialization
 
-/* global projectData */
-
 function customInit() {
 
      // I create a new control click event class
