@@ -15,7 +15,7 @@ var selectedLayers; //later an array containing all visible (selected) layers
 var selectedQueryableLayers; //later an array of all visible (selected and queryable) layers
 var allLayers; //later an array containing all leaf layers
 var thematicLayer, highlightLayer, featureInfoHighlightLayer;
-var highLightGeometry = new Array();
+var highLightGeometry = [];
 var WMSGetFInfo, WMSGetFInfoHover;
 //var lastLayer, lastFeature;
 var featureInfoResultLayers;
@@ -160,7 +160,7 @@ function loadWMSConfig() {
         },
         //uros fix
         projectSettings: null,
-        initialVisibleLayers: new Array(),
+        initialVisibleLayers: [],
         // customize the createNode method to add a checkbox to nodes and the ui provider
         createNode: function (attr) {
             attr.checked = false;
@@ -379,9 +379,9 @@ function postLoading() {
     MapOptions.maxExtent = maxExtent;
 
     //now collect all selected layers (with checkbox enabled in tree)
-    selectedLayers = new Array();
-    selectedQueryableLayers = new Array();
-    allLayers = new Array();
+    selectedLayers = [];
+    selectedQueryableLayers = [];
+    allLayers = [];
 
     layerTree.root.firstChild.cascade(
         function (n) {
@@ -1106,8 +1106,8 @@ function postLoading() {
 
     leafsChangeFunction = function () {
         //now collect all selected queryable layers for WMS request
-        selectedLayers = new Array();
-        selectedQueryableLayers = new Array();
+        selectedLayers = [];
+        selectedQueryableLayers = [];
         layerTree.root.firstChild.cascade(
 
             function (n) {
@@ -2357,7 +2357,7 @@ function setGrayNameWhenOutsideScale() {
 
         //layers
         //------
-        var allLayersWithIDs = new Array();
+        var allLayersWithIDs = [];
 
         //iterate layer tree to get title and layer-id
         layerTree.root.firstChild.cascade(
@@ -2415,10 +2415,10 @@ function setGrayNameWhenOutsideScale() {
 
         // layer-groups
         // ------------
-        var arrLayerGroups = new Array(); //array containing all layer-groups
-        var arrOutsideScale = new Array(); //array with the state of all layers within the group
-        var arrMaxScale = new Array(); //array with the defined max-scale of the group
-        var arrMinScale = new Array(); //array with the defined min-scale of the group
+        var arrLayerGroups = []; //array containing all layer-groups
+        var arrOutsideScale = []; //array with the state of all layers within the group
+        var arrMaxScale = []; //array with the defined max-scale of the group
+        var arrMinScale = []; //array with the defined min-scale of the group
 
         //iterate layer tree
         layerTree.root.firstChild.cascade(
