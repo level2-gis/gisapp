@@ -2,10 +2,6 @@
 // CONTEXT MENU STUFF
 // *******************
 
-/* global projectData */
-/* global Ext */
-/* global lang */
-
 function buildLayerContextMenu(node) {
 
     // prepare the generic context menu for Layer

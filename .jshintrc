@@ -1,0 +1,22 @@
+{
+  "bitwise"	    :  true,
+  "curly"	    :  true,
+  "eqeqeq"	    :  false,
+  "forin"	    :  false,
+  "latedef"	    :  "nofunc",
+  "noarg"		:  true,
+  "nonbsp"      :  true,
+  "notypeof"    :  true,
+  "nonew"		:  true,
+  "undef"		:  true,
+  "unused"	    :  false,
+  "browser"	    :  true,
+  "globals"     : {
+    "Ext":false,
+    "GeoExt":false,
+    "OpenLayers":false,
+    "GLOBAL_SERVER_OS":true,
+    "projectData":true,
+    "lang":true,
+    "TR":true}
+}

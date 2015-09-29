@@ -1,10 +1,5 @@
 //This file is used instead of GlobalOptions.js
 
-/* global GLOBAL_SERVER_OS */
-/* global projectData */
-/* global TR */
-/* global OpenLayers */
-
 var lang = "en";
 var helpfile = "help_en.html";
 var serverAndCGI = "/proxy";

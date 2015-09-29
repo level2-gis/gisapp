@@ -64,7 +64,7 @@ function showInteractiveLegendAndMetadata(layertitle) {
 	metadataText += '<p style="margin-top:1em;margin-bottom:0.4em;font-weight:bold;">'+geographicExtentString[lang]+"</p><ul>";
 	metadataText += '<table style="margin-top:0.5em;border:none;border-collapse:collapse;"><tr class="even"><th class="mdHeader">'+westString[lang]+'</th><th class="mdHeader">'+southString[lang]+'</th><th class="mdHeader">'+eastString[lang]+'</th><th class="mdHeader">'+northString[lang]+'</th></tr>';
 	metadataText += '<tr><td class="mdCell">'+wmsLoader.layerProperties[layername].bbox[0]+'</td><td class="mdCell">'+wmsLoader.layerProperties[layername].bbox[1]+'</td><td class="mdCell">'+wmsLoader.layerProperties[layername].bbox[2]+'</td><td class="mdCell">'+wmsLoader.layerProperties[layername].bbox[3]+'</td></tr>';
-	metadataText += '</table>'
+	metadataText += '</table>';
 	
 	//attributes/fields
 	if (wmsLoader.layerProperties[layername].attributes) {
