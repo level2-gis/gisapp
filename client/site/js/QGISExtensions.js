@@ -37,10 +37,10 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
     WMSCapabilities: null,
     projectSettings: null,
     //this list holds layer properties, indexed by layername
-    layerProperties: new Array(),
+    layerProperties: [],
     //this list holds a mapping between title and layer name - the tree shows the title, the WMS requests need names
-    layerTitleNameMapping: new Array(),
-    initialVisibleLayers: new Array(),
+    layerTitleNameMapping: [],
+    initialVisibleLayers: [],
     getParams: function(node) {
         return {
             SERVICE: 'WMS',

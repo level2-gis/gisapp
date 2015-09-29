@@ -63,7 +63,7 @@ def main():
     for aLine in inputFile:
         if aLine[:4] == "var ":
             outFile.write(aLine)
-        elif aLine.find("new Array()") != -1:
+        elif aLine.find("[]") != -1:
             outFile.write(aLine)
         else:
             for aLang in languages:

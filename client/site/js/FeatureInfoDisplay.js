@@ -38,8 +38,8 @@ function showFeatureInfo(evt) {
                 xmlDoc.loadXML(evt.text);
             }
             // open AttributeTree panel
-            featureInfoResultLayers = new Array();
-            highLightGeometry = new Array();
+            featureInfoResultLayers = [];
+            highLightGeometry = [];
             parseFIResult(xmlDoc);
             featureInfoResultLayers.reverse();
             highLightGeometry.reverse();
@@ -336,7 +336,7 @@ function parseFIResult(node) {
 			//if (showFILayerTitle) {
 			//	htmlText += "<h2>" + wmsLoader.layerProperties[node.getAttribute("name")].title + "</h2>";
 			//}
-            var geoms = new Array();
+            var geoms = [];
             var layerChildNode = node.firstChild;
             while (layerChildNode) {
                 var layerTitle = wmsLoader.layerProperties[node.getAttribute("name")].title;

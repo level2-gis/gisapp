@@ -24,7 +24,7 @@ var searchtables = null;
 var visibleLayers = null; //later an array of layer names that are initially visible
 var visibleBackgroundLayer = null; // later the name of the visibleBackgroundLayer
 var initialLayerOrder = null; //later an array containing the initialLayerOrder
-var fullColorLayers = new Array(); //layers that should be displayed in 24bit (JPEG) instead of 8bit PNG, only relevant if the project format is 8bit
+var fullColorLayers = []; //layers that should be displayed in 24bit (JPEG) instead of 8bit PNG, only relevant if the project format is 8bit
 
 if (document.documentURI) {
 	//all browsers except older IE

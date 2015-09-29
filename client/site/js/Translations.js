@@ -13,7 +13,7 @@
 var availableHelpLanguages = Array("en","de","hu","it","pl","fr","ro");
 
 // list of available languages
-var availableLanguages = new Array();
+var availableLanguages = [];
 availableLanguages["en"] = {names:[], translator:"Andreas Neumann"}; //a (dot) neumann (at) carto (dot) net
 availableLanguages["es"] = {names:[], translator:"Samuel Mesa, Diana Galindo, Germán Carrillo"}; // samuelmesa (at) gmail (dot) com , drgalindog (at) linuxmail (dot) org
 availableLanguages["de"] = {names:[], translator:"Andreas Neumann"}; //a(dot)neumann(at)carto(dot)net
@@ -215,7 +215,7 @@ Status messages
 ***********************/
 
 //map loading string displayed when starting the map application
-var mapAppLoadingString = new Array();
+var mapAppLoadingString = [];
 mapAppLoadingString["en"] = "Loading map application...";
 mapAppLoadingString["es"] = "Cargando la aplicación del mapa...";
 mapAppLoadingString["de"] = "Kartenapplikation wird geladen...";
@@ -231,7 +231,7 @@ mapAppLoadingString["nl"] = "Kaartapplicatie laden...";
 mapAppLoadingString["pl"] = "Ładowanie aplikacji mapy...";
 
 //indicating that map app was loaded and we are now loading the map
-var mapLoadingString = new Array();
+var mapLoadingString = [];
 mapLoadingString["en"] = "Loading Map...";
 mapLoadingString["es"] = "Cargando mapa...";
 mapLoadingString["de"] = "Karte wird geladen...";
@@ -247,7 +247,7 @@ mapLoadingString["nl"] = "Kaart laden...";
 mapLoadingString["pl"] = "Ładowanie mapy...";
 
 //mode string for navigation
-var modeNavigationString = new Array();
+var modeNavigationString = [];
 modeNavigationString["en"] = "Mode: navigation. Shift/rectangle or mouse wheel for zooming.";
 modeNavigationString["es"] = "Modo: navegación. Shift/rectángulo o rueda del ratón que desea zoom.";
 modeNavigationString["de"] = "Modus: Navigation. Shift/Rechteck aufziehen oder Mausrad zum zoomen.";
@@ -263,7 +263,7 @@ modeNavigationString["nl"] = "Mode: navigatie. Shift/rechthoek of muiswiel om te
 modeNavigationString["pl"] = "Tryb: nawigacja. Shift+zaznacz obszar lub użyj kółka myszy, aby przybliżyć.";
 
 //mode string for rectangle zoom
-var modeZoomRectangle = new Array();
+var modeZoomRectangle = [];
 modeZoomRectangle["en"] = "Mode: zoom with rectangle. Draw rectangle over region you wish to zoom in.";
 modeZoomRectangle["es"] = "Modo: zoom con rectángulo. Dibujar el rectángulo sobre la región que desea acercar.";
 modeZoomRectangle["de"] = "Modus: Zoom mit Rechteck. Ziehen Sie die gewünschte Region auf.";
@@ -279,7 +279,7 @@ modeZoomRectangle["nl"] = "Mode: zoomen met rechthoek. Teken een rechthoek over 
 modeZoomRectangle["pl"] = "Tryb: przybliż zaznaczeniem. Narysuj prostokąt obejmujący obszar, który chcesz zbliżyć.";
 
 //mode string for attribute data detailed
-var modeObjectIdentificationString = new Array();
+var modeObjectIdentificationString = [];
 modeObjectIdentificationString["en"] = "Mode: object identification. Move the mouse over an object to identify it, click it to view its attribute data.";
 modeObjectIdentificationString["es"] = "Modo: Identificación de objeto. Mueva el cursor sobre un objeto para identificarlo, haga click sobre él para ver sus atributos.";
 modeObjectIdentificationString["de"] = "Modus: Objektidentifikation. Bewegen Sie die Maus über das Objekt, um es zu identifizeren, klicken Sie es an, um seine Attributdaten anzuzeigen.";
@@ -295,7 +295,7 @@ modeObjectIdentificationString["nl"] = "Mode: object identificieren. Beweeg de m
 modeObjectIdentificationString["pl"] = "Tryb: identyfikacja obiektów. Najedź kursorem na obiekt, aby go zidentyfikować; kliknij na obiekt, aby zobaczyć wszystkie atrybuty";
 
 //mode string for map tips (display main attribute with tooltips)
-var modeMapTipsString = new Array();
+var modeMapTipsString = [];
 modeMapTipsString["en"] = "Mode: MapTips. Display on mouse over with Tooltips.";
 modeMapTipsString["es"] = "Modo: MapTips. Despliega textos emergentes con el cursor del ratón.";
 modeMapTipsString["de"] = "Modus: MapTips. Anzeige mit Mouseover über tooltips.";
@@ -311,7 +311,7 @@ modeMapTipsString["nl"] = "Mode: MapTips. Weergeven tooltips tijdens mouse-over.
 modeMapTipsString["pl"] = "Mode: podpowiedzi. Wyświetl podpowiedź po najechaniu kursorem na obiekt.";
 
 //mode measure distance
-var modeMeasureDistanceString = new Array();
+var modeMeasureDistanceString = [];
 modeMeasureDistanceString["en"] = "Mode: measure distance. Finish with double click.";
 modeMeasureDistanceString["es"] = "Modo: medir distancia. Finalizar con doble click.";
 modeMeasureDistanceString["de"] = "Modus: Distanzmessung. Beenden mit Doppelklick.";
@@ -327,7 +327,7 @@ modeMeasureDistanceString["nl"] = "Mode: afstand meten. Beëindig door te dubbel
 modeMeasureDistanceString["pl"] = "Tryb: pomiar odległości. Kliknij dwukrotnie, aby zakończyć pomiar.";
 
 //mode measure area
-var modeMeasureAreaString = new Array();
+var modeMeasureAreaString = [];
 modeMeasureAreaString["en"] = "Mode: measure area. Finish with double click.";
 modeMeasureAreaString["es"] = "Modo: medir área. Finalizar con doble click.";
 modeMeasureAreaString["de"] = "Modus: Flächenmessung. Beenden mit Doppelklick.";
@@ -343,7 +343,7 @@ modeMeasureAreaString["nl"] = "Mode: oppervlakte berekenen. Beëindig door te du
 modeMeasureAreaString["pl"] = "Tryb: pomiar powierzchni. Kliknij dwukrotnie, aby zakończyć pomiar.";
 
 //mode StreetView
-var modeStreetViewString = new Array();
+var modeStreetViewString = [];
 modeStreetViewString["en"] = "Mode: GoogleStreetView. Click on the road.";
 modeStreetViewString["es"] = "Mode: GoogleStreetView. Click on the road."; //FIXME
 modeStreetViewString["de"] = "Mode: GoogleStreetView. Click on the road."; //FIXME
@@ -360,7 +360,7 @@ modeStreetViewString["pl"] = "Mode: GoogleStreetView. Click on the road."; //FIX
 
 
 //mode printing
-var modePrintingString = new Array();
+var modePrintingString = [];
 modePrintingString["en"] = "Mode: printing. Move or rotate the map extent. Print with the 'Print'-Button.";
 modePrintingString["es"] = "Modo: imprimir. Mueva o rote la extensión del mapa. Imprima con el botón 'imprimir'.";
 modePrintingString["de"] = "Modus: Drucken. Verschieben oder Rotieren Sie den Kartenausschnitt. Drucken mit 'Drucken'-Knopf.";
@@ -376,7 +376,7 @@ modePrintingString["nl"] = "Mode: afdrukken. Verplaats of roteer de kaartextent.
 modePrintingString["pl"] = "Tryb: drukowanie. Przesuń lub obróć zasięg mapy. Wydrukuj widok klikając przycisk 'Drukuj'.";
 
 //indicating is waiting for print
-var printLoadingString = new Array();
+var printLoadingString = [];
 printLoadingString["en"] = "Printing initialised. Please wait...";
 printLoadingString["es"] = "Printing initialised. Please wait..."; //FIXME
 printLoadingString["de"] = "Der Druckauftrag ist erfolgt. Bitte haben sie etwas Geduld...";
@@ -396,7 +396,7 @@ GUI stuff
 ***********************/
 
 //title of panel on the left
-var leftPanelTitleString = new Array();
+var leftPanelTitleString = [];
 leftPanelTitleString["en"] = "Info and Tools";
 leftPanelTitleString["es"] = "Información y herramientas";
 leftPanelTitleString["de"] = "Infos und Werkzeuge";
@@ -412,7 +412,7 @@ leftPanelTitleString["nl"] = "Info en Gereedschap";
 leftPanelTitleString["pl"] = "Informacje i narzędzia";
 
 //title of search panel
-var searchPanelTitleString = new Array();
+var searchPanelTitleString = [];
 searchPanelTitleString["en"] = "Search";
 searchPanelTitleString["es"] = "Buscar";
 searchPanelTitleString["de"] = "Suche";
@@ -428,7 +428,7 @@ searchPanelTitleString["nl"] = "Zoeken";
 searchPanelTitleString["pl"] = "Szukaj";
 
 //text of theme Switcher button
-var mapThemeButtonTitleString = new Array();
+var mapThemeButtonTitleString = [];
 mapThemeButtonTitleString["en"] = "Map themes";
 mapThemeButtonTitleString["es"] = "Temas de mapas";
 mapThemeButtonTitleString["de"] = "Kartenthemen";
@@ -444,7 +444,7 @@ mapThemeButtonTitleString["nl"] = "Kaartthema's";
 mapThemeButtonTitleString["pl"] = "Tematy map";
 
 //theme switcher window title
-var themeSwitcherWindowTitleString = new Array();
+var themeSwitcherWindowTitleString = [];
 themeSwitcherWindowTitleString["en"] = "Map theme choice";
 themeSwitcherWindowTitleString["es"] = "Elección de tema de mapa";
 themeSwitcherWindowTitleString["de"] = "Kartenthemenwechsel";
@@ -460,7 +460,7 @@ themeSwitcherWindowTitleString["nl"] = "Kaartthema keuze";
 themeSwitcherWindowTitleString["pl"] = "Wybór tematu mapy";
 
 //theme switcher filter label string
-var themeSwitcherFilterLabelString = new Array();
+var themeSwitcherFilterLabelString = [];
 themeSwitcherFilterLabelString["en"] = "Filter by map title: ";
 themeSwitcherFilterLabelString["es"] = "Filtrar por título de mapa: ";
 themeSwitcherFilterLabelString["de"] = "Filterung nach Kartentitel: ";
@@ -476,7 +476,7 @@ themeSwitcherFilterLabelString["nl"] = "Filter op kaarttitel: ";
 themeSwitcherFilterLabelString["pl"] = "Filtruj po tytule mapy: ";
 
 //theme switcher all themes string in list view
-var themeSwitcherAllThemesListViewString = new Array();
+var themeSwitcherAllThemesListViewString = [];
 themeSwitcherAllThemesListViewString["en"] = "All map themes";
 themeSwitcherAllThemesListViewString["es"] = "Todos los temas de mapas";
 themeSwitcherAllThemesListViewString["de"] = "Alle Kartenthemen";
@@ -491,7 +491,7 @@ themeSwitcherAllThemesListViewString["sl"] = "Vse vsebine";
 themeSwitcherAllThemesListViewString["nl"] = "Alle kaartthema's";
 themeSwitcherAllThemesListViewString["pl"] = "Wszystkie tematy map";
 
-var themeSwitcherTooltipResponsibleString = new Array();
+var themeSwitcherTooltipResponsibleString = [];
 themeSwitcherTooltipResponsibleString["en"] = "Responsible: ";
 themeSwitcherTooltipResponsibleString["es"] = "Responsable: ";
 themeSwitcherTooltipResponsibleString["de"] = "Verantwortlich: ";
@@ -507,7 +507,7 @@ themeSwitcherTooltipResponsibleString["nl"] = "Verantwoordelijke: ";
 themeSwitcherTooltipResponsibleString["pl"] = "Odpowiedzialność: ";
 
 //either tags or keywords
-var themeSwitcherTooltipTagString = new Array();
+var themeSwitcherTooltipTagString = [];
 themeSwitcherTooltipTagString["en"] = "Tags: ";
 themeSwitcherTooltipTagString["es"] = "Etiquetas: ";
 themeSwitcherTooltipTagString["de"] = "Stichwörter: ";
@@ -522,7 +522,7 @@ themeSwitcherTooltipTagString["sl"] = "Oznake: ";
 themeSwitcherTooltipTagString["nl"] = "Labels: ";
 themeSwitcherTooltipTagString["pl"] = "Tagi: ";
 
-var themeSwitcherTooltipMapThemeString = new Array();
+var themeSwitcherTooltipMapThemeString = [];
 themeSwitcherTooltipMapThemeString["en"] = "Map theme: ";
 themeSwitcherTooltipMapThemeString["es"] = "Tema de mapa: ";
 themeSwitcherTooltipMapThemeString["de"] = "Kartenthema: ";
@@ -537,7 +537,7 @@ themeSwitcherTooltipMapThemeString["sl"] = "Vsebina: ";
 themeSwitcherTooltipMapThemeString["nl"] = "Kaartthema: ";
 themeSwitcherTooltipMapThemeString["pl"] = "Temat mapy: ";
 
-var themeSwitcherTooltipUpdateString = new Array();
+var themeSwitcherTooltipUpdateString = [];
 themeSwitcherTooltipUpdateString["en"] = "Update interval: ";
 themeSwitcherTooltipUpdateString["es"] = "Intervalo de actualización: ";
 themeSwitcherTooltipUpdateString["de"] = "Aktualisierung: ";
@@ -552,7 +552,7 @@ themeSwitcherTooltipUpdateString["sl"] = "Osvežitveni interval: ";
 themeSwitcherTooltipUpdateString["nl"] = "Update-interval: ";
 themeSwitcherTooltipUpdateString["pl"] = "Częstość aktualizacji: ";
 
-var themeSwitcherTooltipLastUpdateString = new Array();
+var themeSwitcherTooltipLastUpdateString = [];
 themeSwitcherTooltipLastUpdateString["en"] = "Last update: ";
 themeSwitcherTooltipLastUpdateString["es"] = "Última actualización: ";
 themeSwitcherTooltipLastUpdateString["de"] = "Letze Aktualisierung: ";
@@ -567,7 +567,7 @@ themeSwitcherTooltipLastUpdateString["sl"] = "Zadnja sprememba: ";
 themeSwitcherTooltipLastUpdateString["nl"] = "Laatste update: ";
 themeSwitcherTooltipLastUpdateString["pl"] = "Ostatnia aktualizacja: ";
 
-var themeSwitcherTooltipPwProtectedString = new Array();
+var themeSwitcherTooltipPwProtectedString = [];
 themeSwitcherTooltipPwProtectedString["en"] = "password protected";
 themeSwitcherTooltipPwProtectedString["es"] = "protegido por contraseña";
 themeSwitcherTooltipPwProtectedString["de"] = "passwortgeschützt";
@@ -582,7 +582,7 @@ themeSwitcherTooltipPwProtectedString["sl"] = "zaščiteno z geslom";
 themeSwitcherTooltipPwProtectedString["nl"] = "Wachtwoord-beveiligd";
 themeSwitcherTooltipPwProtectedString["pl"] = "chronione hasłem";
 
-var emptyThemeSearchFieldString = new Array();
+var emptyThemeSearchFieldString = [];
 emptyThemeSearchFieldString["en"] = "Insert filter string";
 emptyThemeSearchFieldString["es"] = "Inserte el texto para filtrar";
 emptyThemeSearchFieldString["de"] = "Filtertext eingeben";
@@ -597,7 +597,7 @@ emptyThemeSearchFieldString["sl"] = "Vnesi besedilo za filter";
 emptyThemeSearchFieldString["nl"] = "Filtertekst ingeven";
 emptyThemeSearchFieldString["pl"] = "Wpisz tekst, by filtrować";
 
-var resetThemeSearchFieldTooltipString = new Array();
+var resetThemeSearchFieldTooltipString = [];
 resetThemeSearchFieldTooltipString["en"] = "Reset map theme search filter";
 resetThemeSearchFieldTooltipString["es"] = "Borrar el filtro de búsqueda de temas de mapa";
 resetThemeSearchFieldTooltipString["de"] = "Kartenthemenfilter zurücksetzen";
@@ -613,7 +613,7 @@ resetThemeSearchFieldTooltipString["nl"] = "Kaartthemafilter terugplaatsen";
 resetThemeSearchFieldTooltipString["pl"] = "Zresetuj filtr tematu mapy";
 
 //title of map panel
-var mapPanelTitleString = new Array();
+var mapPanelTitleString = [];
 mapPanelTitleString["en"] = "Map";
 mapPanelTitleString["es"] = "Mapa";
 mapPanelTitleString["de"] = "Karte";
@@ -629,7 +629,7 @@ mapPanelTitleString["nl"] = "Kaart";
 mapPanelTitleString["pl"] = "Mapa";
 
 //title of map layer tree
-var layerTreeTitleString = new Array();
+var layerTreeTitleString = [];
 layerTreeTitleString["en"] = "Map Layers";
 layerTreeTitleString["es"] = "Capas";
 layerTreeTitleString["de"] = "Kartenebenen";
@@ -645,7 +645,7 @@ layerTreeTitleString["nl"] = "Kaartlagen";
 layerTreeTitleString["pl"] = "Zawartość mapy";
 
 //title of background layers
-var backgroundLayerTitleString = new Array();
+var backgroundLayerTitleString = [];
 backgroundLayerTitleString["en"] = "Background Layers";
 backgroundLayerTitleString["es"] = "Background Layers";
 backgroundLayerTitleString["de"] = "Hintergrundebenen";
@@ -661,7 +661,7 @@ backgroundLayerTitleString["nl"] = "Achtergrondlagen";
 backgroundLayerTitleString["pl"] = "Warstwy podkładowe";
 
 //title of external layers
-var externalLayerTitleString = new Array();
+var externalLayerTitleString = [];
 externalLayerTitleString["en"] = "External Layers";
 externalLayerTitleString["es"] = "External Layers"; //FIXME
 externalLayerTitleString["de"] = "External Layers"; //FIXME
@@ -677,7 +677,7 @@ externalLayerTitleString["nl"] = "External Layers"; //FIXME
 externalLayerTitleString["pl"] = "External Layers"; //FIXME
 
 //title of layer order panel
-var layerOrderPanelTitleString = new Array();
+var layerOrderPanelTitleString = [];
 layerOrderPanelTitleString["en"] = "Layer order";
 layerOrderPanelTitleString["es"] = "Layer order"; //FIXME
 layerOrderPanelTitleString["de"] = "Ebenenreihenfolge";
@@ -693,7 +693,7 @@ layerOrderPanelTitleString["nl"] = "Laagvolgorde";
 layerOrderPanelTitleString["pl"] = "Kolejność warstw";
 
 //tooltip of layer settings button in layer order panel
-var layerOrderPanelLayerSettingsTooltipString = new Array();
+var layerOrderPanelLayerSettingsTooltipString = [];
 layerOrderPanelLayerSettingsTooltipString["en"] = "Settings";
 layerOrderPanelLayerSettingsTooltipString["es"] = "Settings"; //FIXME
 layerOrderPanelLayerSettingsTooltipString["de"] = "Einstellungen";
@@ -709,7 +709,7 @@ layerOrderPanelLayerSettingsTooltipString["nl"] = "Instellingen";
 layerOrderPanelLayerSettingsTooltipString["pl"] = "Ustawienia";
 
 //tooltip of remove layer button in layer order panel
-var layerOrderPanelVisibilityChangeTooltipString = new Array();
+var layerOrderPanelVisibilityChangeTooltipString = [];
 layerOrderPanelVisibilityChangeTooltipString["en"] = "Change Layer Visibility";
 layerOrderPanelVisibilityChangeTooltipString["es"] = "Change Layer Visibility"; //FIXME
 layerOrderPanelVisibilityChangeTooltipString["de"] = "Ebenensichtbarkeit ändern";
@@ -725,7 +725,7 @@ layerOrderPanelVisibilityChangeTooltipString["nl"] = "Wijzig laagvisibiliteit";
 layerOrderPanelVisibilityChangeTooltipString["pl"] = "Zmień przezroczystość warstwy";
 
 //text when dragging layer in layer order panel
-var layerOrderPanelMoveLayerTextString = new Array();
+var layerOrderPanelMoveLayerTextString = [];
 layerOrderPanelMoveLayerTextString["en"] = "Move layer";
 layerOrderPanelMoveLayerTextString["es"] = "Move layer"; //FIXME
 layerOrderPanelMoveLayerTextString["de"] = "Ebene verschieben";
@@ -741,7 +741,7 @@ layerOrderPanelMoveLayerTextString["nl"] = "Verplaats laag";
 layerOrderPanelMoveLayerTextString["pl"] = "Przenieś warstwę";
 
 //tooltip of transparency sliders in layer order panel
-var layerOrderPanelTransparencyTooltipString = new Array();
+var layerOrderPanelTransparencyTooltipString = [];
 layerOrderPanelTransparencyTooltipString["en"] = "Transparency {0}%";
 layerOrderPanelTransparencyTooltipString["es"] = "Transparency {0}%"; //FIXME
 layerOrderPanelTransparencyTooltipString["de"] = "Transparenz {0}%";
@@ -757,7 +757,7 @@ layerOrderPanelTransparencyTooltipString["nl"] = "Transparantie {0}%";
 layerOrderPanelTransparencyTooltipString["pl"] = "Przezroczystość {0}%";
 
 //title of legend tab
-var legendTabTitleString = new Array();
+var legendTabTitleString = [];
 legendTabTitleString["en"] = "Legend";
 legendTabTitleString["es"] = "Leyenda";
 legendTabTitleString["de"] = "Legende";
@@ -773,7 +773,7 @@ legendTabTitleString["nl"] = "Legende";
 legendTabTitleString["pl"] = "Legenda";
 
 //legend loading message in legend tab
-var legendTabLoadingString = new Array();
+var legendTabLoadingString = [];
 legendTabLoadingString["en"] = "Loading legend, please wait...";
 legendTabLoadingString["es"] = "Leyenda"; //FIXME
 legendTabLoadingString["de"] = "Legende"; //FIXME
@@ -789,7 +789,7 @@ legendTabLoadingString["ru"] = "Legende laden, gelieve te wachten...";
 legendTabLoadingString["pl"] = "Ładowanie legendy, proszę czekać...";
 
 //title of metadata tab
-var metadataTabTitleString = new Array();
+var metadataTabTitleString = [];
 metadataTabTitleString["en"] = "Metadata";
 metadataTabTitleString["es"] = "Metadatos";
 metadataTabTitleString["de"] = "Metadaten";
@@ -805,7 +805,7 @@ metadataTabTitleString["nl"] = "Metadata";
 metadataTabTitleString["pl"] = "Metadane";
 
 //title of help window
-var helpWindowTitleString = new Array();
+var helpWindowTitleString = [];
 helpWindowTitleString["en"] = "Help";
 helpWindowTitleString["es"] = "Ayuda";
 helpWindowTitleString["de"] = "Hilfe";
@@ -821,7 +821,7 @@ helpWindowTitleString["nl"] = "Help";
 helpWindowTitleString["pl"] = "Pomoc";
 
 //title of legend and per layer metadata window
-var legendMetadataWindowTitleString = new Array();
+var legendMetadataWindowTitleString = [];
 legendMetadataWindowTitleString["en"] = "Legend and metadata information of layer";
 legendMetadataWindowTitleString["es"] = "Legend and metadata information of layer"; //FIXME
 legendMetadataWindowTitleString["de"] = "Legende und Metadaten der Ebene";
@@ -837,7 +837,7 @@ legendMetadataWindowTitleString["nl"] = "Legende en metadata laaginformatie";
 legendMetadataWindowTitleString["pl"] = "Legenda i metadane warstwy";
 
 //title of metadata section
-var metadataSectionTitleString = new Array();
+var metadataSectionTitleString = [];
 metadataSectionTitleString["en"] = "Metadata of layer";
 metadataSectionTitleString["es"] = "Metadata of layer"; //FIXME
 metadataSectionTitleString["de"] = "Metadaten der Ebene";
@@ -853,7 +853,7 @@ metadataSectionTitleString["nl"] = "Metadata van laag ";
 metadataSectionTitleString["pl"] = "Metadane warstwy";
 
 //Abstract
-var abstractString = new Array();
+var abstractString = [];
 abstractString["en"] = "Abstract:";
 abstractString["es"] = "Abstract:"; //FIXME
 abstractString["de"] = "Zusammenfassung:";
@@ -869,7 +869,7 @@ abstractString["nl"] = "Abstract:";
 abstractString["pl"] = "Opis:";
 
 //title of legend and per layer metadata window
-var layerQueryable = new Array();
+var layerQueryable = [];
 layerQueryable["en"] = "This layer is queryable: ";
 layerQueryable["es"] = "This layer is queryable: "; //FIXME
 layerQueryable["de"] = "Diese Ebene ist abfragbar: ";
@@ -885,7 +885,7 @@ layerQueryable["nl"] = "Deze laag is bevraagbaar: ";
 layerQueryable["pl"] = "Ta warstwa ma możliwość wykonania zapytania: ";
 
 //in case we need a yes
-var yesString = new Array();
+var yesString = [];
 yesString["en"] = "yes";
 yesString["es"] = "yes"; //FIXME
 yesString["de"] = "ja";
@@ -901,7 +901,7 @@ yesString["nl"] = "ja";
 yesString["pl"] = "tak";
 
 //in case we need a no
-var noString = new Array();
+var noString = [];
 noString["en"] = "no";
 noString["es"] = "no"; //FIXME
 noString["de"] = "nein";
@@ -917,7 +917,7 @@ noString["nl"] = "nee";
 noString["pl"] = "nie";
 
 //metadata: layer group
-var layerGroupString = new Array();
+var layerGroupString = [];
 layerGroupString["en"] = "Layer group";
 layerGroupString["es"] = "Layer group"; //FIXME
 layerGroupString["de"] = "Ebenengruppe";
@@ -933,7 +933,7 @@ layerGroupString["nl"] = "Laaggroep";
 layerGroupString["pl"] = "Grupa warstw";
 
 //metadata: display field (for tooltips)
-var displayFieldString = new Array();
+var displayFieldString = [];
 displayFieldString["en"] = "Display-Field";
 displayFieldString["es"] = "Display-Field"; //FIXME
 displayFieldString["de"] = "Anzeigefeld";
@@ -949,7 +949,7 @@ displayFieldString["nl"] = "Display-veld";
 displayFieldString["pl"] = "Pole do wyświetlenia etykiety";
 
 //metadata: coordinate systems
-var coordinateSystemsString = new Array();
+var coordinateSystemsString = [];
 coordinateSystemsString["en"] = "Available Coordinate Systems";
 coordinateSystemsString["es"] = "Available Coordinate Systems"; //FIXME
 coordinateSystemsString["de"] = "Verfügbare Koordinatensysteme";
@@ -965,7 +965,7 @@ coordinateSystemsString["nl"] = "Beschikbare coördinatensystemen";
 coordinateSystemsString["pl"] = "Dostępne układy odniesienia";
 
 //metadata: geographic extent
-var geographicExtentString = new Array();
+var geographicExtentString = [];
 geographicExtentString["en"] = "Geographic Extent";
 geographicExtentString["es"] = "Geographic Extent"; //FIXME
 geographicExtentString["de"] = "Geographischer Ausschnitt";
@@ -981,7 +981,7 @@ geographicExtentString["nl"] = "Geografische extent";
 geographicExtentString["pl"] = "Zasięg geograficzny";
 
 //metadata: geographic extent
-var westString = new Array();
+var westString = [];
 westString["en"] = "west";
 westString["es"] = "west"; //FIXME
 westString["de"] = "Westen";
@@ -997,7 +997,7 @@ westString["nl"] = "west";
 westString["pl"] = "zachód";
 
 //metadata: geographic extent
-var eastString = new Array();
+var eastString = [];
 eastString["en"] = "east";
 eastString["es"] = "east"; //FIXME
 eastString["de"] = "Osten";
@@ -1013,7 +1013,7 @@ eastString["nl"] = "oost";
 eastString["pl"] = "wschód";
 
 //metadata: geographic extent
-var northString = new Array();
+var northString = [];
 northString["en"] = "north";
 northString["es"] = "north"; //FIXME
 northString["de"] = "Norden";
@@ -1029,7 +1029,7 @@ northString["nl"] = "noord";
 northString["pl"] = "północ";
 
 //metadata: geographic extent
-var southString = new Array();
+var southString = [];
 southString["en"] = "south";
 southString["es"] = "south"; //FIXME
 southString["de"] = "Süden";
@@ -1045,7 +1045,7 @@ southString["nl"] = "zuid";
 southString["pl"] = "południe";
 
 //attributes / fields
-var attributesString = new Array();
+var attributesString = [];
 attributesString["en"] = "Attributes / Fields";
 attributesString["es"] = "Atributos";
 attributesString["de"] = "Attribute / Felder";
@@ -1061,7 +1061,7 @@ attributesString["nl"] = "Attributen / Velden";
 attributesString["pl"] = "Atrybuty / Pola";
 
 //attribute name string
-var attributeNameString = new Array();
+var attributeNameString = [];
 attributeNameString["en"] = "Attribute name";
 attributeNameString["es"] = "Attribute name";
 attributeNameString["de"] = "Attributname";
@@ -1077,7 +1077,7 @@ attributeNameString["nl"] = "Attribuutnaam";
 attributeNameString["pl"] = "Nazwa atrybutu";
 
 //attribute type string
-var attributeTypeString = new Array();
+var attributeTypeString = [];
 attributeTypeString["en"] = "Type";
 attributeTypeString["es"] = "Type";
 attributeTypeString["de"] = "Typ";
@@ -1093,7 +1093,7 @@ attributeTypeString["nl"] = "Type";
 attributeTypeString["pl"] = "Typ";
 
 //attribute comment string
-var attributeCommentString = new Array();
+var attributeCommentString = [];
 attributeCommentString["en"] = "Comment";
 attributeCommentString["es"] = "Comment";
 attributeCommentString["de"] = "Kommentar";
@@ -1109,7 +1109,7 @@ attributeCommentString["nl"] = "Commentaar";
 attributeCommentString["pl"] = "Komentarz";
 
 //attribute length string
-var attributeLengthString = new Array();
+var attributeLengthString = [];
 attributeLengthString["en"] = "Length";
 attributeLengthString["es"] = "Length";
 attributeLengthString["de"] = "Länge";
@@ -1125,7 +1125,7 @@ attributeLengthString["nl"] = "Lengte";
 attributeLengthString["pl"] = "Długość";
 
 //attribute length string
-var attributePrecisionString = new Array();
+var attributePrecisionString = [];
 attributePrecisionString["en"] = "Precision";
 attributePrecisionString["es"] = "Precision";
 attributePrecisionString["de"] = "Präzision";
@@ -1141,7 +1141,7 @@ attributePrecisionString["nl"] = "Precisie";
 attributePrecisionString["pl"] = "Dokładność";
 
 //label in main toolbar for object identification
-var objectIdentificationTextLabel = new Array();
+var objectIdentificationTextLabel = [];
 objectIdentificationTextLabel["en"] = "Object identification: ";
 objectIdentificationTextLabel["es"] = "Identificación de objetos: ";
 objectIdentificationTextLabel["de"] = "Objektidentifikation: ";
@@ -1157,7 +1157,7 @@ objectIdentificationTextLabel["nl"] = "Objectidentificatie: ";
 objectIdentificationTextLabel["pl"] = "Identyfikacja obiektu: ";
 
 //Coordinate text label (coordinate display in bottom toolbar of main map window)
-var coordinateTextLabel = new Array();
+var coordinateTextLabel = [];
 coordinateTextLabel["en"] = "Coordinate:";
 coordinateTextLabel["es"] = "Coordenadas:";
 coordinateTextLabel["de"] = "Koordinate:";
@@ -1173,7 +1173,7 @@ coordinateTextLabel["nl"] = "Coördinaten:";
 coordinateTextLabel["pl"] = "Współrzędne:";
 
 //search
-var searchFieldDefaultTextString = new Array();
+var searchFieldDefaultTextString = [];
 searchFieldDefaultTextString["en"] = "Search (addresses, parcel-nrs, names, etc.)";
 searchFieldDefaultTextString["es"] = "Buscar (direcciones, registros, nombres, etc.)";
 searchFieldDefaultTextString["de"] = "Suche (Adressen, Parzellenr, Flurnamen, etc.)";
@@ -1189,7 +1189,7 @@ searchFieldDefaultTextString["nl"] = "Zoeken (adres, perceelnummers, namen, etc.
 searchFieldDefaultTextString["pl"] = "Szukaj (adresy, numery działek, nazwy, itp.)";
 
 //search button
-var searchButtonString = new Array();
+var searchButtonString = [];
 searchButtonString["en"] = "Search";
 searchButtonString["es"] = "Buscar";
 searchButtonString["de"] = "Suchen";
@@ -1205,7 +1205,7 @@ searchButtonString["nl"] = "Zoeken";
 searchButtonString["pl"] = "Szukaj";
 
 //reset button
-var resetButtonString = new Array();
+var resetButtonString = [];
 resetButtonString["en"] = "Clear";
 resetButtonString["es"] = "Limpiar";
 resetButtonString["de"] = "Zurücksetzen";
@@ -1221,7 +1221,7 @@ resetButtonString["nl"] = "Wissen";
 resetButtonString["pl"] = "Wyczyść";
 
 //please wait
-var pleaseWaitString = new Array();
+var pleaseWaitString = [];
 pleaseWaitString["en"] = "Please wait";
 pleaseWaitString["es"] = "Por favor espere";
 pleaseWaitString["de"] = "Bitte warten";
@@ -1237,7 +1237,7 @@ pleaseWaitString["nl"] = "Gelieve te wachten";
 pleaseWaitString["pl"] = "Proszę czekać";
 
 //search result
-var searchResultString = new Array();
+var searchResultString = [];
 searchResultString["en"] = "Search result";
 searchResultString["es"] = "Resultado de la búsqueda";
 searchResultString["de"] = "Suchresultat";
@@ -1253,7 +1253,7 @@ searchResultString["nl"] = "Zoekresultaat";
 searchResultString["pl"] = "Wyniki wyszukiwania";
 
 //network error
-var networkErrorString = new Array();
+var networkErrorString = [];
 networkErrorString["en"] = "Network error";
 networkErrorString["es"] = "Error de red";
 networkErrorString["de"] = "Netzwerkfehler";
@@ -1269,7 +1269,7 @@ networkErrorString["nl"] = "Netwerkfout";
 networkErrorString["pl"] = "Błąd sieci";
 
 // missing or invalid search params
-var missingOrInvalidSearchParams = new Array();
+var missingOrInvalidSearchParams = [];
 missingOrInvalidSearchParams["en"] = "Missing or invalid values in search form";
 missingOrInvalidSearchParams["es"] = "Valores inválidos o faltantes en el formulario de búsqueda";
 missingOrInvalidSearchParams["de"] = "Fehlende oder ungültige Werte im Suchformular";
@@ -1285,7 +1285,7 @@ missingOrInvalidSearchParams["nl"] = "Ontbrekende of niet correcte waarden in zo
 missingOrInvalidSearchParams["pl"] = "Brakujące lub błędne formuły w polu wyszukiwania";
 
 //search error
-var searchErrorString = new Array();
+var searchErrorString = [];
 searchErrorString["en"] = "Error during search";
 searchErrorString["es"] = "Error en la búsqueda";
 searchErrorString["de"] = "Fehler bei Suche";
@@ -1301,7 +1301,7 @@ searchErrorString["nl"] = "Fout tijdens het zoeken";
 searchErrorString["pl"] = "Błąd podczas wyszukiwania";
 
 //search no records found
-var searchNoRecordsFoundString = new Array();
+var searchNoRecordsFoundString = [];
 searchNoRecordsFoundString["en"] = "No records found"; 
 searchNoRecordsFoundString["es"] = "Error en la búsqueda"; // FIXME
 searchNoRecordsFoundString["de"] = "Fehler bei Suche"; // FIXME
@@ -1317,7 +1317,7 @@ searchNoRecordsFoundString["ru"] = "Geen resultaten gevonden";
 searchNoRecordsFoundString["pl"] = "Nie znaleziono szukanych atrybutów"; 
 
 //print settings toolbar title
-var printSettingsToolbarTitleString = new Array();
+var printSettingsToolbarTitleString = [];
 printSettingsToolbarTitleString["en"] = "Print Settings";
 printSettingsToolbarTitleString["es"] = "Configuración de impresión";
 printSettingsToolbarTitleString["de"] = "Druckeinstellungen";
@@ -1333,7 +1333,7 @@ printSettingsToolbarTitleString["nl"] = "Afdrukinstellingen";
 printSettingsToolbarTitleString["pl"] = "Ustawienia druku";
 
 //print rotation text label
-var printSettingsRotationTextlabelString = new Array();
+var printSettingsRotationTextlabelString = [];
 printSettingsRotationTextlabelString["en"] = "Rotation: ";
 printSettingsRotationTextlabelString["es"] = "Rotación: ";
 printSettingsRotationTextlabelString["de"] = "Rotation: ";
@@ -1349,7 +1349,7 @@ printSettingsRotationTextlabelString["nl"] = "Rotatie: ";
 printSettingsRotationTextlabelString["pl"] = "Obrót: ";
 
 //print button text
-var printButtonTextString = new Array();
+var printButtonTextString = [];
 printButtonTextString["en"] = "Print";
 printButtonTextString["es"] = "Imprimir";
 printButtonTextString["de"] = "Drucken";
@@ -1365,7 +1365,7 @@ printButtonTextString["nl"] = "Afdrukken";
 printButtonTextString["pl"] = "Drukuj";
 
 //print cancel button text
-var printCancelButtonTextString = new Array();
+var printCancelButtonTextString = [];
 printCancelButtonTextString["en"] = "Cancel";
 printCancelButtonTextString["es"] = "Cancelar";
 printCancelButtonTextString["de"] = "Abbrechen";
@@ -1381,8 +1381,8 @@ printCancelButtonTextString["nl"] = "Annuleren";
 printCancelButtonTextString["pl"] = "Anuluj";
 
 //objectIdentificationModeStrings
-var objectIdentificationModeString = new Array();
-objectIdentificationModeString["topMostHit"] = new Array();
+var objectIdentificationModeString = [];
+objectIdentificationModeString["topMostHit"] = [];
 objectIdentificationModeString["topMostHit"]["en"] = "Topmost hit";
 objectIdentificationModeString["topMostHit"]["es"] = "Capa superior";
 objectIdentificationModeString["topMostHit"]["de"] = "Oberster Treffer";
@@ -1397,7 +1397,7 @@ objectIdentificationModeString["topMostHit"]["sl"] = "zgornji zadetek";
 objectIdentificationModeString["topMostHit"]["nl"] = "Bovenste laag";
 objectIdentificationModeString["topMostHit"]["pl"] = "Najwyższa warstwa";
 
-objectIdentificationModeString["allLayers"] = new Array();
+objectIdentificationModeString["allLayers"] = [];
 objectIdentificationModeString["allLayers"]["en"] = "All layers";
 objectIdentificationModeString["allLayers"]["es"] = "Todas las capas";
 objectIdentificationModeString["allLayers"]["de"] = "Alle Ebenen";
@@ -1412,7 +1412,7 @@ objectIdentificationModeString["allLayers"]["sl"] = "vsi sloji";
 objectIdentificationModeString["allLayers"]["nl"] = "Alle lagen";
 objectIdentificationModeString["allLayers"]["pl"] = "Wszystkie warstwy";
 
-objectIdentificationModeString["activeLayers"] = new Array();
+objectIdentificationModeString["activeLayers"] = [];
 objectIdentificationModeString["activeLayers"]["en"] = "Active Layer";
 objectIdentificationModeString["activeLayers"]["es"] = "Capa activa";
 objectIdentificationModeString["activeLayers"]["de"] = "Aktive Ebene";
@@ -1428,7 +1428,7 @@ objectIdentificationModeString["activeLayers"]["nl"] = "Actieve laag";
 objectIdentificationModeString["activeLayers"]["pl"] = "Aktywna warstwa";
 
 //measure distance result prefix
-var measureDistanceResultPrefixString = new Array();
+var measureDistanceResultPrefixString = [];
 measureDistanceResultPrefixString["en"] = "Distance";
 measureDistanceResultPrefixString["es"] = "Distancia";
 measureDistanceResultPrefixString["de"] = "Distanz";
@@ -1444,7 +1444,7 @@ measureDistanceResultPrefixString["nl"] = "Afstand";
 measureDistanceResultPrefixString["pl"] = "Odległość";
 
 //distance prefix for result:
-var measureAreaResultPrefixString = new Array();
+var measureAreaResultPrefixString = [];
 measureAreaResultPrefixString["en"] = "Area";
 measureAreaResultPrefixString["es"] = "Área";
 measureAreaResultPrefixString["de"] = "Fläche";
@@ -1464,7 +1464,7 @@ Tooltips
 ***********************/
 
 //zoom rectangle tooltip
-var zoomRectangleTooltipString = new Array();
+var zoomRectangleTooltipString = [];
 zoomRectangleTooltipString["en"] = "Zoom with rectangle";
 zoomRectangleTooltipString["es"] = "Zoom con rectángulo";
 zoomRectangleTooltipString["de"] = "Zoom Rechteck aufziehen";
@@ -1480,7 +1480,7 @@ zoomRectangleTooltipString["nl"] = "Zoomen met rechthoek";
 zoomRectangleTooltipString["pl"] = "Zbliż przez zaznaczenie";
 
 //zoom to full view
-var zoomFullViewTooltipString = new Array();
+var zoomFullViewTooltipString = [];
 zoomFullViewTooltipString["en"] = "Zoom to the maximum map extent";
 zoomFullViewTooltipString["es"] = "Zoom a la extensión máxima ";
 zoomFullViewTooltipString["de"] = "Zoom zum maximalen Kartenausschnitt";
@@ -1496,7 +1496,7 @@ zoomFullViewTooltipString["nl"] = "Zoomen naar maximum kaartextent";
 zoomFullViewTooltipString["pl"] = "Wyświetl całą mapę";
 
 //navigation history backward
-var navigationHistoryBackwardTooltipString = new Array();
+var navigationHistoryBackwardTooltipString = [];
 navigationHistoryBackwardTooltipString["en"] = "Navigation history backward";
 navigationHistoryBackwardTooltipString["es"] = "Ir a la vista anterior";
 navigationHistoryBackwardTooltipString["de"] = "Navigationshistorie zurück";
@@ -1512,7 +1512,7 @@ navigationHistoryBackwardTooltipString["nl"] = "Navigatiegeschiedenis vorige";
 navigationHistoryBackwardTooltipString["pl"] = "Przejdź do poprzedniego widoku";
 
 //navigation history forward
-var navigationHistoryForwardTooltipString = new Array();
+var navigationHistoryForwardTooltipString = [];
 navigationHistoryForwardTooltipString["en"] = "Navigation history forward";
 navigationHistoryForwardTooltipString["es"] = "Ir a la vista posterior";
 navigationHistoryForwardTooltipString["de"] = "Navigationshistorie vorwärts";
@@ -1528,7 +1528,7 @@ navigationHistoryForwardTooltipString["nl"] = "Navigatiegeschiedenis volgende";
 navigationHistoryForwardTooltipString["pl"] = "Przejdź do następnego widoku";
 
 //discrete zoom in button above zoom slider
-var zoomInTooltipString = new Array();
+var zoomInTooltipString = [];
 zoomInTooltipString["en"] = "Zoom in (discrete step)";
 zoomInTooltipString["es"] = "Acercar (un nivel)";
 zoomInTooltipString["de"] = "Einzoomen (eine Stufe)";
@@ -1544,7 +1544,7 @@ zoomInTooltipString["nl"] = "Inzoomen";
 zoomInTooltipString["pl"] = "Zbliż (o jeden poziom)";
 
 //discrete zoom in button above zoom slider
-var zoomOutTooltipString = new Array();
+var zoomOutTooltipString = [];
 zoomOutTooltipString["en"] = "Zoom out (discrete step)";
 zoomOutTooltipString["es"] = "Alejar (un nivel)";
 zoomOutTooltipString["de"] = "Rauszoomen (eine Stufe)";
@@ -1560,7 +1560,7 @@ zoomOutTooltipString["nl"] = "Uitzoomen";
 zoomOutTooltipString["pl"] = "Oddal (o jeden poziom)";
 
 //object identification tooltip
-var objIdentificationTooltipString = new Array();
+var objIdentificationTooltipString = [];
 objIdentificationTooltipString["en"] = "Object identification (attribute data)";
 objIdentificationTooltipString["es"] = "Indentificación de objetos (atributos)";
 objIdentificationTooltipString["de"] = "Objektidentifizierung (Attributdaten)";
@@ -1576,7 +1576,7 @@ objIdentificationTooltipString["nl"] = "Objectidentificatie (attribuutdata)";
 objIdentificationTooltipString["pl"] = "Identyfikacja obiektu (atrybuty)";
 
 //MapTips tooltip
-var mapTipsTooltipString = new Array();
+var mapTipsTooltipString = [];
 mapTipsTooltipString["en"] = "Display MapTips (attribute data)";
 mapTipsTooltipString["es"] = "Desplegar textos emergentes (atributos)";
 mapTipsTooltipString["de"] = "MapTips anzeigen (Attributdaten)";
@@ -1592,7 +1592,7 @@ mapTipsTooltipString["nl"] = "MapTips weergeven (attribuutdata)";
 mapTipsTooltipString["pl"] = "Wyświetlanie podpowiedzi (atrybutów)";
 
 //Measure Distance
-var measureDistanceTooltipString = new Array();
+var measureDistanceTooltipString = [];
 measureDistanceTooltipString["en"] = "Measure distance";
 measureDistanceTooltipString["es"] = "Medir distancia";
 measureDistanceTooltipString["de"] = "Distanz messen";
@@ -1608,7 +1608,7 @@ measureDistanceTooltipString["nl"] = "Afstand meten";
 measureDistanceTooltipString["pl"] = "Zmierz odległość";
 
 //Measure Area
-var measureAreaTooltipString = new Array();
+var measureAreaTooltipString = [];
 measureAreaTooltipString["en"] = "Measure area";
 measureAreaTooltipString["es"] = "Medir área";
 measureAreaTooltipString["de"] = "Fläche messen";
@@ -1624,7 +1624,7 @@ measureAreaTooltipString["nl"] = "Oppervlakte meten";
 measureAreaTooltipString["pl"] = "Zmierz powierzchnię";
 
 //Print Map
-var printMapTooltipString = new Array();
+var printMapTooltipString = [];
 printMapTooltipString["en"] = "Print Map";
 printMapTooltipString["es"] = "Imprimir mapa";
 printMapTooltipString["de"] = "Karte drucken";
@@ -1640,7 +1640,7 @@ printMapTooltipString["nl"] = "Kaart afdrukken";
 printMapTooltipString["pl"] = "Drukuj mapę";
 
 //Print Map disabled
-var printMapDisabledTooltipString = new Array();
+var printMapDisabledTooltipString = [];
 printMapDisabledTooltipString["en"] = "Print disabled, no layout is defined in the QGIS project";
 printMapDisabledTooltipString["es"] = "Imprimir deshabilitado, no hay formato definido en el proyecto de QGIS";
 printMapDisabledTooltipString["de"] = "Drucken nicht möglich, da keine Layouts im QGIS-Projekt definiert wurden";
@@ -1656,7 +1656,7 @@ printMapDisabledTooltipString["nl"] = "Afdrukken uitgeschakeld, er is geen layou
 printMapDisabledTooltipString["pl"] = "Drukowanie zablokowane - żaden szablon nie został zdefiniowany w projekcie QGIS";
 
 //Send permalink
-var sendPermalinkTooltipString = new Array();
+var sendPermalinkTooltipString = [];
 sendPermalinkTooltipString["en"] = "Create permalink to current map";
 sendPermalinkTooltipString["es"] = "Create permalink to current map"; //FIXME
 sendPermalinkTooltipString["de"] = "Create permalink to current map"; //FIXME
@@ -1672,7 +1672,7 @@ sendPermalinkTooltipString["nl"] = "Create permalink to current map"; //FIXME
 sendPermalinkTooltipString["pl"] = "Create permalink to current map"; //FIXME
 
 //Send permalink
-var sendPermalinkLinkFromString = new Array();
+var sendPermalinkLinkFromString = [];
 sendPermalinkLinkFromString["en"] = "Link to current map";
 sendPermalinkLinkFromString["es"] = "Link to current map"; //FIXME
 sendPermalinkLinkFromString["de"] = "Link to current map"; //FIXME
@@ -1688,7 +1688,7 @@ sendPermalinkLinkFromString["nl"] = "Link to current map"; //FIXME
 sendPermalinkLinkFromString["pl"] = "Link to current map"; //FIXME
 
 //Show Help
-var showHelpTooltipString = new Array();
+var showHelpTooltipString = [];
 showHelpTooltipString["en"] = "Show Help";
 showHelpTooltipString["es"] = "Mostrar ayuda";
 showHelpTooltipString["de"] = "Hilfe öffnen";
@@ -1704,7 +1704,7 @@ showHelpTooltipString["nl"] = "Toon Help";
 showHelpTooltipString["pl"] = "Pokaż pomoc";
 
 //Show location
-var showLocationTooltipString = new Array();
+var showLocationTooltipString = [];
 showLocationTooltipString["en"] = "Show Location";
 showLocationTooltipString["es"] = "Show Location";  //FIXME
 showLocationTooltipString["de"] = "Show Location";  //FIXME
@@ -1720,7 +1720,7 @@ showLocationTooltipString["nl"] = "Show Location";  //FIXME
 showLocationTooltipString["pl"] = "Show Location";  //FIXME
 
 //Geonames loading string
-var geonamesLoadingString = new Array();
+var geonamesLoadingString = [];
 geonamesLoadingString["en"] = "Search in Geonames...";
 geonamesLoadingString["es"] = "Buscar en Geonames...";
 geonamesLoadingString["de"] = "Suche in Geonames...";
@@ -1736,7 +1736,7 @@ geonamesLoadingString["nl"] = "Zoek in Geonames...";
 geonamesLoadingString["pl"] = "Szukaj w Geonames...";
 
 //Geonames empty string
-var geonamesEmptyString = new Array();
+var geonamesEmptyString = [];
 geonamesEmptyString["en"] = "Search location in Geonames";
 geonamesEmptyString["es"] = "Buscar lugar en Geonames";
 geonamesEmptyString["de"] = "Suche Ort in Geonames";
@@ -1752,7 +1752,7 @@ geonamesEmptyString["nl"] = "Zoek locatie in Geonames";
 geonamesEmptyString["pl"] = "Wyszukaj lokację w Geonames";
 
 //Reset Search Field
-var resetSearchFieldTooltipString = new Array();
+var resetSearchFieldTooltipString = [];
 resetSearchFieldTooltipString["en"] = "Reset/empty Searchfield";
 resetSearchFieldTooltipString["es"] = "Limpiar campo de búsqueda";
 resetSearchFieldTooltipString["de"] = "Suchfeld zurücksetzen";
@@ -1768,7 +1768,7 @@ resetSearchFieldTooltipString["nl"] = "Herstel/Wis zoekveld";
 resetSearchFieldTooltipString["pl"] = "Wyczyść pole wyszukiwania";
 
 //print window title
-var printWindowTitleString = new Array();
+var printWindowTitleString = [];
 printWindowTitleString["en"] = "The server is generating a PDF file. For correct up to scale printing please deactivate the option 'Fit to Page'!";
 printWindowTitleString["es"] = "El servidor está generando un archivo PDF. Para corregir la escala de impresión desactive la opción 'Ajustar a la página'!";
 printWindowTitleString["de"] = "PDF wird vom Server generiert. Für massstäbliches Drucken deaktivieren Sie bitte das 'Anpassen der Seitengrösse'!";
@@ -1785,7 +1785,7 @@ printWindowTitleString["pl"] = "Serwer generuje plik PDF. Dla poprawnego wydruku
 
 //print object data alternative string in case no pdf plugin is present in browser
 //attention: single quotes around string, partially html formatting
-var printingObjectDataAlternativeString1 = new Array();
+var printingObjectDataAlternativeString1 = [];
 printingObjectDataAlternativeString1["en"] = 'It looks like your browser cannot open PDF files directly. Not a big problem - you can <a href="';
 printingObjectDataAlternativeString1["es"] = 'Su navegador no puede abrir archivos PDF directamente. No es problema - usted puede <a href="';
 printingObjectDataAlternativeString1["de"] = 'Es sieht so aus als ob Ihr Browser kein PDF Plugin unterstützt. Kein Problem, Sie können die <a href="';
@@ -1802,7 +1802,7 @@ printingObjectDataAlternativeString1["pl"] = 'Wygląda na to, że Twoja przeglą
 
 //the second part of the string after the URL
 //attention: single quotes around string, partially html formatting
-var printingObjectDataAlternativeString2 = new Array();
+var printingObjectDataAlternativeString2 = [];
 printingObjectDataAlternativeString2["en"] = '">download the PDF file here.</a>.</p></object>';
 printingObjectDataAlternativeString2["es"] = '">descargar el archivo PDF aquí.</a>.</p></object>';
 printingObjectDataAlternativeString2["de"] = '">PDF-Datei hier herunterladen</a>.</p></object>';
@@ -1818,7 +1818,7 @@ printingObjectDataAlternativeString2["nl"] = '">het PDF-bestand hier downloaden.
 printingObjectDataAlternativeString2["pl"] = '">ściągnąć plik PDF tutaj.</a>.</p></object>';
 
 //print button tooltip
-var printButtonTooltipString = new Array();
+var printButtonTooltipString = [];
 printButtonTooltipString["en"] = "Print (Generate PDF)";
 printButtonTooltipString["es"] = "Imprimir (Generar PDF)";
 printButtonTooltipString["de"] = "Drucken (PDF generieren)";
@@ -1834,7 +1834,7 @@ printButtonTooltipString["nl"] = "Afdrukken (Genereer PDF)";
 printButtonTooltipString["pl"] = "Drukuj (generuj PDF)";
 
 //print cancel button tooltip
-var printCancelButtonTooltipString = new Array();
+var printCancelButtonTooltipString = [];
 printCancelButtonTooltipString["en"] = "Cancel Print (Close)";
 printCancelButtonTooltipString["es"] = "Cancelar impresión (Cerrar)";
 printCancelButtonTooltipString["de"] = "Druck abbrechen (Schliesen)";
@@ -1851,7 +1851,7 @@ printCancelButtonTooltipString["nl"] = "Annuleer afdruk (Sluiten)";
 printCancelButtonTooltipString["pl"] = "Anuluj drukowanie (Zamknij)";
 
 //theme switcher button tooltip
-var mapThemeButtonTooltipString = new Array();
+var mapThemeButtonTooltipString = [];
 mapThemeButtonTooltipString["en"] = "Click to choose a new map theme";
 mapThemeButtonTooltipString["es"] = "Haga click para escoger un nuevo tema de mapa";
 mapThemeButtonTooltipString["de"] = "Klicken Sie um das Kartenthema zu wechseln";
@@ -1867,7 +1867,7 @@ mapThemeButtonTooltipString["nl"] = "Klik om een kaartthema te kiezen";
 mapThemeButtonTooltipString["pl"] = "Kliknij, aby wybrać nowy temat mapy";
 
 //comment, if layer is outside scale range
-var tooltipLayerTreeLayerOutsideScale = new Array();
+var tooltipLayerTreeLayerOutsideScale = [];
 tooltipLayerTreeLayerOutsideScale["en"] = "Visible at scales";
 tooltipLayerTreeLayerOutsideScale["es"] = "Visible at scales"; //FIXME
 tooltipLayerTreeLayerOutsideScale["de"] = "Sichtbar in den Massstäben";
@@ -1883,7 +1883,7 @@ tooltipLayerTreeLayerOutsideScale["nl"] = "Zichtbaar op schalen";
 tooltipLayerTreeLayerOutsideScale["pl"] = "Widoczne przy skalach";
 
 //title in ClickPopup
-var clickPopupTitleString = new Array();
+var clickPopupTitleString = [];
 clickPopupTitleString["en"] = "Results"; //FIXME
 clickPopupTitleString["es"] = "Results"; //FIXME
 clickPopupTitleString["de"] = "Results"; //FIXME
@@ -1900,7 +1900,7 @@ clickPopupTitleString["sl"] = "Rezultati poizvedbe";
 Context menu items
 ***********************/
 //comment, if layer is outside scale range
-var contextZoomLayerExtent = new Array();
+var contextZoomLayerExtent = [];
 contextZoomLayerExtent["en"] = "Zoom to layer extent";
 contextZoomLayerExtent["es"] = "Zoom to layer extent"; //FIXME
 contextZoomLayerExtent["de"] = "Zoom to layer extent"; //FIXME
@@ -1915,7 +1915,7 @@ contextZoomLayerExtent["sl"] = "Povečava na območje sloja"; //FIXME
 contextZoomLayerExtent["nl"] = "Zoom to layer extent"; //FIXME
 contextZoomLayerExtent["pl"] = "Zoom to layer extent"; //FIXME
 
-var contextOpenTable = new Array();
+var contextOpenTable = [];
 contextOpenTable["en"] = "Open attribute table";
 contextOpenTable["es"] = "Open attribute table"; //FIXME
 contextOpenTable["de"] = "Open attribute table"; //FIXME
@@ -1930,7 +1930,7 @@ contextOpenTable["sl"] = "Prikaz opisnih podatkov sloja";
 contextOpenTable["nl"] = "Open attribute table"; //FIXME
 contextOpenTable["pl"] = "Open attribute table"; //FIXME
 
-var contextDataExport = new Array();
+var contextDataExport = [];
 contextDataExport["en"] = "Export layer to...";
 contextDataExport["es"] = "Export layer to..."; //FIXME
 contextDataExport["de"] = "Export layer to..."; //FIXME
@@ -1945,7 +1945,7 @@ contextDataExport["sl"] = "Izvoz sloja v...";
 contextDataExport["nl"] = "Export layer to..."; //FIXME
 contextDataExport["pl"] = "Export layer to..."; //FIXME
 
-var contextUseExtent = new Array();
+var contextUseExtent = [];
 contextUseExtent["en"] = "Use current map extent";
 contextUseExtent["es"] = "Use current map extent"; //FIXME
 contextUseExtent["de"] = "Use current map extent"; //FIXME
@@ -1964,7 +1964,7 @@ Error Messages
 ***********************/
 
 //error messages on startup
-var errMessageStartupMapParamString = new Array();
+var errMessageStartupMapParamString = [];
 errMessageStartupMapParamString["en"] = "Startup-Parameter 'map' missing!";
 errMessageStartupMapParamString["es"] = "Falta el parámetro de inicio 'map'!";
 errMessageStartupMapParamString["de"] = "Start-Parameter 'map' fehlt!";
@@ -1980,7 +1980,7 @@ errMessageStartupMapParamString["nl"] = "Startparameter 'map' ontbreekt!";
 errMessageStartupMapParamString["pl"] = "Brak początkowego parametru 'map'!";
 
 //additional startup error message
-var errMessageStartupNotAllParamsFoundString = new Array();
+var errMessageStartupNotAllParamsFoundString = [];
 errMessageStartupNotAllParamsFoundString["en"] = "Some mandatory startup paramaters are missing or an optional startup parameter is invalid.";
 errMessageStartupNotAllParamsFoundString["es"] = "Faltan algunos parámetros obligatorios";
 errMessageStartupNotAllParamsFoundString["de"] = "Es wurden nicht alle notwendigen Web-GIS-Parameter gefunden oder ein optionaler Start-Parameter ist falsch.";
@@ -1996,7 +1996,7 @@ errMessageStartupNotAllParamsFoundString["nl"] = "Enkele verplichte startparamet
 errMessageStartupNotAllParamsFoundString["pl"] = "Brakuje niektórych parametrów startowych lub niektóre parametry są błędne.";
 
 //error message if optional startExtent parameter is wrong
-var errMessageExtentParamWrongPart1 = new Array();
+var errMessageExtentParamWrongPart1 = [];
 errMessageExtentParamWrongPart1["en"] = "Start-parameter '";
 errMessageExtentParamWrongPart1["es"] = "Parámetro de inicialización '";
 errMessageExtentParamWrongPart1["de"] = "Start-Parameter '";
@@ -2012,7 +2012,7 @@ errMessageExtentParamWrongPart1["nl"] = "Startparameter '";
 errMessageExtentParamWrongPart1["pl"] = "Parametr startowy '";
 
 //error message if optional startExtent parameter is wrong
-var errMessageExtentParamWrongPart2 = new Array();
+var errMessageExtentParamWrongPart2 = [];
 errMessageExtentParamWrongPart2["en"] = "' needs to be in OpenLayers.Bounds format: 'left,bottom,right,top'.";
 errMessageExtentParamWrongPart2["es"] = "' debe estar en formato OpenLayers.Bounds: 'left,bottom,right,top'.";
 errMessageExtentParamWrongPart2["de"] = "' muss im OpenLayers.Bounds format sein: 'left,bottom,right,top'.";
@@ -2028,7 +2028,7 @@ errMessageExtentParamWrongPart2["nl"] = "' moet in OpenLayers.Bounds-formaat opg
 errMessageExtentParamWrongPart2["pl"] = "' musi być w formacie OpenLayers.Bounds: 'left,bottom,right,top'.";
 
 //error message invalid language code, part 1
-var errMessageInvalidLanguageCodeString1 = new Array();
+var errMessageInvalidLanguageCodeString1 = [];
 errMessageInvalidLanguageCodeString1["en"] = "Invalid language code provided: ";
 errMessageInvalidLanguageCodeString1["es"] = "El código de idioma es inválido: ";
 errMessageInvalidLanguageCodeString1["de"] = "Falscher Sprachparameter übergeben: ";
@@ -2044,7 +2044,7 @@ errMessageInvalidLanguageCodeString1["nl"] = "Incorrecte taalcode: ";
 errMessageInvalidLanguageCodeString1["pl"] = "Wprowadzono niepoprawny kod języka: ";
 
 //error message invalid language code, part 2
-var errMessageInvalidLanguageCodeString2 = new Array();
+var errMessageInvalidLanguageCodeString2 = [];
 errMessageInvalidLanguageCodeString2["en"] = "Switching back to default language ";
 errMessageInvalidLanguageCodeString2["es"] = "Restableciendo el idioma por defecto ";
 errMessageInvalidLanguageCodeString2["de"] = "Wechsle zurück zur Standardsprache ";
@@ -2060,7 +2060,7 @@ errMessageInvalidLanguageCodeString2["nl"] = "Terugschakelen naar de standaardta
 errMessageInvalidLanguageCodeString2["pl"] = "Zmiana języka na domyślny ";
 
 //error message of search combo network request title
-var errMessageSearchComboNetworkRequestFailureTitleString = new Array();
+var errMessageSearchComboNetworkRequestFailureTitleString = [];
 errMessageSearchComboNetworkRequestFailureTitleString["en"] = "Network request failed";
 errMessageSearchComboNetworkRequestFailureTitleString["es"] = "Falló la solicitud de red";
 errMessageSearchComboNetworkRequestFailureTitleString["de"] = "Netzwerk-Request fehlgeschlagen";
@@ -2076,7 +2076,7 @@ errMessageSearchComboNetworkRequestFailureTitleString["nl"] = "Netwerkrequest mi
 errMessageSearchComboNetworkRequestFailureTitleString["pl"] = "Zapytanie sieci nie powiodło się";
 
 //error message of search combo network request detailed message - do not forget the \n at the end of the string!
-var errMessageSearchComboNetworkRequestFailureString = new Array();
+var errMessageSearchComboNetworkRequestFailureString = [];
 errMessageSearchComboNetworkRequestFailureString["en"] = "The network request for the geometry of the search result failed:\n";
 errMessageSearchComboNetworkRequestFailureString["es"] = "Falló la solicitud de red para la geometría del resultado de la búsqueda:\n";
 errMessageSearchComboNetworkRequestFailureString["de"] = "Netzwerk-Request für Geometrie des gesuchten Objekts fehlgeschlagen:\n";
