@@ -142,7 +142,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 		<script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
         <script type="text/javascript" src="admin/languages/locale/ext-lang-<?php echo $def_lang?>.js"></script>
         <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
-		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js"></script>
+		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=2131"></script>
 
 <!--        <script type="text/javascript" src="../libs/openlayers/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
