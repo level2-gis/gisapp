@@ -11,7 +11,7 @@
  * @link https://github.com/panique/php-login-one-file/
  * @license http://opensource.org/licenses/MIT MIT License
  *
- * modifications Uros Preloznik
+ * modifications Level2 Team
  */
 
 namespace GisApp;
@@ -412,7 +412,7 @@ class Login
      */
     private function showPageLoggedIn()
     {
-        $scr = filter_input(INPUT_SERVER,["SCRIPT_NAME"]);
+        $scr = filter_input(INPUT_SERVER,"SCRIPT_NAME");
 
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
@@ -421,7 +421,7 @@ class Login
         echo 'Hello ' . $_SESSION['user_name'] . ', you are logged in.<br/><br/>';
         echo '<a href="' . $scr . '?action=logout">Log out</a>';
 
-        //TODO cleanup this. Superuser not need to register anymmore
+        //TODO cleanup this. Superuser not needed to register anymmore
         //if ($_SESSION['user_name'] == SUPERUSER)
         //    echo '</br><a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">SUPERUSER: Register new account</a>';
 
@@ -440,7 +440,7 @@ class Login
      */
     private function showPageLoginForm()
     {
-        $scr = filter_input(INPUT_SERVER,["SCRIPT_NAME"]);
+        $scr = filter_input(INPUT_SERVER,"SCRIPT_NAME");
 
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
@@ -466,7 +466,7 @@ class Login
      */
     private function showPageRegistration()
     {
-        $scr = filter_input(INPUT_SERVER,["SCRIPT_NAME"]);
+        $scr = filter_input(INPUT_SERVER,"SCRIPT_NAME");
 
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";

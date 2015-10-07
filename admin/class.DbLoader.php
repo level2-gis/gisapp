@@ -1,9 +1,10 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: uros
- * Date: 5.8.2015
- * Time: 6:19
+ * class.DbLoader.php -- part of Server side of Extended QGIS Web Client
+ *
+ * Copyright (2014-2015), Level2 team All rights reserved.
+ * More information at https://github.com/uprel/gisapp
  */
 
 namespace GisApp;

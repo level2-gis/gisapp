@@ -1,6 +1,11 @@
-// *******************
-// CONTEXT MENU STUFF
-// *******************
+/*
+ *
+ * LayerActions.js -- part of Extended QGIS Web Client
+ *
+ * Copyright (2010-2015), The QGIS Project and Level2 team All rights reserved.
+ * More information at https://github.com/uprel/gisapp
+ *
+ */
 
 function buildLayerContextMenu(node) {
 

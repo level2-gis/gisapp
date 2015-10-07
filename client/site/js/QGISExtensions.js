@@ -9,7 +9,7 @@
  *
  */
 
-/* Five QGIS extensions:
+/* QGIS extensions:
  * QGIS.WMSCapabilitiesLoader
  * QGIS.PrintProvider
  * QGIS.SearchComboBox
@@ -88,6 +88,15 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                         };
                     },
 
+                      "ExclusiveLayerGroups": function(node, obj) {
+                        obj.exclusiveLayerGroups = [];
+                        this.readChildNodes(node, obj.exclusiveLayerGroups);
+                      },
+                      "group": function(node, obj) {
+                        // comma separated layer names
+                        obj.push(this.getChildValue(node).split(','));
+                      },
+
                     "LayerDrawingOrder": function(node, obj) {
                         obj.layerDrawingOrder = this.getChildValue(node).split(',');
                     },
@@ -111,11 +120,20 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                         var opaque = (attrNode && attrNode.specified) ?
                             node.getAttribute('opaque') : null;
 
-                        // custom attributes
+                        // QGIS custom attributes
                         attrNode = node.getAttributeNode("visible");
                         var visible = (attrNode && attrNode.specified) ?
                             node.getAttribute("visible") : null;
                         var displayField = node.getAttribute('displayField');
+                        attrNode = node.getAttributeNode("checkbox");
+                        var showCheckbox = (attrNode && attrNode.specified) ?
+                          node.getAttribute("checkbox") : null;
+                        attrNode = node.getAttributeNode("legend");
+                        var showLegend = (attrNode && attrNode.specified) ?
+                          node.getAttribute("legend") : null;
+                        attrNode = node.getAttributeNode("metadata");
+                        var showMetadata = (attrNode && attrNode.specified) ?
+                          node.getAttribute("metadata") : null;
 
                         var noSubsets = node.getAttribute('noSubsets');
                         var fixedWidth = node.getAttribute('fixedWidth');
@@ -140,10 +158,18 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                             opaque: opaque ?
                                 (opaque === "1" || opaque === "true" ) :
                                 (parent.opaque || false),
-                            //visible and displayField are QGIS extensions
+
+                                        // QGIS extensions
                             visible: (visible && visible !== "") ?
                                 ( visible === "1" || visible === "true" ) : true,
                             displayField: displayField,
+                            showCheckbox: (showCheckbox && showCheckbox !== "") ?
+                                ( showCheckbox === "1" || showCheckbox === "true" ) : true,
+                            showLegend: (showLegend && showLegend !== "") ?
+                                ( showLegend === "1" || showLegend === "true" ) : true,
+                            showMetadata: (showMetadata && showMetadata !== "") ?
+                                ( showMetadata === "1" || showMetadata === "true" ) : true,
+
                             noSubsets: (noSubsets !== null) ?
                                 (noSubsets === "1" || noSubsets === "true" ) :
                                 (parent.noSubsets || false),
@@ -155,17 +181,27 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                             maxScale: parent.maxScale,
                             attribution: parent.attribution
                         };
-                        obj.nestedLayers.push(layer);
+
                         layer.capability = capability;
                         this.readChildNodes(node, layer);
                         delete layer.capability;
+                        obj.nestedLayers.push(layer);
                         if(layer.name) {
                             var parts = layer.name.split(":"),
                                 request = capability.request,
                                 gfi = request.getfeatureinfo;
                             if(parts.length > 0) {
                                 layer.prefix = parts[0];
+
+
+
+
+
+
+
+
                             }
+
                             capability.layers.push(layer);
                             if (layer.formats === undefined) {
                                 layer.formats = request.getmap.formats;
@@ -199,6 +235,32 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
         }).read(this.WMSCapabilities);
         this.processLayer(this.projectSettings.capability, this.projectSettings.capability.request.getmap.href, node);
 
+        // WMTS base layers
+        var wmtsLayers = [];
+        if (enableWmtsBaseLayers) {
+          // use root layer name from project settings as topic name on first load
+          var topicName = this.topicName || this.projectSettings.capability.nestedLayers[0].name;
+
+          // collect print layers for WMTS layers
+          var wmtsLayersConfig = getWmtsLayersConfig(topicName);
+          if (wmtsLayersConfig != null) {
+            for (var i=0; i<wmtsLayersConfig.length; i++) {
+              var config = wmtsLayersConfig[i];
+              wmtsLayers.push(config.wmsLayerName);
+            }
+          }
+
+          // prepend WMTS base layers in drawing order
+          var layerDrawingOrder = wmtsLayers.concat();
+          for (var i=0; i<this.projectSettings.capability.layerDrawingOrder.length; i++) {
+            var layer = this.projectSettings.capability.layerDrawingOrder[i];
+            if (wmtsLayers.indexOf(layer) == -1) {
+              layerDrawingOrder.push(layer);
+            }
+          }
+          this.projectSettings.capability.layerDrawingOrder = layerDrawingOrder;
+        }
+
         //fill the list of layer properties
         for (var i=0; i<this.projectSettings.capability.layers.length; i++) {
             var layer = this.projectSettings.capability.layers[i];
@@ -213,17 +275,26 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                 nrChildLayers: layer.nestedLayers.length,
                 attributes: layer.attributes,
                 srsList: layer.srs,
-                bbox: layer.llbbox
+                bbox: layer.llbbox,
+                minScale: (layer.minScale != null) ? parseFloat(layer.minScale) : null,
+                maxScale: (layer.maxScale != null) ? parseFloat(layer.maxScale) : null,
+                wmtsLayer: (wmtsLayers.indexOf(layer.name) != -1), // mark WMTS base layers
+                showLegend: layer.showLegend,
+                showMetadata: layer.showMetadata
             };
             this.layerTitleNameMapping[layer.title] = layer.name;
             if (layer.visible) {
                 this.initialVisibleLayers.push(layer.name);
+
             }
         }
 
         // defaults for GetCapabilities
-        if (this.projectSettings.capability.composerTemplates == undefined) {
+        if (this.projectSettings.capability.composerTemplates === undefined) {
             this.projectSettings.capability.composerTemplates = [];
+        }
+        if (this.projectSettings.capability.exclusiveLayerGroups === undefined) {
+            this.projectSettings.capability.exclusiveLayerGroups = [];
         }
 
         //deal with callback function
@@ -373,13 +444,36 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 printResolution = this.dpi.get("value");
             }
 
-            var printUrl = this.url+'&SRS='+authid+'&DPI='+printResolution+'&TEMPLATE='+this.layout.get("name")+'&map0:extent='+printExtent.page.getPrintExtent(map).toBBOX(1,false)+'&map0:rotation='+(printExtent.page.rotation * -1)+'&map0:scale='+mapScale+'&map0:grid_interval_x='+grid_interval+'&map0:grid_interval_y='+grid_interval+'&LAYERS='+encodeURIComponent(thematicLayer.params.LAYERS);
+            var layers = thematicLayer.params.LAYERS;
+
+            if (enableWmtsBaseLayers) {
+              // collect print layers for visible WMTS layers
+              var printLayers = [];
+              var wmtsLayers = getWmtsLayers();
+              for (var i=0; i<wmtsLayers.length; i++) {
+                var wmtsLayer = wmtsLayers[i];
+                if (wmtsLayer.show) {
+                    printLayers.push(wmtsLayer.wmsLayerName);
+                }
+              }
+              if (printLayers.length > 0) {
+                // prepend WMTS print layers
+                layers = printLayers.join(',') + "," + layers;
+              }
+            }
+
+            var printUrl = this.url+'&SRS='+authid+'&DPI='+printResolution+'&TEMPLATE='+this.layout.get("name")+'&map0:extent='+printExtent.page.getPrintExtent(map).toBBOX(1,false)+'&map0:rotation='+(printExtent.page.rotation * -1)+'&map0:scale='+mapScale+'&map0:grid_interval_x='+grid_interval+'&map0:grid_interval_y='+grid_interval+'&LAYERS='+encodeURIComponent(layers);
             if (thematicLayer.params.OPACITIES) {
                 printUrl += '&OPACITIES='+encodeURIComponent(thematicLayer.params.OPACITIES);
             }
-            if (thematicLayer.params.SELECTION) {
-                printUrl += '&SELECTION='+encodeURIComponent(thematicLayer.params.SELECTION);
-            }
+
+
+
+            // add highlight
+            //var highlightParams = highlighter.printParams("map0");
+            //if (highlightParams != null) {
+            //  printUrl += "&" + Ext.urlEncode(highlightParams);
+            //}
 
             // makes spatial query from map to use the attributes in the print template (more in README chap 4.5)
             var lonlat = printExtent.page.getPrintExtent(map).getCenterLonLat();
@@ -390,7 +484,8 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             });
             Ext.getBody().mask(printLoadingString[lang], 'x-mask-loading');
             var protocol = new OpenLayers.Protocol.WFS({
-                url: wmsURI,
+
+                url: printURI,
                 featureType: 'print',
                 geometryName: 'geometry',
                 srsName: authid,
@@ -398,14 +493,22 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 readWithPOST: true
             });
 
+    this.fireEvent("afterprint", this, map, pages, options);
+
             protocol.read({
                 callback: function(response) {
+                try { // as some projects may have WFS disabled
+                    if(response.features != null) {
                     if(response.features.length > 0) {
                         attributes = response.features[0].attributes;
                         for (key in attributes){
                             printUrl += '&' + key + '=' + encodeURIComponent(attributes[key]);
                         }
                     }
+                    }
+                } catch (e) {
+                    //console.log(e)
+                }
                     this.download(printUrl);
                 },
                 scope: this

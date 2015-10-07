@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * export.php -- part of Server side of Extended QGIS Web Client
+ *
+ * Copyright (2014-2015), Level2 team All rights reserved.
+ *
+ * Initial idea taken from export.php from QGIS WEB CLIENT
+ *
+ * More information at https://github.com/uprel/gisapp
+ */
+
 use GisApp\Helpers;
 
 require_once("class.Helpers.php");

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * cache.php -- part of Server side of Extended QGIS Web Client
+ *
+ * Copyright (2014-2015), Level2 team All rights reserved.
+ * More information at https://github.com/uprel/gisapp
+ */
+
 require '../vendor/autoload.php';
 require_once("settings.php");
 
@@ -14,7 +21,7 @@ require_once("settings.php");
 $cache = phpFastCache("files");
 
 $script = filter_input(INPUT_SERVER,"SCRIPT_NAME",FILTER_SANITIZE_STRING);
-$clear = filter_input(INPUT_GET,"CLEAR",FILTER_SANITIZE_STRING);
+$clear = filter_input(INPUT_GET,"clear",FILTER_SANITIZE_STRING);
 
 //$test = $cache->fallback;
 

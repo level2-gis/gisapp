@@ -7,7 +7,7 @@ This is modified and extended version of **[QGIS Web client](https://github.com/
 * user authorization with optional guest access
 * server side (database for storing info about projects, baselayers, WMS layers and users; user authentication, specific project settings)
 * QGIS server proxy (caching and validating requests)
-* layer context menu with Zoom to layer extent, Open attribute data, Data Export
+* layer context menu with Zoom to layer extent, Open attribute data, Data Export (SHP, DXF, CSV)
 * geolocation button
 * Google StreetView integration
 * legend in layer tree
@@ -42,9 +42,7 @@ uros@level2.si
 ##License
 This software is released under a BSD license.
 
-Copyright (2010-2012), The QGIS Project, All rights reserved.
-
-Modifications by Level2 team (2014-2015), All rights reserved.
+Copyright (2010-2012), The QGIS Project and Level2 team (2014-2015), All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted
 provided that the following conditions are met:

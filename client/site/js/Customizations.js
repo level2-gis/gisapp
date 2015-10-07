@@ -234,6 +234,10 @@ function customAfterMapInit() {
 
  }
 
+// called at the end of GetMapUrls
+function customAfterGetMapUrls() {
+}
+
 // called when DOM is ready (Ext.onReady in WebgisInit.js)
 function customPostLoading() {
 //    Ext.get("panel_header").addClass('sogis-header').insertHtml('beforeEnd', '<div style="float: right; width: 250px;">hello world</div>');
@@ -243,6 +247,12 @@ function customPostLoading() {
 function customBeforePrint() {
     // do something. e.g. rearrange your layers
 }
+
+// called when printing is launched
+function customAfterPrint() {
+    // do something. e.g. rearrange your layers
+}
+
 
 // new buttons for the toolbar
 var customButtons = [ 

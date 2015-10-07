@@ -1,18 +1,37 @@
-//This file is used instead of GlobalOptions.js
+/*
+ *
+ * LoadAppProjectData.js -- part of Extended QGIS Web Client
+ *
+ * Copyright (2010-2015), The QGIS Project and Level2 team All rights reserved.
+ * More information at https://github.com/uprel/gisapp
+ *
+ */
+
+
+//This file is used instead of GlobalOptions.js from QWC
 
 var lang = "en";
 var helpfile = "help_en.html";
+
+//Custom function to populate GetUrlParams variables
+var customGetUrlParamsParser = null;
+
 var serverAndCGI = "/proxy";
 
 if(GLOBAL_SERVER_OS == 'Windows NT') {
 	serverAndCGI = "/qgis/qgis_mapserv.fcgi";
 }
 
+//Optional url for print server hosted on a different server. Default: same as above.
+// var serverAndCGI = "http://otherserver/cgi-bin/qgis_mapserv.fcgi";
+var printServer = serverAndCGI;
+
 var useGetProjectSettings = true;
 var showLayerOrderTab = false;
 var grayLayerNameWhenOutsideScale = true;
 var showMetaDataInLegend = true;
 var enableHoverPopup = false;
+var defaultIdentificationMode = "allLayers";
 var useGeodesicMeasurement = true;
 var useGeoNamesSearchBox = projectData.geoNames != null;
 var iconDirectory = 'client/site/gis_icons/';
@@ -33,6 +52,10 @@ var permaLinkURLShortener = null; // "/wsgi/createShortPermalink.wsgi";
 
 var enableBGMaps = true;
 var enableExtraLayers = false;
+
+// enable to use WMTS base layers
+var enableWmtsBaseLayers = false;
+// NOTE: also set MapOptions according to WMTS
 
 var mediaurl = '';
 var suppressEmptyValues = true;
@@ -119,7 +142,7 @@ var qgisLayerTransparency = true;
 var MapOptions = {
   projection: new OpenLayers.Projection(authid),
   units: "m",
-  numZoomLevels:23,
+  numZoomLevels:22,
   fractionalZoom: !enableBGMaps,
   transitionEffect:"resize",
   zoomDuration: 1,
@@ -135,10 +158,13 @@ var LayerOptions = {
   transitionEffect:"resize",
   isBaseLayer: false,
   projection:authid,
-  yx: {"EPSG:900913": false}
+  yx: {"EPSG:900913": false},
   // If your projection is known to have an inverse axis order in WMS 1.3 compared to WMS 1.1 enter true for yx.
   // For EPSG:900913 OpenLayers should know it by default but because of a bug in OL 2.12 we enter it here.
-
+  tileOptions: {
+    // use POST for long URLs
+    maxGetUrlLength: 2048
+  }
 };
 
 //overview map settings - do not change variable names!

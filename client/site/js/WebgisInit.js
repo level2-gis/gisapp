@@ -1,9 +1,9 @@
 /*
  *
- * WebgisInit.js -- part of Quantum GIS Web Client
+ * WebgisInit.js -- part of QGIS Web Client
  *
  * Copyright (2010-2013), The QGIS Project All rights reserved.
- * Quantum GIS Web Client is released under a BSD license. Please see
+ * QGIS Web Client is released under a BSD license. Please see
  * https://github.com/qgis/qgis-web-client/blob/master/README
  * for the full text of the license and the list of contributors.
  *
@@ -112,7 +112,7 @@ Ext.onReady(function () {
     mainStatusText.setText(mapAppLoadingString[lang]);
 
     if (urlParamsOK) {
-        loadWMSConfig();
+		loadWMSConfig(null);
     } else {
         alert(errMessageStartupNotAllParamsFoundString[lang]);
     }
@@ -141,7 +141,7 @@ Ext.onReady(function () {
     customPostLoading(); //in Customizations.js
 });
 
-function loadWMSConfig() {
+function loadWMSConfig(topicName) {
     loadMask = new Ext.LoadMask(Ext.getCmp('MapPanel').body, {
         msg: mapLoadingString[lang]
     });
@@ -158,17 +158,21 @@ function loadWMSConfig() {
         layerParams: {
             'TRANSPARENT': 'TRUE'
         },
-        //uros fix
         projectSettings: null,
         initialVisibleLayers: [],
         // customize the createNode method to add a checkbox to nodes and the ui provider
         createNode: function (attr) {
             attr.checked = false;
+			if (!attr.layer.metadata.showCheckbox) {
+				// hide checkbox
+				attr.cls = 'layer-checkbox-hidden';
+			}
             return QGIS.WMSCapabilitiesLoader.prototype.createNode.apply(this, [attr]);
         },
         baseAttrs: {
             uiProvider: Ext.tree.TriStateNodeUI
-        }
+		},
+		topicName: topicName
     });
 
     var root = new Ext.tree.AsyncTreeNode({
@@ -344,8 +348,8 @@ function postLoading() {
 
         //combobox listeners
         var ObjectIdentificationModeCombobox = Ext.getCmp('ObjectIdentificationModeCombo');
-        ObjectIdentificationModeCombobox.setValue("allLayers");
-        identificationMode = "allLayers";
+		ObjectIdentificationModeCombobox.setValue(defaultIdentificationMode);
+		identificationMode = defaultIdentificationMode;
         ObjectIdentificationModeCombobox.on("select", function (combobox, record, index) {
             identificationMode = record.get("value");
             //need to updated active selected layers or all selected layers
@@ -376,18 +380,27 @@ function postLoading() {
             }
         }
     }
-    MapOptions.maxExtent = maxExtent;
+	// never change the map extents when using WMTS base layers
+	if (!enableWmtsBaseLayers) {
+        MapOptions.maxExtent = maxExtent;
+	}
 
     //now collect all selected layers (with checkbox enabled in tree)
     selectedLayers = [];
     selectedQueryableLayers = [];
-    allLayers = [];
+	allLayers = [];
+	var wmtsLayers = [];
 
     layerTree.root.firstChild.cascade(
         function (n) {
             if (n.isLeaf()) {
                 if (n.attributes.checked) {
+				if (!wmsLoader.layerProperties[wmsLoader.layerTitleNameMapping[n.text]].wmtsLayer) {
                     selectedLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
+				}
+				else {
+					wmtsLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
+				}
                     if (wmsLoader.layerProperties[wmsLoader.layerTitleNameMapping[n.text]].queryable) {
                         selectedQueryableLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
                     }
@@ -436,18 +449,19 @@ function postLoading() {
     }
 
     // The printProvider that connects us to the print service
-    printUri = wmsURI + 'SERVICE=WMS&VERSION=1.3&REQUEST=GetPrint&FORMAT=pdf&EXCEPTIONS=application/vnd.ogc.se_inimage&TRANSPARENT=true';
+	printUrl = printURI + 'SERVICE=WMS&VERSION=1.3&REQUEST=GetPrint&FORMAT=pdf&EXCEPTIONS=application/vnd.ogc.se_inimage&TRANSPARENT=true';
     if (initialLoadDone) {
         printProvider.capabilities = printCapabilities;
-        printProvider.url = printUri;
+		printProvider.url = printUrl;
     }
     else {
         printProvider = new QGIS.PrintProvider({
             method: "GET", // "POST" recommended for production use
             capabilities: printCapabilities, // from the info.json script in the html
-            url: printUri
+			url: printUrl
         });
         printProvider.addListener("beforeprint", customBeforePrint);
+		printProvider.addListener("afterprint", customAfterPrint);
     }
 
     if (!printExtent) {
@@ -482,8 +496,23 @@ function postLoading() {
         var layerDrawingOrder = wmsLoader.projectSettings.capability.layerDrawingOrder;
         if (layerOrderPanel != null) {
             // override project settings (after first load)
+			if (enableWmtsBaseLayers) {
+				// prepend ordered WMTS layers
+				var orderedLayers = layerOrderPanel.orderedLayers();
+				var wmtsLayers = [];
+				for (var i = 0; i < layerDrawingOrder.length; i++) {
+					var layer = layerDrawingOrder[i];
+					if (orderedLayers.indexOf(layer) == -1) {
+						wmtsLayers.push(layer);
+					}
+				}
+				layerDrawingOrder = wmtsLayers.concat(orderedLayers);
+			}
+			else {
             layerDrawingOrder = layerOrderPanel.orderedLayers();
-        }
+            }
+		}
+
         if (layerDrawingOrder != null) {
             var orderedLayers = [];
             for (var i = 0; i < layerDrawingOrder.length; i++) {
@@ -524,7 +553,8 @@ function postLoading() {
             border: false,
             zoom: 1.6,
             layers: baseLayers.concat(
-                extraLayers.concat([
+                extraLayers.concat(
+                    [
                 thematicLayer = new OpenLayers.Layer.WMS(layerTree.root.firstChild.text,
                     wmsURI, {
                         layers: selectedLayers.join(","),
@@ -578,7 +608,8 @@ function postLoading() {
             geoExtMap.map.zoomToExtent(startExtent,false);
             //alert(geoExtMap.map.getExtent().toString());
         } else {
-            geoExtMap.map.zoomToMaxExtent();
+            //why this?, map is already loaded, commenting
+            //geoExtMap.map.zoomToMaxExtent();
         }
         //add listener to adapt map on panel resize (only needed because of IE)
         MapPanelRef.on('resize', function (panel, w, h) {
@@ -599,7 +630,16 @@ function postLoading() {
             if (geoExtMap.map.zoomBoxActive) {
                 Ext.getCmp('navZoomBoxButton').toggle(false);
             }
+
+			// call custom action on Zoom Event
+			customActionOnZoomEvent();
         });
+
+		//listener to call custom action on moveend event
+		geoExtMap.map.events.register('moveend', this, function () {
+			customActionOnMoveEvent();
+		});
+
 
         //scale listener to gray out names in TOC, which are outside visible scale
         geoExtMap.map.events.register('zoomend', this, this.setGrayNameWhenOutsideScale);
@@ -664,7 +704,7 @@ function postLoading() {
         //geoExtMap.map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
 
         //coordinate display
-        coordinateTextField = Ext.getCmp('CoordinateTextField')
+        coordinateTextField = Ext.getCmp('CoordinateTextField');
         geoExtMap.map.events.register('mousemove', this, function (evt) {
             var xy = geoExtMap.map.events.getMousePosition(evt);
             var geoxy = geoExtMap.map.getLonLatFromPixel(xy);
@@ -2390,7 +2430,7 @@ function setGrayNameWhenOutsideScale() {
                     //comparison layerTree and info from getProjectsettings
                     if (allLayersWithIDs[j][0] == wmsLoader.projectSettings.capability.layers[i].title) {
                         layerTree.root.findChild('id', allLayersWithIDs[j][1], true).setCls('outsidescale');//add css for outside scale
-                        strTOCTooltip = tooltipLayerTreeLayerOutsideScale[lang] + ' 1:' + MaxScale + ' - 1:' + MinScale
+                        strTOCTooltip = tooltipLayerTreeLayerOutsideScale[lang] + ' 1:' + MaxScale + ' - 1:' + MinScale;
                         layerTree.root.findChild('id', allLayersWithIDs[j][1], true).setTooltip(strTOCTooltip);
                         layerTree.root.findChild('id', allLayersWithIDs[j][1], true).isOutsideScale = true;
                         layerTree.root.findChild('id', allLayersWithIDs[j][1], true).MinScale = MinScale;
@@ -2467,7 +2507,7 @@ function setGrayNameWhenOutsideScale() {
             //the group is invisible
             if ( bolGroupOutsideScale ) {
                 layerTree.root.findChild('id', arrLayerGroups[i][0], true).setCls('outsidescale'); // add css class
-                strTOCTooltip = tooltipLayerTreeLayerOutsideScale[lang] + ' 1:' + MaxScale + ' - 1:' + MinScale
+                strTOCTooltip = tooltipLayerTreeLayerOutsideScale[lang] + ' 1:' + MaxScale + ' - 1:' + MinScale;
                 layerTree.root.findChild('id', arrLayerGroups[i][0], true).setTooltip(strTOCTooltip);
 
                 //the group is visible

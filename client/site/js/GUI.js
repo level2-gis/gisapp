@@ -1,9 +1,9 @@
 /*
  *
- * GUI.js -- part of Quantum GIS Web Client
+ * GUI.js -- part of QGIS Web Client
  *
  * Copyright (2010-2012), The QGIS Project All rights reserved.
- * Quantum GIS Web Client is released under a BSD license. Please see
+ * QGIS Web Client is released under a BSD license. Please see
  * https://github.com/qgis/qgis-web-client/blob/master/README
  * for the full text of the license and the list of contributors.
  *
@@ -174,6 +174,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						frame: false,
 						items: [{
 							xtype: 'treepanel',
+                            lines: false,   //rather disable lines since they are missing now with legend inside layer tree
 							border: false,
 							frame: false,
 							title: '', //layerTreeTitleString[lang],

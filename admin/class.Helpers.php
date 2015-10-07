@@ -1,9 +1,13 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: uros
- * Date: 24.9.2015
- * Time: 22:46
+ * class.Helpers.php -- part of Server side of Extended QGIS Web Client
+ *
+ * Copyright (2014-2015), Level2 team All rights reserved.
+ *
+ * Portions of code from QGIS-WEB-CLIENT - PHP HELPERS
+ *
+ * More information at https://github.com/uprel/gisapp
  */
 
 namespace GisApp;
@@ -101,7 +105,11 @@ class Helpers
     }
 
     /**
+     *
      * Load .qgs file
+     *
+     * @param $map
+     * @return array
      */
     public static function getQgsProject($map){
         if(file_exists($map) && is_readable($map)){
@@ -180,5 +188,18 @@ class Helpers
         }
         $pg_layer_infos[$datasource] = $ds_parms;
         return self::msg(true, $ds_parms);
+    }
+
+    public static function getMapFromUrl()
+    {
+        $url = filter_input(INPUT_SERVER,"SCRIPT_URL",FILTER_SANITIZE_STRING);
+        $ret = null;
+
+        if(strpos($url,"/") !== false) {
+            $ret = end(explode("/",$url));
+        }
+
+        return $ret;
+
     }
 }

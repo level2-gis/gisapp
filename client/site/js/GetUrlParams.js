@@ -1,9 +1,9 @@
 /*
  *
- * GetUrlParams.js -- part of Quantum GIS Web Client
+ * GetUrlParams.js -- part of QGIS Web Client
  *
  * Copyright (2010-2012), The QGIS Project All rights reserved.
- * Quantum GIS Web Client is released under a BSD license. Please see
+ * QGIS Web Client is released under a BSD license. Please see
  * https://github.com/qgis/qgis-web-client/blob/master/README
  * for the full text of the license and the list of contributors.
  *
@@ -14,6 +14,7 @@
 var urlParams = {};
 var urlParamsOK = true;
 var wmsURI; //URI with map parameter or appended map name (with URL rewriting)
+var printURI; //URI with map parameter or appended map name (with URL rewriting) for printing
 var wmsMapName; // map parameter or appended map name (with URL rewriting)
 var maxExtent; //later holds the bounding box
 var olBoundsRegexp = /^-*[\d\.]+,-*[\d\.]+,-*[\d\.]+,-*[\d\.]+$/; //regExp to check whether bounding box matches OpenLayers bounding box format
@@ -26,6 +27,10 @@ var visibleBackgroundLayer = null; // later the name of the visibleBackgroundLay
 var initialLayerOrder = null; //later an array containing the initialLayerOrder
 var fullColorLayers = []; //layers that should be displayed in 24bit (JPEG) instead of 8bit PNG, only relevant if the project format is 8bit
 
+if (customGetUrlParamsParser && typeof customGetUrlParamsParser === "function") {
+    customGetUrlParamsParser();
+}
+else {
 if (document.documentURI) {
 	//all browsers except older IE
 	urlString = document.documentURI;
@@ -46,7 +51,7 @@ if (serverAndCGI.substr(serverAndCGI.length - 3, 3).toLowerCase() === "cgi") {
 //patch ends
 if (!norewrite) {
 	//Get map name from base URL (e.g. http://example.com/maps/mapname)
-	var urlBaseArray = urlArray[0].split('/');
+    var urlBaseArray = urlArray[0].split('/')
 	//Remove host and first element of path. http://example.com/maps/subdir/mapname -> subdir/mapname
 	var map = urlBaseArray.slice(4).join('/');
 	//Search for wms directory suffix (maps-protected -> wms-protected)
@@ -56,6 +61,7 @@ if (!norewrite) {
 		suffix = urlBaseArray[3].substr(dashpos);
 	}
 	wmsURI = serverAndCGI + suffix + "/" + map + "?";
+    printURI = printServer + suffix + "/" + map + "?";
 	wmsMapName = map;
 }
 if (urlArray.length > 1) {
@@ -66,6 +72,7 @@ if (urlArray.length > 1) {
 			urlParamsOK = false;
 		} else {
 			wmsURI = serverAndCGI + "?map=" + urlParams.map + "&";
+            printURI = printServer + "?map=" + urlParams.map + "&";
 			wmsMapName = urlParams.map;
 		}
 	}
@@ -100,14 +107,27 @@ if (urlArray.length > 1) {
 		//if lang is not defined in GlobalOptions.js we set it to "en"
 		lang = "en";
 	}
-	if (urlParams.lang) {
-		//check if language is available
-		if (availableLanguages[urlParams.lang]) {
-			lang = urlParams.lang;
-		} else {
-			alert(errMessageInvalidLanguageCodeString1[lang] + "'" + urlParams.lang + "'\n" + errMessageInvalidLanguageCodeString2[lang] + availableLanguages[lang].names[lang] + ".");
-		}
-	}
+	//if (urlParams.lang) {
+	//	//check if language is available
+	//	if (availableLanguages[urlParams.lang]) {
+	//		lang = urlParams.lang;
+	//		var xhr = new XMLHttpRequest();
+	//		xhr.open('HEAD', "help_"+urlParams.lang+".html", false);
+     //       xhr.send();
+	//		if (xhr.status!="404"){
+	//			helpfile="help_"+urlParams.lang+".html";
+	//		}
+	//		else{
+	//			alert("Help file unavailable for this language!");
+	//			if (typeof helpfile == "undefined") {
+	//			//if helpfile is not defined in GlobalOptions.js we set it to "help_en.html"
+	//				helpfile = "help_en.html";
+	//			}
+	//		}
+	//	} else {
+	//		alert(errMessageInvalidLanguageCodeString1[lang] + "'" + urlParams.lang + "'\n" + errMessageInvalidLanguageCodeString2[lang] + availableLanguages[lang].names[lang] + ".");
+	//	}
+	//}
 	if (urlParams.searchtables) {
 		searchtables = urlParams.searchtables;
 	}
@@ -141,5 +161,8 @@ if (urlArray.length > 1) {
 		}
 	}
 } else {
-	urlParamsOK = !norewrite;
+	    urlParamsOK = !norewrite;
+    }
 }
+
+customAfterGetMapUrls();

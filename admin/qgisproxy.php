@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * qgisproxy.php -- part of Server side of Extended QGIS Web Client
+ *
+ * Copyright (2014-2015), Level2 team All rights reserved.
+ * More information at https://github.com/uprel/gisapp
+ */
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception;
 use GuzzleHttp\Psr7\Request;
@@ -10,11 +17,7 @@ require_once("class.Helpers.php");
 require_once("settings.php");
 
 //parameters
-//$query = $_SERVER['QUERY_STRING'];
-//$query_arr = array();
-//parse_str($query,$query_arr);
-
-$query_arr = filter_input_array(INPUT_GET,FILTER_SANITIZE_STRING);
+$query_arr = filter_input_array(INPUT_GET,FILTER_UNSAFE_RAW);
 
 //we have to extend map parameter with path to projects, but first store it into own variable and remove .qgs
 $map = "";
