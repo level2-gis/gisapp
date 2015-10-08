@@ -1,15 +1,15 @@
 /**
  * German translation for administration part of Extended Qgis Web Client
  *
- * Translators:
+ * Translators: Dreanor
  *
- * Date:
+ * Date: 09.10.15
  */
 var TR = {
     appName: 'Räumliches Informationssystem - ',
     loginTitle: 'Login',
     loginMessage: 'Der Zugriff zu diesem Bereich ist auf authentifizierte Benutzer beschränkt.' +
-        '<br />Please type your username and password.',
+        '<br />Bitte gebe deinen Benutzernamen und dein Passwort ein.',
     loginFailMessage: 'Einloggen fehlgeschlagen',
     loginWaitMessage: 'Bitte warten...',
     loginButton: 'Einloggen',
