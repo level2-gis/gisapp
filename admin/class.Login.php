@@ -55,20 +55,16 @@ class Login
 
     /**
      * Performs a check for minimum requirements to run this application.
-     * Does not run the further application when PHP version is lower than 5.3.7
-     * Does include the PHP password compatibility library when PHP version lower than 5.5.0
-     * (this library adds the PHP 5.5 password hashing functions to older versions of PHP)
+     * Does not run the further application when PHP version is lower than 5.5
      * @return bool Success status of minimum requirements check, default is false
      */
     private function performMinimumRequirementsCheck()
     {
-        if (version_compare(PHP_VERSION, '5.3.7', '<')) {
-            echo "Sorry, Simple PHP Login does not run on a PHP version older than 5.3.7 !";
-        } elseif (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            require_once("libraries/password_compatibility_library.php");
+        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
             return true;
-        } elseif (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            return true;
+        }
+        else {
+            echo "Sorry, This app does not run on a PHP version older than 5.5!";
         }
         // default return
         return false;

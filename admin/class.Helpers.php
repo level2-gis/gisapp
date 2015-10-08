@@ -12,6 +12,8 @@
 
 namespace GisApp;
 
+use SimpleXMLElement;
+
 class Helpers
 {
 
@@ -128,10 +130,10 @@ class Helpers
      * Load a layer instance from the project
      *
      * @param $layername
-     * @param $project
+     * @param SimpleXMLElement $project
      * @return array
      */
-    public static function getLayer($layername, $project){
+    public static function getLayer($layername, SimpleXMLElement $project){
         // Caching
         static $layers = array();
         if(array_key_exists($layername, $layers)){
@@ -149,10 +151,10 @@ class Helpers
      *
      * Get layer connection and geom info
      *
-     * @param $layer
+     * @param SimpleXMLElement $layer
      * @return array
      */
-    public static function getLayerInfo($layer){
+    public static function getLayerInfo(SimpleXMLElement $layer){
         // Cache
         static $pg_layer_infos = array();
 

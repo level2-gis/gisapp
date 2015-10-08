@@ -3,27 +3,26 @@
 use GisApp\Helpers;
 
 require_once("admin/class.Helpers.php");
+require_once("admin/settings.php");
+
 
 $server_os = php_uname('s');
+$def_lang = strtolower(filter_input(INPUT_GET,'lang',FILTER_SANITIZE_STRING));
+
 
 session_start();
 
-if(isset($_GET['lang'])) {
-	$def_lang = strtolower($_GET['lang']);
-	if ($def_lang=='sl' || $def_lang=='en' || $def_lang=='de') {
-		//OK
-	}
-	else {
-		$def_lang = "en";
-	}
-	
+if($def_lang>'') {
+    $lang_fn = filter_input(INPUT_SERVER,'DOCUMENT_ROOT',FILTER_SANITIZE_STRING) . GISAPPURL . 'admin/languages/' . $def_lang . '.js';
+    if(!(file_exists($lang_fn))) {
+        $def_lang = 'en';
+    }
 }
-else
-	$def_lang = "en";
+else {
+    $def_lang = "en";
+}
 
-if (!isset($_SESSION['lang']))  {
-	$_SESSION['lang'] = $def_lang;
-}
+$_SESSION['lang'] = $def_lang;
 
 if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
@@ -135,7 +134,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 	
 		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js"></script>
 	
-		<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=true"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&sensor=true"></script>
 
 		<script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
