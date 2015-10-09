@@ -25,8 +25,8 @@ Visit **[Demo by Level2](http://level2.si/gisapp/eu_demo)**
 ##Translations
 Available languages:
 * English
+* German
 * Slovenian
-* German (Needs additional translate - [look](https://github.com/uprel/gisapp/issues/7))
 
 New language:
 * Read this **[page](../../wiki/6.-Translations)**
