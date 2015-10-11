@@ -1,11 +1,12 @@
 Extended QGIS Web Client (EQWC)
 ===============================
 
-This is modified and extended version of **[QGIS Web client](https://github.com/qgis/QGIS-Web-Client)**
+This is modified and extended version of **[QGIS Web client (QWC)](https://github.com/qgis/QGIS-Web-Client)**.
+It turns your QGIS project into Web GIS application with tools to view, navigate, search and print your data. On top of that, there is a simple administration part to manage different projects, users, delegate permissions and set some specific settings not in QGIS project.
 
-##Modifications and new features:
+##Modifications and new features regarding original QWC:
 * user authorization with optional guest access
-* server side (database for storing info about projects, baselayers, WMS layers and users; user authentication, specific project settings)
+* server side (database for storing info about projects, base layers, WMS layers and users; user authentication, specific project settings)
 * QGIS server proxy (caching and validating requests)
 * layer context menu with Zoom to layer extent, Open attribute data, Data Export (SHP, DXF, CSV)
 * geolocation button
