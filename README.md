@@ -17,7 +17,7 @@ It turns your QGIS project into Web GIS application with tools to view, navigate
 
 **[Longer Description](http://level2.si/index.php/2015/06/14/whats-new-in-extended-qgis-web-client/)**
 
-##Setup
+##Documentation
 Read **[Wiki](../../wiki)**
 
 ##Demo
