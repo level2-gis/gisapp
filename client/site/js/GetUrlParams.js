@@ -56,7 +56,7 @@ if (!norewrite) {
 	var map = urlBaseArray.slice(4).join('/');
 	//Search for wms directory suffix (maps-protected -> wms-protected)
 	var suffix = '';
-	var dashpos = urlBaseArray[3].indexOf('-')
+	var dashpos = urlBaseArray[3].indexOf('-');
 	if (dashpos != -1) {
 		suffix = urlBaseArray[3].substr(dashpos);
 	}
