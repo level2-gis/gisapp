@@ -69,7 +69,7 @@ class DbLoader
                 return false;
             }
         } else {
-            return json_encode(new stdClass); //empty json object
+            return json_encode(new \stdClass()); //empty json object
         }
     }
 }
