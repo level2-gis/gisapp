@@ -906,7 +906,14 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
     },
 
     onSubmit: function() {
-        if (this.store != null) {
+
+        if(this.form !== null) {
+            if(this.form.getForm().isValid()===false){
+                return;
+            }
+        }
+
+        if (this.store !== null) {
             this.store.removeAll();
         }
         // Moved to try/catch because of wierd error in popup implementation

@@ -1,0 +1,31 @@
+{
+    "search": [
+        {
+            "title": "Search continent",
+            "useWmsRequest": true,
+            "queryLayer": "Country",
+            "formItems": [
+                {
+                    "xtype": "textfield",
+                    "name": "name",
+                    "fieldLabel": "Name",
+                    "allowBlank": false,
+                    "blankText": "Please enter a name (e.g. 'africa')",
+                    "minLength": 2,
+                    "filterOp": "LIKE"
+                }
+            ],
+            "gridColumns": [
+                {
+                    "header": "Name",
+                    "dataIndex": "name",
+                    "menuDisabled": "true",
+                    "renderer": "customURLFormatter"
+                }
+            ],
+            "selectionLayer": "Country",
+            "selectionZoom": 0,
+            "doZoomToExtent": true
+        }
+    ]
+}

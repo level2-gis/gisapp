@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.3.9
 -- Dumped by pg_dump version 9.3.9
--- Started on 2015-08-11 21:15:15 CEST
+-- Started on 2015-10-23 00:05:57 CEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -22,7 +22,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2127 (class 0 OID 0)
+-- TOC entry 2128 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
@@ -31,7 +31,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- TOC entry 182 (class 3079 OID 85453)
+-- TOC entry 182 (class 3079 OID 95823)
 -- Name: intarray; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -39,7 +39,7 @@ CREATE EXTENSION IF NOT EXISTS intarray WITH SCHEMA public;
 
 
 --
--- TOC entry 2128 (class 0 OID 0)
+-- TOC entry 2129 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: EXTENSION intarray; Type: COMMENT; Schema: -; Owner: -
 --
@@ -50,7 +50,7 @@ COMMENT ON EXTENSION intarray IS 'functions, operators, and index support for 1-
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 241 (class 1255 OID 85564)
+-- TOC entry 240 (class 1255 OID 95934)
 -- Name: check_user_project(text, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -83,8 +83,8 @@ $_$;
 
 
 --
--- TOC entry 2129 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 2130 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: FUNCTION check_user_project(uname text, project text); Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -92,7 +92,7 @@ COMMENT ON FUNCTION check_user_project(uname text, project text) IS 'IN uname, p
 
 
 --
--- TOC entry 240 (class 1255 OID 85565)
+-- TOC entry 241 (class 1255 OID 95935)
 -- Name: get_project_data(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -122,33 +122,32 @@ $_$;
 
 
 --
--- TOC entry 2130 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 2131 (class 0 OID 0)
+-- Dependencies: 241
 -- Name: FUNCTION get_project_data(project text); Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON FUNCTION get_project_data(project text) IS 'IN project --> client, theme, baselayers, overview layer, extra layers and tables_onstart for project_name.';
 
 
-SET default_tablespace = '';
-
 SET default_with_oids = false;
 
 --
--- TOC entry 170 (class 1259 OID 85566)
--- Name: clients; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- TOC entry 170 (class 1259 OID 95936)
+-- Name: clients; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE clients (
   id integer NOT NULL,
   name text NOT NULL,
   display_name text,
-  theme_id integer
+  theme_id integer,
+  url text
 );
 
 
 --
--- TOC entry 171 (class 1259 OID 85572)
+-- TOC entry 171 (class 1259 OID 95942)
 -- Name: clients_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -161,7 +160,7 @@ CACHE 1;
 
 
 --
--- TOC entry 2131 (class 0 OID 0)
+-- TOC entry 2132 (class 0 OID 0)
 -- Dependencies: 171
 -- Name: clients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -170,8 +169,8 @@ ALTER SEQUENCE clients_id_seq OWNED BY clients.id;
 
 
 --
--- TOC entry 172 (class 1259 OID 85574)
--- Name: layers; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- TOC entry 172 (class 1259 OID 95944)
+-- Name: layers; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE layers (
@@ -185,7 +184,7 @@ CREATE TABLE layers (
 
 
 --
--- TOC entry 173 (class 1259 OID 85580)
+-- TOC entry 173 (class 1259 OID 95950)
 -- Name: layers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -198,7 +197,7 @@ CACHE 1;
 
 
 --
--- TOC entry 2132 (class 0 OID 0)
+-- TOC entry 2133 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: layers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -207,8 +206,8 @@ ALTER SEQUENCE layers_id_seq OWNED BY layers.id;
 
 
 --
--- TOC entry 174 (class 1259 OID 85582)
--- Name: projects; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- TOC entry 174 (class 1259 OID 95952)
+-- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE projects (
@@ -224,7 +223,7 @@ CREATE TABLE projects (
 
 
 --
--- TOC entry 175 (class 1259 OID 85588)
+-- TOC entry 175 (class 1259 OID 95959)
 -- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -237,7 +236,7 @@ CACHE 1;
 
 
 --
--- TOC entry 2133 (class 0 OID 0)
+-- TOC entry 2134 (class 0 OID 0)
 -- Dependencies: 175
 -- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -246,19 +245,19 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 
 
 --
--- TOC entry 180 (class 1259 OID 94727)
--- Name: settings; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- TOC entry 176 (class 1259 OID 95961)
+-- Name: settings; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE settings (
-  version integer,
+  version integer NOT NULL,
   date date
 );
 
 
 --
--- TOC entry 176 (class 1259 OID 85590)
--- Name: themes; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- TOC entry 177 (class 1259 OID 95964)
+-- Name: themes; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE themes (
@@ -268,7 +267,7 @@ CREATE TABLE themes (
 
 
 --
--- TOC entry 177 (class 1259 OID 85596)
+-- TOC entry 178 (class 1259 OID 95970)
 -- Name: themes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -281,8 +280,8 @@ CACHE 1;
 
 
 --
--- TOC entry 2134 (class 0 OID 0)
--- Dependencies: 177
+-- TOC entry 2135 (class 0 OID 0)
+-- Dependencies: 178
 -- Name: themes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -290,8 +289,8 @@ ALTER SEQUENCE themes_id_seq OWNED BY themes.id;
 
 
 --
--- TOC entry 178 (class 1259 OID 85598)
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- TOC entry 179 (class 1259 OID 95972)
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE users (
@@ -307,7 +306,7 @@ CREATE TABLE users (
 
 
 --
--- TOC entry 179 (class 1259 OID 85605)
+-- TOC entry 180 (class 1259 OID 95979)
 -- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -320,8 +319,8 @@ CACHE 1;
 
 
 --
--- TOC entry 2135 (class 0 OID 0)
--- Dependencies: 179
+-- TOC entry 2136 (class 0 OID 0)
+-- Dependencies: 180
 -- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -329,7 +328,7 @@ ALTER SEQUENCE users_user_id_seq OWNED BY users.user_id;
 
 
 --
--- TOC entry 1972 (class 2604 OID 85607)
+-- TOC entry 1972 (class 2604 OID 95981)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -337,7 +336,7 @@ ALTER TABLE ONLY clients ALTER COLUMN id SET DEFAULT nextval('clients_id_seq'::r
 
 
 --
--- TOC entry 1973 (class 2604 OID 85608)
+-- TOC entry 1973 (class 2604 OID 95982)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -345,7 +344,7 @@ ALTER TABLE ONLY layers ALTER COLUMN id SET DEFAULT nextval('layers_id_seq'::reg
 
 
 --
--- TOC entry 1974 (class 2604 OID 85609)
+-- TOC entry 1975 (class 2604 OID 95983)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -353,7 +352,7 @@ ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq':
 
 
 --
--- TOC entry 1976 (class 2604 OID 85610)
+-- TOC entry 1976 (class 2604 OID 95984)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -361,7 +360,7 @@ ALTER TABLE ONLY themes ALTER COLUMN id SET DEFAULT nextval('themes_id_seq'::reg
 
 
 --
--- TOC entry 1978 (class 2604 OID 85611)
+-- TOC entry 1978 (class 2604 OID 95985)
 -- Name: user_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -369,16 +368,16 @@ ALTER TABLE ONLY users ALTER COLUMN user_id SET DEFAULT nextval('users_user_id_s
 
 
 --
--- TOC entry 2109 (class 0 OID 85566)
+-- TOC entry 2111 (class 0 OID 95936)
 -- Dependencies: 170
 -- Data for Name: clients; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO clients VALUES (1, 'demo', 'DEMO', 1);
+INSERT INTO clients VALUES (1, 'demo', 'DEMO', 1, 'http://www.level2.si');
 
 
 --
--- TOC entry 2136 (class 0 OID 0)
+-- TOC entry 2137 (class 0 OID 0)
 -- Dependencies: 171
 -- Name: clients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -387,35 +386,37 @@ SELECT pg_catalog.setval('clients_id_seq', 1, false);
 
 
 --
--- TOC entry 2111 (class 0 OID 85574)
+-- TOC entry 2113 (class 0 OID 95944)
 -- Dependencies: 172
 -- Data for Name: layers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO layers VALUES (1, 'google_map', '', 'Google', true, '"Google "+TR.mapBasic,{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true}');
 INSERT INTO layers VALUES (2, 'google_sat', '', 'Google', true, '"Google "+TR.mapSatellite,{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
-INSERT INTO layers VALUES (3, 'mapquest_map', '', 'OSM', true, '"MapQuest-OSM "+TR.mapBasic, ["http://otile1.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile2.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile3.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile4.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg"], {numZoomLevels: 19, attribution: "Data, imagery and map information provided by <a href=''http://www.mapquest.com/''  target=''_blank''>MapQuest</a>, <a href=''http://www.openstreetmap.org/'' target=''_blank''>Open Street Map</a> and contributors, <a href=''http://creativecommons.org/licenses/by-sa/2.0/'' target=''_blank''>CC-BY-SA</a>  <img src=''http://developer.mapquest.com/content/osm/mq_logo.png'' border=''0''>"}');
-
-
---
--- TOC entry 2137 (class 0 OID 0)
--- Dependencies: 173
--- Name: layers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('layers_id_seq', 4, true);
-
-
---
--- TOC entry 2113 (class 0 OID 85582)
--- Dependencies: 174
--- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: -
---
-
+INSERT INTO layers VALUES (3, 'mapquest_map', '', 'OSM', true, '"MapQuest-OSM "+TR.mapBasic, ["http://otile1.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile2.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile3.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile4.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg"], {numZoomLevels: 19}');
+INSERT INTO layers VALUES (4, 'osm_mapnik', '', 'OSM', true, '"OpenStreetMap (mapnik)"');
 
 
 --
 -- TOC entry 2138 (class 0 OID 0)
+-- Dependencies: 173
+-- Name: layers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('layers_id_seq', 5, true);
+
+
+--
+-- TOC entry 2115 (class 0 OID 95952)
+-- Dependencies: 174
+-- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO projects VALUES (1, 'helloworld', 3, '{2,3,4}', NULL, 1, NULL, true);
+
+
+--
+-- TOC entry 2139 (class 0 OID 0)
 -- Dependencies: 175
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -424,17 +425,17 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 
 
 --
--- TOC entry 2119 (class 0 OID 94727)
--- Dependencies: 180
+-- TOC entry 2117 (class 0 OID 95961)
+-- Dependencies: 176
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (2, '2015-08-11');
+INSERT INTO settings VALUES (3, '2015-10-22');
 
 
 --
--- TOC entry 2115 (class 0 OID 85590)
--- Dependencies: 176
+-- TOC entry 2118 (class 0 OID 95964)
+-- Dependencies: 177
 -- Data for Name: themes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -442,8 +443,8 @@ INSERT INTO themes VALUES (1, 'xtheme-blue.css');
 
 
 --
--- TOC entry 2139 (class 0 OID 0)
--- Dependencies: 177
+-- TOC entry 2140 (class 0 OID 0)
+-- Dependencies: 178
 -- Name: themes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -451,25 +452,25 @@ SELECT pg_catalog.setval('themes_id_seq', 1, false);
 
 
 --
--- TOC entry 2117 (class 0 OID 85598)
--- Dependencies: 178
+-- TOC entry 2120 (class 0 OID 95972)
+-- Dependencies: 179
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 
 
 --
--- TOC entry 2140 (class 0 OID 0)
--- Dependencies: 179
+-- TOC entry 2141 (class 0 OID 0)
+-- Dependencies: 180
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('users_user_id_seq', 2, true);
+SELECT pg_catalog.setval('users_user_id_seq', 3, true);
 
 
 --
--- TOC entry 1980 (class 2606 OID 85613)
--- Name: clients_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1980 (class 2606 OID 95987)
+-- Name: clients_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY clients
@@ -477,8 +478,8 @@ ADD CONSTRAINT clients_name_key UNIQUE (name);
 
 
 --
--- TOC entry 1982 (class 2606 OID 85615)
--- Name: clients_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1982 (class 2606 OID 95989)
+-- Name: clients_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY clients
@@ -486,8 +487,8 @@ ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
 
 
 --
--- TOC entry 1984 (class 2606 OID 85617)
--- Name: layers_layer_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1984 (class 2606 OID 95991)
+-- Name: layers_layer_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY layers
@@ -495,8 +496,8 @@ ADD CONSTRAINT layers_layer_name_key UNIQUE (name);
 
 
 --
--- TOC entry 1986 (class 2606 OID 85619)
--- Name: layers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1986 (class 2606 OID 95993)
+-- Name: layers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY layers
@@ -504,8 +505,8 @@ ADD CONSTRAINT layers_pkey PRIMARY KEY (id);
 
 
 --
--- TOC entry 1988 (class 2606 OID 85621)
--- Name: projects_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1988 (class 2606 OID 95995)
+-- Name: projects_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY projects
@@ -513,8 +514,8 @@ ADD CONSTRAINT projects_name_key UNIQUE (name);
 
 
 --
--- TOC entry 1990 (class 2606 OID 85623)
--- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1990 (class 2606 OID 95997)
+-- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY projects
@@ -522,8 +523,17 @@ ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
 --
--- TOC entry 1992 (class 2606 OID 85625)
--- Name: themes_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1992 (class 2606 OID 96386)
+-- Name: settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY settings
+ADD CONSTRAINT settings_pkey PRIMARY KEY (version);
+
+
+--
+-- TOC entry 1994 (class 2606 OID 95999)
+-- Name: themes_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY themes
@@ -531,8 +541,8 @@ ADD CONSTRAINT themes_name_key UNIQUE (name);
 
 
 --
--- TOC entry 1994 (class 2606 OID 85627)
--- Name: themes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1996 (class 2606 OID 96001)
+-- Name: themes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY themes
@@ -540,8 +550,8 @@ ADD CONSTRAINT themes_pkey PRIMARY KEY (id);
 
 
 --
--- TOC entry 1996 (class 2606 OID 85629)
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 1998 (class 2606 OID 96003)
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -549,8 +559,8 @@ ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
 
 
 --
--- TOC entry 1998 (class 2606 OID 85631)
--- Name: users_user_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- TOC entry 2000 (class 2606 OID 96005)
+-- Name: users_user_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -558,7 +568,7 @@ ADD CONSTRAINT users_user_name_key UNIQUE (user_name);
 
 
 --
--- TOC entry 1999 (class 2606 OID 85632)
+-- TOC entry 2001 (class 2606 OID 96006)
 -- Name: clients_theme_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -567,7 +577,7 @@ ADD CONSTRAINT clients_theme_id_fkey FOREIGN KEY (theme_id) REFERENCES themes(id
 
 
 --
--- TOC entry 2000 (class 2606 OID 85637)
+-- TOC entry 2002 (class 2606 OID 96011)
 -- Name: projects_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -576,7 +586,7 @@ ADD CONSTRAINT projects_client_id_fkey FOREIGN KEY (client_id) REFERENCES client
 
 
 --
--- TOC entry 2001 (class 2606 OID 85642)
+-- TOC entry 2003 (class 2606 OID 96016)
 -- Name: projects_overview_layer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -584,19 +594,7 @@ ALTER TABLE ONLY projects
 ADD CONSTRAINT projects_overview_layer_id_fkey FOREIGN KEY (overview_layer_id) REFERENCES layers(id);
 
 
---
--- TOC entry 2126 (class 0 OID 0)
--- Dependencies: 6
--- Name: public; Type: ACL; Schema: -; Owner: -
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
-
--- Completed on 2015-08-11 21:15:15 CEST
+-- Completed on 2015-10-23 00:06:01 CEST
 
 --
 -- PostgreSQL database dump complete
