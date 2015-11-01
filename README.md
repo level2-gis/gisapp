@@ -23,15 +23,6 @@ Read **[Wiki](../../wiki)**
 ##Demo
 Visit **[Demo by Level2](http://level2.si/gisapp/eu_demo)**
 
-##Translations
-Available languages:
-* English
-* German
-* Slovenian
-
-New language:
-* Read this **[page](../../wiki/6.-Translations)**
-
 ##Contributing
 
 Support this project by donating.
@@ -42,6 +33,16 @@ You are also welcome to contribute to the project by testing, translating, submi
 Read this [tutorial about making changes to repositories](https://help.github.com/articles/fork-a-repo/).
 
 Thank you!
+
+##Translations
+Available languages:
+* English
+* German
+* Slovenian
+
+New language:
+* Read this **[page](../../wiki/6.-Translations)**
+
 
 ##Contact
 **Uros Preloznik**<br>
