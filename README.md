@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/uprel/gisapp/badges/gpa.svg)](https://codeclimate.com/github/uprel/gisapp)
+
 Extended QGIS Web Client (EQWC)
 ===============================
 
