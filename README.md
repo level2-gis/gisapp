@@ -33,8 +33,15 @@ New language:
 * Read this **[page](../../wiki/6.-Translations)**
 
 ##Contributing
-You are welcome to contribute to the project by testing, translating, submitting code, documenting... 
+
+Support this project by donating.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3EV5P3XZQW84J)
+
+You are also welcome to contribute to the project by testing, translating, submitting code, documenting... 
 Read this [tutorial about making changes to repositories](https://help.github.com/articles/fork-a-repo/).
+
+Thank you!
 
 ##Contact
 **Uros Preloznik**<br>
