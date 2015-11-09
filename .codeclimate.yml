@@ -19,6 +19,6 @@ ratings:
   - "**.module"
   - "**.inc"
 exclude_paths:
-- admin/languages/locale/*
-- client/site/libs/*
-- vendor/*
+- "admin/languages/locale/*"
+- "client/site/libs/*"
+- "vendor/*"
