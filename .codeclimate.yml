@@ -1,10 +1,24 @@
-# Save as .codeclimate.yml (note leading .) in project root directory
-languages:
-  Ruby: false
-  JavaScript: true
-  PHP: true
-  Python: true
+---
+engines:
+  eslint:
+    enabled: true
+  csslint:
+    enabled: true
+  phpcodesniffer:
+    enabled: true
+  phpmd:
+    enabled: true
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "**.js"
+  - "**.jsx"
+  - "**.css"
+  - "**.php"
+  - "**.module"
+  - "**.inc"
 exclude_paths:
- - "admin/languages/locale/*"
- - "client/site/libs/*"
- - "vendor/*"
+- admin/languages/locale/*
+- client/site/libs/*
+- vendor/*
