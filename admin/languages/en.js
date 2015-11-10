@@ -9,7 +9,7 @@ var TR = {
     appName: 'Spatial info. system - ',
     loginTitle: 'Login',
     loginMessage: 'Access for authorized users.' +
-        '<br />Please type your username and password.',
+    '<br />Please type your username and password.',
     loginFailMessage: 'Unable to log in',
     loginWaitMessage: 'Please wait...',
     loginButton: 'Login',
@@ -19,7 +19,7 @@ var TR = {
     loginLanguageLabel: 'Language',
     loginRememberMeLabel: 'Remember me on this computer',
     loginForgotPasswordLabel: '',
-    logoutLabel:'logout',
+    logoutLabel: 'logout',
     noProject: 'Project doesn\'t exist.',
     noProjectText: 'Add correct project name and reload the page.',
     wrongPassword: 'Wrong password.',

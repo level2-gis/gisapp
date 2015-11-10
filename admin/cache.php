@@ -20,16 +20,15 @@ require_once("settings.php");
 //$cache = phpFastCache("files", $config);
 $cache = phpFastCache("files");
 
-$script = filter_input(INPUT_SERVER,"SCRIPT_NAME",FILTER_SANITIZE_STRING);
-$clear = filter_input(INPUT_GET,"clear",FILTER_SANITIZE_STRING);
+$script = filter_input(INPUT_SERVER, "SCRIPT_NAME", FILTER_SANITIZE_STRING);
+$clear = filter_input(INPUT_GET, "clear", FILTER_SANITIZE_STRING);
 
 //$test = $cache->fallback;
 
 if ($clear != null) {
     if ($clear == 'all') {
         $cache->clean();
-    }
-    else {
+    } else {
         $cache->delete($clear);
     }
     header("Location:" . $script);
@@ -47,14 +46,14 @@ echo "<pre>";
 $stats = $cache->stats();
 $path = $cache->getPath();
 
-print("Cache size in bytes: ".$stats["size"]); //size of cached objects in bytes
-print("\nPath to store files: ".$path);
+print("Cache size in bytes: " . $stats["size"]); //size of cached objects in bytes
+print("\nPath to store files: " . $path);
 print("\nCache content (key, size, write time):");
 
 foreach ($stats["data"] as $key => $el) {
-    $cmd_clear = '<a href="' . $script . '?clear='.$key.'">clear </a>';
+    $cmd_clear = '<a href="' . $script . '?clear=' . $key . '">clear </a>';
     //$cmd_view = '<a href="' . $script . '?view='.$key.'">view </a>';
-    print('</br>'.$cmd_clear.'<b>'.$key.'</b>,'.$el['size'].','.date('c',$el['write_time']));
+    print('</br>' . $cmd_clear . '<b>' . $key . '</b>,' . $el['size'] . ',' . date('c', $el['write_time']));
 }
 
 //TODO bug, doesn't work on files

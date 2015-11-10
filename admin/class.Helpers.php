@@ -74,12 +74,10 @@ class Helpers
 
         if (!(isset($params['cmd']))) {
             return "No cmd parameter";
-        } else
-        {
-            if($params["cmd"] == 'prepare' || $params["cmd"] == 'get') {
+        } else {
+            if ($params["cmd"] == 'prepare' || $params["cmd"] == 'get') {
                 //OK
-            }
-            else
+            } else
                 return "Unknown cmd parameter";
         }
 
@@ -102,7 +100,8 @@ class Helpers
         return strtr($string, $table);
     }
 
-    private function msg($status, $data) {
+    private function msg($status, $data)
+    {
         return ["status" => $status, "message" => $data];
     }
 
@@ -113,16 +112,17 @@ class Helpers
      * @param $map
      * @return array
      */
-    public static function getQgsProject($map){
-        if(file_exists($map) && is_readable($map)){
+    public static function getQgsProject($map)
+    {
+        if (file_exists($map) && is_readable($map)) {
             $project = simplexml_load_file($map);
-            if(!$project){
-                return self::msg(false,'project not valid');
+            if (!$project) {
+                return self::msg(false, 'project not valid');
             }
         } else {
-            return self::msg(false,'project not found');
+            return self::msg(false, 'project not found');
         }
-        return self::msg(true,$project);
+        return self::msg(true, $project);
     }
 
     /**
@@ -133,14 +133,15 @@ class Helpers
      * @param SimpleXMLElement $project
      * @return array
      */
-    public static function getLayer($layername, SimpleXMLElement $project){
+    public static function getLayer($layername, SimpleXMLElement $project)
+    {
         // Caching
         static $layers = array();
-        if(array_key_exists($layername, $layers)){
+        if (array_key_exists($layername, $layers)) {
             return self::msg(true, $layers[$layername]);
         }
         $xpath = '//maplayer/layername[.="' . $layername . '"]/parent::*';
-        if(!$layer = $project->xpath($xpath)){
+        if (!$layer = $project->xpath($xpath)) {
             return self::msg(false, "layer not found");
         }
         $layers[$layername] = $layer[0];
@@ -154,17 +155,18 @@ class Helpers
      * @param SimpleXMLElement $layer
      * @return array
      */
-    public static function getLayerInfo(SimpleXMLElement $layer){
+    public static function getLayerInfo(SimpleXMLElement $layer)
+    {
         // Cache
         static $pg_layer_infos = array();
 
-        if((string)$layer->provider != 'postgres' && (string)$layer->provider != 'spatialite'){
+        if ((string)$layer->provider != 'postgres' && (string)$layer->provider != 'spatialite') {
             return self::msg(false, 'only postgis or spatialite layers are supported' . (string)$layer->provider);
         }
         // Datasource
         $datasource = (string)$layer->datasource;
 
-        if(array_key_exists($datasource, $pg_layer_infos)){
+        if (array_key_exists($datasource, $pg_layer_infos)) {
             return self::msg(true, $pg_layer_infos[$datasource]);
         }
 
@@ -173,16 +175,16 @@ class Helpers
             'provider' => (string)$layer->provider
         );
         // First extract sql=
-        if(preg_match('/sql=(.*)/', $datasource, $matches)){
+        if (preg_match('/sql=(.*)/', $datasource, $matches)) {
             $datasource = str_replace($matches[0], '', $datasource);
             $ds_parms['sql'] = $matches[1];
         }
-        foreach(explode(' ', $datasource) as $token){
+        foreach (explode(' ', $datasource) as $token) {
             $kvn = explode('=', $token);
-            if(count($kvn) == 2){
+            if (count($kvn) == 2) {
                 $ds_parms[$kvn[0]] = $kvn[1];
             } else { // Parse (geom)
-                if(preg_match('/\(([^\)]+)\)/', $kvn[0], $matches)){
+                if (preg_match('/\(([^\)]+)\)/', $kvn[0], $matches)) {
                     $ds_parms['geom_column'] = $matches[1];
                 }
                 // ... maybe other parms ...
@@ -194,11 +196,11 @@ class Helpers
 
     public static function getMapFromUrl()
     {
-        $url = filter_input(INPUT_SERVER,"SCRIPT_URL",FILTER_SANITIZE_STRING);
+        $url = filter_input(INPUT_SERVER, "SCRIPT_URL", FILTER_SANITIZE_STRING);
         $ret = null;
 
-        if(strpos($url,"/") !== false) {
-            $ret = end(explode("/",$url));
+        if (strpos($url, "/") !== false) {
+            $ret = end(explode("/", $url));
         }
 
         return $ret;

@@ -17,34 +17,32 @@ session_start();
 
 $login = new Login();
 
-$pp='';
+$pp = '';
 if (isset($_SESSION['project'])) {
-	$pp = $_SESSION['project'];
+    $pp = $_SESSION['project'];
 }
 
 //check action parameter
-$action = filter_input(INPUT_GET,"action",FILTER_SANITIZE_STRING);
+$action = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 if ($action != null) {
-	if($action == "logout") {
-		//logout
-		$login->doLogout();
-		if($server_os=='Windows NT') {
-			header("Location: ../index.php?map=".PROJECT_PATH.$pp.'.qgs');
-		}
-		else {
-			header("Location: ../".$pp);
-		}
-	}
-}
-else {
-	//login   				
-	$loginUsername = filter_input(INPUT_POST,"user_name",FILTER_SANITIZE_STRING);
-    $loginPass = filter_input(INPUT_POST,"user_password",FILTER_SANITIZE_STRING);
-	
-	$login->doLoginWithPostData();
-	 
-	$result["success"] = $login->getUserLoginStatus();
-	$result["message"] = $login->feedback;
+    if ($action == "logout") {
+        //logout
+        $login->doLogout();
+        if ($server_os == 'Windows NT') {
+            header("Location: ../index.php?map=" . PROJECT_PATH . $pp . '.qgs');
+        } else {
+            header("Location: ../" . $pp);
+        }
+    }
+} else {
+    //login
+    $loginUsername = filter_input(INPUT_POST, "user_name", FILTER_SANITIZE_STRING);
+    $loginPass = filter_input(INPUT_POST, "user_password", FILTER_SANITIZE_STRING);
 
-	echo json_encode($result);
+    $login->doLoginWithPostData();
+
+    $result["success"] = $login->getUserLoginStatus();
+    $result["message"] = $login->feedback;
+
+    echo json_encode($result);
 }

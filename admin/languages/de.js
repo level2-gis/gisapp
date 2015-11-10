@@ -9,7 +9,7 @@ var TR = {
     appName: 'Räumliches Informationssystem - ',
     loginTitle: 'Login',
     loginMessage: 'Der Zugriff zu diesem Bereich ist auf authentifizierte Benutzer beschränkt.' +
-        '<br />Bitte gebe deinen Benutzernamen und dein Passwort ein.',
+    '<br />Bitte gebe deinen Benutzernamen und dein Passwort ein.',
     loginFailMessage: 'Einloggen fehlgeschlagen',
     loginWaitMessage: 'Bitte warten...',
     loginButton: 'Einloggen',
@@ -19,7 +19,7 @@ var TR = {
     loginLanguageLabel: 'Sprache',
     loginRememberMeLabel: 'Angemeldet bleiben',
     loginForgotPasswordLabel: '',
-    logoutLabel:'Ausloggen',
+    logoutLabel: 'Ausloggen',
     noProject: 'Das Projekt existiert nicht.',
     noProjectText: 'Füge den richtigen Projektnamen hinzu und lade die Seite erneut.',
     wrongPassword: 'Falsches Passwort.',

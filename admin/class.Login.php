@@ -47,7 +47,7 @@ class Login
     public function __construct()
     {
         $this->performMinimumRequirementsCheck();
-        
+
 //        if ($this->performMinimumRequirementsCheck()) {
 //            $this->runApplication();
 //        }
@@ -62,8 +62,7 @@ class Login
     {
         if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
             return true;
-        }
-        else {
+        } else {
             echo "Sorry, This app does not run on a PHP version older than 5.5!";
         }
         // default return
@@ -191,8 +190,8 @@ class Login
      */
     private function checkLoginFormDataNotEmpty()
     {
-        $user = filter_input(INPUT_POST,'user_name',FILTER_SANITIZE_STRING);
-        $pass = filter_input(INPUT_POST,'user_password',FILTER_SANITIZE_STRING);
+        $user = filter_input(INPUT_POST, 'user_name', FILTER_SANITIZE_STRING);
+        $pass = filter_input(INPUT_POST, 'user_password', FILTER_SANITIZE_STRING);
 
         if (!empty($user) && !empty($pass)) {
             return true;
@@ -211,8 +210,8 @@ class Login
      */
     private function checkPasswordCorrectnessAndLogin()
     {
-        $user = filter_input(INPUT_POST,'user_name',FILTER_SANITIZE_STRING);
-        $project = filter_input(INPUT_POST,'project',FILTER_SANITIZE_STRING);
+        $user = filter_input(INPUT_POST, 'user_name', FILTER_SANITIZE_STRING);
+        $project = filter_input(INPUT_POST, 'project', FILTER_SANITIZE_STRING);
         $email = "";
         $pass = false;
 
@@ -408,7 +407,7 @@ class Login
      */
     private function showPageLoggedIn()
     {
-        $scr = filter_input(INPUT_SERVER,"SCRIPT_NAME");
+        $scr = filter_input(INPUT_SERVER, "SCRIPT_NAME");
 
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
@@ -423,7 +422,7 @@ class Login
 
 
         echo "<h3> PHP List All Session Variables</h3>";
-        echo "sess_id: ".session_id()."<br/><br/>";
+        echo "sess_id: " . session_id() . "<br/><br/>";
         foreach ($_SESSION as $key => $val)
             echo $key . ": " . $val . "<br/><br/>";
 
@@ -436,7 +435,7 @@ class Login
      */
     private function showPageLoginForm()
     {
-        $scr = filter_input(INPUT_SERVER,"SCRIPT_NAME");
+        $scr = filter_input(INPUT_SERVER, "SCRIPT_NAME");
 
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
@@ -462,7 +461,7 @@ class Login
      */
     private function showPageRegistration()
     {
-        $scr = filter_input(INPUT_SERVER,"SCRIPT_NAME");
+        $scr = filter_input(INPUT_SERVER, "SCRIPT_NAME");
 
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";

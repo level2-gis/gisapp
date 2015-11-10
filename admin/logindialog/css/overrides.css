@@ -3,60 +3,73 @@
 .x-form-cb-label {
     top: 0px;
 }
+
 .x-form-check-wrap {
-	position: relative;
-	padding: 3px 0;
-	height: auto;
-	line-height: 14px;
+    position: relative;
+    padding: 3px 0;
+    height: auto;
+    line-height: 14px;
 }
+
 .x-form-check-wrap label.x-form-cb-label {
-	position: relative;
-	left: 17px;
-	margin-left: 0;
-	padding: 0 3px 0 0;
+    position: relative;
+    left: 17px;
+    margin-left: 0;
+    padding: 0 3px 0 0;
 }
+
 .x-form-checkbox, .x-form-radio {
-	width: 13px;
-	height: 13px;
-	-moz-opacity: 0;
-	opacity: 0;
-	-ms-filter: 'alpha(opacity=0)';
-	filter: alpha(opacity=0);
+    width: 13px;
+    height: 13px;
+    -moz-opacity: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    filter: alpha(opacity=0);
 }
+
 .ext-ie .x-form-check-wrap input {
-	width: 13px;
-	height: 13px;
+    width: 13px;
+    height: 13px;
 }
+
 .x-form-checkbox-inner, .x-form-radio-inner {
-	position: absolute;
-	left: 0px;
-	top: 4px;
-	width: 13px;
-	height: 13px;
+    position: absolute;
+    left: 0px;
+    top: 4px;
+    width: 13px;
+    height: 13px;
 }
+
 .x-form-check-no-label {
-	position: relative;
+    position: relative;
 }
+
 .x-form-checkbox-inner {
-	background: url('../../../client/site/libs/ext/resources/images/default/form/checkbox.gif') no-repeat 0 0;
+    background: url('../../../client/site/libs/ext/resources/images/default/form/checkbox.gif') no-repeat 0 0;
 }
+
 .x-form-radio-inner {
-	background: url('../../../client/site/libs/ext/resources/images/default/form/radio.gif') no-repeat 0 0;
+    background: url('../../../client/site/libs/ext/resources/images/default/form/radio.gif') no-repeat 0 0;
 }
+
 .x-form-check-focus .x-form-checkbox-inner, .x-form-check-over .x-form-checkbox-inner,
 .x-form-check-focus .x-form-radio-inner, .x-form-check-over .x-form-radio-inner {
-	background-position: -13px 0;
+    background-position: -13px 0;
 }
+
 .x-form-check-down .x-form-checkbox-inner,
 .x-form-check-down .x-form-radio-inner {
-	background-position: -26px 0;
+    background-position: -26px 0;
 }
+
 .x-form-check-checked {
-	background-position: 0 -13px;
+    background-position: 0 -13px;
 }
+
 .x-form-check-focus .x-form-check-checked, .x-form-check-over .x-form-check-checked {
-	background-position: -13px -13px;
+    background-position: -13px -13px;
 }
+
 .x-form-check-down .x-form-check-checked {
-	background-position: -26px -13px;
+    background-position: -26px -13px;
 }
