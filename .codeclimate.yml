@@ -9,7 +9,7 @@ engines:
   phpmd:
     enabled: true
   fixme:
-    enabled: true
+    enabled: false
 ratings:
   paths:
   - "**.js"
