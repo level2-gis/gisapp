@@ -59,7 +59,10 @@ var layoutHeaderCfg = {
 		{
 			tag: 'div',
 			id: 'panel_header_title',
-			html: ''
+			html: '',
+            style: {
+                cursor: 'default'
+            }
 		},
 		{
 			tag: 'div',

@@ -231,14 +231,14 @@ function postLoading() {
         // set header logo and link
         if (headerLogoImg != null) {
             Ext.select('#panel_header_link a').replaceWith({
-                //tag: 'a',
-                //href: headerLogoLink,
-                //target: '_blank',
-                //children: [{
-                tag: 'img',
-                src: headerLogoImg,
-                height: headerLogoHeight
-                //}]
+                tag: 'a',
+                href: headerLogoLink,
+                target: '_blank',
+                children: [{
+                    tag: 'img',
+                    src: headerLogoImg,
+                    height: headerLogoHeight
+                }]
             });
 
             // adjust title position
