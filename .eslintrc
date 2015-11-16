@@ -251,10 +251,11 @@ globals:
   OpenLayers:false
   google:false
   QGIS:true
-  wmsLoader: true
+  wmsLoader:true
   wmsURI:true
   geoExtMap:true
   GLOBAL_SERVER_OS:true
   projectData:true
   lang:true
   TR:true
+  
