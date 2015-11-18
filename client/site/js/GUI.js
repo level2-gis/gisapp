@@ -346,7 +346,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							xtype: 'tbspacer'
 						}, {
 							xtype: 'textfield',
-							width: 130,
+							width: 120,
 							regex: /^\d{6}\.?\d{0,2},\d{6}\.?\d{0,2}$/,
 							enableKeyEvents: true,
 							id: 'CoordinateTextField'
@@ -358,7 +358,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							minValue: 1,
 							allowNegative: false,
 							allowDecimals: false,
-							width: 75,
+							width: 65,
 							enableKeyEvents: true,
 							id: 'ScaleNumberField'
 						}]

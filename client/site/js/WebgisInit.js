@@ -601,6 +601,11 @@ function postLoading() {
     }
 
     if (!initialLoadDone) {
+
+        //set EPSG text from OpenLayers
+        var proj = geoExtMap.map.getProjectionObject();
+        rightStatusText.setText(proj.getCode());
+
         if (urlParams.startExtent) {
             var startExtentParams = urlParams.startExtent.split(",");
             var startExtent = new OpenLayers.Bounds(parseFloat(startExtentParams[0]), parseFloat(startExtentParams[1]), parseFloat(startExtentParams[2]), parseFloat(startExtentParams[3]));
