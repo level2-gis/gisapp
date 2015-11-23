@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.3.9
 -- Dumped by pg_dump version 9.3.9
--- Started on 2015-10-23 00:05:57 CEST
+-- Started on 2015-11-23 22:48:03 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -55,8 +55,8 @@ SET search_path = public, pg_catalog;
 --
 
 CREATE FUNCTION check_user_project(uname text, project text) RETURNS text
-LANGUAGE plpgsql COST 1
-AS $_$
+    LANGUAGE plpgsql COST 1
+    AS $_$
 declare proj_id integer;
 declare is_public boolean;
 begin
@@ -92,13 +92,13 @@ COMMENT ON FUNCTION check_user_project(uname text, project text) IS 'IN uname, p
 
 
 --
--- TOC entry 241 (class 1255 OID 95935)
+-- TOC entry 241 (class 1255 OID 96388)
 -- Name: get_project_data(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION get_project_data(project text) RETURNS TABLE(client_name text, client_display_name text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[])
-LANGUAGE plpgsql COST 1
-AS $_$
+CREATE FUNCTION get_project_data(project text) RETURNS TABLE(client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[])
+    LANGUAGE plpgsql COST 1
+    AS $_$
 declare base json;
 declare overview json;
 declare extra json;
@@ -116,7 +116,7 @@ SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definit
 FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
 
 
-RETURN QUERY SELECT clients.name, clients.display_name, themes.name, overview,base,extra, projects.tables_onstart FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
+RETURN QUERY SELECT clients.name, clients.display_name, clients.url, themes.name, overview,base,extra, projects.tables_onstart FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
 end;
 $_$;
 
@@ -138,11 +138,11 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE clients (
-  id integer NOT NULL,
-  name text NOT NULL,
-  display_name text,
-  theme_id integer,
-  url text
+    id integer NOT NULL,
+    name text NOT NULL,
+    display_name text,
+    theme_id integer,
+    url text
 );
 
 
@@ -152,11 +152,11 @@ CREATE TABLE clients (
 --
 
 CREATE SEQUENCE clients_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
@@ -174,12 +174,12 @@ ALTER SEQUENCE clients_id_seq OWNED BY clients.id;
 --
 
 CREATE TABLE layers (
-  id integer NOT NULL,
-  name text NOT NULL,
-  display_name text,
-  type text NOT NULL,
-  base_layer boolean NOT NULL,
-  definition text NOT NULL
+    id integer NOT NULL,
+    name text NOT NULL,
+    display_name text,
+    type text NOT NULL,
+    base_layer boolean NOT NULL,
+    definition text NOT NULL
 );
 
 
@@ -189,11 +189,11 @@ CREATE TABLE layers (
 --
 
 CREATE SEQUENCE layers_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
@@ -211,14 +211,14 @@ ALTER SEQUENCE layers_id_seq OWNED BY layers.id;
 --
 
 CREATE TABLE projects (
-  id integer NOT NULL,
-  name text NOT NULL,
-  overview_layer_id integer,
-  base_layers_ids integer[],
-  extra_layers_ids integer[],
-  client_id integer,
-  tables_onstart text[],
-  public boolean DEFAULT false NOT NULL
+    id integer NOT NULL,
+    name text NOT NULL,
+    overview_layer_id integer,
+    base_layers_ids integer[],
+    extra_layers_ids integer[],
+    client_id integer,
+    tables_onstart text[],
+    public boolean DEFAULT false NOT NULL
 );
 
 
@@ -228,11 +228,11 @@ CREATE TABLE projects (
 --
 
 CREATE SEQUENCE projects_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
@@ -250,8 +250,8 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 --
 
 CREATE TABLE settings (
-  version integer NOT NULL,
-  date date
+    version integer NOT NULL,
+    date date
 );
 
 
@@ -261,8 +261,8 @@ CREATE TABLE settings (
 --
 
 CREATE TABLE themes (
-  id integer NOT NULL,
-  name text NOT NULL
+    id integer NOT NULL,
+    name text NOT NULL
 );
 
 
@@ -272,11 +272,11 @@ CREATE TABLE themes (
 --
 
 CREATE SEQUENCE themes_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
@@ -294,14 +294,14 @@ ALTER SEQUENCE themes_id_seq OWNED BY themes.id;
 --
 
 CREATE TABLE users (
-  user_id integer NOT NULL,
-  user_name text,
-  user_password_hash text,
-  user_email text,
-  display_name text,
-  last_login timestamp with time zone,
-  count_login integer DEFAULT 0,
-  project_ids integer[]
+    user_id integer NOT NULL,
+    user_name text,
+    user_password_hash text,
+    user_email text,
+    display_name text,
+    last_login timestamp with time zone,
+    count_login integer DEFAULT 0,
+    project_ids integer[]
 );
 
 
@@ -311,11 +311,11 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_user_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
@@ -430,7 +430,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (3, '2015-10-22');
+INSERT INTO settings VALUES (4, '2015-11-23');
 
 
 --
@@ -474,7 +474,7 @@ SELECT pg_catalog.setval('users_user_id_seq', 3, true);
 --
 
 ALTER TABLE ONLY clients
-ADD CONSTRAINT clients_name_key UNIQUE (name);
+    ADD CONSTRAINT clients_name_key UNIQUE (name);
 
 
 --
@@ -483,7 +483,7 @@ ADD CONSTRAINT clients_name_key UNIQUE (name);
 --
 
 ALTER TABLE ONLY clients
-ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
 
 
 --
@@ -492,7 +492,7 @@ ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY layers
-ADD CONSTRAINT layers_layer_name_key UNIQUE (name);
+    ADD CONSTRAINT layers_layer_name_key UNIQUE (name);
 
 
 --
@@ -501,7 +501,7 @@ ADD CONSTRAINT layers_layer_name_key UNIQUE (name);
 --
 
 ALTER TABLE ONLY layers
-ADD CONSTRAINT layers_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT layers_pkey PRIMARY KEY (id);
 
 
 --
@@ -510,7 +510,7 @@ ADD CONSTRAINT layers_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY projects
-ADD CONSTRAINT projects_name_key UNIQUE (name);
+    ADD CONSTRAINT projects_name_key UNIQUE (name);
 
 
 --
@@ -519,7 +519,7 @@ ADD CONSTRAINT projects_name_key UNIQUE (name);
 --
 
 ALTER TABLE ONLY projects
-ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -528,7 +528,7 @@ ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY settings
-ADD CONSTRAINT settings_pkey PRIMARY KEY (version);
+    ADD CONSTRAINT settings_pkey PRIMARY KEY (version);
 
 
 --
@@ -537,7 +537,7 @@ ADD CONSTRAINT settings_pkey PRIMARY KEY (version);
 --
 
 ALTER TABLE ONLY themes
-ADD CONSTRAINT themes_name_key UNIQUE (name);
+    ADD CONSTRAINT themes_name_key UNIQUE (name);
 
 
 --
@@ -546,7 +546,7 @@ ADD CONSTRAINT themes_name_key UNIQUE (name);
 --
 
 ALTER TABLE ONLY themes
-ADD CONSTRAINT themes_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT themes_pkey PRIMARY KEY (id);
 
 
 --
@@ -555,7 +555,7 @@ ADD CONSTRAINT themes_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY users
-ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
 
 
 --
@@ -564,7 +564,7 @@ ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
 --
 
 ALTER TABLE ONLY users
-ADD CONSTRAINT users_user_name_key UNIQUE (user_name);
+    ADD CONSTRAINT users_user_name_key UNIQUE (user_name);
 
 
 --
@@ -573,7 +573,7 @@ ADD CONSTRAINT users_user_name_key UNIQUE (user_name);
 --
 
 ALTER TABLE ONLY clients
-ADD CONSTRAINT clients_theme_id_fkey FOREIGN KEY (theme_id) REFERENCES themes(id);
+    ADD CONSTRAINT clients_theme_id_fkey FOREIGN KEY (theme_id) REFERENCES themes(id);
 
 
 --
@@ -582,7 +582,7 @@ ADD CONSTRAINT clients_theme_id_fkey FOREIGN KEY (theme_id) REFERENCES themes(id
 --
 
 ALTER TABLE ONLY projects
-ADD CONSTRAINT projects_client_id_fkey FOREIGN KEY (client_id) REFERENCES clients(id);
+    ADD CONSTRAINT projects_client_id_fkey FOREIGN KEY (client_id) REFERENCES clients(id);
 
 
 --
@@ -591,11 +591,12 @@ ADD CONSTRAINT projects_client_id_fkey FOREIGN KEY (client_id) REFERENCES client
 --
 
 ALTER TABLE ONLY projects
-ADD CONSTRAINT projects_overview_layer_id_fkey FOREIGN KEY (overview_layer_id) REFERENCES layers(id);
+    ADD CONSTRAINT projects_overview_layer_id_fkey FOREIGN KEY (overview_layer_id) REFERENCES layers(id);
 
 
--- Completed on 2015-10-23 00:06:01 CEST
+-- Completed on 2015-11-23 22:48:13 CET
 
 --
 -- PostgreSQL database dump complete
 --
+

@@ -43,6 +43,16 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
     if(!property_exists($settings,"geoNames")) {
         $settings->geoNames = null;
     }
+    if(!property_exists($data,"client_url")) {
+        $data->client_url = "";
+    }
+    if(file_exists($_SERVER["DOCUMENT_ROOT"] . $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png')) {
+        $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png';
+    }
+    else {
+        $data->client_logo = $gis_projects->path . 'admin/resources/images/demo.png';
+    }
+
 
 	//OK open application
 	?>
@@ -75,6 +85,8 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
             projectData.user = '<?php echo $user?>';
 			projectData.client_name = '<?php echo $data->client_name?>';
 			projectData.client_display_name = '<?php echo $data->client_display_name?>';
+            projectData.client_url = '<?php echo $data->client_url?>';
+            projectData.client_logo = '<?php echo $data->client_logo?>';
 
 			projectData.search = eval(<?php echo json_encode($settings->search)?>);
             projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics)?>);

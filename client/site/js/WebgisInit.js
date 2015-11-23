@@ -229,7 +229,7 @@ function postLoading() {
         Ext.get('panel_header_title').update(document.title);
 
         // set header logo and link
-        if (headerLogoImg != null) {
+        if (headerLogoLink > '') {
             Ext.select('#panel_header_link a').replaceWith({
                 tag: 'a',
                 href: headerLogoLink,
@@ -1073,7 +1073,7 @@ function postLoading() {
                 panel.on("featureselectioncleared", clearFeatureSelected);
                 panel.on("beforesearchdataloaded", showSearchPanelResults);
                 // Just for debugging...
-                // panel.on("afterdsearchdataloaded", function(e){console.log(e);});
+                // panel.on("aftersearchdataloaded", function(e){console.log(e);});
                 searchTabPanel.add(panel);
             }
             searchTabPanel.setActiveTab(0);

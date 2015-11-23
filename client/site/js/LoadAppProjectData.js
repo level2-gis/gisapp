@@ -35,6 +35,7 @@ var defaultIdentificationMode = "allLayers";
 var useGeodesicMeasurement = true;
 var useGeoNamesSearchBox = projectData.geoNames != null;
 var iconDirectory = 'client/site/gis_icons/';
+var coordinatePrecision = 2;    //precision of decimal places in GetFeatureInfo result window
 
 //URL for custom search scripts
 var searchBoxQueryURL = null; // "/wsgi/search.wsgi?query=";
@@ -102,16 +103,11 @@ var themeSwitcherTemplate = null;
 var titleBarText = TR.appName; // will be appended with project title
 
 // header logo image and link
-var headerLogoImg = projectData.gis_projects.path+'admin/resources/images/headerLogoImg.png'; // path to image, set null for no logo
+var headerLogoImg = projectData.client_logo;
 var headerLogoHeight = 24; // logo image height in pixels
-var headerLogoLink = 'http://level2.si'; // logo links to this URL
+var headerLogoLink = projectData.client_url; // logo links to this URL
 var headerTermsOfUseText = TR.logoutLabel; // set null for no link
 var headerTermsOfUseLink = "./admin/login.php?action=logout"; // URL to terms of use
-
-// optional project title per map name
-var projectTitles = {
-  "helloworld": "Hello World"
-};
 
 // Optional list of layers that should be displayed in a different image format,
 // if the default image format is 8bit.
