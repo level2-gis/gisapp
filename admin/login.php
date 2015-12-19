@@ -28,11 +28,7 @@ if ($action != null) {
     if ($action == "logout") {
         //logout
         $login->doLogout();
-        if ($server_os == 'Windows NT') {
-            header("Location: ../index.php?map=" . PROJECT_PATH . $pp . '.qgs');
-        } else {
-            header("Location: ../" . $pp);
-        }
+        header("Location: ../" . $pp);
     }
 } else {
     //login
