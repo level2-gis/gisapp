@@ -200,7 +200,8 @@ class Helpers
         $ret = null;
 
         if (strpos($url, "/") !== false) {
-            $ret = end(explode("/", $url));
+            $tmp = explode("/", $url);
+            $ret = end($tmp);
         }
 
         return $ret;
