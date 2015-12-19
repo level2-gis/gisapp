@@ -1,10 +1,5 @@
 //GetProject (code from GetUrlParam)
 
-/* global GLOBAL_SERVER_OS */
-/* global GLOBAL_LANG */
-/* global Ext */
-/* global TR */
-
 var urlString = "";
 var map = "";
 var urlParams = {};
@@ -21,26 +16,18 @@ if (document.documentURI) {
 }
 urlString = urlString.replace(/\+/g, ' ');
 
-if (GLOBAL_SERVER_OS == 'Windows NT') {
-    var fullPath = Ext.urlDecode(window.location.search.substring(1)).map;
-    map = fullPath.substr(fullPath.lastIndexOf('/') + 1, fullPath.length);
-    if (map.indexOf('.qgs') > -1) {
-        map = map.slice(0, map.length - 4);
+var urlArray = urlString.split('?');
+
+if (urlArray.length > 1) {
+    urlParams = Ext.urlDecode(urlArray[1]);
+    if (urlParams.public == 'on') {
+        guest = true;
     }
 }
-else {
-    var urlArray = urlString.split('?');
 
-    if (urlArray.length > 1) {
-        urlParams = Ext.urlDecode(urlArray[1]);
-        if (urlParams.public == 'on') {
-            guest = true;
-        }
-    }
+var urlBaseArray = urlArray[0].split('/');
+map = urlBaseArray.slice(4).join('/');
 
-    var urlBaseArray = urlArray[0].split('/');
-    map = urlBaseArray.slice(4).join('/');
-}
 
 Ext.BLANK_IMAGE_URL = 'client/site/libs/ext/resources/images/default/s.gif';
 
@@ -72,12 +59,7 @@ Ext.onReady(function () {
                         urlParams.lang = langsel;
                         startParams = Ext.urlEncode(urlParams);
 
-                        if (GLOBAL_SERVER_OS == 'Windows NT') {
-                            window.location.href = "index.php?map=" + fullPath + "&" + startParams;
-                        }
-                        else {
-                            window.location.href = map + "?" + startParams;
-                        }
+                        window.location.href = map + "?" + startParams;
                     }
                     else {
                         Ext.Msg.alert("Error", eval(result.message));
@@ -115,12 +97,7 @@ Ext.onReady(function () {
                         urlParams.lang = langsel;
                         startParams = Ext.urlEncode(urlParams);
 
-                        if (GLOBAL_SERVER_OS == 'Windows NT') {
-                            window.location.href = "index.php?map=" + fullPath + "&" + startParams;
-                        }
-                        else {
-                            window.location.href = map + "?" + startParams;
-                        }
+                        window.location.href = map + "?" + startParams;
                         this.hide();
                     }
                 },

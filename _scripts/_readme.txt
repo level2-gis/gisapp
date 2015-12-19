@@ -8,4 +8,4 @@ UPGRADE
 -----------
 1. Check your database version: SELECT max(version) FROM settings; (if there is no table settings, version = 1)
 
-2. Run all scripts lower and same than your version.
+2. Run all scripts from your version number and higher.

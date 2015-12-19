@@ -18,10 +18,6 @@ var customGetUrlParamsParser = null;
 
 var serverAndCGI = "/proxy";
 
-if(GLOBAL_SERVER_OS == 'Windows NT') {
-	serverAndCGI = "/qgis/qgis_mapserv.fcgi";
-}
-
 //Optional url for print server hosted on a different server. Default: same as above.
 // var serverAndCGI = "http://otherserver/cgi-bin/qgis_mapserv.fcgi";
 var printServer = serverAndCGI;
@@ -35,7 +31,9 @@ var defaultIdentificationMode = "allLayers";
 var useGeodesicMeasurement = true;
 var useGeoNamesSearchBox = projectData.geoNames != null;
 var iconDirectory = 'client/site/gis_icons/';
-var coordinatePrecision = 2;    //precision of decimal places in GetFeatureInfo result window
+var coordinatePrecision = 2;    //precision of coordinates decimal places in GetFeatureInfo result window
+var elevationPrecision = 1;     //precision of height in GetFeatureInfo result window
+var minimumAddressRange = 1000;  //range in meters within address is displayed with GetFeatureInfo, if outside than only regional info is displayed
 
 //URL for custom search scripts
 var searchBoxQueryURL = null; // "/wsgi/search.wsgi?query=";

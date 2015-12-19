@@ -79,9 +79,6 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 			var projectData = {};
 			
 			//bind PHP --> JS
-
-			GLOBAL_SERVER_OS = '<?php echo $server_os?>';
-
             projectData.user = '<?php echo $user?>';
 			projectData.client_name = '<?php echo $data->client_name?>';
 			projectData.client_display_name = '<?php echo $data->client_display_name?>';
@@ -227,7 +224,6 @@ else {
 		<script type="text/javascript">
 			//bind PHP --> JS
 			GLOBAL_LANG = '<?php echo $def_lang?>';
-			GLOBAL_SERVER_OS = '<?php echo $server_os?>';
 		</script>
 		
 		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=20150811"></script>
