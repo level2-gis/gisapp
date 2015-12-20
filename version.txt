@@ -1,2 +1,2 @@
-1.0.6 - Application
-4     - Database
+1.1.0 dev   - Application
+4           - Database

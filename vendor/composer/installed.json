@@ -165,17 +165,17 @@
     },
     {
         "name": "guzzlehttp/guzzle",
-        "version": "6.0.2",
-        "version_normalized": "6.0.2.0",
+        "version": "6.1.1",
+        "version_normalized": "6.1.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/guzzle/guzzle.git",
-            "reference": "a8dfeff00eb84616a17fea7a4d72af35e750410f"
+            "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a8dfeff00eb84616a17fea7a4d72af35e750410f",
-            "reference": "a8dfeff00eb84616a17fea7a4d72af35e750410f",
+            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c6851d6e48f63b69357cbfa55bca116448140e0c",
+            "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c",
             "shasum": ""
         },
         "require": {
@@ -188,11 +188,11 @@
             "phpunit/phpunit": "~4.0",
             "psr/log": "~1.0"
         },
-        "time": "2015-07-04 20:09:24",
+        "time": "2015-11-23 00:47:50",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "6.0-dev"
+                "dev-master": "6.1-dev"
             }
         },
         "installation-source": "dist",
@@ -229,23 +229,23 @@
     },
     {
         "name": "phpfastcache/phpfastcache",
-        "version": "3.0.17",
-        "version_normalized": "3.0.17.0",
+        "version": "3.0.20",
+        "version_normalized": "3.0.20.0",
         "source": {
             "type": "git",
             "url": "https://github.com/khoaofgod/phpfastcache.git",
-            "reference": "cccc2c8040e90cff1eb7bf3d76db3aec8efabf89"
+            "reference": "cafc8b42e13ac2cd843a1731ea66a58c9b9e8ac5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/khoaofgod/phpfastcache/zipball/cccc2c8040e90cff1eb7bf3d76db3aec8efabf89",
-            "reference": "cccc2c8040e90cff1eb7bf3d76db3aec8efabf89",
+            "url": "https://api.github.com/repos/khoaofgod/phpfastcache/zipball/cafc8b42e13ac2cd843a1731ea66a58c9b9e8ac5",
+            "reference": "cafc8b42e13ac2cd843a1731ea66a58c9b9e8ac5",
             "shasum": ""
         },
         "require": {
             "php": ">=5.1.0"
         },
-        "time": "2015-11-10 20:22:50",
+        "time": "2015-12-17 16:40:23",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
