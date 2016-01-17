@@ -34,5 +34,7 @@ var TR = {
     mapBasic: 'Osnovna karta',
     mapSatellite: 'Satelit',
     mapHybrid: 'Hibridni prikaz',
-    mapTerrain: 'Topografska karta'
+    mapTerrain: 'Topografska karta',
+    fiLocation: 'Lokacija',
+    fiElevation: 'nadmorska višina'
 };

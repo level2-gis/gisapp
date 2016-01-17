@@ -34,5 +34,7 @@ var TR = {
     mapBasic: 'Map',
     mapSatellite: 'Satellite',
     mapHybrid: 'Hybrid',
-    mapTerrain: 'Terrain'
+    mapTerrain: 'Terrain',
+    fiLocation: 'Location',
+    fiElevation: 'above sea level'
 };

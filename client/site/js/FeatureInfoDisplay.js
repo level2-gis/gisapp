@@ -37,16 +37,60 @@ function showFeatureInfo(evt) {
                 xmlDoc.async = "false";
                 xmlDoc.loadXML(evt.text);
             }
+
+            //start locationservices
+            var text = "";
+            var locationText = "";
+            var locationUnits = map.getLonLatFromPixel(evt.xy);
+            var locationObj = new QGIS.LocationService({location: locationUnits});
+            var popupItems = [];
+
+            if (projectData.locationServices != null) {
+
+                text = "</br>";
+                locationText = "<h2>" + TR.fiLocation + "</h2>";
+                //locationText += '<table><tbody>';
+
+                popupItems.push(
+                    {
+                        xtype: 'box',
+                            html: locationText
+                        }, {
+                        id: "fi_location",
+                            //margins: '5 5 5 5',
+                            xtype: 'box',
+                            html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
+                    });
+
+                for (var l = 0; l < projectData.locationServices.length; l++) {
+                    locationObj.getService({
+                        name: projectData.locationServices[l].name,
+                        key: projectData.locationServices[l].key,
+                        provider: projectData.locationServices[l].provider
+                    });
+
+                    popupItems.push({
+                            id: "fi_"+projectData.locationServices[l].name,
+                            //margins: '5 5 5 5',
+                            xtype: 'box',
+                            html: '</br>'
+                    });
+                }
+            }
+
+            locationObj.on("elevation", updateElevation);
+            locationObj.on("address", updateAddress);
+
             // open AttributeTree panel
             featureInfoResultLayers = [];
             highLightGeometry = [];
             parseFIResult(xmlDoc);
             featureInfoResultLayers.reverse();
             highLightGeometry.reverse();
-            if (featureInfoResultLayers.length > 0) {
+            //if (featureInfoResultLayers.length > 0) {
                 if (hoverPopup) {removeHoverPopup();}
                 if (clickPopup) {removeClickPopup();}
-                var text = "";
+
                 if (identificationMode == 'topMostHit') {
                     text += featureInfoResultLayers[0];
                     featureInfoHighlightLayer.addFeatures(highLightGeometry[0]);
@@ -57,25 +101,42 @@ function showFeatureInfo(evt) {
                         featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
                     }
                 }
-     
+
+                popupItems.push({
+                    id: "fi_qgis",
+                    xtype: 'box',
+                    //margins: '3 0 3 3',
+                    html: text
+                });
+
 				//new way GeoExt Popup
 				clickPopup = new GeoExt.Popup({
                     title: clickPopupTitleString[lang],
-					location: map.getLonLatFromPixel(evt.xy),
+					location: locationUnits,
 					map: map,
 					autoScroll: true,
                     bodyStyle:'padding:5px',
-                    html: text,
+                    //layout: 'accordion',
+                    items: popupItems,
 					maximizable: true,
 					collapsible: true,
                     listeners: {
                         beforeshow: function() {
+
                             var maxHeight = geoExtMap.getHeight() * 0.8;
+                            var minWidth = 200;
+
+                            if ((geoExtMap.getWidth() * 0.2) > minWidth) {
+                                this.setWidth(geoExtMap.getWidth() * 0.2);
+                            } else {
+                                this.setWidth(minWidth);
+                            }
+
                             if (this.getHeight()> maxHeight) {
                                 this.setHeight(maxHeight);
                             }
                        }
-                   }
+                    }
 				});
 				clickPopup.show();
 
@@ -95,7 +156,7 @@ function showFeatureInfo(evt) {
                 // clickPopup.events.fallThrough = false;
                 // map.addPopup(clickPopup); //*/
                 changeCursorInMap("default");
-            }
+            //}
         } else {
             closePopupClick = false;
         }
@@ -453,4 +514,54 @@ function getFeatures(layerName, node) {
             }
         }
     }
+}
+
+function updateElevation(data, location, field, template){
+
+    var pan = Ext.getCmp('fi_elevation');
+    var tem = new Ext.Template(template);
+
+    if(data!==undefined) {
+        if (!(isNaN(data[field]))) {
+            if(data[field] === parseInt(data[field])) {
+                //
+            }
+            else {
+                data[field] = data[field].toFixed(elevationPrecision);
+            }
+        }
+    }
+
+    var label = tem.apply(data);
+
+    pan.update(label);
+}
+
+function updateAddress(data, location, field, template, templateMin, factor) {
+
+    var pan = Ext.getCmp('fi_address');
+
+    var distance = 0;
+    var results;
+
+    if((field=='') || (field==null))
+        results = data;
+    else
+        results = data[field];
+
+    if(results.distance != null) {
+        distance = results.distance;
+        results.distance = distance*factor;
+    }
+    if (distance*factor>minimumAddressRange) {
+        tem = new Ext.Template(templateMin);
+    }
+    else {
+        tem = new Ext.Template(template);
+    }
+
+    var label = tem.apply(results);
+
+    pan.update(label);
+
 }

@@ -43,6 +43,10 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
     if(!property_exists($settings,"geoNames")) {
         $settings->geoNames = null;
     }
+    if(!property_exists($settings,"locationServices")) {
+        $settings->locationServices = null;
+    }
+
     if(!property_exists($data,"client_url")) {
         $data->client_url = "";
     }
@@ -88,6 +92,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 			projectData.search = eval(<?php echo json_encode($settings->search)?>);
             projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics)?>);
             projectData.geoNames = eval(<?php echo json_encode($settings->geoNames)?>);
+            projectData.locationServices = eval(<?php echo json_encode($settings->locationServices)?>);
             projectData.gis_projects = eval(<?php echo json_encode($gis_projects)?>);
             projectData.project = '<?php echo $project?>';
             projectData.crs = '<?php echo $crs?>';
@@ -143,7 +148,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
 		</script>
 	
-		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js"></script>
+		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=1.1"></script>
 	
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&sensor=true"></script>
 
@@ -164,9 +169,9 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 		<script type="text/javascript" src="client/site/js/GetUrlParams.js"></script>
 		<script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
 		<script type="text/javascript" src="client/site/js/GUI.js?v=1"></script>
-		<script type="text/javascript" src="client/site/js/QGISExtensions.js"></script>
+		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=1.1"></script>
         <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js"></script>
-		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js"></script>
+		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
         <script type="text/javascript" src="client/site/js/LayerActions.js"></script>
         <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1"></script>

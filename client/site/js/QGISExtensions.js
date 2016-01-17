@@ -1595,6 +1595,125 @@ QGIS.LayerOrderPanel = Ext.extend(Ext.Panel, {
 Ext.reg('qgis_layerorderpanel', QGIS.LayerOrderPanel);
 
 
+/* *************************** QGIS.LocationService **************************** */
+/*                  Created by Uros Preloznik, Level2 www.level2.si              */
+/* ***************************************************************************** */
+
+QGIS.LocationService = Ext.extend(Ext.util.Observable, {
+    constructor: function(config){
+        this.location = config.location; //units
+
+        this.addEvents(['elevation', 'address']);
+
+        this.listeners = config.listeners;
+
+        // Call our superclass constructor to complete construction process.
+        QGIS.LocationService.superclass.constructor.call(this, config)
+    },
+
+    locationToString: function () {
+        return this.location.lon.toFixed(coordinatePrecision)+ ", " + this.location.lat.toFixed(coordinatePrecision);
+
+    },
+
+    locationToWgs: function () {
+        return this.location.clone().transform(authid, new OpenLayers.Projection("EPSG:4326"));
+    },
+
+    getService: function (config) {
+
+        var serviceData = {};
+        switch (config.name) {
+            case "elevation" :
+                switch
+                    (config.provider.toLowerCase()) {
+                    case "mapbox" :
+                        serviceData.url = "https://api.mapbox.com/v4/surface/mapbox.mapbox-terrain-v1.json";
+                        serviceData.resultNode = "results";
+                        serviceData.resultField = "ele";
+                        serviceData.displayTemplate = '<tr><td>{ele}m '+TR.fiElevation + '</td></tr>'
+                        serviceData.params = {
+                            layer: "contour",
+                            fields: "ele",
+                            points: this.locationToWgs().toShortString(),
+                            access_token: config.key
+                        };
+                        break;
+                    case "mapzen" :
+                        serviceData.url = "https://elevation.mapzen.com/height";
+                        serviceData.resultNode = "";
+                        serviceData.resultField = "height";
+                        //serviceData.displayTemplate = "{height}m";
+                        serviceData.displayTemplate = '<tr><td>{height}m '+TR.fiElevation + '</td></tr>'
+                        serviceData.params = {
+                            json: Ext.util.JSON.encode({
+                                range: false,
+                                shape: [{
+                                    lat: this.locationToWgs().lat,
+                                    lon: this.locationToWgs().lon
+                                }]
+                            }),
+                            api_key: config.key
+                        };
+                        break;
+                }
+                break;
+            case "address" :
+                switch
+                    (config.provider.toLowerCase()) {
+                    case "mapzen" :
+                        serviceData.url = "https://search.mapzen.com/v1/reverse";
+                        serviceData.resultNode = "features";
+                        serviceData.resultField = "properties";
+                        serviceData.displayTemplate = '<tr><td>{label}  ('+measureDistanceResultPrefixString[lang].toLowerCase()+' {distance}m)</td></tr>';
+                        serviceData.displayTemplateMinimum = '<tr><td>{region}, {country}</td></tr>';
+                        serviceData.factor = 1000;  //factor to multiply returned distance to get meters
+                        serviceData.params = {
+                            layers: "address",
+                            'point.lat': this.locationToWgs().lat,
+                            'point.lon': this.locationToWgs().lon,
+                            api_key: config.key,
+                            size: 1
+                        };
+                        break;
+                    case "mapbox" :
+                        serviceData.url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"+this.locationToWgs().lon+","+this.locationToWgs().lat+".json";
+                        serviceData.resultNode = "features";
+                        serviceData.resultField = "";
+                        serviceData.displayTemplate = '<tr><td>{place_name}</td></tr>';
+                        serviceData.displayTemplateMinimum = '';
+                        serviceData.factor = 1;  //factor to multiply returned distance to get meters
+                        serviceData.params = {
+                            access_token: config.key,
+                            types: "address,neighborhood,place"
+                        };
+                        break;
+                }
+                break;
+
+        }
+
+        Ext.Ajax.request({
+            url: serviceData.url,
+            params: serviceData.params,
+            method: 'GET',
+            scope: this,
+            success: function (response) {
+                var result = Ext.util.JSON.decode(response.responseText);
+
+                if (result[serviceData.resultNode].length > 0) {
+                    this.fireEvent(config.name, result[serviceData.resultNode][0],this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
+                }
+            },
+            failure: function (response) {
+                //return {success: false, message: "not available"};
+            }
+        });
+    }
+
+});
+Ext.reg('qgis_location', QGIS.LocationService);
+
 /* ***************************************************************************** */
 // fix for Ext.Slider in IE9
 Ext.override(Ext.dd.DragTracker, {

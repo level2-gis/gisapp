@@ -10,14 +10,17 @@ It turns your QGIS project into Web GIS application with tools to view, navigate
 * user authorization with optional guest access
 * server side (database for storing info about projects, base layers, external layers (WMS,WFS) and users; user authentication, specific project settings)
 * QGIS server proxy (caching and validating requests)
-* layer context menu with Zoom to layer extent, Open attribute data, Data Export (SHP, DXF, CSV)
+* layer context menu with Zoom to layer extent, Open attribute data, Data Export* (SHP, DXF, CSV)
 * geolocation button
 * Google StreetView integration
+* using external location services for address and elevation
 * legend in layer tree
 * separating project settings and code
 * user Interface changes
 
 **[Longer Description](http://level2.si/index.php/2015/06/14/whats-new-in-extended-qgis-web-client/)**
+
+*Only PostGIS layers
 
 ##Documentation
 Read **[Wiki](../../wiki)**

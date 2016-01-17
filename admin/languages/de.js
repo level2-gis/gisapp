@@ -34,5 +34,7 @@ var TR = {
     mapBasic: 'Karte',
     mapSatellite: 'Satellit',
     mapHybrid: 'Hybrid',
-    mapTerrain: 'Gelände'
+    mapTerrain: 'Gelände',
+    fiLocation: 'Position',
+    fiElevation: 'über dem Meeresspiegel'
 };
