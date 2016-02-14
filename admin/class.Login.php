@@ -255,6 +255,9 @@ class Login
             if ($check == 'OK') {
                 //get additional project info
                 $project_data = $gisApp->getProjectDataFromDB();
+                if($project_data==false) {
+                    return false;
+                }
 
                 //get all GIS projects for user for themeswitcher
                 $gis_projects = $gisApp->getGisProjectsFromDB();

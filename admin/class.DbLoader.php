@@ -49,7 +49,7 @@ class DbLoader
         if ($result_row) {
             return $result_row->data;
         } else
-            return 'TR.loginFailMessage';
+            return false;
 
     }
 
