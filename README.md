@@ -8,7 +8,7 @@ It turns your QGIS project into Web GIS application with tools to view, navigate
 
 ##Modifications and new features regarding QWC:
 * user authorization with optional guest access
-* server side (database for storing info about projects, base layers, external layers (WMS,WFS) and users; user authentication, specific project settings)
+* server side (database for storing info about projects, base layers, external layers (WMS) and users; user authentication, specific project settings)
 * QGIS server proxy (caching and validating requests)
 * layer context menu with Zoom to layer extent, Open attribute data, Data Export* (SHP, DXF, CSV)
 * geolocation button
