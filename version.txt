@@ -1,2 +1,2 @@
-1.1.0       - Application
+1.1.1       - Application
 4           - Database

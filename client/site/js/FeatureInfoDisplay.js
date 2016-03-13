@@ -414,7 +414,7 @@ function parseFIResult(node) {
                     while (attributeNode) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
-                            var attValue = attributeNode.getAttribute("value");
+                            var attValue = attributeNode.getAttribute("value").replace("NULL",noDataValue);
                             if ((attName !== mapInfoFieldName) && ((suppressEmptyValues == true && attValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '') !== "") || suppressEmptyValues == false)) {
                                 if (attName === "geometry") {
                                     var feature = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(attValue));

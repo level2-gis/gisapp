@@ -1220,7 +1220,7 @@ QGIS.FeatureInfoParser = Ext.extend(Object, {
                             this.fields.push(attributeNode.getAttribute("name"));
                         }
                         // add feature attribute value
-                        feature.push(attributeNode.getAttribute("value"));
+                        feature.push(attributeNode.getAttribute("value").replace("NULL",noDataValue));
                     }
                     var bboxNodes = featureNode.getElementsByTagName("BoundingBox");
                     if (bboxNodes.length > 0) {
