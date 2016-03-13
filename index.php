@@ -164,14 +164,14 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
         <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
 		<script type="text/javascript" src="client/site/js/Translations.js"></script>
 		<script type="text/javascript" src="client/site/js/PagingStore.js"></script>
-		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.1"></script>
+		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.1.1"></script>
 		<script type="text/javascript" src="client/site/js/Customizations.js"></script>
 		<script type="text/javascript" src="client/site/js/GetUrlParams.js"></script>
 		<script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
 		<script type="text/javascript" src="client/site/js/GUI.js?v=1"></script>
-		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=1.1"></script>
+		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=1.1.1"></script>
         <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js"></script>
-		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1"></script>
+		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1.1"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
         <script type="text/javascript" src="client/site/js/LayerActions.js"></script>
         <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1"></script>
