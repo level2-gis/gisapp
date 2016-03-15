@@ -63,7 +63,13 @@ class DbLoader
         if (file_exists(PROJECT_PATH . $this->project . '.json')) {
             try {
                 $filestr = file_get_contents(PROJECT_PATH . $this->project . '.json', true);
-                return $filestr;
+                //check if json is valid string
+                if (json_decode($filestr) === null) {
+                    $this->feedback = "Bad project json configuration!";
+                    return false;
+                } else {
+                    return $filestr;
+                }
             } catch (Exception $e) {
                 $this->feedback = $e->getMessage();
                 return false;

@@ -189,9 +189,3 @@ if (Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion) {
         collapsibleSplitTip: "Potegni za razširitev. Dvojni klik, če želite skriti."
     });
 }
-
-if (Ext.ux.grid.GridFilters) {
-    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
-        menuFilterText: 'Filtri'
-    });
-}

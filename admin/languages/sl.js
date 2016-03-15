@@ -38,3 +38,9 @@ var TR = {
     fiLocation: 'Lokacija',
     fiElevation: 'nadmorska višina'
 };
+
+if (Ext.ux.grid.GridFilters) {
+    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
+        menuFilterText: 'Filtri'
+    });
+}

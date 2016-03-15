@@ -38,3 +38,9 @@ var TR = {
     fiLocation: 'Location',
     fiElevation: 'above sea level'
 };
+
+if (Ext.ux.grid.GridFilters) {
+    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
+        menuFilterText: 'Filters'
+    });
+}

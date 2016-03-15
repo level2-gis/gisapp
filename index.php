@@ -147,33 +147,32 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 			var userLogoImg = projectData.gis_projects.path+'admin/resources/images/user_gray.png';
 
 		</script>
-	
-		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=1.1"></script>
-	
+
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&sensor=true"></script>
 
 		<script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
-        <script type="text/javascript" src="admin/languages/locale/ext-lang-<?php echo $def_lang?>.js"></script>
+        <script type="text/javascript" src="admin/languages/locale/ext-lang-<?php echo $def_lang?>.js?v=1.1.2"></script>
+        <script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=1.1.2"></script>
         <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
 		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=2131"></script>
 
 <!--        <script type="text/javascript" src="../libs/openlayers/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
         <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
-		<script type="text/javascript" src="client/site/js/Translations.js"></script>
+		<script type="text/javascript" src="client/site/js/Translations.js?v=1.1.2"></script>
 		<script type="text/javascript" src="client/site/js/PagingStore.js"></script>
 		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.1.1"></script>
 		<script type="text/javascript" src="client/site/js/Customizations.js"></script>
 		<script type="text/javascript" src="client/site/js/GetUrlParams.js"></script>
 		<script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
 		<script type="text/javascript" src="client/site/js/GUI.js?v=1"></script>
-		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=1.1.1"></script>
+		<script type="text/javascript" src="client/site/js/QGISExtensions.js?v=1.1.2"></script>
         <script type="text/javascript" src="client/site/js/GeoNamesSearchCombo.js"></script>
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1.1"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
-        <script type="text/javascript" src="client/site/js/LayerActions.js"></script>
+        <script type="text/javascript" src="client/site/js/LayerActions.js?v=1.1.2"></script>
         <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1"></script>
 	<style type="text/css">
 	#dpiDetection {

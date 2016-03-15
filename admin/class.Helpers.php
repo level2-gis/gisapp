@@ -161,7 +161,7 @@ class Helpers
         static $pg_layer_infos = array();
 
         if ((string)$layer->provider != 'postgres' && (string)$layer->provider != 'spatialite') {
-            return self::msg(false, 'only postgis or spatialite layers are supported' . (string)$layer->provider);
+            return self::msg(false, 'Only postgis or spatialite layers are supported!</br>'. (string)$layer->layername.': ' . (string)$layer->provider);
         }
         // Datasource
         $datasource = (string)$layer->datasource;

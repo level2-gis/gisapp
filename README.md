@@ -44,6 +44,7 @@ Available languages:
 * English
 * German
 * Slovenian
+* Slovak
 
 New language:
 * Read this **[page](../../wiki/6.-Translations)**

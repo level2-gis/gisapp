@@ -293,6 +293,7 @@ class Login
 
                     return true;
                 } else {
+                    $this->feedback = $gisApp->feedback;
                     return false;
                 }
             } else {

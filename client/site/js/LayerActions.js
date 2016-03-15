@@ -125,7 +125,8 @@ function buildLayerContextMenu(node) {
 
 function zoomToLayerExtent(item) {
     var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
-    var bbox = new OpenLayers.Bounds(wmsLoader.layerProperties[myLayerName].bbox).transform('EPSG:4326', geoExtMap.map.projection);
+    var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
+    var bbox = new OpenLayers.Bounds(wmsLoader.layerProperties[layerId].bbox).transform('EPSG:4326', geoExtMap.map.projection);
     geoExtMap.map.zoomToExtent(bbox);
 }
 
@@ -146,13 +147,13 @@ function exportHandler(item) {
 // Show the menu on right click of the leaf node of the layerTree object
 function contextMenuHandler(node) {
 
-    var layer = node.attributes.text;
+    var layerId = wmsLoader.layerTitleNameMapping[node.attributes.text];
+    var layer = wmsLoader.layerProperties[layerId];
 
-    //disable option for opentable if layer is not queryable
-    var queryable = wmsLoader.layerProperties[layer].queryable;
+    //disable option for opentable if layer is not queryableor layer has no attributes (WMS)
     //var contTable = Ext.getCmp('contextOpenTable');
     var contTable = node.menu.getComponent('contextOpenTable');
-    if (queryable)
+    if (layer.queryable && typeof(layer.attributes) !== 'undefined')
         contTable.setDisabled(false);
     else
         contTable.setDisabled(true);
@@ -268,14 +269,15 @@ function applyWMSFilter(item) {
  */
 function getLayerAttributes(layer) {
 
+    var layerId = wmsLoader.layerTitleNameMapping[layer];
     var ret = {};
     ret.columns = [];
     ret.fields = [];
 
-    for (var i=0;i<wmsLoader.layerProperties[layer].attributes.length;i++) {
+    for (var i=0;i<wmsLoader.layerProperties[layerId].attributes.length;i++) {
         ret.columns[i] = {};
         //ret.fields[i] = {};
-        var attribute = wmsLoader.layerProperties[layer].attributes[i];
+        var attribute = wmsLoader.layerProperties[layerId].attributes[i];
         var fieldType = attribute.type;
         if(fieldType=='int' || fieldType=='date' || fieldType=='boolean') {
             ret.fields.push({name: attribute.name,type:fieldType});

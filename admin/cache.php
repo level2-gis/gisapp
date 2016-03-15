@@ -45,7 +45,9 @@ $path = $cache->getPath();
 
 print("Cache size in bytes: " . $stats["size"]); //size of cached objects in bytes
 print("\nPath to store files: " . $path);
-print("\nCache content (key, size, write time):");
+print("\nCache content (key, size, write time UTC):");
+
+date_default_timezone_set('UTC');
 
 foreach ($stats["data"] as $key => $el) {
     $cmd_clear = '<a href="' . $script . '?clear=' . $key . '">clear </a>';

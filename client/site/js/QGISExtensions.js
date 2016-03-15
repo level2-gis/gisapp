@@ -1052,7 +1052,8 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                 //manually add field feature_id, bbox (and geometry if exists) since they are not in wmsLoader...
                 storeFields.push({name: 'feature_id'});
 
-                var wmsLayerFields = wmsLoader.layerProperties[this.queryLayer].attributes;
+                var layerId = wmsLoader.layerTitleNameMapping[this.queryLayer];
+                var wmsLayerFields = wmsLoader.layerProperties[layerId].attributes;
                 for (var i=0; i<wmsLayerFields.length; i++) {
 
                     var fieldType = wmsLayerFields[i].type;
