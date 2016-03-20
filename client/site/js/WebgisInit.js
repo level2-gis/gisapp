@@ -1611,7 +1611,8 @@ function showSearchPanelResults(searchPanelInstance, features) {
         var filters = new Ext.ux.grid.GridFilters({
             // encode and local configuration options
             encode: false, // json encode the filter query
-            local: true   // defaults to false (remote filtering)
+            local: true,   // defaults to false (remote filtering)
+            menuFilterText: TR.menuFilterText
 
 //            filters: [{
 //                type: 'numeric',

@@ -27,6 +27,7 @@ var TR = {
     noPermission: 'Nimate pravic za uporabo projekta',
     noPublicAccess: 'Javni dostop ni omogočen za ta projekt.',
     clearFilter: 'Pobriši vse filtre',
+    menuFilterText: 'Filtri',
     editData: 'Uredi podatke',
     editDisabled: 'Urejanje onemogočeno',
     editDelete: 'Briši',
@@ -38,9 +39,3 @@ var TR = {
     fiLocation: 'Lokacija',
     fiElevation: 'nadmorska višina'
 };
-
-if (Ext.ux.grid.GridFilters) {
-    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
-        menuFilterText: 'Filtri'
-    });
-}

@@ -52,9 +52,9 @@ date_default_timezone_set('UTC');
 foreach ($stats["data"] as $key => $el) {
     $cmd_clear = '<a href="' . $script . '?clear=' . $key . '">clear </a>';
     $cmd_get = "view ";
-    if (strpos($key,"_XML_")>-1) {
+    //if (strpos($key,"_XML_")>-1) {
         $cmd_get = '<a href="' . $script . '?get=' . $key . '">view </a>';
-    }
+    //}
     print('</br>' . $cmd_clear . $cmd_get . '<b>' . $key . '</b>,' . $el['size'] . ',' . date('c', $el['write_time']));
 }
 

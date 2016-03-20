@@ -27,6 +27,7 @@ var TR = {
     noPermission: 'You don\'t have permissions to use this project.',
     noPublicAccess: 'Public access is not allowed with this project.',
     clearFilter: 'Clear all filters',
+    menuFilterText: 'Filters',
     editData: 'Edit data',
     editDisabled: 'Editing disabled',
     editDelete: 'Delete',
@@ -38,9 +39,3 @@ var TR = {
     fiLocation: 'Location',
     fiElevation: 'above sea level'
 };
-
-if (Ext.ux.grid.GridFilters) {
-    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
-        menuFilterText: 'Filters'
-    });
-}

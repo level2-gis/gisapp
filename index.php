@@ -154,7 +154,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 		<script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
         <script type="text/javascript" src="admin/languages/locale/ext-lang-<?php echo $def_lang?>.js?v=1.1.2"></script>
-        <script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=1.1.2"></script>
+        <script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=1.1.3"></script>
         <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
 		<script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=2131"></script>
 
@@ -173,7 +173,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1.1"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
         <script type="text/javascript" src="client/site/js/LayerActions.js?v=1.1.2"></script>
-        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1"></script>
+        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1.1.3"></script>
 	<style type="text/css">
 	#dpiDetection {
 	  height: 1in;
@@ -230,7 +230,7 @@ else {
 			GLOBAL_LANG = '<?php echo $def_lang?>';
 		</script>
 		
-		<script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=20150811"></script>
+        <script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=1.1.3"></script>
         <script type="text/javascript" src="admin/languages/_lang.js?v=20150819"></script>
 		<script type="text/javascript" src="admin/logindialog/js/overrides.js"></script>
 

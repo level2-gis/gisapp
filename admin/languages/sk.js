@@ -27,6 +27,7 @@ var TR = {
     noPermission: 'Nemate pravo pouzivat tento projekt.',
     noPublicAccess: 'Volný pristup pre tento projekt nie je nastavený.',
     clearFilter: 'Zmaz vetky filtre',
+    menuFilterText: 'Filtre',
     editData: 'Editovat data',
     editDisabled: 'Editovanie nie je povolene.',
     editDelete: 'Zmaz',
@@ -38,8 +39,4 @@ var TR = {
     fiLocation: 'Pozicia',
     fiElevation: 'nad morom'
 };
-if(Ext.ux.grid.GridFilters) {
-    Ext.apply(Ext.ux.grid.GridFilters.prototype, {
-        menuFilterText: 'Filtre'
-    });
-}
+
