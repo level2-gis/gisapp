@@ -10,6 +10,8 @@
 require '../vendor/autoload.php';
 require_once("settings.php");
 
+header('Content-type: text/html; charset=utf-8');
+
 //TODO custom settings
 //$config = array(
 //    //"htaccess" => false,
@@ -61,11 +63,13 @@ foreach ($stats["data"] as $key => $el) {
 //TODO bug, doesn't work on files
 //print_r($cache->systemInfo());
 
-
-
 if($get != null) {
     echo '</br></br>' . '<b>Contents: '.$get.'</b></br>';
-    echo htmlentities($cache->get($get),ENT_COMPAT,"UTF-8");
+    if (strpos($get,"_XML_")>-1) {
+        echo htmlentities($cache->get($get), ENT_COMPAT, "UTF-8");
+    } elseif (strpos($get,"_PNG_")>-1) {
+        $im = base64_encode($cache->get($get));
+        echo '<img src="data:image/png;base64,'.$im.'" alt="legend" />';
+    }
 }
-
 echo "</pre>";

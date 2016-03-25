@@ -87,17 +87,15 @@ class Helpers
     public static function normalize($string)
     {
         $table = array(
-            'Š' => 'S', 'š' => 's', 'Đ' => 'Dj', 'đ' => 'dj', 'Ž' => 'Z', 'ž' => 'z', 'Č' => 'C', 'č' => 'c', 'Ć' => 'C', 'ć' => 'c',
-            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E',
-            'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O',
-            'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss',
+            'š' => 's', 'ď' => 'd', 'đ' => 'dj', 'ž' => 'z', 'č' => 'c', 'ć' => 'c',
+            'Þ' => 'b', 'ß' => 's', 'ĺ' => 'l', 'ľ' => 'l',
             'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e',
-            'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o',
-            'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'þ' => 'b',
-            'ÿ' => 'y', 'Ŕ' => 'R', 'ŕ' => 'r', '.' => ''
+            'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'o', 'ň' => 'n', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o',
+            'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ť' => 't', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'þ' => 'b',
+            'ÿ' => 'y', 'ŕ' => 'r', '.' => ''
         );
 
-        return strtr($string, $table);
+        return strtr(strtolower($string), $table);
     }
 
     private function msg($status, $data)
@@ -114,13 +112,15 @@ class Helpers
      */
     public static function getQgsProject($map)
     {
+        libxml_clear_errors();
+        libxml_use_internal_errors(true);
         if (file_exists($map) && is_readable($map)) {
             $project = simplexml_load_file($map);
             if (!$project) {
-                return self::msg(false, 'project not valid');
+                return self::msg(false, 'Project not valid XML!');
             }
         } else {
-            return self::msg(false, 'project not found');
+            return self::msg(false, 'Project not found!');
         }
         return self::msg(true, $project);
     }

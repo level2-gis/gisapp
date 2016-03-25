@@ -265,7 +265,10 @@ class Login
                 //get QGIS project CRS
                 $project_qgs = Helpers::getQgsProject(PROJECT_PATH . $project . '.qgs');
                 if (!($project_qgs["status"])) {
+                    //error in XML, using default CRS but continue
                     $crs = "EPSG:3857";
+                    $this->feedback = $project_qgs["message"];
+                    //return false;
                 }
                 else {
                     $crs = (string)$project_qgs["message"]->properties->SpatialRefSys->ProjectCrs;
@@ -283,6 +286,7 @@ class Login
                     $_SESSION['settings'] = $project_settings;
                     $_SESSION['gis_projects'] = $gis_projects;
                     $_SESSION['crs'] = $crs;
+                    $_SESSION['message'] = $this->feedback;
                     $this->user_is_logged_in = true;
 
                     //update lastlogin and count
@@ -423,6 +427,7 @@ class Login
     private function showPageLoggedIn()
     {
         $scr = filter_input(INPUT_SERVER, "SCRIPT_NAME");
+        echo "<pre>";
 
         if ($this->feedback) {
             echo $this->feedback . "<br/><br/>";
@@ -436,11 +441,12 @@ class Login
         //    echo '</br><a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">SUPERUSER: Register new account</a>';
 
 
-        echo "<h3> PHP List All Session Variables</h3>";
-        echo "sess_id: " . session_id() . "<br/><br/>";
+        echo "<h3>PHP List All Session Variables</h3>";
+        echo "<b>sess_id</b>: " . session_id() . "<br/><br/>";
         foreach ($_SESSION as $key => $val)
-            echo $key . ": " . $val . "<br/><br/>";
+            echo "<b>" . $key . "</b>: " . $val . "<br/><br/>";
 
+        echo "</pre>";
     }
 
     /**

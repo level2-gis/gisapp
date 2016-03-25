@@ -11,6 +11,8 @@ use GisApp\Login;
 
 require_once("class.Login.php");
 
+header('Content-type: text/html; charset=utf-8');
+
 $version = "EQWC version: ";
 if (file_exists('../version.txt')) {
     $version .= file_get_contents('../version.txt',null,null,null,8);
