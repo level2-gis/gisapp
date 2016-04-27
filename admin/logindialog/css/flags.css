@@ -1,4 +1,5 @@
-﻿.ux-flag-us {
+
+.ux-flag-us {
     background-image: url(../img/flags/us.png) !important;
 }
 
@@ -16,4 +17,8 @@
 
 .ux-flag-de {
     background-image: url(../img/flags/de.png) !important;
+}
+
+.ux-flag-es {
+    background-image: url(../img/flags/es.png) !important;
 }
