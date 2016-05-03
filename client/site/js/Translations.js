@@ -10,12 +10,12 @@
 */
 
 //indicating which of the help files have been translated already
-var availableHelpLanguages = Array("en","de","hu","it","pl","fr","ro","sk");
+var availableHelpLanguages = Array("en","es","de","hu","it","pl","fr","ro","sk");
 
 // list of available languages
 var availableLanguages = [];
 availableLanguages["en"] = {names:[], translator:"Andreas Neumann"}; //a (dot) neumann (at) carto (dot) net
-availableLanguages["es"] = {names:[], translator:"Samuel Mesa, Diana Galindo, Germán Carrillo"}; // samuelmesa (at) gmail (dot) com , drgalindog (at) linuxmail (dot) org
+availableLanguages["es"] = {names:[], translator:"Samuel Mesa, Diana Galindo, Germán Carrillo, Ignacio Serrano Ayllón"}; // samuelmesa (at) gmail (dot) com , drgalindog (at) linuxmail (dot) org
 availableLanguages["de"] = {names:[], translator:"Andreas Neumann"}; //a(dot)neumann(at)carto(dot)net
 availableLanguages["fr"] = {names:[], translator:"Mayeul Kauffmann, Amandine Schloupt (Aguram)"}; //mayeul (dot) kauffmann (at) free (dot) fr, aschloupt (at) aguram (dot) org
 availableLanguages["it"] = {names:[], translator:"Paolo Cavallini (Faunalia), Giovanni Allegri (Gis3W), Alessandro Pasotti (ItOpen)"}; //cavallini (at) faunalia (dot) it
@@ -211,7 +211,7 @@ availableLanguages["nl"].names["sk"] = "Holandsky";
 //Polish; 
 availableLanguages["pl"].names["en"] = "Polish";
 availableLanguages["pl"].names["de"] = "Polish"; //FIXME
-availableLanguages["pl"].names["es"] = "Polish"; //FIXME
+availableLanguages["pl"].names["es"] = "Polaco"; //FIXed
 availableLanguages["pl"].names["fr"] = "Polonais";
 availableLanguages["pl"].names["it"] = "Polacco";
 availableLanguages["pl"].names["pt_PT"] = "Polish"; //FIXME
@@ -227,7 +227,7 @@ availableLanguages["pl"].names["sk"] = "Poľsky";
 //Slovak; 
 availableLanguages["sk"].names["en"] = "Slovak";
 availableLanguages["sk"].names["de"] = "Slovak"; //FIXME
-availableLanguages["sk"].names["es"] = "Slovak"; //FIXME
+availableLanguages["sk"].names["es"] = "Eslovaco"; //fixed
 availableLanguages["sk"].names["fr"] = "Slovak";
 availableLanguages["sk"].names["it"] = "Slovak";
 availableLanguages["sk"].names["pt_PT"] = "Slovak"; //FIXME
@@ -280,7 +280,7 @@ mapLoadingString["sk"] = "Načítavam mapu...";
 //mode string for navigation
 var modeNavigationString = [];
 modeNavigationString["en"] = "Mode: navigation. Shift/rectangle or mouse wheel for zooming.";
-modeNavigationString["es"] = "Modo: navegación. Shift/rectángulo o rueda del ratón que desea zoom.";
+modeNavigationString["es"] = "Modo: navegación. Shift/rectángulo o rueda del ratón para hacer zoom.";
 modeNavigationString["de"] = "Modus: Navigation. Shift/Rechteck aufziehen oder Mausrad zum zoomen.";
 modeNavigationString["fr"] = "Mode: navigation. Majuscule+tracer un rectangle ou roulette de la souris pour zoomer.";
 modeNavigationString["it"] = "Modalità: navigazione. Shift+rettangolo o rotella del mouse per zoomare.";
@@ -382,7 +382,7 @@ modeMeasureAreaString["sk"] = "Mód: meranie plochy. Ukončite dvojklikom,";
 //mode StreetView
 var modeStreetViewString = [];
 modeStreetViewString["en"] = "Mode: GoogleStreetView. Click on the road.";
-modeStreetViewString["es"] = "Mode: GoogleStreetView. Click on the road."; //FIXME
+modeStreetViewString["es"] = "Modo: GoogleStreetView. Pulsar sobre una carretera."; 
 modeStreetViewString["de"] = "Mode: GoogleStreetView. Click on the road."; //FIXME
 modeStreetViewString["fr"] = "Mode: GoogleStreetView. Click on the road."; //FIXME
 modeStreetViewString["it"] = "Mode: GoogleStreetView. Click on the road."; //FIXME
@@ -417,7 +417,7 @@ modePrintingString["sk"] = "Mód: Tlač. Posuňte, alebo otočte  rozsah mapy. V
 //indicating is waiting for print
 var printLoadingString = [];
 printLoadingString["en"] = "Printing initialised. Please wait...";
-printLoadingString["es"] = "Printing initialised. Please wait..."; //FIXME
+printLoadingString["es"] = "Impresión inicializada, por favor espere...";
 printLoadingString["de"] = "Der Druckauftrag ist erfolgt. Bitte haben sie etwas Geduld...";
 printLoadingString["fr"] = "Impression en cours. Veuillez patienter...";
 printLoadingString["it"] = "Avviata la stampa, attendere prego...";
@@ -703,7 +703,7 @@ layerTreeTitleString["sk"] = "Vrstvy";
 //title of background layers
 var backgroundLayerTitleString = [];
 backgroundLayerTitleString["en"] = "Background Layers";
-backgroundLayerTitleString["es"] = "Background Layers";
+backgroundLayerTitleString["es"] = "Capas de fondo";
 backgroundLayerTitleString["de"] = "Hintergrundebenen";
 backgroundLayerTitleString["fr"] = "Couches d'arrière-plan";
 backgroundLayerTitleString["it"] = "Background Layers";
@@ -720,7 +720,7 @@ backgroundLayerTitleString["sk"] = "Podkladové vrstvy";
 //title of external layers
 var externalLayerTitleString = [];
 externalLayerTitleString["en"] = "External Layers";
-externalLayerTitleString["es"] = "External Layers"; //FIXME
+externalLayerTitleString["es"] = "Capas externas "; 
 externalLayerTitleString["de"] = "External Layers"; //FIXME
 externalLayerTitleString["fr"] = "External Layers"; //FIXME
 externalLayerTitleString["it"] = "External Layers"; //FIXME
@@ -737,7 +737,7 @@ externalLayerTitleString["sk"] = "Externé vrstvy"; //FIXME
 //title of layer order panel
 var layerOrderPanelTitleString = [];
 layerOrderPanelTitleString["en"] = "Layer order";
-layerOrderPanelTitleString["es"] = "Layer order"; //FIXME
+layerOrderPanelTitleString["es"] = "Orden de capa"; 
 layerOrderPanelTitleString["de"] = "Ebenenreihenfolge";
 layerOrderPanelTitleString["fr"] = "Ordre des couches";
 layerOrderPanelTitleString["it"] = "Ordine dei layer";
@@ -754,7 +754,7 @@ layerOrderPanelTitleString["sk"] = "Poradie vrstiev";
 //tooltip of layer settings button in layer order panel
 var layerOrderPanelLayerSettingsTooltipString = [];
 layerOrderPanelLayerSettingsTooltipString["en"] = "Settings";
-layerOrderPanelLayerSettingsTooltipString["es"] = "Settings"; //FIXME
+layerOrderPanelLayerSettingsTooltipString["es"] = "Ajustes"; 
 layerOrderPanelLayerSettingsTooltipString["de"] = "Einstellungen";
 layerOrderPanelLayerSettingsTooltipString["fr"] = "Réglages";
 layerOrderPanelLayerSettingsTooltipString["it"] = "Impostazioni";
@@ -771,7 +771,7 @@ layerOrderPanelLayerSettingsTooltipString["sk"] = "Nastavenie";
 //tooltip of remove layer button in layer order panel
 var layerOrderPanelVisibilityChangeTooltipString = [];
 layerOrderPanelVisibilityChangeTooltipString["en"] = "Change Layer Visibility";
-layerOrderPanelVisibilityChangeTooltipString["es"] = "Change Layer Visibility"; //FIXME
+layerOrderPanelVisibilityChangeTooltipString["es"] = "Cambiar visibilidad de la capa";
 layerOrderPanelVisibilityChangeTooltipString["de"] = "Ebenensichtbarkeit ändern";
 layerOrderPanelVisibilityChangeTooltipString["fr"] = "Changer la visibilité de la couche";
 layerOrderPanelVisibilityChangeTooltipString["it"] = "Cambia la visilità del layer";
@@ -788,7 +788,7 @@ layerOrderPanelVisibilityChangeTooltipString["sk"] = "Zmeniť viditeľnosť vrst
 //text when dragging layer in layer order panel
 var layerOrderPanelMoveLayerTextString = [];
 layerOrderPanelMoveLayerTextString["en"] = "Move layer";
-layerOrderPanelMoveLayerTextString["es"] = "Move layer"; //FIXME
+layerOrderPanelMoveLayerTextString["es"] = "Mover capa"; 
 layerOrderPanelMoveLayerTextString["de"] = "Ebene verschieben";
 layerOrderPanelMoveLayerTextString["fr"] = "Supprimer la couche";
 layerOrderPanelMoveLayerTextString["it"] = "Sposta layer";
@@ -805,7 +805,7 @@ layerOrderPanelMoveLayerTextString["sk"] = "Posunúť vrstvu";
 //tooltip of transparency sliders in layer order panel
 var layerOrderPanelTransparencyTooltipString = [];
 layerOrderPanelTransparencyTooltipString["en"] = "Transparency {0}%";
-layerOrderPanelTransparencyTooltipString["es"] = "Transparency {0}%"; //FIXME
+layerOrderPanelTransparencyTooltipString["es"] = "Transparencia {0}%"; 
 layerOrderPanelTransparencyTooltipString["de"] = "Transparenz {0}%";
 layerOrderPanelTransparencyTooltipString["fr"] = "Transparence {0}%";
 layerOrderPanelTransparencyTooltipString["it"] = "Trasparenza {0}%";
@@ -839,7 +839,7 @@ legendTabTitleString["sk"] = "Legenda";
 //legend loading message in legend tab
 var legendTabLoadingString = [];
 legendTabLoadingString["en"] = "Loading legend, please wait...";
-legendTabLoadingString["es"] = "Leyenda"; //FIXME
+legendTabLoadingString["es"] = "Cargando leyenda, por favor espere"; 
 legendTabLoadingString["de"] = "Legende"; //FIXME
 legendTabLoadingString["fr"] = "Légende"; //FIXME
 legendTabLoadingString["it"] = "Legenda in caricamento, attendere prego...";
@@ -891,7 +891,7 @@ helpWindowTitleString["sk"] = "Pomoc";
 //title of legend and per layer metadata window
 var legendMetadataWindowTitleString = [];
 legendMetadataWindowTitleString["en"] = "Legend and metadata information of layer";
-legendMetadataWindowTitleString["es"] = "Legend and metadata information of layer"; //FIXME
+legendMetadataWindowTitleString["es"] = "Información de Metadatos y Leyenda de la capa"; 
 legendMetadataWindowTitleString["de"] = "Legende und Metadaten der Ebene";
 legendMetadataWindowTitleString["fr"] = "Légende et métadonnée de la couche";
 legendMetadataWindowTitleString["it"] = "Legenda e metadati del layer";
@@ -908,7 +908,7 @@ legendMetadataWindowTitleString["sk"] = "Legenda a metadata vrstvy";
 //title of metadata section
 var metadataSectionTitleString = [];
 metadataSectionTitleString["en"] = "Metadata of layer";
-metadataSectionTitleString["es"] = "Metadata of layer"; //FIXME
+metadataSectionTitleString["es"] = "Metadatos de la capa"; 
 metadataSectionTitleString["de"] = "Metadaten der Ebene";
 metadataSectionTitleString["fr"] = "Métadonnée de la couche";
 metadataSectionTitleString["it"] = "Metadati del layer";
@@ -925,7 +925,7 @@ metadataSectionTitleString["sk"] = "Metadata vrstvy";
 //Abstract
 var abstractString = [];
 abstractString["en"] = "Abstract:";
-abstractString["es"] = "Abstract:"; //FIXME
+abstractString["es"] = "Resumen:"; 
 abstractString["de"] = "Zusammenfassung:";
 abstractString["fr"] = "Résumé:";
 abstractString["it"] = "Riassunto:";
@@ -942,7 +942,7 @@ abstractString["sk"] = "Abstrakt";
 //title of legend and per layer metadata window
 var layerQueryable = [];
 layerQueryable["en"] = "This layer is queryable: ";
-layerQueryable["es"] = "This layer is queryable: "; //FIXME
+layerQueryable["es"] = "Esta capa se puede consultar: "; 
 layerQueryable["de"] = "Diese Ebene ist abfragbar: ";
 layerQueryable["fr"] = "Cette couche est interrogeable: ";
 layerQueryable["it"] = "Questo layer è interrogabile: ";
@@ -959,7 +959,7 @@ layerQueryable["sk"] = "V tejto vrstve je možné vyhľadávať: ";
 //in case we need a yes
 var yesString = [];
 yesString["en"] = "yes";
-yesString["es"] = "yes"; //FIXME
+yesString["es"] = "sí"; //FIXME
 yesString["de"] = "ja";
 yesString["fr"] = "oui";
 yesString["it"] = "sl";
@@ -976,7 +976,7 @@ yesString["sk"] = "áno";
 //in case we need a no
 var noString = [];
 noString["en"] = "no";
-noString["es"] = "no"; //FIXME
+noString["es"] = "no"; 
 noString["de"] = "nein";
 noString["fr"] = "non";
 noString["it"] = "no";
@@ -993,7 +993,7 @@ noString["sk"] = "nie";
 //metadata: layer group
 var layerGroupString = [];
 layerGroupString["en"] = "Layer group";
-layerGroupString["es"] = "Layer group"; //FIXME
+layerGroupString["es"] = "Grupo de capas"; 
 layerGroupString["de"] = "Ebenengruppe";
 layerGroupString["fr"] = "Groupe de couches";
 layerGroupString["it"] = "Gruppo dei layer";
@@ -1010,7 +1010,7 @@ layerGroupString["sk"] = "Skupina vrstiev";
 //metadata: display field (for tooltips)
 var displayFieldString = [];
 displayFieldString["en"] = "Display-Field";
-displayFieldString["es"] = "Display-Field"; //FIXME
+displayFieldString["es"] = "Mostrar campo"; 
 displayFieldString["de"] = "Anzeigefeld";
 displayFieldString["fr"] = "Affichage";
 displayFieldString["it"] = "Campo visualizzato";
@@ -1027,7 +1027,7 @@ displayFieldString["sk"] = "Zobrazované pole";
 //metadata: coordinate systems
 var coordinateSystemsString = [];
 coordinateSystemsString["en"] = "Available Coordinate Systems";
-coordinateSystemsString["es"] = "Available Coordinate Systems"; //FIXME
+coordinateSystemsString["es"] = "Sistemas de coordenadas disponibles"; 
 coordinateSystemsString["de"] = "Verfügbare Koordinatensysteme";
 coordinateSystemsString["fr"] = "Système de coordonnées disponible";
 coordinateSystemsString["it"] = "Sistemi di coordinate disponibili";
@@ -1044,7 +1044,7 @@ coordinateSystemsString["sk"] = "Dostupné koordinačné systémy";
 //metadata: geographic extent
 var geographicExtentString = [];
 geographicExtentString["en"] = "Geographic Extent";
-geographicExtentString["es"] = "Geographic Extent"; //FIXME
+geographicExtentString["es"] = "Extensión geográfica"; 
 geographicExtentString["de"] = "Geographischer Ausschnitt";
 geographicExtentString["fr"] = "Etendue géographique";
 geographicExtentString["it"] = "Estensione geografica";
@@ -1061,7 +1061,7 @@ geographicExtentString["sk"] = "Rozsah";
 //metadata: geographic extent
 var westString = [];
 westString["en"] = "west";
-westString["es"] = "west"; //FIXME
+westString["es"] = "Oeste"; 
 westString["de"] = "Westen";
 westString["fr"] = "ouest";
 westString["it"] = "ovest";
@@ -1078,7 +1078,7 @@ westString["sk"] = "západ";
 //metadata: geographic extent
 var eastString = [];
 eastString["en"] = "east";
-eastString["es"] = "east"; //FIXME
+eastString["es"] = "Este"; 
 eastString["de"] = "Osten";
 eastString["fr"] = "est";
 eastString["it"] = "est";
@@ -1095,7 +1095,7 @@ eastString["sk"] = "východ";
 //metadata: geographic extent
 var northString = [];
 northString["en"] = "north";
-northString["es"] = "north"; //FIXME
+northString["es"] = "Norte"; 
 northString["de"] = "Norden";
 northString["fr"] = "nord";
 northString["it"] = "nord";
@@ -1112,7 +1112,7 @@ northString["sk"] = "sever";
 //metadata: geographic extent
 var southString = [];
 southString["en"] = "south";
-southString["es"] = "south"; //FIXME
+southString["es"] = "Sur"; 
 southString["de"] = "Süden";
 southString["fr"] = "sud";
 southString["it"] = "sud";
@@ -1146,7 +1146,7 @@ attributesString["sk"] = "Attribúty / Polia";
 //attribute name string
 var attributeNameString = [];
 attributeNameString["en"] = "Attribute name";
-attributeNameString["es"] = "Attribute name";
+attributeNameString["es"] = "Nombre del atributo";
 attributeNameString["de"] = "Attributname";
 attributeNameString["fr"] = "Nom des attributs";
 attributeNameString["it"] = "Attribute name";
@@ -1163,7 +1163,7 @@ attributeNameString["sk"] = "Názov atribútu";
 //attribute type string
 var attributeTypeString = [];
 attributeTypeString["en"] = "Type";
-attributeTypeString["es"] = "Type";
+attributeTypeString["es"] = "Tipo";
 attributeTypeString["de"] = "Typ";
 attributeTypeString["fr"] = "Type";
 attributeTypeString["it"] = "Type";
@@ -1180,7 +1180,7 @@ attributeTypeString["sk"] = "Typ";
 //attribute comment string
 var attributeCommentString = [];
 attributeCommentString["en"] = "Comment";
-attributeCommentString["es"] = "Comment";
+attributeCommentString["es"] = "Comentario";
 attributeCommentString["de"] = "Kommentar";
 attributeCommentString["fr"] = "Commentaire";
 attributeCommentString["it"] = "Comment";
@@ -1197,7 +1197,7 @@ attributeCommentString["sk"] = "Poznámka";
 //attribute length string
 var attributeLengthString = [];
 attributeLengthString["en"] = "Length";
-attributeLengthString["es"] = "Length";
+attributeLengthString["es"] = "Longitud";
 attributeLengthString["de"] = "Länge";
 attributeLengthString["fr"] = "Longueur";
 attributeLengthString["it"] = "Length";
@@ -1214,7 +1214,7 @@ attributeLengthString["sk"] = "Dĺžka";
 //attribute length string
 var attributePrecisionString = [];
 attributePrecisionString["en"] = "Precision";
-attributePrecisionString["es"] = "Precision";
+attributePrecisionString["es"] = "Precisión";
 attributePrecisionString["de"] = "Präzision";
 attributePrecisionString["fr"] = "Précision";
 attributePrecisionString["it"] = "Precision";
@@ -1402,7 +1402,7 @@ searchErrorString["sk"] = "Chyba počas hľadania";
 //search no records found
 var searchNoRecordsFoundString = [];
 searchNoRecordsFoundString["en"] = "No records found"; 
-searchNoRecordsFoundString["es"] = "Error en la búsqueda"; // FIXME
+searchNoRecordsFoundString["es"] = "Búsqueda sin resultados"; 
 searchNoRecordsFoundString["de"] = "Fehler bei Suche"; // FIXME
 searchNoRecordsFoundString["fr"] = "Aucun résultat trouvé (la recherche est sensible à la casse)";
 searchNoRecordsFoundString["it"] = "Nessun risultato";
@@ -1626,7 +1626,7 @@ navigationHistoryBackwardTooltipString["sk"] = "Predchádzajúci pohľad";
 //navigation history forward
 var navigationHistoryForwardTooltipString = [];
 navigationHistoryForwardTooltipString["en"] = "Navigation history forward";
-navigationHistoryForwardTooltipString["es"] = "Ir a la vista posterior";
+navigationHistoryForwardTooltipString["es"] = "Ir a la siguiente vista";
 navigationHistoryForwardTooltipString["de"] = "Navigationshistorie vorwärts";
 navigationHistoryForwardTooltipString["fr"] = "Zone suivante dans l'historique";
 navigationHistoryForwardTooltipString["it"] = "Inquadramento successivo";
@@ -1779,7 +1779,7 @@ printMapDisabledTooltipString["sk"] = "Tlač nie je povolená";
 //Send permalink
 var sendPermalinkTooltipString = [];
 sendPermalinkTooltipString["en"] = "Create permalink to current map";
-sendPermalinkTooltipString["es"] = "Create permalink to current map"; //FIXME
+sendPermalinkTooltipString["es"] = "Crear permalink al mapa actual"; 
 sendPermalinkTooltipString["de"] = "Create permalink to current map"; //FIXME
 sendPermalinkTooltipString["fr"] = "Create permalink to current map"; //FIXME
 sendPermalinkTooltipString["it"] = "Create permalink to current map"; //FIXME
@@ -1796,7 +1796,7 @@ sendPermalinkTooltipString["sk"] = "Vytvor odkaz na mapu"; //FIXME
 //Send permalink
 var sendPermalinkLinkFromString = [];
 sendPermalinkLinkFromString["en"] = "Link to current map";
-sendPermalinkLinkFromString["es"] = "Link to current map"; //FIXME
+sendPermalinkLinkFromString["es"] = "Enlace al mapa actual"; 
 sendPermalinkLinkFromString["de"] = "Link to current map"; //FIXME
 sendPermalinkLinkFromString["fr"] = "Link to current map"; //FIXME
 sendPermalinkLinkFromString["it"] = "Link to current map"; //FIXME
@@ -1830,7 +1830,7 @@ showHelpTooltipString["sk"] = "Ukáž pomoc";
 //Show location
 var showLocationTooltipString = [];
 showLocationTooltipString["en"] = "Show Location";
-showLocationTooltipString["es"] = "Show Location";  //FIXME
+showLocationTooltipString["es"] = "Mostrar localización"; 
 showLocationTooltipString["de"] = "Show Location";  //FIXME
 showLocationTooltipString["fr"] = "Show Location";  //FIXME
 showLocationTooltipString["it"] = "Show Location";  //FIXME
@@ -2004,7 +2004,7 @@ mapThemeButtonTooltipString["sk"] = "Klikni pre výber novej témy"
 //comment, if layer is outside scale range
 var tooltipLayerTreeLayerOutsideScale = [];
 tooltipLayerTreeLayerOutsideScale["en"] = "Visible at scales";
-tooltipLayerTreeLayerOutsideScale["es"] = "Visible at scales"; //FIXME
+tooltipLayerTreeLayerOutsideScale["es"] = "Visible a las escalas"; 
 tooltipLayerTreeLayerOutsideScale["de"] = "Sichtbar in den Massstäben";
 tooltipLayerTreeLayerOutsideScale["fr"] = "Visible aux échelles";
 tooltipLayerTreeLayerOutsideScale["it"] = "Visibile alle scale";
@@ -2021,7 +2021,7 @@ tooltipLayerTreeLayerOutsideScale["sk"] = "Viditeľné v mierke";
 //title in ClickPopup
 var clickPopupTitleString = [];
 clickPopupTitleString["en"] = "Results"; //FIXME
-clickPopupTitleString["es"] = "Results"; //FIXME
+clickPopupTitleString["es"] = "Resultados"; //FIXME
 clickPopupTitleString["de"] = "Results"; //FIXME
 clickPopupTitleString["fr"] = "Results"; //FIXME
 clickPopupTitleString["it"] = "Results"; //FIXME
@@ -2039,7 +2039,7 @@ Context menu items
 //comment, if layer is outside scale range
 var contextZoomLayerExtent = [];
 contextZoomLayerExtent["en"] = "Zoom to layer extent";
-contextZoomLayerExtent["es"] = "Zoom to layer extent"; //FIXME
+contextZoomLayerExtent["es"] = "Zoom a la extensión de la capa"; 
 contextZoomLayerExtent["de"] = "Zoom to layer extent"; //FIXME
 contextZoomLayerExtent["fr"] = "Zoom to layer extent"; //FIXME
 contextZoomLayerExtent["it"] = "Zoom all'estensione del layer";
@@ -2055,7 +2055,7 @@ contextZoomLayerExtent["sk"] = "Priblíž na veľkosť vrstvy";
 
 var contextOpenTable = [];
 contextOpenTable["en"] = "Open attribute table";
-contextOpenTable["es"] = "Open attribute table"; //FIXME
+contextOpenTable["es"] = "Abrir tabla de atributos"; 
 contextOpenTable["de"] = "Open attribute table"; //FIXME
 contextOpenTable["fr"] = "Open attribute table"; //FIXME
 contextOpenTable["it"] = "Open attribute table";
@@ -2071,7 +2071,7 @@ contextOpenTable["sk"] = "Otvor atribútovú tabuľku";
 
 var contextDataExport = [];
 contextDataExport["en"] = "Export layer to...";
-contextDataExport["es"] = "Export layer to..."; //FIXME
+contextDataExport["es"] = "Exportar capa a..."; 
 contextDataExport["de"] = "Export layer to..."; //FIXME
 contextDataExport["fr"] = "Export layer to..."; //FIXME
 contextDataExport["it"] = "Export layer to...";
@@ -2087,7 +2087,7 @@ contextDataExport["sk"] = "Exportuj vrstvu ako...";
 
 var contextUseExtent = [];
 contextUseExtent["en"] = "Use current map extent";
-contextUseExtent["es"] = "Use current map extent"; //FIXME
+contextUseExtent["es"] = "Usar extensión del mapa actual"; 
 contextUseExtent["de"] = "Use current map extent"; //FIXME
 contextUseExtent["fr"] = "Use current map extent"; //FIXME
 contextUseExtent["it"] = "Use current map extent";
