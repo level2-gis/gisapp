@@ -160,7 +160,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
 <!--        <script type="text/javascript" src="../libs/openlayers/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
-        <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js"></script>
+        <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
 		<script type="text/javascript" src="client/site/js/Translations.js?v=1.1.2"></script>
 		<script type="text/javascript" src="client/site/js/PagingStore.js"></script>
 		<script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.1.1"></script>
