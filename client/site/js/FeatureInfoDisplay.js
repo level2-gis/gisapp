@@ -87,7 +87,7 @@ function showFeatureInfo(evt) {
             parseFIResult(xmlDoc);
             featureInfoResultLayers.reverse();
             highLightGeometry.reverse();
-            //if (featureInfoResultLayers.length > 0) {
+            if (featureInfoResultLayers.length > 0 || text > '') {
                 if (hoverPopup) {removeHoverPopup();}
                 if (clickPopup) {removeClickPopup();}
 
@@ -156,7 +156,7 @@ function showFeatureInfo(evt) {
                 // clickPopup.events.fallThrough = false;
                 // map.addPopup(clickPopup); //*/
                 changeCursorInMap("default");
-            //}
+            }
         } else {
             closePopupClick = false;
         }
@@ -301,12 +301,21 @@ function showFeatureInfoHover(evt) {
 
 // disable all GetFeatureInfoRequest until we have a reponse
 function onBeforeGetFeatureInfoClick(evt){
+
+    //workaround to avoid qgis server 500 error on empty query layers request
+    //we want empty result
+    //better way is to just cancel request, how?
+    if (selectedQueryableLayers.length==0) {
+        WMSGetFInfo.vendorParams.QUERY_LAYERS = evt.object.layers[0].name;
+        WMSGetFInfo.maxFeatures = 0;
+    }
+
     activateGetFeatureInfo(false);
 }
 
 // reenable GetFeatureInfo
 function noFeatureInfoClick(evt){
-    activateGetFeatureInfo(true);
+   activateGetFeatureInfo(true);
 }
 
 /* we need this function in order to pass through the click to the map events
