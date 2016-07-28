@@ -58,7 +58,7 @@ uros@level2.si
 ##License
 This software is released under a BSD license.
 
-Copyright (2010-2012), The QGIS Project and Level2 team (2014-2015), All rights reserved.
+Copyright (2010-2012), The QGIS Project and Level2 team (2014-2016), All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted
 provided that the following conditions are met:
