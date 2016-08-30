@@ -65,7 +65,7 @@ class DbLoader
                 $filestr = file_get_contents(PROJECT_PATH . $this->project . '.json', true);
                 //check if json is valid string
                 if (json_decode($filestr) === null) {
-                    $this->feedback = "Bad project json configuration!";
+                    $this->feedback = "No permission or bad project json configuration!";
                     return false;
                 } else {
                     return $filestr;

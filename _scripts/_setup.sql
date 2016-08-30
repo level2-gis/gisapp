@@ -393,7 +393,6 @@ SELECT pg_catalog.setval('clients_id_seq', 1, false);
 
 INSERT INTO layers VALUES (1, 'google_map', '', 'Google', true, '"Google "+TR.mapBasic,{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true}');
 INSERT INTO layers VALUES (2, 'google_sat', '', 'Google', true, '"Google "+TR.mapSatellite,{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
-INSERT INTO layers VALUES (3, 'mapquest_map', '', 'OSM', true, '"MapQuest-OSM "+TR.mapBasic, ["http://otile1.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile2.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile3.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg","http://otile4.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg"], {numZoomLevels: 19}');
 INSERT INTO layers VALUES (4, 'osm_mapnik', '', 'OSM', true, '"OpenStreetMap (mapnik)"');
 
 
@@ -412,7 +411,7 @@ SELECT pg_catalog.setval('layers_id_seq', 5, true);
 -- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO projects VALUES (1, 'helloworld', 3, '{2,3,4}', NULL, 1, NULL, true);
+INSERT INTO projects VALUES (1, 'helloworld', 4, '{2,4}', NULL, 1, NULL, true);
 
 
 --

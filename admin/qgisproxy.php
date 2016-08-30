@@ -73,15 +73,33 @@ try {
 
 
         if ($content == null) {
-            $response = $client->send($new_request, ['query' => $query_arr]);
+            $response = $client->send($new_request, [
+                'query' => $query_arr,
+                'http_errors' => true
+            ]);
             $contentType = $response->getHeaderLine('Content-Type');
             $contentLength = $response->getHeaderLine('Content-Length');
             $content = $response->getBody()->__toString();
 
+            //check GetProjectSettings XML
+            if ($query_arr["REQUEST"] == "GetProjectSettings") {
+                $contentXml = simplexml_load_string($content);
+                if ($contentXml !== false) {
+                    if ($contentXml->getName() !== 'WMS_Capabilities') {
+                        $m = "Unknown GetCapabilities error";
+                        if($contentXml->ServiceException !== null) {
+                            $m = (string)$contentXml->ServiceException;
+                        }
+                        throw new Exception\ServerException($m, $new_request);
+                    }
+                } else {
+                    throw new Exception\ServerException($content, $new_request);
+                }
+            }
             if ($response->getStatusCode() == 200) {
                 $cache->set($cacheKey, $content);
             } else {
-                throw new Exception\ClientException($content, $new_request);
+                throw new Exception\ServerException($content, $new_request);
             }
         }
     } else {
@@ -113,11 +131,15 @@ try {
         echo $content;
     }
 
-} catch (Exception\RequestException $e) {
-    if ($e->hasResponse()) {
-        header('', true, $e->getResponse()->getStatusCode());
-    } else {
-        header('Unauthorized', true, 401);
-    }
+} catch (Exception\ServerException $e) {
+    //if ($e->hasResponse()) {
+    //    header('', true, $e->getResponse()->getStatusCode());
+    //} else {
+        header('Server Error', true, 500);
+    //}
+    echo $e->getMessage();
+
+} catch (Exception\ClientException $e) {
+    header('Unauthorized', true, 401);
     echo $e->getMessage();
 }

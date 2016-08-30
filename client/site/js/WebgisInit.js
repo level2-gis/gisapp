@@ -172,7 +172,12 @@ function loadWMSConfig(topicName) {
         baseAttrs: {
             uiProvider: Ext.tree.TriStateNodeUI
 		},
-		topicName: topicName
+		topicName: topicName,
+        listeners: {
+            'loadexception': function (obj, node, response) {
+                exceptionLoading(response);
+            }
+        }
     });
 
     var root = new Ext.tree.AsyncTreeNode({
@@ -2516,4 +2521,21 @@ function setGrayNameWhenOutsideScale() {
             }
         }
     }
+}
+
+function exceptionLoading(res) {
+    loadMask.hide();
+
+    Ext.Msg.show({
+        title: 'Error code: '+res.status,
+        msg: res.responseText,
+        //width: 300,
+        buttons: Ext.MessageBox.OK,
+        //multiline: true,
+        fn: logout
+    });
+}
+
+function logout() {
+    window.location.href = "./admin/login.php?action=logout";
 }

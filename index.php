@@ -148,7 +148,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
 		</script>
 
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&sensor=true"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
 
 		<script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
@@ -173,7 +173,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 		<script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1.1"></script>
 		<script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
         <script type="text/javascript" src="client/site/js/LayerActions.js?v=1.1.2"></script>
-        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1.1.3"></script>
+        <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1.2"></script>
 	<style type="text/css">
 	#dpiDetection {
 	  height: 1in;
