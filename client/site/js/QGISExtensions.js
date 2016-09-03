@@ -1079,7 +1079,31 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     fields: storeFields,
                     lastOptions: {params: {start: 0, limit: this.gridResultsPageSize}},
                     totalCount: totalCount,
-                    totalBbox: totalBbox
+                    totalBbox: totalBbox,
+                    queryLayer: this.queryLayer,
+                    gridLocation: this.gridLocation,
+                    listeners: {
+                        datachanged: function() {
+                            //console.log(this.totalCount);
+                            //console.log(this.getTotalCount());
+
+                            //only in this case we update title
+                            if (this.gridLocation =='bottom') {
+
+                                var cnt_all = this.totalCount;
+                                var cnt_filt = this.getTotalCount();
+
+                                var tableId = 'table_' + this.queryLayer;
+                                var table = Ext.getCmp(tableId);
+
+                                if (cnt_filt < cnt_all) {
+                                    table.setTitle(this.queryLayer + "* (" + cnt_filt + ")");
+                                } else {
+                                    table.setTitle(this.queryLayer + " (" + cnt_all + ")");
+                                }
+                            }
+                        }
+                    }
                 });
 
             }

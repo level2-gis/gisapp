@@ -1601,17 +1601,6 @@ function showSearchPanelResults(searchPanelInstance, features) {
             // Eventually log...
         }
 
-        //test if we need paging (not actual size of results, just initial settings
-        var pagingConfig = {};
-        if (searchPanelInstance.gridResults>searchPanelInstance.gridResultsPageSize) {
-            pagingConfig = new Ext.ux.PagingToolbar({
-                pageSize: searchPanelInstance.gridResultsPageSize,
-                store: searchPanelInstance.store,
-                displayInfo: false
-            });
-
-        }
-
         //filter config
         var filters = new Ext.ux.grid.GridFilters({
             // encode and local configuration options
@@ -1642,6 +1631,17 @@ function showSearchPanelResults(searchPanelInstance, features) {
 //                dataIndex: 'visible'
 //            }]
         });
+
+        //test if we need paging (not actual size of results, just initial settings
+        var pagingConfig = {};
+        if (searchPanelInstance.gridResults>searchPanelInstance.gridResultsPageSize) {
+            pagingConfig = new Ext.ux.PagingToolbar({
+                pageSize: searchPanelInstance.gridResultsPageSize,
+                store: searchPanelInstance.store,
+                displayInfo: false
+            });
+
+        }
 
         var tt = searchPanelInstance.gridTitle + " ("+searchPanelInstance.store.totalCount+")";
         if (searchPanelInstance.wmsFilter>"") {
@@ -1680,6 +1680,37 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             grid.fireEvent('rowClick', grid, 0);
                         }
                     });
+                },
+                filterupdate : function() {
+
+                    if (typeof searchPanelInstance.resultsGrid === 'object') {
+                        var wmsFilter = [];
+                        var layer = searchPanelInstance.queryLayer;
+                        var layerId = wmsLoader.layerTitleNameMapping[layer];
+                        var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
+                        Ext.each(filt, function (f) {
+                            if (f.data.type == 'string') {
+                                wmsFilter.push("\"" + f.field + "\" LIKE \'%" + f.data.value + "%\'");
+                            } else if (f.data.type == 'numeric') {
+                                var sep = '';
+                                switch (f.data.comparison) {
+                                    case 'gt':
+                                        sep = '>';
+                                        break;
+                                    case 'lt':
+                                        sep = '<';
+                                        break;
+                                    case 'eq':
+                                        sep = '=';
+                                        break;
+                                }
+                                wmsFilter.push("\"" + f.field + "\" "+ sep + " " + f.data.value );
+                            }
+                        });
+
+
+                        thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
+                    }
                 }
             }
 
@@ -1690,15 +1721,16 @@ function showSearchPanelResults(searchPanelInstance, features) {
         if(pagingConfig.displayInfo==false) {
 
             searchPanelInstance.resultsGrid.getBottomToolbar().add([
+                //{
+                //text: 'All Filter Data',
+                //tooltip: 'Get Filter Data for Grid',
+                //handler: function () {
+                //    var data = Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData());
+                //    Ext.Msg.alert('All Filter Data',data);
+                //}
+                //},
                 {
-//                text: 'All Filter Data',
-//                tooltip: 'Get Filter Data for Grid',
-//                handler: function () {
-//                    var data = Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData());
-//                    Ext.Msg.alert('All Filter Data',data);
-//                }
-//            },{
-//
+
 
                     iconCls : 'x-clearfilter-icon',
                     tooltip: TR.clearFilter,

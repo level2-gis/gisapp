@@ -1,2 +1,2 @@
-1.2.0 WORK  - Application
-4           - Database
+1.2.0   - Application
+4       - Database
