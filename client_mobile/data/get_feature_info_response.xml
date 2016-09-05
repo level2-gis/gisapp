@@ -1,0 +1,26 @@
+<GetFeatureInfoResponse>
+ <Layer name="BB Namen"/>
+ <Layer name="BBFlaechen_farbig">
+  <Feature id="4131034">
+   <Attribute value="1632" name="BFS-Nummer"/>
+   <Attribute value="AV93" name="Qualitaet"/>
+   <Attribute value="Wasserbecken" name="Art"/>
+   <Attribute value="" name="EGID"/>
+   <Attribute value="http://example.com" name="Link"/>
+   <Attribute value="NULL" name="Empty"/>
+   <Attribute value="POLYGON((724051.044 211075.328,724050.91246793 211075.24373346,724050.58756006 211075.04898846,724051.044 211075.328))" type="derived" name="geometry"/>
+  </Feature>
+ </Layer>
+ <Layer name="BPAV5000 farbig">
+  <Attribute value="178" name="Band 1"/>
+  <Attribute value="230" name="Band 2"/>
+  <Attribute value="255" name="Band 3"/>
+  <Attribute value="255" name="Band 4"/>
+ </Layer>
+ <Layer name="BPAV5000 farbig Liegenschaften">
+  <Attribute value="0" name="Band 1"/>
+  <Attribute value="0" name="Band 2"/>
+  <Attribute value="0" name="Band 3"/>
+  <Attribute value="0" name="Band 4"/>
+ </Layer>
+</GetFeatureInfoResponse>

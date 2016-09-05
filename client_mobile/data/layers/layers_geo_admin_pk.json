@@ -1,0 +1,14 @@
+{
+    "success": true,
+    "wmslayers": [
+        {
+            "topic": "geo_admin_pk",
+            "groupname": "Pixelkarte",
+            "layername": "ch.swisstopo.pixelkarte-farbe-pk1000.noscale",
+            "toclayertitle": "Pixelkarte Farbe PK1000",
+            "visini": true,
+            "wms_sort": 0,
+            "toc_sort": 0
+        }
+    ]
+}

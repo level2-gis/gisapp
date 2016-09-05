@@ -1,0 +1,600 @@
+{
+    "success": true,
+    "features": [
+        {
+            "fid": 170690,
+            "kategorie": "Quartier",
+            "begriff": "Talacker",
+            "bbox_xmin": 698047,
+            "bbox_ymin": 261878,
+            "bbox_xmax": 699537,
+            "bbox_ymax": 263690
+        },
+        {
+            "fid": 150642,
+            "kategorie": "Strasse",
+            "begriff": "Lüchentalackerstrasse",
+            "bbox_xmin": 694907,
+            "bbox_ymin": 259142,
+            "bbox_xmax": 695261,
+            "bbox_ymax": 259277
+        },
+        {
+            "fid": 151652,
+            "kategorie": "Strasse",
+            "begriff": "Talackerstrasse",
+            "bbox_xmin": 698846,
+            "bbox_ymin": 261681,
+            "bbox_xmax": 699023,
+            "bbox_ymax": 262944
+        },
+        {
+            "fid": 166384,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 1",
+            "bbox_xmin": 698942,
+            "bbox_ymin": 262912,
+            "bbox_xmax": 698942,
+            "bbox_ymax": 262912
+        },
+        {
+            "fid": 158236,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 100",
+            "bbox_xmin": 698913,
+            "bbox_ymin": 261791,
+            "bbox_xmax": 698913,
+            "bbox_ymax": 261791
+        },
+        {
+            "fid": 156668,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 101",
+            "bbox_xmin": 698985,
+            "bbox_ymin": 261826,
+            "bbox_xmax": 698985,
+            "bbox_ymax": 261826
+        },
+        {
+            "fid": 158965,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 103",
+            "bbox_xmin": 698994,
+            "bbox_ymin": 261802,
+            "bbox_xmax": 698994,
+            "bbox_ymax": 261802
+        },
+        {
+            "fid": 158240,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 105",
+            "bbox_xmin": 699002,
+            "bbox_ymin": 261792,
+            "bbox_xmax": 699002,
+            "bbox_ymax": 261792
+        },
+        {
+            "fid": 158966,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 106",
+            "bbox_xmin": 698979,
+            "bbox_ymin": 261764,
+            "bbox_xmax": 698979,
+            "bbox_ymax": 261764
+        },
+        {
+            "fid": 167037,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 107",
+            "bbox_xmin": 699019,
+            "bbox_ymin": 261769,
+            "bbox_xmax": 699019,
+            "bbox_ymax": 261769
+        },
+        {
+            "fid": 167034,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 109",
+            "bbox_xmin": 699003,
+            "bbox_ymin": 261759,
+            "bbox_xmax": 699003,
+            "bbox_ymax": 261759
+        },
+        {
+            "fid": 158969,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 11",
+            "bbox_xmin": 698870,
+            "bbox_ymin": 262803,
+            "bbox_xmax": 698870,
+            "bbox_ymax": 262803
+        },
+        {
+            "fid": 167035,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 111",
+            "bbox_xmin": 699005,
+            "bbox_ymin": 261751,
+            "bbox_xmax": 699005,
+            "bbox_ymax": 261751
+        },
+        {
+            "fid": 167036,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 113",
+            "bbox_xmin": 699025,
+            "bbox_ymin": 261748,
+            "bbox_xmax": 699025,
+            "bbox_ymax": 261748
+        },
+        {
+            "fid": 158970,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 14",
+            "bbox_xmin": 698831,
+            "bbox_ymin": 262803,
+            "bbox_xmax": 698831,
+            "bbox_ymax": 262803
+        },
+        {
+            "fid": 158242,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 15",
+            "bbox_xmin": 698861,
+            "bbox_ymin": 262776,
+            "bbox_xmax": 698861,
+            "bbox_ymax": 262776
+        },
+        {
+            "fid": 158237,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 16",
+            "bbox_xmin": 698838,
+            "bbox_ymin": 262781,
+            "bbox_xmax": 698838,
+            "bbox_ymax": 262781
+        },
+        {
+            "fid": 159381,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 17",
+            "bbox_xmin": 698907,
+            "bbox_ymin": 262687,
+            "bbox_xmax": 698907,
+            "bbox_ymax": 262687
+        },
+        {
+            "fid": 158233,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 18",
+            "bbox_xmin": 698834,
+            "bbox_ymin": 262753,
+            "bbox_xmax": 698834,
+            "bbox_ymax": 262753
+        },
+        {
+            "fid": 162644,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 20",
+            "bbox_xmin": 698834,
+            "bbox_ymin": 262740,
+            "bbox_xmax": 698834,
+            "bbox_ymax": 262740
+        },
+        {
+            "fid": 158963,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 21",
+            "bbox_xmin": 698907,
+            "bbox_ymin": 262596,
+            "bbox_xmax": 698907,
+            "bbox_ymax": 262596
+        },
+        {
+            "fid": 158974,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 3",
+            "bbox_xmin": 698934,
+            "bbox_ymin": 262891,
+            "bbox_xmax": 698934,
+            "bbox_ymax": 262891
+        },
+        {
+            "fid": 158973,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 36",
+            "bbox_xmin": 698874,
+            "bbox_ymin": 262615,
+            "bbox_xmax": 698874,
+            "bbox_ymax": 262615
+        },
+        {
+            "fid": 159379,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 38",
+            "bbox_xmin": 698891,
+            "bbox_ymin": 262571,
+            "bbox_xmax": 698891,
+            "bbox_ymax": 262571
+        },
+        {
+            "fid": 158238,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 4",
+            "bbox_xmin": 698919,
+            "bbox_ymin": 262913,
+            "bbox_xmax": 698919,
+            "bbox_ymax": 262913
+        },
+        {
+            "fid": 158241,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 5",
+            "bbox_xmin": 698918,
+            "bbox_ymin": 262870,
+            "bbox_xmax": 698918,
+            "bbox_ymax": 262870
+        },
+        {
+            "fid": 159366,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 52",
+            "bbox_xmin": 698920,
+            "bbox_ymin": 262404,
+            "bbox_xmax": 698920,
+            "bbox_ymax": 262404
+        },
+        {
+            "fid": 159378,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 54",
+            "bbox_xmin": 698921,
+            "bbox_ymin": 262382,
+            "bbox_xmax": 698921,
+            "bbox_ymax": 262382
+        },
+        {
+            "fid": 159376,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 55",
+            "bbox_xmin": 698962,
+            "bbox_ymin": 262454,
+            "bbox_xmax": 698962,
+            "bbox_ymax": 262454
+        },
+        {
+            "fid": 159377,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 56",
+            "bbox_xmin": 698921,
+            "bbox_ymin": 262375,
+            "bbox_xmax": 698921,
+            "bbox_ymax": 262375
+        },
+        {
+            "fid": 162544,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 57",
+            "bbox_xmin": 698947,
+            "bbox_ymin": 262412,
+            "bbox_xmax": 698947,
+            "bbox_ymax": 262412
+        },
+        {
+            "fid": 159375,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 58",
+            "bbox_xmin": 698921,
+            "bbox_ymin": 262369,
+            "bbox_xmax": 698921,
+            "bbox_ymax": 262369
+        },
+        {
+            "fid": 162543,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 59",
+            "bbox_xmin": 698954,
+            "bbox_ymin": 262387,
+            "bbox_xmax": 698954,
+            "bbox_ymax": 262387
+        },
+        {
+            "fid": 158971,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 6",
+            "bbox_xmin": 698905,
+            "bbox_ymin": 262891,
+            "bbox_xmax": 698905,
+            "bbox_ymax": 262891
+        },
+        {
+            "fid": 159374,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 60",
+            "bbox_xmin": 698922,
+            "bbox_ymin": 262362,
+            "bbox_xmax": 698922,
+            "bbox_ymax": 262362
+        },
+        {
+            "fid": 162542,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 61",
+            "bbox_xmin": 698955,
+            "bbox_ymin": 262363,
+            "bbox_xmax": 698955,
+            "bbox_ymax": 262363
+        },
+        {
+            "fid": 159368,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 62",
+            "bbox_xmin": 698922,
+            "bbox_ymin": 262349,
+            "bbox_xmax": 698922,
+            "bbox_ymax": 262349
+        },
+        {
+            "fid": 159369,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 64",
+            "bbox_xmin": 698923,
+            "bbox_ymin": 262342,
+            "bbox_xmax": 698923,
+            "bbox_ymax": 262342
+        },
+        {
+            "fid": 159370,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 66",
+            "bbox_xmin": 698923,
+            "bbox_ymin": 262335,
+            "bbox_xmax": 698923,
+            "bbox_ymax": 262335
+        },
+        {
+            "fid": 159371,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 68",
+            "bbox_xmin": 698923,
+            "bbox_ymin": 262328,
+            "bbox_xmax": 698923,
+            "bbox_ymax": 262328
+        },
+        {
+            "fid": 159372,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 69",
+            "bbox_xmin": 698948,
+            "bbox_ymin": 262289,
+            "bbox_xmax": 698948,
+            "bbox_ymax": 262289
+        },
+        {
+            "fid": 159292,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 7",
+            "bbox_xmin": 698902,
+            "bbox_ymin": 262849,
+            "bbox_xmax": 698902,
+            "bbox_ymax": 262849
+        },
+        {
+            "fid": 159373,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 71",
+            "bbox_xmin": 698948,
+            "bbox_ymin": 262277,
+            "bbox_xmax": 698948,
+            "bbox_ymax": 262277
+        },
+        {
+            "fid": 159380,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 72",
+            "bbox_xmin": 698925,
+            "bbox_ymin": 262299,
+            "bbox_xmax": 698925,
+            "bbox_ymax": 262299
+        },
+        {
+            "fid": 158386,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 75",
+            "bbox_xmin": 698952,
+            "bbox_ymin": 262181,
+            "bbox_xmax": 698952,
+            "bbox_ymax": 262181
+        },
+        {
+            "fid": 158239,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 76",
+            "bbox_xmin": 698926,
+            "bbox_ymin": 262269,
+            "bbox_xmax": 698926,
+            "bbox_ymax": 262269
+        },
+        {
+            "fid": 158967,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 77",
+            "bbox_xmin": 698950,
+            "bbox_ymin": 262160,
+            "bbox_xmax": 698950,
+            "bbox_ymax": 262160
+        },
+        {
+            "fid": 155895,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 8",
+            "bbox_xmin": 698889,
+            "bbox_ymin": 262871,
+            "bbox_xmax": 698889,
+            "bbox_ymax": 262871
+        },
+        {
+            "fid": 156338,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 80",
+            "bbox_xmin": 698926,
+            "bbox_ymin": 262123,
+            "bbox_xmax": 698926,
+            "bbox_ymax": 262123
+        },
+        {
+            "fid": 162481,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 81",
+            "bbox_xmin": 698946,
+            "bbox_ymin": 262086,
+            "bbox_xmax": 698946,
+            "bbox_ymax": 262086
+        },
+        {
+            "fid": 156339,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 82",
+            "bbox_xmin": 698925,
+            "bbox_ymin": 262099,
+            "bbox_xmax": 698925,
+            "bbox_ymax": 262099
+        },
+        {
+            "fid": 162482,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 83",
+            "bbox_xmin": 698949,
+            "bbox_ymin": 262077,
+            "bbox_xmax": 698949,
+            "bbox_ymax": 262077
+        },
+        {
+            "fid": 162483,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 85",
+            "bbox_xmin": 698955,
+            "bbox_ymin": 262064,
+            "bbox_xmax": 698955,
+            "bbox_ymax": 262064
+        },
+        {
+            "fid": 167235,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 86",
+            "bbox_xmin": 698908,
+            "bbox_ymin": 262048,
+            "bbox_xmax": 698908,
+            "bbox_ymax": 262048
+        },
+        {
+            "fid": 158964,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 89",
+            "bbox_xmin": 698958,
+            "bbox_ymin": 261988,
+            "bbox_xmax": 698958,
+            "bbox_ymax": 261988
+        },
+        {
+            "fid": 159079,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 89a",
+            "bbox_xmin": 698952,
+            "bbox_ymin": 261967,
+            "bbox_xmax": 698952,
+            "bbox_ymax": 261967
+        },
+        {
+            "fid": 158968,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 9",
+            "bbox_xmin": 698888,
+            "bbox_ymin": 262830,
+            "bbox_xmax": 698888,
+            "bbox_ymax": 262830
+        },
+        {
+            "fid": 158243,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 90",
+            "bbox_xmin": 698916,
+            "bbox_ymin": 261966,
+            "bbox_xmax": 698916,
+            "bbox_ymax": 261966
+        },
+        {
+            "fid": 158385,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 91",
+            "bbox_xmin": 698968,
+            "bbox_ymin": 261926,
+            "bbox_xmax": 698968,
+            "bbox_ymax": 261926
+        },
+        {
+            "fid": 159367,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 94",
+            "bbox_xmin": 698957,
+            "bbox_ymin": 261856,
+            "bbox_xmax": 698957,
+            "bbox_ymax": 261856
+        },
+        {
+            "fid": 158234,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 96",
+            "bbox_xmin": 698970,
+            "bbox_ymin": 261804,
+            "bbox_xmax": 698970,
+            "bbox_ymax": 261804
+        },
+        {
+            "fid": 158235,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 98",
+            "bbox_xmin": 698941,
+            "bbox_ymin": 261797,
+            "bbox_xmax": 698941,
+            "bbox_ymax": 261797
+        },
+        {
+            "fid": 158972,
+            "kategorie": "Adresse",
+            "begriff": "Talackerstrasse 99",
+            "bbox_xmin": 698979,
+            "bbox_ymin": 261864,
+            "bbox_xmax": 698979,
+            "bbox_ymax": 261864
+        },
+        {
+            "fid": 128124,
+            "kategorie": "POI",
+            "begriff": "Kindergarten Rychenberg Talackerstrasse 17",
+            "bbox_xmin": 698910,
+            "bbox_ymin": 262713,
+            "bbox_xmax": 698910,
+            "bbox_ymax": 262713
+        },
+        {
+            "fid": 128564,
+            "kategorie": "POI",
+            "begriff": "Schulhaus Rychenberg Talackerstrasse 17",
+            "bbox_xmin": 698902,
+            "bbox_ymin": 262699,
+            "bbox_xmax": 698902,
+            "bbox_ymax": 262699
+        },
+        {
+            "fid": 128636,
+            "kategorie": "POI",
+            "begriff": "Schulhaus Talacker Talackerstrasse 90",
+            "bbox_xmin": 698910,
+            "bbox_ymin": 261963,
+            "bbox_xmax": 698910,
+            "bbox_ymax": 261963
+        }
+    ],
+    "quality": 0
+}

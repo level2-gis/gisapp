@@ -1,0 +1,419 @@
+/* icons */
+
+.ui-icon-logo {
+  background-image: none;
+}
+
+.ui-icon-compass {
+  background-image: url("../img/compass.svg");
+}
+
+.ui-icon-location_off {
+  background-image: url("../img/positioning_off.png");
+}
+
+.ui-icon-location_on {
+  background-image: url("../img/positioning_on.png");
+}
+
+.ui-icon-searching {
+  background-image: url("../img/search.png");
+}
+
+.ui-icon-layers {
+  background-image: url("../img/layers.svg");
+}
+
+.ui-icon-properties {
+  background-image: url("../img/properties.png");
+}
+
+/* button positions */
+
+#btnCompass {
+  right: 5px;
+  bottom: 25px;
+  background: none repeat scroll 0 0 transparent;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 1px;
+}
+#btnCompass .ui-btn-inner {
+  border: none;
+}
+
+#btnLocation {
+  right: 105px;
+}
+
+#btnSearching {
+  right: 55px;
+}
+
+#btnLayers {
+  left: -16px;
+  bottom: 5px;
+  -webkit-border-radius: 0 1em 1em 0;
+  border-radius: 0 1em 1em 0;
+}
+
+#btnProperties {
+  right: 5px;
+}
+
+/* geolocation */
+
+#locationMarker {
+  background-image: url("../img/location.svg");
+  width: 20px;
+  height: 20px;
+}
+
+/* layer panel */
+
+#panelLayer .ui-navbar .ui-btn.selected .ui-btn-inner {
+  background-color: lightgray;
+}
+
+#panelLayer .ui-navbar .ui-btn-inner {
+  padding: 0.7em 0 0.8em 0;
+}
+
+/* topics */
+
+#topicList li.selected {
+  background-color: lightgray;
+}
+
+/* layer list */
+
+#panelLayerAll .ui-collapsible-content {
+  padding: 0 0 0 15px;
+}
+
+/* layer order */
+
+#listOrder {
+  width: 220px;
+}
+
+#listOrder .ui-li {
+  border-bottom-width: 1px;
+  margin-bottom: -1px;
+}
+
+#listOrder li.selected{
+  background-color: lightgray;
+}
+
+/* properties */
+
+#properties .ui-field-contain .ui-slider-switch {
+  float: right;
+}
+
+#dlgAbout .ui-title {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+#buttonSignOut .ui-btn-inner {
+  max-width: 220px;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+/* misc */
+
+.scrollable {
+  overflow: auto;
+}
+
+#clickMarker {
+  background-image: url("../img/click.svg");
+  width: 20px;
+  height: 20px;
+}
+
+/* OpenLayers 3 */
+
+#map {
+  text-shadow: white 0 0 0;
+}
+
+.ol-scale-line {
+  background-color: transparent;
+  left: inherit;
+  right: 8px;
+}
+
+.ol-scale-line-inner {
+  color: black;
+  font-size: 10pt;
+  font-weight: bold;
+  border-color: black;
+  border-style: none none solid none;
+  border-bottom-width: 4px;
+  opacity: 0.6;
+}
+
+/* jQuery mobile custom widgets  */
+
+/* collapsible group checkbox */
+.ui-collapsible[data-groupcheckbox=true] .ui-collapsible-heading-toggle {
+  float: right;
+  width: calc(100% - 43px);
+  border-radius: 0 0.6em 0.6em 0 !important;
+}
+.ui-collapsible-groupcheckbox {
+  width: 40px;
+  border-radius: 0.6em 0 0 0.6em !important;
+}
+.ui-collapsible-groupcheckbox .ui-btn-inner {
+  padding-left: inherit !important;
+}
+.ui-collapsible-groupcheckbox .ui-icon {
+  background-color: rgba(0,​ 0,​ 0,​ 0.4);
+  border-radius: 3px;
+}
+.ui-collapsible-groupcheckbox.ui-collapsible-groupcheckbox-button-checked .ui-icon {
+  background-color: #4596ce;
+}
+.ui-collapsible-groupcheckbox.ui-collapsible-groupcheckbox-button-somechecked .ui-icon {
+  background-image: url("../img/icon_tristate.png");
+  background-position: 0 0;
+}
+
+/* jQuery mobile */
+
+.ui-content {
+  padding: 0;
+}
+
+.ui-popup .ui-content {
+  padding: 10px;
+}
+
+.ui-btn-icon-notext {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  z-index: 1;
+}
+
+.ui-btn-icon-notext .ui-btn-inner .ui-icon {
+  background-color: transparent;
+  background-size: 32px 32px;
+  width: 32px;
+  height: 32px;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 4px;
+}
+
+.btn-icon-text.ui-btn-icon-left .ui-btn-inner {
+  padding-left: 48px;
+}
+
+.btn-icon-text.ui-btn-icon-left .ui-btn-inner .ui-icon {
+  background-color: transparent;
+  background-size: 32px 32px;
+  width: 32px;
+  height: 32px;
+  box-shadow: none;
+  border-radius: 0;
+  margin-top: -17px;
+}
+
+.ui-input-clear {
+  width: 24px;
+  height: 24px;
+}
+
+.ui-input-clear .ui-btn-inner .ui-icon-delete {
+  background-color: #666;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-image: url('../lib/jquery/images/icons-18-white.png');
+  background-size: 864px 18px;
+  background-repeat: no-repeat;
+  width: 18px;
+  height: 18px;
+  margin: 2px 1px 2px 3px;
+  border-radius: 9px;
+}
+
+#searchResultsList .ui-li.category-title {
+  margin-left: -12px;
+}
+#searchResultsList .ui-li .ui-btn-text a.ui-link-inherit {
+  font-weight: normal;
+  margin-left: -12px;
+}
+
+#featureInfoResults .ui-btn-text {
+  white-space: normal;
+}
+#featureInfoResults .feature {
+  margin: 0;
+}
+#featureInfoResults .feature .ui-collapsible-content {
+  padding: 0;
+}
+#featureInfoResults ul.ui-listview-inset {
+  margin: 0;
+}
+#featureInfoResults li.ui-li {
+  padding-left: 4px;
+  padding-right: 4px;
+  overflow: auto;
+}
+#featureInfoResults li.ui-li .link {
+  padding-left: 0;
+  padding-right: 0;
+}
+#featureInfoResults span.value {
+  font-weight: normal;
+  text-align: right;
+  float: right;
+}
+
+.ui-panel-inner {
+  padding: 8px;
+}
+
+/* fix switch layout on narrow screens */
+.ui-field-contain, .ui-mobile fieldset.ui-field-contain {
+  border-width: 0;
+  padding: 0;
+  margin: 1em 0;
+}
+.ui-field-contain label.ui-slider {
+  vertical-align: top;
+  display: inline-block;
+  width: 20%;
+  margin: 0 2% 0 0;
+}
+
+/* fix closing panels with outside click on IE10 */
+.ui-panel-dismiss {
+  background-color: inherit;
+  opacity: 0.0;
+}
+/* hide native clear button in search input on IE10 */
+input[data-type='search']::-ms-clear { display: none; }
+
+/* override panel width */
+
+.ui-panel {
+  width: 18em;
+}
+.ui-panel-closed {
+  width: 0;
+}
+.ui-panel-position-left {
+  left: -18em;
+}
+.ui-panel-animate.ui-panel-position-left.ui-panel-display-overlay,
+.ui-panel-animate.ui-panel-position-left.ui-panel-display-push {
+  -webkit-transform: translate3d(-18em,0,0);
+  -moz-transform: translate3d(-18em,0,0);
+  transform: translate3d(-18em,0,0);
+}
+.ui-panel-position-right {
+  right: -18em;
+}
+.ui-panel-animate.ui-panel-position-right.ui-panel-display-overlay,
+.ui-panel-animate.ui-panel-position-right.ui-panel-display-push {
+  -webkit-transform: translate3d(18em,0,0);
+  -moz-transform: translate3d(18em,0,0);
+  transform: translate3d(18em,0,0);
+}
+.ui-panel-content-fixed-toolbar-position-left.ui-panel-content-fixed-toolbar-open,
+.ui-panel-content-wrap-position-left.ui-panel-content-wrap-open,
+.ui-panel-dismiss-position-left.ui-panel-dismiss-open {
+  left: 18em;
+  right: -18em;
+}
+.ui-panel-animate.ui-panel-content-fixed-toolbar-position-left.ui-panel-content-fixed-toolbar-open.ui-panel-content-fixed-toolbar-display-reveal,
+.ui-panel-animate.ui-panel-content-fixed-toolbar-position-left.ui-panel-content-fixed-toolbar-open.ui-panel-content-fixed-toolbar-display-push,
+.ui-panel-animate.ui-panel-content-wrap-position-left.ui-panel-content-wrap-open.ui-panel-content-wrap-display-reveal,
+.ui-panel-animate.ui-panel-content-wrap-position-left.ui-panel-content-wrap-open.ui-panel-content-wrap-display-push {
+  -webkit-transform: translate3d(18em,0,0);
+  -moz-transform: translate3d(18em,0,0);
+  transform: translate3d(18em,0,0);
+}
+.ui-panel-content-fixed-toolbar-position-right.ui-panel-content-fixed-toolbar-open,
+.ui-panel-content-wrap-position-right.ui-panel-content-wrap-open,
+.ui-panel-dismiss-position-right.ui-panel-dismiss-open {
+  left: -18em;
+  right: 18em;
+}
+.ui-panel-animate.ui-panel-content-fixed-toolbar-position-right.ui-panel-content-fixed-toolbar-open.ui-panel-content-fixed-toolbar-display-reveal,
+.ui-panel-animate.ui-panel-content-fixed-toolbar-position-right.ui-panel-content-fixed-toolbar-open.ui-panel-content-fixed-toolbar-display-push,
+.ui-panel-animate.ui-panel-content-wrap-position-right.ui-panel-content-wrap-open.ui-panel-content-wrap-display-reveal,
+.ui-panel-animate.ui-panel-content-wrap-position-right.ui-panel-content-wrap-open.ui-panel-content-wrap-display-push {
+  -webkit-transform: translate3d(-18em,0,0);
+  -moz-transform: translate3d(-18em,0,0);
+  transform: translate3d(-18em,0,0);
+}
+@media (min-width:55em) {
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-fixed-toolbar-display-push.ui-panel-content-fixed-toolbar-position-left,
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-fixed-toolbar-display-reveal.ui-panel-content-fixed-toolbar-position-left,
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-wrap-display-push.ui-panel-content-wrap-position-left,
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-wrap-display-reveal.ui-panel-content-wrap-position-left {
+    margin-right: 18em;
+  }
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-fixed-toolbar-display-push.ui-panel-content-fixed-toolbar-position-right,
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-fixed-toolbar-display-reveal.ui-panel-content-fixed-toolbar-position-right,
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-wrap-display-push.ui-panel-content-wrap-position-right,
+  .ui-responsive-panel.ui-page-panel-open .ui-panel-content-wrap-display-reveal.ui-panel-content-wrap-position-right {
+    margin-left: 18em;
+  }
+}
+
+/* styles for printing */
+@media print {
+
+  /* hide tool buttons and panels */
+  .ui-btn-icon-notext {
+    display: none;
+  }
+  .ui-panel {
+    display: none;
+  }
+
+  /* show compass */
+  #btnCompass {
+    display: inherit;
+  }
+  /* workaround for compass image */
+  .ui-icon-compass {
+    background-image: none;
+    display: list-item !important;
+    list-style-image: url("../img/compass.svg");
+    list-style-position: inside;
+  }
+
+  /* workaround for location marker image */
+  #locationMarker {
+    background-image: none;
+    display: list-item !important;
+    list-style-image: url("../img/location.svg");
+    list-style-position: inside;
+  }
+
+  /* workaround for click marker image */
+  #clickMarker {
+    background-image: none;
+    display: list-item !important;
+    list-style-image: url("../img/click.svg");
+    list-style-position: inside;
+  }
+
+  /* remove blurring of scale bar */
+  .ol-scale-line-inner {
+    opacity: 1.0;
+  }
+
+}

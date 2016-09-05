@@ -1,0 +1,72 @@
+{
+    "success": true,
+    "wmslayers": [
+        {
+            "topic": "basisplan_av_farbig",
+            "groupname": "Basiskarten",
+            "layername": "Pixelkarte 25",
+            "toclayertitle": "Pixelkarte 25",
+            "visini": true,
+            "wms_sort": 0,
+            "toc_sort": 0
+        },
+        {
+            "topic": "basisplan_av_farbig",
+            "groupname": "Basiskarten",
+            "layername": "Pixelkarte 25 grau",
+            "toclayertitle": "Pixelkarte 25 grau",
+            "visini": false,
+            "wms_sort": 1,
+            "toc_sort": 1
+        },
+        {
+            "topic": "basisplan_av_farbig",
+            "groupname": "AV Bodenbedeckung",
+            "layername": "BBFlaechen_farbig",
+            "toclayertitle": "BBFlaechen farbig",
+            "visini": false,
+            "wms_sort": 3,
+            "toc_sort": 3,
+            "hidden_attributes": ["EGID"],
+            "hidden_values": ["", "NULL"]
+        },
+        {
+            "topic": "basisplan_av_farbig",
+            "groupname": "Basiskarten",
+            "layername": "CH-Rahmen",
+            "toclayertitle": "CH-Rahmen",
+            "visini": true,
+            "wms_sort": 2,
+            "toc_sort": 2
+        },
+        {
+            "topic": "basisplan_av_farbig",
+            "groupname": "Basisplan-AV farbig",
+            "layername": "BPAV5000 farbig Liegenschaften",
+            "toclayertitle": "BPAV5000 farbig Liegenschaften",
+            "visini": true,
+            "wms_sort": 6,
+            "toc_sort": 4
+        },
+        {
+            "topic": "basisplan_av_farbig",
+            "groupname": "Basisplan-AV farbig",
+            "layername": "BPAV5000 farbig",
+            "toclayertitle": "BPAV5000 farbig",
+            "visini": true,
+            "wms_sort": 5,
+            "toc_sort": 5
+        },
+        {
+            "topic": "basisplan_av_farbig",
+            "groupname": "Basisplan-AV farbig",
+            "layername": "BPAV10000 farbig",
+            "toclayertitle": "BPAV10000 farbig",
+            "minscale": 5000,
+            "maxscale": 50000,
+            "visini": true,
+            "wms_sort": 4,
+            "toc_sort": 6
+        }
+    ]
+}

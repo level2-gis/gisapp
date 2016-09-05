@@ -1,0 +1,32 @@
+{
+    "success": true,
+    "wmslayers": [
+        {
+            "topic": "overlay_places",
+            "groupname": "Ortsangaben",
+            "layername": "Ortschaften",
+            "toclayertitle": "Ortschaften",
+            "visini": true,
+            "wms_sort": 0,
+            "toc_sort": 0
+        },
+        {
+            "topic": "overlay_places",
+            "groupname": "Ortsangaben",
+            "layername": "Ortschaftsnamen",
+            "toclayertitle": "Ortschaftsnamen",
+            "visini": true,
+            "wms_sort": 1,
+            "toc_sort": 1
+        },
+        {
+            "topic": "overlay_places",
+            "groupname": "Ortsangaben",
+            "layername": "Flur- und Ortsnamen",
+            "toclayertitle": "Flur- und Ortsnamen",
+            "visini": true,
+            "wms_sort": 2,
+            "toc_sort": 2
+        }
+    ]
+}

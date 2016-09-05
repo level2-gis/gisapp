@@ -1,0 +1,189 @@
+/* custom CSS */
+
+.ui-icon-logo {
+  background-image: url("../img/glarus_logo.png");
+}
+
+/* topics list from Mapfish Appserver */
+/*
+#topicList li.ui-li.ui-li-static.ui-li-has-thumb {
+  padding: 10px 15px 0 61px;
+  min-height: 41px;
+}
+
+#topicList .ui-li-thumb {
+  padding: 5px;
+}
+*/
+
+/* HTML feature info from Mapfish Appserver */
+/*
+#featureInfoResults {
+  font-size: 12px;
+}
+
+#featureInfoResults table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.infogem,.infokoord,.infozahlds {
+  padding-top:5px;
+  font-size:90%;
+}
+
+.infokoord {
+  padding-bottom:5px;
+  border-bottom-style:dotted;
+  border-bottom-color:#d0d0d0;
+  border-bottom-width:1px;
+}
+
+.infocircle {
+  font-size:90%;
+  padding-top:5px;
+  border-top-style:dotted;
+  border-top-color:#d0d0d0;
+  border-top-width:1px;
+}
+
+.legpart,.infopart {
+  padding-top:12px;
+  padding-bottom:5px;
+  border-top-style:dotted;
+  border-top-color:#d0d0d0;
+  border-top-width:1px;
+}
+
+#featureInfoResults table {
+  font-size:11px;
+  color:#000;
+}
+
+#featureInfoResults a {
+  font-size:11px;
+  text-decoration:none;
+}
+
+#featureInfoResults a:hover {
+  color:#333;
+  text-decoration:underline!important;
+}
+
+TABLE.infotab {
+  border-right:#999 1px;
+  border-top:#999 1px;
+  border-left:#999 1px;
+  border-bottom:#999 1px;
+  background-color:#999;
+  margin-bottom:5px;
+}
+
+TH {
+  font-weight:bolder;
+  font-size:11px;
+  font-family:Arial, Verdana;
+}
+
+TD {
+  font-size:11px;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+TD.xmpcode {
+  border-right:#999 1pt solid;
+  border-top:#999 1pt solid;
+  border-left:#999 1pt solid;
+  color:#000;
+  border-bottom:#999 1pt solid;
+  background-color:#ffffe0;
+}
+
+TD.tabtitle,.infotabtitle {
+  font-weight:bolder;
+  color:#000;
+  border-bottom:#fff solid;
+  border-right:#fff solid;
+  border-bottom-width:1px;
+  border-right-width:1px;
+  background-color:#e3e3e3;
+  padding:2px 5px;
+}
+
+TD.tabheader,.infotabtitle {
+  font-weight:bolder;
+  color:#000;
+  border-bottom:#fff solid;
+  border-right:#fff solid;
+  border-bottom-width:1px;
+  border-right-width:1px;
+  background-color:#c2c2c2;
+  padding:2px 5px;
+}
+
+TD.tabcell,.infotabcell {
+  color:#000;
+  border-right:#fff solid;
+  border-bottom:#fff solid;
+  border-bottom-width:1px;
+  border-right-width:1px;
+  background-color:#fafafa;
+  padding:2px 5px;
+}
+
+TD.tabcellr,.infotabcellr {
+  color:#000;
+  border-bottom:#fff solid;
+  border-right:#fff solid;
+  border-bottom-width:1px;
+  border-right-width:1px;
+  background-color:#fafafa;
+  text-align:right;
+  padding:2px 5px;
+}
+
+TD.units {
+  color:#000;
+  border-bottom:#fff solid;
+  border-bottom-width:1px;
+  border-right:#fff solid;
+  border-right-width:1px;
+  background-color:#e3e3e3;
+  padding:2px 5px;
+}
+
+#featureInfoResults tr {
+  line-height:15px;
+}
+
+#legtxt,#featureInfoResults {
+  padding:0 5px 5px;
+}
+
+#legtxt .layer,#featureInfoResults .layer {
+  font-size:13px;
+  font-weight:700;
+  color:#000;
+  padding:0 5px 5px 0;
+}
+
+#legtxt .layertitle,#featureInfoResults .layertitle {
+  font-size:11px;
+  font-weight:700;
+  color:#000;
+  padding:20px 5px 0 0;
+}
+
+#legtxt .layertitle2,#featureInfoResults .layertitle2 {
+  font-size:12px;
+  font-weight:700;
+  color:#000;
+  padding:20px 5px 5px 0;
+}
+
+#legtxt a:hover,#legtxt a:active,#featureInfoResults a:hover,#featureInfoResults a:active {
+  color:#f00000;
+  text-decoration:none;
+}
+*/

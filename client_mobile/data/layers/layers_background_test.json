@@ -1,0 +1,32 @@
+{
+    "success": true,
+    "wmslayers": [
+        {
+            "topic": "background_test",
+            "groupname": "Basiskarten",
+            "layername": "Pixelkarte 25",
+            "toclayertitle": "Pixelkarte 25",
+            "visini": false,
+            "wms_sort": 0,
+            "toc_sort": 0
+        },
+        {
+            "topic": "background_test",
+            "groupname": "Basiskarten",
+            "layername": "Pixelkarte 25 grau",
+            "toclayertitle": "Pixelkarte 25 grau",
+            "visini": true,
+            "wms_sort": 1,
+            "toc_sort": 1
+        },
+        {
+            "topic": "background_test",
+            "groupname": "Basiskarten",
+            "layername": "CH-Rahmen",
+            "toclayertitle": "CH-Rahmen",
+            "visini": true,
+            "wms_sort": 2,
+            "toc_sort": 2
+        }
+    ]
+}

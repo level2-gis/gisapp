@@ -1,0 +1,14 @@
+{
+    "success": true,
+    "wmslayers": [
+        {
+            "topic": "overlay_ch",
+            "groupname": "Basiskarten",
+            "layername": "CH-Rahmen",
+            "toclayertitle": "CH-Rahmen",
+            "visini": true,
+            "wms_sort": 0,
+            "toc_sort": 0
+        }
+    ]
+}

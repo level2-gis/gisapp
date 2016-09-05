@@ -1,0 +1,23 @@
+{
+    "success": true,
+    "wmslayers": [
+        {
+            "topic": "Topic",
+            "groupname": "Group",
+            "layername": "Hello",
+            "toclayertitle": "Hello",
+            "visini": true,
+            "wms_sort": 0,
+            "toc_sort": 0
+        },
+        {
+            "topic": "Topic",
+            "groupname": "Group",
+            "layername": "Country",
+            "toclayertitle": "Country",
+            "visini": true,
+            "wms_sort": 1,
+            "toc_sort": 1
+        }
+    ]
+}
