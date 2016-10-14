@@ -136,10 +136,17 @@ try {
     //    header('', true, $e->getResponse()->getStatusCode());
     //} else {
         header('Server Error', true, 500);
+    header("Content-Type: text/html");
     //}
     echo $e->getMessage();
 
 } catch (Exception\ClientException $e) {
     header('Unauthorized', true, 401);
+    header("Content-Type: text/html");
+    echo $e->getMessage();
+
+} catch (Exception\RequestException $e) {
+    header('Error', true, 500);
+    header("Content-Type: text/html");
     echo $e->getMessage();
 }
