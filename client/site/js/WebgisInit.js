@@ -2214,7 +2214,8 @@ function addAbstractToLayerGroups() {
                 } else {
                     var thisAbstract = layerGroupString[lang]+ ' "' + n.text + '"';
                 }
-                wmsLoader.layerProperties[n.text].abstract = thisAbstract;
+                var layerId = wmsLoader.layerTitleNameMapping[n.text];
+                wmsLoader.layerProperties[layerId].abstract = thisAbstract;
             }
         }
     );
