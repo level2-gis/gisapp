@@ -391,7 +391,7 @@ SELECT pg_catalog.setval('clients_id_seq', 1, false);
 -- Data for Name: layers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO layers VALUES (1, 'google_map', '', 'Google', true, '"Google "+TR.mapBasic,{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true}');
+INSERT INTO layers VALUES (1, 'google_map', '', 'Google', true, '"Google "+TR.mapSatellite,{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true, useTiltImages: false}');
 INSERT INTO layers VALUES (2, 'google_sat', '', 'Google', true, '"Google "+TR.mapSatellite,{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
 INSERT INTO layers VALUES (4, 'osm_mapnik', '', 'OSM', true, '"OpenStreetMap (mapnik)"');
 
@@ -429,7 +429,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (4, '2015-11-23');
+INSERT INTO settings VALUES (5, '2015-11-23');
 
 
 --
