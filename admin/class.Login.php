@@ -262,17 +262,9 @@ class Login
                 //get all GIS projects for user for themeswitcher
                 $gis_projects = $gisApp->getGisProjectsFromDB();
 
-                //get QGIS project CRS
-                $project_qgs = Helpers::getQgsProject(PROJECT_PATH . $project . '.qgs');
-                if (!($project_qgs["status"])) {
-                    //error in XML, using default CRS but continue
-                    $crs = "EPSG:3857";
-                    $this->feedback = $project_qgs["message"];
-                    //return false;
-                }
-                else {
-                    $crs = (string)$project_qgs["message"]->properties->SpatialRefSys->ProjectCrs;
-                }
+                //get QGIS project properties
+                $project_qgs = Helpers::getQgsProjectProperties(PROJECT_PATH . $project . '.qgs');
+                //$this->feedback = $project_qgs->message;
 
                 //search configs
                 $project_settings = $gisApp->getProjectConfigs();
@@ -285,7 +277,8 @@ class Login
                     $_SESSION['data'] = $project_data;
                     $_SESSION['settings'] = $project_settings;
                     $_SESSION['gis_projects'] = $gis_projects;
-                    $_SESSION['crs'] = $crs;
+                    $_SESSION['qgs'] = $project_qgs;
+
                     $_SESSION['message'] = $this->feedback;
                     $this->user_is_logged_in = true;
 

@@ -110,7 +110,7 @@ class Helpers
      * @param $map
      * @return array
      */
-    public static function getQgsProject($map)
+    private function getQgsProject($map)
     {
         libxml_clear_errors();
         libxml_use_internal_errors(true);
@@ -123,6 +123,46 @@ class Helpers
             return self::msg(false, 'Project not found!');
         }
         return self::msg(true, $project);
+    }
+
+    public static function getQgsProjectProperties($map)
+    {
+        $qgs = self::getQgsProject($map);
+        $prop = new \stdClass();
+        $lay = new \stdClass();
+
+        if (!($qgs["status"])) {
+            //error in XML, using default CRS but continue
+            $prop->crs = "EPSG:3857";
+            $prop->message = $qgs["message"];
+            //return false;
+        }
+        else {
+            $prop->crs = (string)$qgs["message"]->properties->SpatialRefSys->ProjectCrs;
+            $prop->title = (string)$qgs["message"]->title;
+            $prop->extent = (array)($qgs["message"]->properties->WMSExtent->value);
+            $prop->layers = [];
+
+            try {
+
+                $group = (array)$qgs["message"]->xpath('layer-tree-group/layer-tree-layer');
+
+                foreach ($group as $el) {
+                    $lay->name = (string)$el->attributes()["name"];
+                    $lay->checked = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
+                    $lay->id = (string)$el->attributes()["id"];
+                    array_push($prop->layers, $lay);
+                    $lay = new \stdClass();
+                }
+            } catch (\Exception $e) {
+                $prop->message = $e->getMessage();
+            }
+
+
+            $prop->message = $qgs["status"];
+        }
+
+        return json_encode($prop);
     }
 
     /**
