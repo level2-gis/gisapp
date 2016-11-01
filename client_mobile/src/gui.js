@@ -106,11 +106,12 @@ Gui.selectTopic = function(topic) {
   }
 
   // load layers
-  Layers.loadLayers(Config.data.layersUrl(topic), Gui.loadLayers);
-  if (Map.backgroundTopic != null) {
-    // load background layers
-    Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
-  }
+  Layers.loadLayers(null, Gui.loadLayers);
+
+  //if (Map.backgroundTopic != null) {
+  //  // load background layers
+  //  Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
+  //}
 
   // mark topic button
   $('#topicList li.topic').removeClass('selected');
@@ -826,7 +827,7 @@ Gui.loginStatus = function(result) {
 Gui.login = function(result) {
   if (result.success) {
     // reload topics
-    Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
+    Topics.loadTopics(null, Gui.loadTopics);
 
     $('#dlgLogin').popup('close');
     $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
@@ -840,7 +841,7 @@ Gui.login = function(result) {
 
 Gui.logout = function() {
   // reload topics
-  Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
+  Topics.loadTopics(null, Gui.loadTopics);
 
   Gui.toggleLogin(false);
 };
@@ -890,7 +891,7 @@ Gui.initViewer = function() {
   Map.toggleScalebar(Config.defaultProperties.scalebar);
 
   // topics
-  Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
+  Topics.loadTopics(null, Gui.loadTopics);
   // topic selection
   $('#topicList').delegate('li.topic', 'vclick', function(e) {
     Gui.selectTopic($(this).data('topic'));

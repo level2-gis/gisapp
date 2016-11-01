@@ -15,7 +15,7 @@
             "groupname": "Group",
             "layername": "Country",
             "toclayertitle": "Country",
-            "visini": true,
+            "visini": false,
             "wms_sort": 1,
             "toc_sort": 1
         }

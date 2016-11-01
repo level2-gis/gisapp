@@ -1,18 +1,39 @@
 /**
  * Custom configuration
  */
-
 var Config = {};
 
+/**
+ * Helper function to calculate center from extent
+ * @param extent
+ * @returns {*[]}
+ */
+//Config.getCenterOfExtent = function(extent){
+//    var x = extent[0] + (extent[2] - extent[0])/2;
+//    var y = extent[1] + (extent[3] - extent[1])/2;
+//    return [x, y];
+//}
+
+Config.parseExtentToArray = function(str){
+    var ext2 = [];
+    var extent = str.split(',');
+    ext2.push(parseInt(extent[0]));
+    ext2.push(parseInt(extent[1]));
+    ext2.push(parseInt(extent[2]));
+    ext2.push(parseInt(extent[3]));
+    return ext2;
+}
+
+
 // flag to activate debug code
-Config.debug = true;
+Config.debug = false;
 
 
 // GUI
 Config.gui = {
-  hideShareButton: false,
-  hideLoginButton: false,
-  useLayertreeGroupCheckboxes: true
+  hideShareButton: true,
+  hideLoginButton: true,
+  useLayertreeGroupCheckboxes: false
 };
 
 
@@ -30,11 +51,11 @@ Config.login = new MapfishLogin();
 // data configuration
 Config.data = {};
 
-Config.data.topicsUrl = "data/topics.json";
+//Config.data.topicsUrl = "client_mobile/data/topics.json";
 
-Config.data.layersUrl = function(topicName) {
-  return "data/layers/layers_" + topicName + ".json";
-};
+//Config.data.layersUrl = function(topicName) {
+//    return "client_mobile/data/layers/layers_" + topicName + ".json";
+//};
 
 /* Configuration for Mapfish Appserver:
 Config.data.topicsUrl = "/topics.json?gbapp=default";
@@ -44,7 +65,7 @@ return "/layers.json?topic=" + topicName;
 }
 */
 
-Config.data.initialTopic = "geo_admin_pk";
+Config.data.initialTopic = projectData.project;
 
 
 // default properties
@@ -119,31 +140,31 @@ Config.map = {};
 Config.map.dpi = 96;
 
 // ol.Extent [<minx>, <miny>, <maxx>, <maxy>]
-Config.map.extent = [420000, 30000, 900000, 350000];
+Config.map.extent = Config.parseExtentToArray(projectData.extent);
 
-Config.map.scaleDenoms = [2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100];
+//Config.map.scaleDenoms = [2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100];
 
 Config.map.init = {
-  center: [660000, 190000],
-  zoom: 15
+  center: ol.extent.getCenter(Config.map.extent),
+  zoom: 2
 };
 
 // ol.proj.Projection
-Config.map.projection = ol.proj.get('EPSG:3857');
+Config.map.projection = ol.proj.get(projectData.crs);
 Config.map.projection.setExtent(Config.map.extent);
 
 // calculate resolutions from scales
-Config.map.scaleDenomsToResolutions = function(scales) {
-  var resolutions = $.map(scales, function(scale, index) {
-    return scale / (Config.map.projection.getMetersPerUnit() * (Config.map.dpi / 0.0254));
-  });
-  return resolutions;
-};
+//Config.map.scaleDenomsToResolutions = function(scales) {
+//  var resolutions = $.map(scales, function(scale, index) {
+//    return scale / (Config.map.projection.getMetersPerUnit() * (Config.map.dpi / 0.0254));
+//  });
+//  return resolutions;
+//};
 
 // ol.View options
 Config.map.viewOptions = {
   projection: Config.map.projection,
-  resolutions: Config.map.scaleDenomsToResolutions(Config.map.scaleDenoms),
+  //resolutions: Config.map.scaleDenomsToResolutions(Config.map.scaleDenoms),
   center: Config.map.init.center,
   zoom: Config.map.init.zoom
 };
