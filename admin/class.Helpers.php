@@ -146,13 +146,19 @@ class Helpers
             try {
 
                 $group = (array)$qgs["message"]->xpath('layer-tree-group/layer-tree-layer');
-
+                $i = 0;
                 foreach ($group as $el) {
-                    $lay->name = (string)$el->attributes()["name"];
-                    $lay->checked = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
+                    $lay->topic = 'Topic';
+                    $lay->groupname = $prop->title;
+                    $lay->layername = (string)$el->attributes()["name"];
+                    $lay->toclayertitle = (string)$el->attributes()["name"];
+                    $lay->visini = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
                     $lay->id = (string)$el->attributes()["id"];
+                    $lay->wms_sort = $i;
+                    $lay->toc_sort = $i;
                     array_push($prop->layers, $lay);
                     $lay = new \stdClass();
+                    $i++;
                 }
             } catch (\Exception $e) {
                 $prop->message = $e->getMessage();

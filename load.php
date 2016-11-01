@@ -56,6 +56,7 @@ projectData.project = '<?php echo $project ?>';
 projectData.crs = '<?php echo $qgs->crs ?>';
 projectData.title = '<?php echo $qgs->title ?>';
 projectData.extent = '<?php echo implode(',',$qgs->extent) ?>';
+projectData.layers = eval(<?php echo json_encode($qgs->layers) ?>);
 
 projectData.setBaseLayers = function () {
 var bl = eval(<?php echo json_encode($data->base_layers) ?>);

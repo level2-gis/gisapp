@@ -4,14 +4,16 @@ use GisApp\Helpers;
 
 require_once("admin/class.Helpers.php");
 require_once("admin/settings.php");
+require 'vendor/autoload.php';
 
-function goMobile() {
+
+function goMobile($lang) {
  ?>
     <!DOCTYPE html>
     <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-        <title>Mobile Viewer</title>
+        <!--        <title>Mobile Viewer</title>-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -43,19 +45,20 @@ function goMobile() {
         <script src="client_mobile/lib/ol3/ol.js"></script>
         <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css" />
 
+        <script type="text/javascript" src="admin/languages/<?php echo $lang ?>.js?v=1.1.3"></script>
+
         <script src="client_mobile/src/url_params.js"></script>
-        <script src="client_mobile/src/translations.js"></script>
         <script src="client_mobile/src/permalink.js"></script>
         <script src="client_mobile/src/login.js"></script>
         <script src="client_mobile/src/search.js"></script>
 
         <!-- NOTE: remove unused classes -->
-        <script src="client_mobile/src/mapfish_permalink.js"></script>
+<!--        <script src="client_mobile/src/mapfish_permalink.js"></script>-->
         <script src="client_mobile/src/qgis_permalink.js"></script>
-        <script src="client_mobile/src/mapfish_login.js"></script>
-        <script src="client_mobile/src/mapfish_search.js"></script>
+<!--        <script src="client_mobile/src/mapfish_login.js"></script>-->
+<!--        <script src="client_mobile/src/mapfish_search.js"></script>-->
         <script src="client_mobile/src/swiss_search.js"></script>
-        <script src="client_mobile/src/wsgi_search.js"></script>
+<!--        <script src="client_mobile/src/wsgi_search.js"></script>-->
 
         <script src="client_mobile/src/config.js"></script>
         <script src="client_mobile/src/map.js"></script>
@@ -64,7 +67,7 @@ function goMobile() {
         <script src="client_mobile/src/topics.js"></script>
         <script src="client_mobile/src/layers.js"></script>
         <script src="client_mobile/src/gui.js"></script>
-        <script src="client_mobile/src/high_resolution_printing.js"></script>
+<!--        <script src="client_mobile/src/high_resolution_printing.js"></script>-->
         <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css" />
     </head>
@@ -106,7 +109,7 @@ function goMobile() {
                             <option value="on">Ein</option>
                         </select>
                     </div>
-                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>
+<!--                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>-->
 
                     <div data-role="popup" id="dlgAbout" class="ui-corner-all" data-theme="c" data-overlay-theme="a">
                         <div data-role="header" data-theme="c" class="ui-corner-top">
@@ -146,9 +149,9 @@ function goMobile() {
             <div class="panel-content">
                 <div data-role="navbar">
                     <ul>
-                        <li><a id="buttonTopics" href="#panelTopics">Themen</a></li>
-                        <li><a id="buttonLayerAll" href="#panelLayerAll">Ebenen</a></li>
-                        <li><a id="buttonLayerOrder" href="#panelLayerOrder">Reihenfolge</a></li>
+                        <li><a id="buttonTopics" href="#panelTopics">Themen1</a></li>
+                        <li><a id="buttonLayerAll" href="#panelLayerAll">Ebenen1</a></li>
+                        <li><a id="buttonLayerOrder" href="#panelLayerOrder">Reihenfolge1</a></li>
                     </ul>
                 </div>
                 <div id="layerPanelContent">
@@ -214,11 +217,16 @@ else {
 
 $_SESSION['lang'] = $def_lang;
 
+$detect = new Mobile_Detect;
+if ($detect->isMobile()) {
+    $mobile='on';
+}
+
 if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
 	//OK open application
     if($mobile=='on') {
-        goMobile();
+        goMobile($def_lang);
     }
     else {
 
@@ -258,7 +266,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <!--        <script type="text/javascript" src="../libs/openlayers/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
-                <script type="text/javascript" src="client/site/js/Translations.js?v=1.1.2"></script>
+                <script type="text/javascript" src="client/site/js/Translations.js?v=1.3"></script>
                 <script type="text/javascript" src="client/site/js/PagingStore.js"></script>
                 <script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.1.1"></script>
                 <script type="text/javascript" src="client/site/js/Customizations.js"></script>
