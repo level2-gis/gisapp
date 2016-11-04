@@ -109,8 +109,9 @@ Gui.selectTopic = function(topic) {
   Layers.loadLayers(null, Gui.loadLayers);
 
   //if (Map.backgroundTopic != null) {
-  //  // load background layers
-  //  Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
+    // load background layers
+    //Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
+    Layers.loadLayers(null, Gui.loadBackgroundLayers);
   //}
 
   // mark topic button

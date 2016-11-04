@@ -33,7 +33,7 @@ Config.debug = false;
 Config.gui = {
   hideShareButton: true,
   hideLoginButton: true,
-  useLayertreeGroupCheckboxes: false
+  useLayertreeGroupCheckboxes: true
 };
 
 
@@ -151,7 +151,7 @@ Config.map.init = {
 
 // ol.proj.Projection
 Config.map.projection = ol.proj.get(projectData.crs);
-Config.map.projection.setExtent(Config.map.extent);
+//Config.map.projection.setExtent(Config.map.extent);
 
 // calculate resolutions from scales
 //Config.map.scaleDenomsToResolutions = function(scales) {
@@ -174,7 +174,7 @@ Config.map.wmsServerType = 'qgis';
 
 Config.map.wmsParams = {
   'FORMAT': 'image/png; mode=8bit',
-  'TRANSPARENT': null
+  'TRANSPARENT': true
 };
 
 Config.map.useTiledBackgroundWMS = true;

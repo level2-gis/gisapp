@@ -134,27 +134,27 @@ Map.setTopicLayer = function() {
 };
 
 Map.setBackgroundLayer = function() {
-  var wmsParams = $.extend({}, Config.map.wmsParams, {
-    'LAYERS': Map.backgroundLayers
-  });
-  var wmsOptions = {
-    url: Map.topics[Map.backgroundTopic].wms_url,
-    params: wmsParams,
-    extent: Config.map.extent,
-    serverType: Config.map.wmsServerType,
-    dpi: Config.map.dpi
-  };
-  Map.backgroundLayer = null;
-  if (Config.map.useTiledBackgroundWMS) {
-    Map.backgroundLayer = new ol.layer.Tile({
-      source: new ol.source.TileWMS(wmsOptions)
-    });
-  }
-  else {
-    Map.backgroundLayer = new ol.layer.Image({
-      source: new ol.source.ImageWMS(wmsOptions)
-    });
-  }
+  //var wmsParams = $.extend({}, Config.map.wmsParams, {
+  //  'LAYERS': Map.backgroundLayers
+  //});
+  //var wmsOptions = {
+  //  url: Map.topics[Map.backgroundTopic].wms_url,
+  //  params: wmsParams,
+  //  extent: Config.map.extent,
+  //  serverType: Config.map.wmsServerType,
+  //  dpi: Config.map.dpi
+  //};
+  //Map.backgroundLayer = null;
+  //if (Config.map.useTiledBackgroundWMS) {
+  //  Map.backgroundLayer = new ol.layer.Tile({
+  //    source: new ol.source.TileWMS(wmsOptions)
+  //  });
+  //}
+  //else {
+  //  Map.backgroundLayer = new ol.layer.Image({
+  //    source: new ol.source.ImageWMS(wmsOptions)
+  //  });
+  //}
 
     //test uros
     //Map.backgroundLayer = new ol.layer.Tile({
@@ -162,6 +162,14 @@ Map.setBackgroundLayer = function() {
     //        url: 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidXJvcyIsImEiOiJMdnp4MVhZIn0.YT7wkb6rzr3Aibb66kvuIw'
     //    })
     //});
+
+    Map.backgroundLayer = new ol.layer.Tile({
+        preload: Infinity,
+        source: new ol.source.BingMaps({
+            key: 'AmTsuJpyBR0JTUwkDikck0BSIb3q3VmI7YsEHR9jT-cgyMGDjZflhsCrPc5exSSI',
+            imagerySet: 'Aerial'
+        })
+    });
 
 
         Map.backgroundLayer.name = 'background';
