@@ -146,7 +146,7 @@ Config.map.extent = Config.parseExtentToArray(projectData.extent);
 
 Config.map.init = {
   center: ol.extent.getCenter(Config.map.extent),
-  zoom: 2
+  zoom: 6
 };
 
 // ol.proj.Projection

@@ -218,7 +218,8 @@ else {
 $_SESSION['lang'] = $def_lang;
 
 $detect = new Mobile_Detect;
-if ($detect->isMobile()) {
+// Exclude tablets.
+if( $detect->isMobile() && !$detect->isTablet() ){
     $mobile='on';
 }
 
