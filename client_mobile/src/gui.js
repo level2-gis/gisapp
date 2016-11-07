@@ -817,7 +817,11 @@ Gui.applyPermalink = function() {
 };
 
 Gui.loginStatus = function(result) {
-  if (result.success) {
+
+    result.success = true;
+    result.user = projectData.user;
+
+    if (result.success) {
     $('#dlgLogin').popup('close');
     $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
     $('#panelProperties').panel('close');
@@ -842,9 +846,10 @@ Gui.login = function(result) {
 
 Gui.logout = function() {
   // reload topics
-  Topics.loadTopics(null, Gui.loadTopics);
+  //Topics.loadTopics(null, Gui.loadTopics);
 
   Gui.toggleLogin(false);
+  window.location.href = "./admin/login.php?action=logout";
 };
 
 Gui.toggleLogin = function(signedIn) {

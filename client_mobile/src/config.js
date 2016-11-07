@@ -3,16 +3,6 @@
  */
 var Config = {};
 
-/**
- * Helper function to calculate center from extent
- * @param extent
- * @returns {*[]}
- */
-//Config.getCenterOfExtent = function(extent){
-//    var x = extent[0] + (extent[2] - extent[0])/2;
-//    var y = extent[1] + (extent[3] - extent[1])/2;
-//    return [x, y];
-//}
 
 Config.parseExtentToArray = function(str){
     var ext2 = [];
@@ -24,6 +14,13 @@ Config.parseExtentToArray = function(str){
     return ext2;
 }
 
+Config.getLayerName = function (lid) {
+    var lay = projectData.layers.filter(function( obj ) {
+        return obj.id == lid;
+    });
+
+    return lay[0].layername;
+};
 
 // flag to activate debug code
 Config.debug = false;
@@ -32,7 +29,7 @@ Config.debug = false;
 // GUI
 Config.gui = {
   hideShareButton: true,
-  hideLoginButton: true,
+  hideLoginButton: false,
   useLayertreeGroupCheckboxes: true
 };
 

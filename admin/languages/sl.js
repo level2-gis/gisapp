@@ -55,10 +55,10 @@ I18n.search = {
 };
 
 I18n.properties = {
-    header: "Settings",
-    mapFollowing: "Map tracking",
-    mapRotation: "Map auto rotation",
-    scaleBar: "Map scale",
+    header: "Map Settings",
+    mapFollowing: "Tracking",
+    mapRotation: "Auto Rotation",
+    scaleBar: "Scale",
     about: "Imprint",
     share: "Share",
     login: "Login",

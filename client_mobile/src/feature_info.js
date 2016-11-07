@@ -114,8 +114,11 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
       }
 
       if (features.length > 0) {
+
+        var lay = $(this).attr('name');
+
         results.push({
-          layer: $(this).attr('name'),
+          layer: Config.getLayerName(lay),
           features: features
         });
       }
