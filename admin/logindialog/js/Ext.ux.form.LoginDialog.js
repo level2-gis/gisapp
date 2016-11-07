@@ -70,7 +70,7 @@ Ext.ux.form.LoginDialog = function (config) {
         bodyStyle: "padding: 10px;",
         waitMsgTarget: true,
         labelWidth: 75,
-        defaults: {width: 300},
+        defaults: {width: 250},
         items: [{
             xtype: 'textfield',
             id: this._usernameId,
@@ -86,7 +86,7 @@ Ext.ux.form.LoginDialog = function (config) {
             name: this.passwordField,
             fieldLabel: this.passwordLabel,
             vtype: this.passwordVtype,
-            width: this.enableVirtualKeyboard == true ? 280 : 300,
+            width: this.enableVirtualKeyboard == true ? 230 : 250,
             validateOnBlur: false,
             allowBlank: false,
             validationEvent: this.forceVirtualKeyboard == true ? 'blur' : 'keyup',
@@ -152,7 +152,7 @@ Ext.ux.form.LoginDialog = function (config) {
         }, {
             xtype: 'box',
             autoEl: {
-                html: '<div style="text-align: right; width: 380px;">' +
+                html: '<div style="text-align: right; width: 330px;">' +
                 '<a href="' + this.forgotPasswordLink + '" target="_blank">' +
                 this.forgotPasswordLabel + '</a></div>'
             }
@@ -254,7 +254,7 @@ Ext.ux.form.LoginDialog = function (config) {
 
     // create the window
     this._window = new Ext.Window({
-        width: 420,
+        width: 370,
         height: 280,
         closable: false,
         resizable: false,

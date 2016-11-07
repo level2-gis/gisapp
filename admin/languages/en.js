@@ -49,58 +49,58 @@ var I18n = {};
 I18n.title = "Mobile Viewer";
 
 I18n.search = {
-    header: "Adresssuche",
-    results: "Suchresultat",
-    failed: "Suche fehlgeschlagen:"
+    header: "Search",
+    results: "Results",
+    failed: "Search failed:"
 };
 
 I18n.properties = {
-    header: "Einstellungen",
-    mapFollowing: "Kartennachf&uuml;hrung",
-    mapRotation: "Kartenausrichtung",
-    scaleBar: "Massstabsbalken",
-    about: "Impressum",
+    header: "Settings",
+    mapFollowing: "Map tracking",
+    mapRotation: "Map auto rotation",
+    scaleBar: "Map scale",
+    about: "Imprint",
     share: "Share",
     login: "Login",
-    on: "Ein",
-    off: "Aus",
+    on: "On",
+    off: "Off"
 };
 
 I18n.about = {
-    header: "Impressum",
+    header: "Imprint",
     content: "Development version"
 };
 
 I18n.layers = {
-    topics: "Themen",
-    layers: "Ebenen",
-    layerOrder: "Reihenfolge",
-    background: "Hintergrund",
-    overlays: "Überlagerung",
-    selection: "Selektion",
+    topics: "Themes",
+    layers: "Layers",
+    layerOrder: "Layer order",
+    background: "Background",
+    overlays: "Overlays",
+    selection: "Selection",
     redlining: "Redlining",
-    transparency: "Transparenz"
+    transparency: "Transparency"
 };
 
 I18n.featureInfo = {
-    header: "Informationen",
-    feature: "Feature mit ID:",
-    raster: "Rasterzelle",
-    noFeatureFound: "Kein Objekt gefunden"
+    header: "Information",
+    feature: "Feature with ID:",
+    raster: "Raster",
+    noFeatureFound: "No objects found"
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Die Geolokalisierung ist für diese Seite deaktiviert.\n\nBitte überprüfen Sie Ihre Browser-Einstellungen, um die Berechtigung zurückzusetzen."
+    permissionDeniedMessage: "Location is disabled.\n\nPlease check your browser or device settings."
 };
 
 I18n.login = {
     header: "Login",
-    user: "Benutzer",
-    password: "Passwort",
-    signIn: "Anmelden",
-    cancel: "Abbrechen",
-    signOut: "Abmelden",
-    signInFailed: "Benutzername oder Passwort nicht korrekt",
-    signOutFailed: "Abmelden fehlgeschlagen",
-    statusFailed: "Login Status fehlgeschlagen"
+    user: "User",
+    password: "Password",
+    signIn: "Login",
+    cancel: "Cancel",
+    signOut: "Logout",
+    signInFailed: "Username or password are wrong",
+    signOutFailed: "Login failed",
+    statusFailed: "Login Status failed"
 };

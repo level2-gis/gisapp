@@ -63,7 +63,7 @@ I18n.properties = {
     share: "Share",
     login: "Login",
     on: "Ein",
-    off: "Aus",
+    off: "Aus"
 };
 
 I18n.about = {

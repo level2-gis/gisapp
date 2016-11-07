@@ -348,7 +348,7 @@ else {
         <script type="text/javascript" src="admin/logindialog/js/plugins/virtualkeyboard.js"></script>
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.Crypto.SHA1.js"></script>
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.IconCombo.js"></script>
-		<script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.LoginDialog.js?v=20150817"></script>
+		<script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.LoginDialog.js?v=20161107"></script>
         <script type="text/javascript" src="admin/logindialog/js/login.js?v=20150819"></script>
 				
 		</head>
