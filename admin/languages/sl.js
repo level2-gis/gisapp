@@ -90,7 +90,7 @@ I18n.featureInfo = {
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Location is disabled.\n\nPlease check your browser or device settings."
+    permissionDeniedMessage: "Location is not available.\n\nPlease check your browser or device settings."
 };
 
 I18n.login = {
