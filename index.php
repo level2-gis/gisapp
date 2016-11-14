@@ -262,7 +262,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                         src="admin/languages/locale/ext-lang-<?php echo $def_lang ?>.js?v=1.1.2"></script>
                 <script type="text/javascript" src="admin/languages/<?php echo $def_lang ?>.js?v=1.1.3"></script>
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
-                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20161107"></script>
+                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20161114"></script>
 
                 <!--        <script type="text/javascript" src="../libs/openlayers/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
@@ -307,6 +307,11 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                         float: right;
                         font-weight: bold;
                     }
+
+                    .olTileImage.olImageLoadError {
+                        display: none !important;
+                    }
+
                 </style>
             </head>
             <body>
