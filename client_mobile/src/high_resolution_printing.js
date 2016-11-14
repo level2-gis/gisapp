@@ -72,7 +72,7 @@ $(document).ready(function() {
 
     map.addOverlay(
       new ol.Overlay({
-        element: ($(html)),
+        element: ($(html))[0],
         positioning: 'center-center',
         position: pos
       })

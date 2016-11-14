@@ -159,11 +159,12 @@ Map.setBackgroundLayer = function(layerName, layerId) {
     var lay = Config.data.baselayers[layerId];
 
     var layOl3 = {};
+    var visible = (layerId == 0) ? true : false;
 
     switch (lay.type) {
         case 'OSM' :
             layOl3 = new ol.layer.Tile({
-                visible: false,
+                visible: visible,
                 //name: lay.name,
                 source: new ol.source.OSM
             });
@@ -179,7 +180,7 @@ Map.setBackgroundLayer = function(layerName, layerId) {
         case 'XYZ' :
             var definition = $.parseJSON(lay.definition);
             layOl3 = new ol.layer.Tile({
-                visible: false,
+                visible: visible,
                 //name: lay.name,
                 source: new ol.source.XYZ({
                             url: definition.url
@@ -196,7 +197,7 @@ Map.setBackgroundLayer = function(layerName, layerId) {
         case 'Bing' :
             var definition = $.parseJSON(lay.definition);
             layOl3 = new ol.layer.Tile({
-                visible: false,
+                visible: visible,
                 //name: lay.name,
                 preload: Infinity,
                 source: new ol.source.BingMaps({
@@ -226,7 +227,7 @@ Map.setBackgroundLayer = function(layerName, layerId) {
                 });
 
                 var layOl3 = new ol.layer.Tile({
-                    visible: false,
+                    visible: visible,
                     //name: lay.name,
                     source: new ol.source.WMTS(options)
                 });
@@ -241,16 +242,6 @@ Map.setBackgroundLayer = function(layerName, layerId) {
 
 
     }
-
-    //Map.backgroundLayer = new ol.layer.Tile({
-    //    preload: Infinity,
-    //    source: new ol.source.BingMaps({
-    //        key: 'AmTsuJpyBR0JTUwkDikck0BSIb3q3VmI7YsEHR9jT-cgyMGDjZflhsCrPc5exSSI',
-    //        imagerySet: 'Aerial'
-    //    })
-    //});
-
-
 
 };
 
@@ -532,11 +523,13 @@ Map.toggleTracking = function(enabled) {
   if (Map.geolocation == null) {
     // create geolocation
     Map.geolocation = new ol.Geolocation({
+      projection: Map.map.getView().getProjection(),
       trackingOptions: {
         enableHighAccuracy: true
       }
     });
-    Map.geolocation.bindTo('projection', Map.map.getView());
+
+    //  Map.geolocation.bindTo('projection', Map.map.getView());
 
     Map.geolocation.on('error', function(error) {
       if (error.code == error.PERMISSION_DENIED) {
@@ -544,13 +537,18 @@ Map.toggleTracking = function(enabled) {
       }
     });
 
+    Map.geolocation.on('change:position', function() {
+        var coordinates = Map.geolocation.getPosition();
+            marker.setPosition(coordinates);
+      });
+
     // add geolocation marker
     var marker = new ol.Overlay({
-      element: ($('<div id="locationMarker"></div>')),
+      element: ($('<div id="locationMarker"></div>'))[0],
       positioning: 'center-center'
     });
     Map.map.addOverlay(marker);
-    marker.bindTo('position', Map.geolocation);
+    //marker.bindTo('position', Map.geolocation);
   }
 
   Map.geolocation.setTracking(enabled);
@@ -623,7 +621,7 @@ Map.toggleOrientation = function(enabled) {
 Map.toggleClickMarker = function(enabled) {
   if (Map.clickMarker == null) {
     Map.clickMarker = new ol.Overlay({
-      element: ($('<div id="clickMarker"></div>')),
+      element: ($('<div id="clickMarker"></div>'))[0],
       positioning: 'center-center'
     });
     Map.map.addOverlay(Map.clickMarker);

@@ -276,10 +276,15 @@ Gui.loadBackgroundLayers = function(data) {
 
     for (var i=0;i<Config.data.baselayers.length;i++) {
         var el = Config.data.baselayers[i];
+        var selected ='';
         //skip google maps in ol3
         if (el.type != 'Google') {
             // add background layer button
-            html += '<label><input type="radio" name="_background_" id="' + el.name + '" data-background="true">' + el.name + '</label>'
+            //select first in array
+            if(i==0) {
+                selected = ' checked="checked"';
+            }
+            html += '<label><input type="radio" name="_background_" id="' + el.name + '" data-background="true"' +selected+ '>' + el.title + '</label>'
             //create ol3 layer object, first time only, visibility false
             Map.setBackgroundLayer(el.name,i);
         }
