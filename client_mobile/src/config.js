@@ -64,7 +64,14 @@ return "/layers.json?topic=" + topicName;
 
 Config.data.initialTopic = projectData.project;
 
-Config.data.baselayers = projectData.baseLayers();
+Config.data.baselayers = [];
+//remove google from array
+for (var i=0;i<projectData.baseLayers().length;i++) {
+    var bl = projectData.baseLayers()[i];
+    if(bl.type!='Google') {
+        Config.data.baselayers.push(bl);
+    }
+}
 
 
 // default properties
