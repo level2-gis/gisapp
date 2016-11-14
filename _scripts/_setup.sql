@@ -106,14 +106,23 @@ begin
 base:=null;
 overview:=null;
 
-SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
-FROM projects,layers where layers.id = ANY(projects.base_layers_ids) AND base_layer=true and projects.name=$1 INTO base;
+--SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
+--FROM projects,layers where layers.id = ANY(projects.base_layers_ids) AND base_layer=true and projects.name=$1 INTO base;
 
-SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
-FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND base_layer=false and projects.name=$1 INTO extra;
+  SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
+  FROM projects,layers where layers.id = ANY(projects.base_layers_ids) AND base_layer=true and projects.name=$1 INTO base;
 
-SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
-FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
+--SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
+--FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND base_layer=false and projects.name=$1 INTO extra;
+
+  SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
+  FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND base_layer=false and projects.name=$1 INTO extra;
+
+--SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
+--FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
+
+  SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
+  FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
 
 
 RETURN QUERY SELECT clients.name, clients.display_name, clients.url, themes.name, overview,base,extra, projects.tables_onstart FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
@@ -391,9 +400,9 @@ SELECT pg_catalog.setval('clients_id_seq', 1, false);
 -- Data for Name: layers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO layers VALUES (1, 'google_map', '', 'Google', true, '"Google "+TR.mapSatellite,{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true, useTiltImages: false}');
-INSERT INTO layers VALUES (2, 'google_sat', '', 'Google', true, '"Google "+TR.mapSatellite,{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
-INSERT INTO layers VALUES (4, 'osm_mapnik', '', 'OSM', true, '"OpenStreetMap (mapnik)"');
+INSERT INTO layers VALUES (1, 'google_map', 'Google Map', 'Google', true, '{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true, useTiltImages: false}');
+INSERT INTO layers VALUES (2, 'google_sat', 'Google Satellite', 'Google', true, '{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
+INSERT INTO layers VALUES (4, 'osm_mapnik', 'OpenStreetMap (mapnik)', 'OSM', true, '');
 
 
 --
@@ -429,7 +438,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (5, '2015-11-23');
+INSERT INTO settings VALUES (6, '2016-11-12');
 
 
 --

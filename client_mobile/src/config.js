@@ -64,6 +64,8 @@ return "/layers.json?topic=" + topicName;
 
 Config.data.initialTopic = projectData.project;
 
+Config.data.baselayers = projectData.baseLayers();
+
 
 // default properties
 Config.defaultProperties = {

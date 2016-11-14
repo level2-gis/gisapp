@@ -133,7 +133,7 @@ Map.setTopicLayer = function() {
   Map.map.addLayer(Map.topicLayer);
 };
 
-Map.setBackgroundLayer = function() {
+Map.setBackgroundLayer = function(layerName, layerId) {
   //var wmsParams = $.extend({}, Config.map.wmsParams, {
   //  'LAYERS': Map.backgroundLayers
   //});
@@ -156,26 +156,102 @@ Map.setBackgroundLayer = function() {
   //  });
   //}
 
-    //test uros
+    var lay = Config.data.baselayers[layerId];
+
+    var layOl3 = {};
+
+    switch (lay.type) {
+        case 'OSM' :
+            layOl3 = new ol.layer.Tile({
+                visible: false,
+                //name: lay.name,
+                source: new ol.source.OSM
+            });
+
+            //this is layer id, must be same as layer name from database!
+            layOl3.name = lay.name;
+
+            // add background as base layer
+            Map.map.getLayers().insertAt(0, layOl3);
+
+            break;
+
+        case 'XYZ' :
+            var definition = $.parseJSON(lay.definition);
+            layOl3 = new ol.layer.Tile({
+                visible: false,
+                //name: lay.name,
+                source: new ol.source.XYZ({
+                            url: definition.url
+                })
+            });
+
+            layOl3.name = lay.name;
+
+            // add background as base layer
+            Map.map.getLayers().insertAt(0, layOl3);
+
+            break;
+
+        case 'Bing' :
+            var definition = $.parseJSON(lay.definition);
+            layOl3 = new ol.layer.Tile({
+                visible: false,
+                //name: lay.name,
+                preload: Infinity,
+                source: new ol.source.BingMaps({
+                    key: definition.key,
+                    imagerySet: definition.imagerySet
+                })
+            });
+
+            layOl3.name = lay.name;
+
+            // add background as base layer
+            Map.map.getLayers().insertAt(0, layOl3);
+
+            break;
+
+        case 'WMTS' :
+
+            var definition = $.parseJSON(lay.definition);
+            //first load capabilities
+            $.ajax(definition.capabilitiesUrl).then(function(response) {
+                var result = new ol.format.WMTSCapabilities().read(response);
+                var options = ol.source.WMTS.optionsFromCapabilities(result, {
+                    layer: definition.layer,
+                    matrixSet: definition.matrixSet,
+                    requestEncoding: definition.requestEncoding,
+                    style: definition.style
+                });
+
+                var layOl3 = new ol.layer.Tile({
+                    visible: false,
+                    //name: lay.name,
+                    source: new ol.source.WMTS(options)
+                });
+
+                layOl3.name = lay.name;
+
+                // add background as base layer
+                Map.map.getLayers().insertAt(0, layOl3);
+            });
+
+            break;
+
+
+    }
+
     //Map.backgroundLayer = new ol.layer.Tile({
-    //    source: new ol.source.XYZ({
-    //        url: 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidXJvcyIsImEiOiJMdnp4MVhZIn0.YT7wkb6rzr3Aibb66kvuIw'
+    //    preload: Infinity,
+    //    source: new ol.source.BingMaps({
+    //        key: 'AmTsuJpyBR0JTUwkDikck0BSIb3q3VmI7YsEHR9jT-cgyMGDjZflhsCrPc5exSSI',
+    //        imagerySet: 'Aerial'
     //    })
     //});
 
-    Map.backgroundLayer = new ol.layer.Tile({
-        preload: Infinity,
-        source: new ol.source.BingMaps({
-            key: 'AmTsuJpyBR0JTUwkDikck0BSIb3q3VmI7YsEHR9jT-cgyMGDjZflhsCrPc5exSSI',
-            imagerySet: 'Aerial'
-        })
-    });
 
 
-        Map.backgroundLayer.name = 'background';
-
-  // add background as base layer
-  Map.map.getLayers().insertAt(0, Map.backgroundLayer);
 };
 
 Map.toggleBackgroundLayer = function(visible) {

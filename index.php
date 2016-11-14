@@ -42,7 +42,7 @@ function goMobile($lang) {
         <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
 
         <!-- OpenLayers 3 -->
-        <script src="client_mobile/lib/ol3/ol.js"></script>
+        <script src="client_mobile/lib/ol3/ol.js?v=3.19.1"></script>
         <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css" />
 
         <script type="text/javascript" src="admin/languages/<?php echo $lang ?>.js?v=1.1.3"></script>
@@ -269,7 +269,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
                 <script type="text/javascript" src="client/site/js/Translations.js?v=1.3"></script>
                 <script type="text/javascript" src="client/site/js/PagingStore.js"></script>
-                <script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.1.1"></script>
+                <script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.3.0"></script>
                 <script type="text/javascript" src="client/site/js/Customizations.js"></script>
                 <script type="text/javascript" src="client/site/js/GetUrlParams.js"></script>
                 <script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
@@ -279,7 +279,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1.1"></script>
                 <script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
                 <script type="text/javascript" src="client/site/js/LayerActions.js?v=1.1.2"></script>
-                <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1.2.1"></script>
+                <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1.3.0"></script>
                 <style type="text/css">
                     #dpiDetection {
                         height: 1in;

@@ -209,8 +209,8 @@ function postLoading() {
 
     //setting up project specific data
     var initialBGMap = 0;
-    var baseLayers = projectData.setBaseLayers();
-    var extraLayers = projectData.extraLayers();
+    var baseLayers = projectData.setBaseLayers(true);
+    var extraLayers = projectData.setBaseLayers(false);
     var overviewLayer = projectData.overViewLayer();
 
     // run the function from Customizations.js

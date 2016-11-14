@@ -124,7 +124,7 @@ Gui.loadLayers = function(data) {
   var html = "";
   var layers = [];
 
-  function fillLayertree(node, parent, depth) {
+  function fillLayertree(node, parent, depth, type) {
     if (node.layers.length > 0) {
       // add group
       html += '<div data-role="collapsible" data-theme="c"';
@@ -148,7 +148,7 @@ Gui.loadLayers = function(data) {
 
         // add layer
         html += '<label>';
-        html +=   '<input type="checkbox" ';
+        html +=   '<input type="'+type+'" ';
         if (parent != null) {
           // prevent auto-enhancement by jQuery Mobile if layer belongs to a group
           html +=   'data-role="none" ';
@@ -176,7 +176,7 @@ Gui.loadLayers = function(data) {
 
     // traverse children
     for (var i=0; i<node.layers.length; i++) {
-      fillLayertree(node.layers[i], node.name, depth + 1);
+      fillLayertree(node.layers[i], node.name, depth + 1, "checkbox");
     }
 
     if (node.layers.length > 0) {
@@ -186,7 +186,7 @@ Gui.loadLayers = function(data) {
 
   // fill layer tree
   for (var i=0; i<data.layertree.length; i++) {
-    fillLayertree(data.layertree[i], null, 0);
+    fillLayertree(data.layertree[i], null, 0, "checkbox");
   }
 
   $('#panelLayerAll').html(html);
@@ -254,18 +254,6 @@ Gui.loadLayers = function(data) {
   }
   Gui.setupOverlayTopics(overlayTopics);
 
-  if (Map.backgroundTopic) {
-    // add background layer button
-    var html = '<label><input type="checkbox" name="_background_" data-background="true" checked>' + I18n.layers.background + '</label>';
-    $('#panelLayerAll').append(html);
-    $('#panelLayerAll').trigger('create');
-
-    // background toggle
-    $('#panelLayerAll :checkbox[data-background=true]').bind('change', function(e) {
-      Map.toggleBackgroundLayer($(this).is(':checked'));
-    });
-  }
-
   // add any overlays from permalink
   Config.permalink.addOverlays(Gui.setSelectionLayer, Gui.setRedliningLayer);
 
@@ -278,31 +266,100 @@ Gui.loadLayers = function(data) {
 
 // add background layer
 Gui.loadBackgroundLayers = function(data) {
-  // collect visible layers
-  var groups = data.groups;
-  var layers = [];
-  for (var i=0; i<groups.length; i++) {
-    var group = groups[i];
-    for (var j=0;j<group.layers.length; j++) {
-      var layer = group.layers[j];
-      if (layer.visini) {
-        layers.push({
-          layername: layer.layername,
-          wms_sort: layer.wms_sort
-        });
-      }
+
+    var html = '<div data-role="collapsible" data-theme="c"';
+    if (Config.gui.useLayertreeGroupCheckboxes) {
+        html += ' data-groupcheckbox="true"';
     }
-  }
-  // sort by wms_sort
-  layers = layers.sort(function(a, b) {
-    return a.wms_sort - b.wms_sort;
-  });
-  var sortedLayers = [];
-  for (var i=0; i<layers.length; i++) {
-    sortedLayers.push(layers[i].layername);
-  }
-  Map.backgroundLayers = sortedLayers.join(',');
-  Map.setBackgroundLayer();
+    html += '>';
+    html +=   '<h3>' + I18n.layers.background + '</h3>';
+
+    for (var i=0;i<Config.data.baselayers.length;i++) {
+        var el = Config.data.baselayers[i];
+        //skip google maps in ol3
+        if (el.type != 'Google') {
+            // add background layer button
+            html += '<label><input type="radio" name="_background_" id="' + el.name + '" data-background="true">' + el.name + '</label>'
+            //create ol3 layer object, first time only, visibility false
+            Map.setBackgroundLayer(el.name,i);
+        }
+    }
+
+    //if (Map.backgroundTopic) {
+
+    html += '</div>';
+
+    $('#panelLayerAll').append(html);
+
+    //$(".base").click(function() {
+    //    alert($(this).attr("name"));
+    //    $(".back_class").attr("checked", false); //uncheck all checkboxes
+    //    $(this).attr("checked", true);  //check the clicked one
+    //});
+
+    //$('.base').change(function() {
+    //    alert($(this).attr("name"));
+    //    $('.base').not(this).prop('checked', false);
+    //});
+
+
+    $('#panelLayerAll').trigger('create');
+
+    // background toggle
+    $('#panelLayerAll :radio[data-background=true]').bind('change', function(e) {
+        //alert($(this).attr("name"));
+        var selected = $(this).attr("id");
+        var all = Map.map.getLayers();
+        var isChecked = $(this).is(':checked');
+
+        all.forEach(function(layer) {
+            //Assuming all baselayers are layer.Tile ?
+            if(layer instanceof ol.layer.Tile) {
+                if (layer.name == selected) {
+                    // Do with layer
+                    layer.setVisible(isChecked);
+                } else {
+                    layer.setVisible(!isChecked);
+                }
+            }
+        });
+
+
+
+        //var test1 = test.item(0);
+        //alert(test.getLength());
+        //test1.setVisible($(this).is(':checked'));
+        //Map.layers[selected].visible = $(this).is(':checked');
+        //Map.toggleBackgroundLayer($(this).is(':checked'));
+
+    });
+    //}
+
+  //// collect visible layers
+  //var groups = data.groups;
+  //var layers = [];
+  //for (var i=0; i<groups.length; i++) {
+  //  var group = groups[i];
+  //  for (var j=0;j<group.layers.length; j++) {
+  //    var layer = group.layers[j];
+  //    if (layer.visini) {
+  //      layers.push({
+  //        layername: layer.layername,
+  //        wms_sort: layer.wms_sort
+  //      });
+  //    }
+  //  }
+  //}
+  //// sort by wms_sort
+  //layers = layers.sort(function(a, b) {
+  //  return a.wms_sort - b.wms_sort;
+  //});
+  //var sortedLayers = [];
+  //for (var i=0; i<layers.length; i++) {
+  //  sortedLayers.push(layers[i].layername);
+  //}
+  //Map.backgroundLayers = sortedLayers.join(',');
+
 };
 
 // add layer group for overlay topics
@@ -848,7 +905,8 @@ Gui.logout = function() {
   // reload topics
   //Topics.loadTopics(null, Gui.loadTopics);
 
-  Gui.toggleLogin(false);
+  //Gui.toggleLogin(false);
+  $('#panelProperties').panel('close');
   window.location.href = "./admin/login.php?action=logout";
 };
 
