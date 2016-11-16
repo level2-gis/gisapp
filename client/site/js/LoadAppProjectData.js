@@ -98,7 +98,7 @@ var showMetaDataInLegend = true;
 var enableHoverPopup = false;
 var defaultIdentificationMode = "allLayers";
 var useGeodesicMeasurement = true;
-var useGeoNamesSearchBox = projectData.geoNames != null;
+var useGeoCodeSearchBox = projectData.geoCode != null;
 var iconDirectory = 'client/site/gis_icons/';
 var coordinatePrecision = 2;    //precision of coordinates decimal places in GetFeatureInfo result window
 var elevationPrecision = 1;     //precision of height in GetFeatureInfo result window

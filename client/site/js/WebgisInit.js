@@ -966,34 +966,35 @@ function postLoading() {
         });
 
          //add QGISSearchCombo
-        if (useGeoNamesSearchBox || searchBoxQueryURL != null) {
+        if (useGeoCodeSearchBox || searchBoxQueryURL != null) {
             myTopToolbar.insert(myTopToolbar.items.length, new Ext.Toolbar.Fill());
 
-            if (useGeoNamesSearchBox) {
-                qgisSearchCombo = new GeoExt.ux.GeoNamesSearchCombo({
+            if (useGeoCodeSearchBox) {
+                qgisSearchCombo = new GeoExt.ux.GeocodingSearchCombo({
                     map: geoExtMap.map,
                     width: 300,
                     minChars: 2,
                     loadingText: geonamesLoadingString[lang],
                     emptyText: geonamesEmptyString[lang],
                     lang: lang,
-                    zoom: projectData.geoNames.zoom,
-                    featureClassString: projectData.geoNames.featureClassString,
-                    countryString: projectData.geoNames.countryString,
-                    tpl: '<tpl for="."><div class="x-combo-list-item"><h3>{name}</h3>{adminName1} - {countryName}</div></tpl>',
-                    continentCode: projectData.geoNames.continentCode,
-                    username: projectData.geoNames.userName
+                    zoom: projectData.geoCode.zoom,
+                    countryString: projectData.geoCode.countryString,
+                    tpl: '<tpl for="."><div class="x-combo-list-item"><h3>{street} {housenumber}</h3>{postalcode} {locality}, {country}</div></tpl>',
+                    layers: projectData.geoCode.layers,
+                    //continentCode: projectData.geoCode.continentCode,
+                    maxRows: 10,
+                    displayField: "name2",
+                    key: projectData.geoCode.key
                 });
-                //disabling button for resetting search, not needed, not working
-                // var emptySearchFieldButton = new Ext.Button({
-                // scale: 'medium',
-                // icon: 'gis_icons/mActionUndo.png',
-                // tooltipType: 'qtip',
-                // tooltip: resetSearchFieldTooltipString[lang],
-                // id: 'EmptySearchField'
-                // });
-                // emptySearchFieldButton.handler = mapToolbarHandler;
-                // myTopToolbar.insert(myTopToolbar.items.length, emptySearchFieldButton);
+                var emptySearchFieldButton = new Ext.Button({
+                scale: 'medium',
+                icon: iconDirectory+'mActionUndo.png',
+                tooltipType: 'qtip',
+                tooltip: resetSearchFieldTooltipString[lang],
+                id: 'EmptySearchField'
+                });
+                emptySearchFieldButton.handler = mapToolbarHandler;
+                myTopToolbar.insert(myTopToolbar.items.length, emptySearchFieldButton);
             } else {
                 qgisSearchCombo = new QGIS.SearchComboBox({
                     map: geoExtMap.map,

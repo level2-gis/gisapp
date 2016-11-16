@@ -49,7 +49,7 @@ projectData.client_logo = '<?php echo $data->client_logo ?>';
 
 projectData.search = eval(<?php echo json_encode($settings->search) ?>);
 projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics) ?>);
-projectData.geoNames = eval(<?php echo json_encode($settings->geoNames) ?>);
+projectData.geoCode = eval(<?php echo json_encode($settings->geoCode) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';
