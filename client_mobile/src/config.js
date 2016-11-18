@@ -198,14 +198,8 @@ Config.map.initialGeolocationMaxScale = null;
 
 
 // search configuration
-
-/**
- * SwissSearch
- *
- * services: SwissSearch services
- * queryPostfix: append this to the query string to limit search results e.g. to a canton ("ZH")
- */
-Config.search = new SwissSearch('swissnames', "");
+var sCon = projectData.geoCode;
+Config.search = new Geocode(sCon.key, sCon.layers, sCon.countryString);
 
 
 /**

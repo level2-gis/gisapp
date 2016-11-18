@@ -317,15 +317,27 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
                     new OpenLayers.Projection("EPSG:4326"),
                     this.map.getProjectionObject()
                 );
+
+                //add location to higlightlayer
+                var marker = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(position.lon, position.lat),
+                    {},
+                    symbolizersHighLightLayer.Point
+                );
+                featureInfoHighlightLayer.removeAllFeatures();
+                featureInfoHighlightLayer.addFeatures(marker);
+
                 this.map.setCenter(position, this.zoom);
             }, this);
         }
     },
     clearSearchResult: function() {
         this.setValue("");
+        //TODO, FIX THIS
         if (this.highlightLayer) {
             this.highlightLayer.removeAllFeatures();
         }
+        featureInfoHighlightLayer.removeAllFeatures();
     },
     getName2: function(v, record){
         return record.properties.street + ' ' + record.properties.housenumber;

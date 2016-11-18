@@ -51,13 +51,14 @@ function goMobile($lang) {
         <script src="client_mobile/src/permalink.js"></script>
         <script src="client_mobile/src/login.js"></script>
         <script src="client_mobile/src/search.js"></script>
+        <script src="client_mobile/src/geocode.js"></script>
 
         <!-- NOTE: remove unused classes -->
 <!--        <script src="client_mobile/src/mapfish_permalink.js"></script>-->
         <script src="client_mobile/src/qgis_permalink.js"></script>
 <!--        <script src="client_mobile/src/mapfish_login.js"></script>-->
 <!--        <script src="client_mobile/src/mapfish_search.js"></script>-->
-        <script src="client_mobile/src/swiss_search.js"></script>
+<!--        <script src="client_mobile/src/swiss_search.js"></script>-->
 <!--        <script src="client_mobile/src/wsgi_search.js"></script>-->
 
         <script src="client_mobile/src/config.js"></script>

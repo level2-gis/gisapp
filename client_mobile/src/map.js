@@ -496,7 +496,7 @@ Map.clampToScale = function(scaleDenom) {
 // zoom to extent and clamp to max zoom level
 // extent as [<minx>, <miny>, <maxx>, maxy>]
 Map.zoomToExtent = function(extent, minScaleDenom) {
-  Map.map.getView().fitExtent(extent, Map.map.getSize());
+  Map.map.getView().fit(extent, Map.map.getSize());
   if (minScaleDenom != null) {
     Map.clampToScale(minScaleDenom);
   }
