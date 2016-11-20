@@ -696,6 +696,7 @@ Gui.showSearchResults = function(results) {
       var li = $('<li><a href="#">' + result.name + '</a></li>');
       li.data('bbox', result.bbox);
       li.data('highlight', result.highlight);
+      li.data('point', result.point);
       $('#searchResultsList').append(li);
     }
   }
@@ -705,8 +706,8 @@ Gui.showSearchResults = function(results) {
   $('#searchResults').show();
 
   // automatically jump to single result
-  if (results.length === 1 && results[0].bbox != null) {
-    Gui.jumpToSearchResult(results[0].bbox);
+  if (results.length === 1 && result.point != null) {
+    Gui.jumpToSearchResult(result.point);
     if (results[0].highlight != undefined) {
       Config.search.highlight(results[0].highlight, Map.setHighlightLayer);
     }
@@ -714,8 +715,11 @@ Gui.showSearchResults = function(results) {
 };
 
 // bbox as [<minx>, <miny>, <maxx>, <maxy>]
-Gui.jumpToSearchResult = function(bbox) {
-  Map.zoomToExtent(bbox, Config.map.minScaleDenom.search);
+Gui.jumpToSearchResult = function(point) {
+
+  Map.searchMarker.setPosition(point.getCoordinates());
+
+  Map.zoomToExtent(point.getExtent(), Config.map.minScaleDenom.search);
 
   // disable following
   $('#switchFollow').val('off');
@@ -1024,6 +1028,9 @@ Gui.initViewer = function() {
     $('#searchResults').hide();
     // reset highlight
     Map.setHighlightLayer(null);
+    //reset marker
+    Map.searchMarker.setPosition(undefined);
+
   };
   $('#searchInput').bind('change', function(e) {
     if ($(this).val() == "") {
@@ -1047,8 +1054,8 @@ Gui.initViewer = function() {
     e.stopPropagation();
   });
   $('#searchResultsList').delegate('li', 'vclick', function() {
-    if ($(this).data('bbox') != null) {
-      Gui.jumpToSearchResult($(this).data('bbox'));
+    if ($(this).data('point') != null) {
+      Gui.jumpToSearchResult($(this).data('point'));
     }
     if ($(this).data('highlight') != undefined) {
       Config.search.highlight($(this).data('highlight'), Map.setHighlightLayer);

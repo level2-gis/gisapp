@@ -1,8 +1,9 @@
 
-function Geocode(key, layers, countryString) {
+function Geocode(key, layers, sources, countryString) {
 
     this.key = key;
     this.layers = layers;
+    this.sources = sources;
     this.countryString = countryString;
 }
 
@@ -38,6 +39,7 @@ Geocode.prototype.parseSearchParams = function(searchParams) {
   return {
     "api_key": this.key,
     "layers": this.layers,
+    "sources": this.sources,
     "boundary.country": this.countryString,
     "text": query
   };
@@ -60,15 +62,18 @@ Geocode.prototype.parseSearchParams = function(searchParams) {
  */
 Geocode.prototype.parseResults = function(data, status, callback) {
   var results = $.map(data.features, function(value, index) {
-    // remove HTML tags and (<canton>)
-    var name = value.properties.label;   //.replace(/<\/?[^>]+(>|$)/g, "").replace(/\s\([A-Z]{2}\)/, "");
+
+    value.properties.locality = value.properties.locality==undefined ? '' : ' '+value.properties.locality;
+
+    var name = value.properties.street +' '+ value.properties.housenumber + '</br>' + value.properties.postalcode + value.properties.locality+', '+value.properties.region;
     var loc = new ol.geom.Point([value.geometry.coordinates[0],value.geometry.coordinates[1]]);
     loc.transform("EPSG:4326",Map.map.getView().getProjection());
     var box = loc.getExtent();
 
     return {
       name: name,
-      bbox: box    //properties.bbox
+      bbox: box,
+      point: loc
     };
   });
 

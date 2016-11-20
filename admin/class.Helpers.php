@@ -145,19 +145,25 @@ class Helpers
 
             try {
 
-                $group = (array)$qgs["message"]->xpath('layer-tree-group/layer-tree-layer');
+                //$group = (array)$qgs["message"]->xpath('layer-tree-group/layer-tree-layer');
+                $main = $qgs["message"]->xpath('layer-tree-group')[0];  //always one group with all elements
                 $i = 0;
-                foreach ($group as $el) {
-                    $lay->topic = 'Topic';
-                    $lay->groupname = $prop->title;
-                    $lay->layername = (string)$el->attributes()["name"];
-                    $lay->toclayertitle = (string)$el->attributes()["name"];
-                    $lay->visini = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
-                    $lay->id = (string)$el->attributes()["id"];
-                    $lay->wms_sort = $i;
-                    $lay->toc_sort = $i;
-                    array_push($prop->layers, $lay);
-                    $lay = new \stdClass();
+                foreach ($main->children() as $el) {
+                    $type = $el->getName();
+                    if ($type=='layer-tree-group') {
+                        $groupname = (string)$el->attributes()["name"];
+                        foreach ($el->children() as $el2) {
+                            if ($el2->attributes()["id"] > '') {
+                                array_push($prop->layers, self::LayerToMobileClientArray($groupname, $el2, $i));
+                            }
+                        }
+                    }
+                    else {
+                        $groupname = $prop->title;
+                        if ($el->attributes()["id"] > '') {
+                            array_push($prop->layers, self::LayerToMobileClientArray($groupname, $el, $i));
+                        }
+                    }
                     $i++;
                 }
             } catch (\Exception $e) {
@@ -252,5 +258,26 @@ class Helpers
 
         return $ret;
 
+    }
+
+    /**
+     * @param $groupname
+     * @param $el
+     * @param $i
+     */
+    private static function LayerToMobileClientArray($groupname, $el, $i)
+    {
+        $lay = new \stdClass();
+
+        $lay->topic = 'Topic';
+        $lay->groupname = $groupname;
+        $lay->layername = (string)$el->attributes()["name"];
+        $lay->toclayertitle = (string)$el->attributes()["name"];
+        $lay->visini = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
+        $lay->id = (string)$el->attributes()["id"];
+        $lay->wms_sort = $i;
+        $lay->toc_sort = $i;
+
+        return $lay;
     }
 }

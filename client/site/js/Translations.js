@@ -1846,37 +1846,37 @@ showLocationTooltipString["sk"] = "Ukáž polohu";
 
 //Geonames loading string
 var geonamesLoadingString = [];
-geonamesLoadingString["en"] = "Search in Geonames...";
-geonamesLoadingString["es"] = "Buscar en Geonames...";
-geonamesLoadingString["de"] = "Suche in Geonames...";
-geonamesLoadingString["fr"] = "Recherche dans Geonames...";
-geonamesLoadingString["it"] = "Ricerca con Geonames...";
-geonamesLoadingString["pt_PT"] = "Pesquisar em Geonames...";
-geonamesLoadingString["uk"] = "Пошук в Геоданих...";
-geonamesLoadingString["hu"] = "Keresés geoadatokban...";
-geonamesLoadingString["ro"] = "Caută în Geonames...";
-geonamesLoadingString["ru"] = "Поиск в геоданных...";
+geonamesLoadingString["en"] = "Search...";
+geonamesLoadingString["es"] = "Buscar...";
+geonamesLoadingString["de"] = "Suche...";
+geonamesLoadingString["fr"] = "Recherche...";
+geonamesLoadingString["it"] = "Ricerca...";
+geonamesLoadingString["pt_PT"] = "Pesquisar...";
+geonamesLoadingString["uk"] = "Пошук...";
+geonamesLoadingString["hu"] = "Keresés...";
+geonamesLoadingString["ro"] = "Caută...";
+geonamesLoadingString["ru"] = "Поиск...";
 geonamesLoadingString["sl"] = "iskanje poteka...";
-geonamesLoadingString["nl"] = "Zoek in Geonames...";
-geonamesLoadingString["pl"] = "Szukaj w Geonames...";
-geonamesLoadingString["sk"] = "Hľadám v Geonames...";
+geonamesLoadingString["nl"] = "Zoek...";
+geonamesLoadingString["pl"] = "Szukaj...";
+geonamesLoadingString["sk"] = "Hľadám...";
 
 //Geonames empty string
 var geonamesEmptyString = [];
-geonamesEmptyString["en"] = "Search location in Geonames";
-geonamesEmptyString["es"] = "Buscar lugar en Geonames";
-geonamesEmptyString["de"] = "Suche Ort in Geonames";
-geonamesEmptyString["fr"] = "Rechercher le lieu dans Geonames";
-geonamesEmptyString["it"] = "Cerca località con Geonames";
-geonamesEmptyString["pt_PT"] = "Pesquisar localização em Geonames";
-geonamesEmptyString["uk"] = "Пошук місць у Геоданих";
-geonamesEmptyString["hu"] = "Keresés a térképen";
-geonamesEmptyString["ro"] = "Caută locația în Geonames";
-geonamesEmptyString["ru"] = "Поиск местоположения в геоданных";
+geonamesEmptyString["en"] = "Search location";
+geonamesEmptyString["es"] = "Buscar lugar";
+geonamesEmptyString["de"] = "Suche";
+geonamesEmptyString["fr"] = "Rechercher le lieu";
+geonamesEmptyString["it"] = "Cerca località";
+geonamesEmptyString["pt_PT"] = "Pesquisar localização";
+geonamesEmptyString["uk"] = "Пошук місць";
+geonamesEmptyString["hu"] = "Keresés";
+geonamesEmptyString["ro"] = "Caută locația";
+geonamesEmptyString["ru"] = "Поиск местоположения";
 geonamesEmptyString["sl"] = "hitro iskanje";
-geonamesEmptyString["nl"] = "Zoek locatie in Geonames";
-geonamesEmptyString["pl"] = "Wyszukaj lokację w Geonames";
-geonamesEmptyString["sk"] = "Nájdi v Geonames";
+geonamesEmptyString["nl"] = "Zoek locatie";
+geonamesEmptyString["pl"] = "Wyszukaj lokację";
+geonamesEmptyString["sk"] = "Nájdi";
 
 //Reset Search Field
 var resetSearchFieldTooltipString = [];

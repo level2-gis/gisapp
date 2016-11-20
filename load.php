@@ -30,7 +30,7 @@ if (!property_exists($data, "client_url")) {
 if (file_exists($_SERVER["DOCUMENT_ROOT"] . $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png')) {
     $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png';
 } else {
-    $data->client_logo = $gis_projects->path . 'admin/resources/images/demo.png';
+    $data->client_logo = $gis_projects->path . 'admin/resources/images/_temp.png';
 }
 
 Header("content-type: application/x-javascript");

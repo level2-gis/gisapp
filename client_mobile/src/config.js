@@ -187,10 +187,11 @@ Config.map.useTiledBackgroundWMS = true;
 Config.map.useTiledOverlayWMS = false;
 
 // limit max zoom to this scale (e.g. minScaleDenom=500 for 1:500)
+//UROS don't see point of this
 Config.map.minScaleDenom = {
-  map: 1000, // if topic.minscale is not set
-  geolocation: 10000, // on location following
-  search: 10000 // jump to search results
+  map: 5000, // if topic.minscale is not set
+  geolocation: 5000, // on location following
+  search: 5000 // jump to search results
 };
 
 // limit min zoom to this scale on the initial geolocation update (null to disable)
@@ -198,8 +199,8 @@ Config.map.initialGeolocationMaxScale = null;
 
 
 // search configuration
-var sCon = projectData.geoCode;
-Config.search = new Geocode(sCon.key, sCon.layers, sCon.countryString);
+var sCon = projectData.geoCode ? projectData.geoCode : null;
+Config.search = sCon != null ? new Geocode(sCon.key, sCon.layers, sCon.sources, sCon.countryString) : new Search();
 
 
 /**
@@ -280,4 +281,11 @@ Config.print = {
  *
  * e.g. setup custom click handlers here
  */
-Config.customInitViewer = function() {};
+Config.customInitViewer = function() {
+    //this is marker to display location of search result (geocoding)
+    Map.searchMarker = new ol.Overlay({
+        element: ($('<div id="locationMarker"></div>'))[0],
+        positioning: 'center-center'
+    });
+    Map.map.addOverlay(Map.searchMarker);
+};
