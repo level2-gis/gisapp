@@ -257,7 +257,7 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
                 //tag: this.tag,
                 //charset: this.charset,
                 "layers": this.layers,
-                "sources": this.sources,
+                "sources": this.sources != null ? '' : this.sources,
                 "boundary.country": this.countryString,
                 "api_key": this.key
             },
