@@ -268,9 +268,9 @@ Gui.loadLayers = function(data) {
 Gui.loadBackgroundLayers = function(data) {
 
     var html = '<div data-role="collapsible" data-theme="c"';
-    if (Config.gui.useLayertreeGroupCheckboxes) {
-        html += ' data-groupcheckbox="true"';
-    }
+    //if (Config.gui.useLayertreeGroupCheckboxes) {
+    //    html += ' data-groupcheckbox="true"';
+    //}
     html += '>';
     html +=   '<h3>' + I18n.layers.background + '</h3>';
 
