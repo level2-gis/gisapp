@@ -21,4 +21,5 @@ ratings:
 exclude_paths:
 - "admin/languages/locale/**/*"
 - "client/site/libs/**/*"
+- "client_mobile/lib/**/*"
 - "vendor/**/*"
