@@ -26,7 +26,7 @@ It turns your QGIS project into Web GIS application with tools to view, navigate
 Read **[Wiki](../../wiki)**
 
 ##Demo
-Visit **[Demo by Level2](http://level2.si/gisapp/eu_demo)**
+Visit **[Demo by Level2](http://test.level2.si/gisapp/eu_demo?public=on)**
 
 ##Contributing
 
@@ -52,7 +52,7 @@ New language:
 
 
 ##Contact
-**Uros Preloznik**<br>
+**Uroš Preložnik**<br>
 uros@level2.si
 
 ##License
