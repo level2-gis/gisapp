@@ -26,7 +26,7 @@ It turns your QGIS project into Web GIS application with tools to view, navigate
 Read **[Wiki](../../wiki)**
 
 ##Demo
-Visit **[Demo by Level2](http://test.level2.si/gisapp/eu_demo?public=on)**
+Visit **<a href="http://test.level2.si/gisapp/eu_demo?public=on">Demo by Level2</a>**
 
 ##Contributing
 
