@@ -30,11 +30,16 @@ This project turns your QGIS project into Web GIS application with tools to view
 
 *Only PostGIS layers
 
-##Documentation
-Read **[Wiki](../../wiki)**
-
 ##Demo
 Visit **<a target="_blank" href="http://test.level2.si/gisapp/eu_demo?public=on">Demo by Level2</a>**
+
+##Services
+* Support with installation and setting up
+* Custom development
+* Hosting of projects on our servers
+
+##Documentation
+Read **[Wiki](../../wiki)**
 
 ##Contributing
 
