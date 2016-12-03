@@ -15,12 +15,18 @@ This project turns your QGIS project into Web GIS application with tools to view
 * layer context menu with Zoom to layer extent, Open attribute data, Data Export* (SHP, DXF, CSV)
 * geolocation button
 * Google StreetView integration
-* using external location services for address and elevation
 * legend in layer tree
 * separating project settings and code
 * user Interface changes
 
 **[Longer Description](http://level2.si/2015/06/whats-new-in-extended-qgis-web-client/)**
+
+##New features in 2016:
+* mobile client
+* using external location services for address and elevation
+* table filtering also reflects on graphics (layer is filtered as table)
+* replace GeoNames Search with more powerful Mapzen Search API
+* baselayers refactoring, added support for BING Maps and WMTS layers on both clients
 
 *Only PostGIS layers
 
