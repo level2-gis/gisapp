@@ -17,8 +17,8 @@ if (!property_exists($settings, "search")) {
 if (!property_exists($settings, "layerSpecifics")) {
     $settings->layerSpecifics = null;
 }
-if (!property_exists($settings, "geoNames")) {
-    $settings->geoNames = null;
+if (!property_exists($settings, "geoCode")) {
+    $settings->geoCode = null;
 }
 if (!property_exists($settings, "locationServices")) {
     $settings->locationServices = null;

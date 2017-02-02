@@ -134,6 +134,9 @@ class Helpers
         if (!($qgs["status"])) {
             //error in XML, using default CRS but continue
             $prop->crs = "EPSG:3857";
+            $prop->title = "";
+            $prop->extent = [];
+            $prop->layers = [];
             $prop->message = $qgs["message"];
             //return false;
         }
