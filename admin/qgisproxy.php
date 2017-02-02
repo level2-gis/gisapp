@@ -32,8 +32,7 @@ $client = new Client();
 
 try {
 
-    //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
-    $new_request = new Request('GET', QGISSERVERURL, ['verify' => false]);
+    $new_request = new Request('GET', QGISSERVERURL);
 
     //session check
     session_start();
@@ -76,7 +75,9 @@ try {
         if ($content == null) {
             $response = $client->send($new_request, [
                 'query' => $query_arr,
-                'http_errors' => true
+                'http_errors' => true,
+                //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+                ['verify' => false]
             ]);
             $contentType = $response->getHeaderLine('Content-Type');
             $contentLength = $response->getHeaderLine('Content-Length');
