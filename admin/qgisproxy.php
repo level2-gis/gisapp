@@ -77,7 +77,7 @@ try {
                 'query' => $query_arr,
                 'http_errors' => true,
                 //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
-                ['verify' => false]
+                'verify' => false
             ]);
             $contentType = $response->getHeaderLine('Content-Type');
             $contentLength = $response->getHeaderLine('Content-Length');
@@ -106,7 +106,13 @@ try {
         }
     } else {
         //no caching request
-        $response = $client->send($new_request, ['query' => $query_arr]);
+        $response = $client->send($new_request, [
+            'query' => $query_arr,
+            'http_errors' => true,
+            //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+            'verify' => false
+        ]);
+
         $contentType = $response->getHeaderLine('Content-Type');
         $contentLength = $response->getHeaderLine('Content-Length');
         $content = $response->getBody();
