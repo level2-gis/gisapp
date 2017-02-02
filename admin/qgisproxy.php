@@ -32,7 +32,8 @@ $client = new Client();
 
 try {
 
-    $new_request = new Request('GET', QGISSERVERURL);
+    //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+    $new_request = new Request('GET', QGISSERVERURL, ['verify' => false]);
 
     //session check
     session_start();
