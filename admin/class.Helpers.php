@@ -174,10 +174,10 @@ class Helpers
             }
 
 
-            $prop->message = $qgs["status"];
+            //$prop->message = $qgs["status"];
         }
 
-        return json_encode($prop);
+        return $prop;
     }
 
     /**

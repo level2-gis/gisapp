@@ -264,7 +264,10 @@ class Login
 
                 //get QGIS project properties
                 $project_qgs = Helpers::getQgsProjectProperties(PROJECT_PATH . $project . '.qgs');
-                //$this->feedback = $project_qgs->message;
+                if (property_exists($project_qgs,"message")) {
+                    $this->feedback = $project_qgs->message;
+                    return false;
+                }
 
                 //search configs
                 $project_settings = $gisApp->getProjectConfigs();
@@ -277,7 +280,7 @@ class Login
                     $_SESSION['data'] = $project_data;
                     $_SESSION['settings'] = $project_settings;
                     $_SESSION['gis_projects'] = $gis_projects;
-                    $_SESSION['qgs'] = $project_qgs;
+                    $_SESSION['qgs'] = json_encode($project_qgs);
 
                     $_SESSION['message'] = $this->feedback;
                     $this->user_is_logged_in = true;
