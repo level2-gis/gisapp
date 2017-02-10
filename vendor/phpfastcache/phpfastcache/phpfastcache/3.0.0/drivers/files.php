@@ -197,6 +197,7 @@ class phpfastcache_files extends BasePhpFastCache implements phpfastcache_driver
 
         $total = 0;
         $removed = 0;
+        $content = "";
         while($file=readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir

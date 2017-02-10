@@ -42,30 +42,36 @@ try {
     }
 
     //caching certain requests
-    $cache = phpFastCache("files");
+    $config = array(
+        "path"      =>  TEMP_PATH
+    );
+    $cache = phpFastCache("files",$config);
     $content = null;
     $contentType = null;
     $cacheKey = null;
     $contentLength = 0;
     $sep = "_x_"; //separator for key generating
-    switch ($query_arr["REQUEST"]) {
-        case "GetProjectSettings":
-            $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"];
-            $contentType = "text/xml";
-            break;
-        case "GetLegendGraphics":
-            $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS']);
-            $contentType = "image/png";
-            break;
-        case "GetFeatureInfo":
-            //only caching large responses (whole tables)
-            $count = $query_arr['FEATURE_COUNT'];
-            if (is_numeric($count)) {
-                if (intval($count) > 100) {
-                    $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['FILTER']);
+
+    if($query_arr["REQUEST"] != null) {
+        switch ($query_arr["REQUEST"]) {
+            case "GetProjectSettings":
+                $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"];
+                $contentType = "text/xml";
+                break;
+            case "GetLegendGraphics":
+                $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS']);
+                $contentType = "image/png";
+                break;
+            case "GetFeatureInfo":
+                //only caching large responses (whole tables)
+                $count = $query_arr['FEATURE_COUNT'];
+                if (is_numeric($count)) {
+                    if (intval($count) > 100) {
+                        $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['FILTER']);
+                    }
                 }
-            }
-            break;
+                break;
+        }
     }
 
     if ($cacheKey != null) {
