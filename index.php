@@ -62,7 +62,7 @@ function goMobile($lang) {
 <!--        <script src="client_mobile/src/wsgi_search.js"></script>-->
 
         <script src="client_mobile/src/config.js"></script>
-        <script src="client_mobile/src/map.js"></script>
+        <script src="client_mobile/src/map.js?v=1.3.3"></script>
         <script src="client_mobile/src/map_click_handler.js"></script>
         <script src="client_mobile/src/feature_info.js"></script>
         <script src="client_mobile/src/topics.js"></script>
@@ -270,7 +270,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
                 <script type="text/javascript" src="client/site/js/Translations.js?v=1.3.1"></script>
                 <script type="text/javascript" src="client/site/js/PagingStore.js"></script>
-                <script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.3.1"></script>
+                <script type="text/javascript" src="client/site/js/LoadAppProjectData.js?v=1.3.3"></script>
                 <script type="text/javascript" src="client/site/js/Customizations.js"></script>
                 <script type="text/javascript" src="client/site/js/GetUrlParams.js"></script>
                 <script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
@@ -280,7 +280,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1.1"></script>
                 <script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
                 <script type="text/javascript" src="client/site/js/LayerActions.js?v=1.1.2"></script>
-                <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1.3.1"></script>
+                <script type="text/javascript" src="client/site/js/WebgisInit.js?v=1.3.3"></script>
                 <style type="text/css">
                     #dpiDetection {
                         height: 1in;

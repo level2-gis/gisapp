@@ -81,7 +81,13 @@ projectData.tablesOnStart = function () {
 };
 
 projectData.overViewLayer = function () {
-    return eval('<?php echo 'new OpenLayers.Layer.'.$data->overview_layer[0]->type.'('.$data->overview_layer[0]->definition.')' ?>');
+    var ol = eval(<?php echo json_encode($data->overview_layer) ?>);
+    if (ol !== null && ol.constructor === Array) {
+        return ol[0];
+    }
+    else {
+        return ol;
+    }
 };
 
 //TODO use in css!

@@ -10,6 +10,59 @@
 
 //This file is used instead of GlobalOptions.js from QWC
 
+function makeLayer(layDef) {
+
+    if (layDef==null) {
+        return null;
+    }
+
+    var options = Ext.util.JSON.decode(layDef.definition);
+    var type = layDef.type;
+    var title = layDef.title;
+    var layer = {};
+
+    switch (type) {
+
+        case 'Google' :
+            layer = new OpenLayers.Layer.Google(title, options);
+            break;
+
+        case 'OSM' :
+            layer = new OpenLayers.Layer.OSM(title);
+            break;
+
+        case 'XYZ' :
+            var url = options.url.replace(/\/{/g, '/${');
+            layer = new OpenLayers.Layer.XYZ(title, url, options.options);
+            break;
+
+        case 'Bing' :
+            layer = new OpenLayers.Layer.Bing({
+                name: title,
+                type: options.imagerySet,
+                key: options.key
+            });
+            break;
+
+        case 'WMTS' :
+            var layer = new OpenLayers.Layer.WMTS({
+                name: title,
+                url: options.url,
+                layer: options.layer,
+                style: options.style,
+                matrixSet: options.matrixSet,
+                requestEncoding: options.requestEncoding,
+                tileFullExtent: eval(options.tileFullExtent),
+                tileOrigin: eval(options.tileOrigin),
+                maxExtent: eval(options.maxExtent),
+                numZoomLevels: options.numZoomLevels
+            });
+
+            break;
+
+    }
+    return layer;
+}
 /**
  * Create OpenLayers2 layer objects from definition data readed from database
  * @returns {Array}
@@ -22,55 +75,7 @@ projectData.setBaseLayers = function (isBase) {
 
     if (bl != null) {
         for (var k = 0; k < bl.length; k++) {
-            var options = Ext.util.JSON.decode(bl[k].definition);
-            var type = bl[k].type;
-            var title = bl[k].title;
-
-            switch (type) {
-
-                case 'Google' :
-                    var layer = new OpenLayers.Layer.Google(title,options);
-                    baseLayers.push(layer);
-                    break;
-
-                case 'OSM' :
-                    var layer = new OpenLayers.Layer.OSM(title);
-                    baseLayers.push(layer);
-                    break;
-
-                case 'XYZ' :
-                    var url = options.url.replace(/\/{/g,'/${');
-                    var layer = new OpenLayers.Layer.XYZ(title,url,options.options);
-                    baseLayers.push(layer);
-                    break;
-
-                case 'Bing' :
-                    var layer = new OpenLayers.Layer.Bing({
-                        name: title,
-                        type: options.imagerySet,
-                        key: options.key});
-                    baseLayers.push(layer);
-                    break;
-
-                case 'WMTS' :
-                    var layer = new OpenLayers.Layer.WMTS({
-                        name: title,
-                        url: options.url,
-                        layer: options.layer,
-                        style: options.style,
-                        matrixSet: options.matrixSet,
-                        requestEncoding: options.requestEncoding,
-                        tileFullExtent: eval(options.tileFullExtent),
-                        tileOrigin: eval(options.tileOrigin),
-                        maxExtent: eval(options.maxExtent),
-                        numZoomLevels: options.numZoomLevels
-                    });
-
-                    baseLayers.push(layer);
-                    break;
-
-            }
-
+            baseLayers.push(makeLayer(bl[k]));
         }
     }
 

@@ -211,7 +211,7 @@ function postLoading() {
     var initialBGMap = 0;
     var baseLayers = projectData.setBaseLayers(true);
     var extraLayers = projectData.setBaseLayers(false);
-    var overviewLayer = projectData.overViewLayer();
+    var overviewLayer = makeLayer(projectData.overViewLayer());
 
     // run the function from Customizations.js
     customBeforeMapInit();
@@ -784,7 +784,7 @@ function postLoading() {
     }
 
     //overview map
-    if (!initialLoadDone) {
+    if (!initialLoadDone && overviewLayer != null) {
         OverviewMapOptions.maxExtent = maxExtent;
         geoExtMap.map.addControl(new OpenLayers.Control.OverviewMap({
             size: OverviewMapSize,
