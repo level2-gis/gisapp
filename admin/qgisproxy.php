@@ -64,10 +64,12 @@ try {
                 break;
             case "GetFeatureInfo":
                 //only caching large responses (whole tables)
-                $count = $query_arr['FEATURE_COUNT'];
-                if (is_numeric($count)) {
-                    if (intval($count) > 100) {
-                        $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['FILTER']);
+                if(array_key_exists("FEATURE_COUNT",$query_arr)) {
+                    $count = $query_arr['FEATURE_COUNT'];
+                    if (is_numeric($count)) {
+                        if (intval($count) > 100) {
+                            $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['FILTER']);
+                        }
                     }
                 }
                 break;

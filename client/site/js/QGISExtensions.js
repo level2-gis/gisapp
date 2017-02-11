@@ -902,7 +902,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         this.addEvents("featureselected");
         this.addEvents("featureselectioncleared");
 
-        Ext.Ajax.on('requestexception', this.onAjaxRequestException, this);
+        //Ext.Ajax.on('requestexception', this.onAjaxRequestException, this);
     },
 
     onSubmit: function() {
@@ -1011,7 +1011,8 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                 },
                 method: 'GET',
                 scope: this,
-                success: this.onSuccess
+                success: this.onSuccess,
+                failure: this.onFormFailure
             });
         }
         else {
@@ -1134,22 +1135,29 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    onAjaxRequestException: function() {
-        this.showFailure(networkErrorString[lang]);
-    },
+    //onAjaxRequestException: function() {
+    //    this.showFailure(networkErrorString[lang]);
+    //},
 
-    onFormFailure: function(form, action) {
+    onFormFailure: function(response, options) {
         // workaround for IE 8/9, when response is XML
-        if (action.response != null && action.response.status == 200) {
-            this.onSuccess(action.response);
+        if (response != null && response.status == 200) {
+            this.onSuccess(response);
             return;
         }
 
-        this.showFailure(action.failureType);
+        this.showFailure(response.statusText);
     },
 
     showFailure: function(msg) {
-        this.el.unmask();
+
+        //remove loading mask
+        var maskElement = this.el;
+        if(this.gridLocation=='bottom') {
+            maskElement = Ext.getCmp('BottomPanel').el;
+        }
+        maskElement.unmask();
+
         if (msg == "client") {
             Ext.MessageBox.alert(searchPanelTitleString[lang], missingOrInvalidSearchParams[lang]);
         }

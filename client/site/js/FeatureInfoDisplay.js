@@ -531,19 +531,21 @@ function updateElevation(data, location, field, template){
     var tem = new Ext.Template(template);
 
     if(data!==undefined) {
-        if (!(isNaN(data[field]))) {
+        if (!(isNaN(data[field])) && data[field] !== null) {
             if(data[field] === parseInt(data[field])) {
                 //
             }
             else {
                 data[field] = data[field].toFixed(elevationPrecision);
             }
+
+            var label = tem.apply(data);
+
+            pan.update(label);
         }
     }
 
-    var label = tem.apply(data);
 
-    pan.update(label);
 }
 
 function updateAddress(data, location, field, template, templateMin, factor) {
