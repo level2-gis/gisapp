@@ -523,10 +523,10 @@ Map.toggleTracking = function(enabled) {
   if (Map.geolocation == null) {
     // create geolocation
     Map.geolocation = new ol.Geolocation({
-      projection: Map.map.getView().getProjection(),
-      trackingOptions: {
-        enableHighAccuracy: true
-      }
+      projection: Map.map.getView().getProjection()
+      //trackingOptions: {
+      //  enableHighAccuracy: true
+      //}
     });
 
     //  Map.geolocation.bindTo('projection', Map.map.getView());
