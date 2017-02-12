@@ -276,7 +276,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/js/TriStateTree.js"></script>
                 <script type="text/javascript" src="client/site/js/GUI.js?v=1"></script>
                 <script type="text/javascript" src="client/site/js/QGISExtensions.js?v=1.1.2"></script>
-                <script type="text/javascript" src="client/site/js/GeocodingSearchCombo.js"></script>
+                <script type="text/javascript" src="client/site/js/GeocodingSearchCombo.js?v=1.3.3"></script>
                 <script type="text/javascript" src="client/site/js/FeatureInfoDisplay.js?v=1.1.1"></script>
                 <script type="text/javascript" src="client/site/js/LegendAndMetadataDisplay.js"></script>
                 <script type="text/javascript" src="client/site/js/LayerActions.js?v=1.1.2"></script>
