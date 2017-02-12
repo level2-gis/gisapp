@@ -12,9 +12,14 @@ Config.parseExtentToArray = function(str){
     ext2.push(parseInt(extent[2]));
     ext2.push(parseInt(extent[3]));
     return ext2;
-}
+};
 
 Config.getLayerName = function (lid) {
+
+    if(!(projectData.use_ids)) {
+        return lid;
+    }
+
     var lay = projectData.layers.filter(function( obj ) {
         return obj.id == lid;
     });
@@ -66,13 +71,14 @@ Config.data.initialTopic = projectData.project;
 
 Config.data.baselayers = [];
 //remove google from array
-for (var i=0;i<projectData.baseLayers().length;i++) {
-    var bl = projectData.baseLayers()[i];
-    if(bl.type!='Google') {
-        Config.data.baselayers.push(bl);
+if (projectData.baseLayers() !== null) {
+    for (var i = 0; i < projectData.baseLayers().length; i++) {
+        var bl = projectData.baseLayers()[i];
+        if (bl.type != 'Google') {
+            Config.data.baselayers.push(bl);
+        }
     }
 }
-
 
 // default properties
 Config.defaultProperties = {

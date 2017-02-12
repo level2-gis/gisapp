@@ -137,14 +137,16 @@ class Helpers
             $prop->title = "";
             $prop->extent = [];
             $prop->layers = [];
+            $prop->use_ids = false;
             $prop->message = $qgs["message"];
             //return false;
         }
         else {
             $prop->crs = (string)$qgs["message"]->properties->SpatialRefSys->ProjectCrs;
-            $prop->title = (string)$qgs["message"]->title;
+            $prop->title = (string)$qgs["message"]->title == "" ? basename($map,".qgs") : (string)$qgs["message"]->title;
             $prop->extent = (array)($qgs["message"]->properties->WMSExtent->value);
             $prop->layers = [];
+            $prop->use_ids = (bool)$qgs["message"]->properties->WMSUseLayerIDs;
 
             try {
 
