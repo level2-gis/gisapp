@@ -1,4 +1,4 @@
-<?php
+, chec<?php
 
 /**
  * settings.php -- part of Server side of Extended QGIS Web Client
@@ -20,8 +20,8 @@ define('PROJECT_PATH', 'C:/Apache24/apache/www/gisapp/_demo/');
 //superuser, currently irrelevant
 define('SUPERUSER', 'gisadmin');
 
-//qgis server
-define('QGISSERVERURL', 'http://localhost/cgi-bin/qgis_mapserv.fcgi.exe');
+//qgis server, check your port, if you are using default port 80, then simply go: /localhost/cgi-bin...
+define('QGISSERVERURL', 'http://localhost:8080/cgi-bin/qgis_mapserv.fcgi.exe');
 
 //other settings
 define('OGR2OGR', 'C:/OSGeo4W64/bin/ogr2ogr');
