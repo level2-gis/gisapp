@@ -1071,7 +1071,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     }
                 }
 
-                //maptip field is also in GetFEatureInfo response and not in WMS loader
+                //maptip field is also in GetFEatureInfo response in case of such setting in QGIS layer properties and not in WMS loader
                 //now it is skipped from FeatureInfo parser, other option would be here to manually add it, then it is part of table
 
                 if(fields.indexOf('geometry')>-1) {
