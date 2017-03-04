@@ -358,12 +358,14 @@ function removeHoverPopup(){
 
 function showFeatureSelected(args) {
 
-    //TODO UROS tule bi bilo fajn dodati da se vklopi layer če je izklopljen
+    //TODO It would be useful to switch on layer if it is off
+
+    var layerId = wmsLoader.layerTitleNameMapping[args["layer"]];
 
     if(args["geometry"]==undefined) {
         // select feature in layer
         thematicLayer.mergeNewParams({
-            "SELECTION": args["layer"] + ":" + args["id"]
+            "SELECTION": layerId + ":" + args["id"]
         });
     }
     else

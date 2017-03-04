@@ -1785,6 +1785,15 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
     } else {
         // No features: shouldn't we warn the user?
+
+        //remove loading mask
+        var maskElement = this.el;
+        if(this.gridLocation=='bottom') {
+            maskElement = Ext.getCmp('BottomPanel').el;
+        }
+
+        maskElement.unmask();
+
         Ext.MessageBox.alert(searchPanelTitleString[lang], searchNoRecordsFoundString[lang]);
         try {
             Ext.getCmp('SearchPanelResultsGrid').destroy();

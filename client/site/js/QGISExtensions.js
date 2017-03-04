@@ -961,6 +961,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
     submitGetFeatureInfo: function() {
 
         var storedFilter = this.wmsFilter;
+        var layerId = wmsLoader.layerTitleNameMapping[this.queryLayer];
         var fieldsValidate = true;
 
         if (storedFilter == "") {
@@ -990,10 +991,10 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     fieldsValidate &= field.validate();
                 }
             }
-            filter = this.queryLayer + ":" + filter.join(' AND ');
+            filter = layerId + ":" + filter.join(' AND ');
         }
         else {
-            filter = this.queryLayer + ":" + storedFilter;
+            filter = layerId + ":" + storedFilter;
         }
         if (fieldsValidate) {
             Ext.Ajax.request({
@@ -1002,8 +1003,8 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     'SERVICE': 'WMS',
                     'VERSION': '1.1.1',
                     'REQUEST': 'GetFeatureInfo',
-                    'LAYERS': this.queryLayer,
-                    'QUERY_LAYERS': this.queryLayer,
+                    'LAYERS': layerId,
+                    'QUERY_LAYERS': layerId,
                     'FEATURE_COUNT': this.gridResults,
                     'INFO_FORMAT': 'text/xml',
                     'SRS': authid,
@@ -1136,7 +1137,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
     },
 
     //onAjaxRequestException: function() {
-    //    this.showFailure(networkErrorString[lang]);
+    //    this.showfeatureselectedailure(networkErrorString[lang]);
     //},
 
     onFormFailure: function(response, options) {
