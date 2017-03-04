@@ -1071,6 +1071,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     }
                 }
 
+                //maptip field is also in GetFEatureInfo response and not in WMS loader
+                //now it is skipped from FeatureInfo parser, other option would be here to manually add it, then it is part of table
+
                 if(fields.indexOf('geometry')>-1) {
                     storeFields.push({name: 'geometry'});
                 }
@@ -1249,6 +1252,10 @@ QGIS.FeatureInfoParser = Ext.extend(Object, {
                     var attributeNodes = featureNode.getElementsByTagName("Attribute");
                     for (var a=0; a<attributeNodes.length; a++) {
                         var attributeNode = attributeNodes[a];
+
+                        //skip maptip field
+                        if(attributeNode.getAttribute("name") == "maptip") {continue;}
+
                         if (updateFields) {
                             // get fields from first feature
                             this.fields.push(attributeNode.getAttribute("name"));
