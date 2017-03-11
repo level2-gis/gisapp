@@ -16,43 +16,113 @@ require '../vendor/autoload.php';
 require_once("class.Helpers.php");
 require_once("settings.php");
 
-//parameters
-$query_arr = filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW);
+/**
+ * @param $query_arr
+ * @param $client
+ */
+function doPostRequest($query_arr, $client)
+{
 
-//we have to extend map parameter with path to projects, but first store it into own variable and remove .qgs
-$map = "";
-if (strpos($query_arr["map"], ".") === false) {
-    $map = $query_arr["map"];
-} else {
-    $map = explode(".", $query_arr["map"])[0];
-}
-$query_arr["map"] = PROJECT_PATH . $query_arr["map"];
+    $request_params = $_POST;
 
-$client = new Client();
+    if (empty($request_params)) {
 
-try {
+        $data = file_get_contents('php://input');
 
-    $new_request = new Request('GET', QGISSERVERURL);
+        if (!empty($data)) {
 
-    //session check
-    session_start();
+            $request_params = $data;
 
-    if (!(Helpers::isValidUserProj($map))) {
-        throw new Exception\ClientException("Session time out or unathorized access!", $new_request);
+        }
+
     }
+
+    //async request, but calling wait, no difference
+//use GuzzleHttp\Exception\RequestException;
+//use Psr\Http\Message\ResponseInterface;
+//    $promise = $client->requestAsync('POST', QGISSERVERURL, [
+//        'query' => $query_arr,
+//        'body' => $request_params,
+//        'http_errors' => true,
+//        //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+//        'verify' => false
+//    ]);
+//
+//    $promise->then(
+//        function (ResponseInterface $response) {
+//            //response
+//            $contentType = $response->getHeaderLine('Content-Type');
+//            $contentLength = $response->getHeaderLine('Content-Length');
+//            $content = $response->getBody();
+//
+//            header("Content-Length: " . $contentLength);
+//            header("Content-Type: " . $contentType);
+//            header("Cache-control: max-age=0");
+//
+//            echo $content;
+//        },
+//        function (RequestException $e) {
+//            //exception
+//            $http_ver = $_SERVER["SERVER_PROTOCOL"];
+//            header($http_ver . " 500 Error");
+//            header("Content-Type: text/html");
+//            echo $e->getMessage() . "\n";
+//            echo $e->getRequest()->getMethod();
+//        }
+//    );
+//
+//    $promise->wait();
+
+    //standard synhrone request
+    $new_request = new Request('POST', QGISSERVERURL);
+
+
+    $response = $client->send($new_request, [
+        'query' => $query_arr,
+        'body' => $request_params,
+        'http_errors' => true,
+        //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+        'verify' => false
+    ]);
+
+    $contentType = $response->getHeaderLine('Content-Type');
+    $contentLength = $response->getHeaderLine('Content-Length');
+    $content = $response->getBody();
+
+    if ($response->getStatusCode() != 200) {
+        throw new Exception\ServerException($content, $new_request);
+    }
+
+    header("Content-Length: " . $contentLength);
+    header("Content-Type: " . $contentType);
+    header("Cache-control: max-age=0");
+
+    echo $content;
+
+}
+
+/**
+ * @param $query_arr
+ * @param $map
+ * @param $client
+ * @param $http_ver
+ */
+function doGetRequest($query_arr, $map, $client, $http_ver)
+{
+    $new_request = new Request('GET', QGISSERVERURL);
 
     //caching certain requests
     $config = array(
-        "path"      =>  TEMP_PATH
+        "path" => TEMP_PATH
     );
-    $cache = phpFastCache("files",$config);
+    $cache = phpFastCache("files", $config);
     $content = null;
     $contentType = null;
     $cacheKey = null;
     $contentLength = 0;
     $sep = "_x_"; //separator for key generating
 
-    if($query_arr["REQUEST"] != null) {
+    if ($query_arr["REQUEST"] != null) {
         switch ($query_arr["REQUEST"]) {
             case "GetProjectSettings":
                 $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"];
@@ -64,7 +134,7 @@ try {
                 break;
             case "GetFeatureInfo":
                 //only caching large responses (whole tables)
-                if(array_key_exists("FEATURE_COUNT",$query_arr)) {
+                if (array_key_exists("FEATURE_COUNT", $query_arr)) {
                     $count = $query_arr['FEATURE_COUNT'];
                     if (is_numeric($count)) {
                         if (intval($count) > 100) {
@@ -97,7 +167,7 @@ try {
                 if ($contentXml !== false) {
                     if ($contentXml->getName() !== 'WMS_Capabilities') {
                         $m = "Unknown GetCapabilities error";
-                        if($contentXml->ServiceException !== null) {
+                        if ($contentXml->ServiceException !== null) {
                             $m = (string)$contentXml->ServiceException;
                         }
                         throw new Exception\ServerException($m, $new_request);
@@ -135,7 +205,7 @@ try {
     //check if client send etag and compare it
     if (isset($client_headers['If-None-Match']) && strcmp($new_etag, $client_headers['If-None-Match']) == 0) {
         //return code 304 not modified without content
-        header('HTTP/1.1 304 Not Modified');
+        header($http_ver . " 304 Not Modified");
         header("Cache-control: max-age=0");
         header("Etag: " . $new_etag);
     } else {
@@ -146,23 +216,59 @@ try {
 
         echo $content;
     }
+}
+
+try {
+
+//parameters, always (post also contains at lest map parameter
+    $query_arr = filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW);
+    $request_method = $_SERVER['REQUEST_METHOD'];
+    $http_ver = $_SERVER["SERVER_PROTOCOL"];
+
+//we have to extend map parameter with path to projects, but first store it into own variable and remove .qgs
+    $map = "";
+    if (strpos($query_arr["map"], ".") === false) {
+        $map = $query_arr["map"];
+    } else {
+        $map = explode(".", $query_arr["map"])[0];
+    }
+    $query_arr["map"] = PROJECT_PATH . $query_arr["map"];
+
+//session check
+    session_start();
+
+    if (!(Helpers::isValidUserProj($map))) {
+        throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
+    }
+
+    $client = new Client();
+
+    if ($request_method == 'GET') {
+
+        doGetRequest($query_arr, $map, $client, $http_ver);
+
+    }
+    elseif ($request_method == 'POST') {
+
+        doPostRequest($query_arr, $client, $http_ver);
+    }
 
 } catch (Exception\ServerException $e) {
     //if ($e->hasResponse()) {
     //    header('', true, $e->getResponse()->getStatusCode());
     //} else {
-        header('Server Error', true, 500);
+    header($http_ver . " 500 Server Error");
     header("Content-Type: text/html");
     //}
     echo $e->getMessage();
 
 } catch (Exception\ClientException $e) {
-    header('Unauthorized', true, 401);
+    header($http_ver . " 401 Unathorized");
     header("Content-Type: text/html");
     echo $e->getMessage();
 
 } catch (Exception\RequestException $e) {
-    header('Error', true, 500);
+    header($http_ver . " 500 Error");
     header("Content-Type: text/html");
     echo $e->getMessage();
 }

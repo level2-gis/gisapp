@@ -17,6 +17,7 @@ use SimpleXMLElement;
 class Helpers
 {
 
+    public $qgs_layers = [];
 
     public static function isValidUserProj($project)
     {
@@ -110,7 +111,7 @@ class Helpers
      * @param $map
      * @return array
      */
-    private function getQgsProject($map)
+    public static function getQgsProject($map)
     {
         libxml_clear_errors();
         libxml_use_internal_errors(true);
@@ -125,11 +126,10 @@ class Helpers
         return self::msg(true, $project);
     }
 
-    public static function getQgsProjectProperties($map)
+    public function getQgsProjectProperties($map)
     {
         $qgs = self::getQgsProject($map);
         $prop = new \stdClass();
-        $lay = new \stdClass();
 
         if (!($qgs["status"])) {
             //error in XML, using default CRS but continue
@@ -140,37 +140,41 @@ class Helpers
             $prop->use_ids = false;
             $prop->message = $qgs["message"];
             //return false;
-        }
-        else {
+        } else {
             $prop->crs = (string)$qgs["message"]->properties->SpatialRefSys->ProjectCrs;
-            $prop->title = (string)$qgs["message"]->title == "" ? basename($map,".qgs") : (string)$qgs["message"]->title;
+            $prop->title = (string)$qgs["message"]->title == "" ? basename($map, ".qgs") : (string)$qgs["message"]->title;
             $prop->extent = (array)($qgs["message"]->properties->WMSExtent->value);
             $prop->layers = [];
             $prop->use_ids = (bool)$qgs["message"]->properties->WMSUseLayerIDs;
 
             try {
 
-                //$group = (array)$qgs["message"]->xpath('layer-tree-group/layer-tree-layer');
-                $main = $qgs["message"]->xpath('layer-tree-group')[0];  //always one group with all elements
-                $i = 0;
-                foreach ($main->children() as $el) {
-                    $type = $el->getName();
-                    if ($type=='layer-tree-group') {
-                        $groupname = (string)$el->attributes()["name"];
-                        foreach ($el->children() as $el2) {
-                            if ($el2->attributes()["id"] > '') {
-                                array_push($prop->layers, self::LayerToMobileClientArray($groupname, $el2, $i));
-                            }
+                $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],$prop->title,0);
+
+
+                //get wfs layers
+                $wfs = (array)($qgs["message"]->properties->WFSLayers->value);
+                foreach($this->qgs_layers as $lay) {
+
+                    $lay_object = self::getLayerById($lay->id,$qgs["message"]);
+                    if($lay_object["status"]) {
+                        $lay_info = self::getLayerInfo($lay_object["message"]);
+                        if ($lay_info["status"]) {
+                            $lay->provider = (string)$lay_info["message"]["provider"];
+                            $lay->geom_type = (string)$lay_info["message"]["type"];
+                            $lay->geom_column = (string)$lay_info["message"]["geom_column"];
                         }
                     }
-                    else {
-                        $groupname = $prop->title;
-                        if ($el->attributes()["id"] > '') {
-                            array_push($prop->layers, self::LayerToMobileClientArray($groupname, $el, $i));
-                        }
+
+                    //enable wfs just for postgres and spatialite regardless project setting
+                    if (in_array($lay->id,$wfs) and ($lay->provider == 'postgres' or $lay->provider == 'spatialite')) {
+                        $lay->wfs = true;
                     }
-                    $i++;
+
+
+                    $prop->layers[$lay->id] = $lay;
                 }
+
             } catch (\Exception $e) {
                 $prop->message = $e->getMessage();
             }
@@ -205,6 +209,15 @@ class Helpers
         return self::msg(true, $layer[0]);
     }
 
+    public static function getLayerById($id, SimpleXMLElement $project)
+    {
+        $xpath = '//maplayer/id[.="' . $id . '"]/parent::*';
+        if (!$layer = $project->xpath($xpath)) {
+            return self::msg(false, "layer not found");
+        }
+        return self::msg(true, $layer[0]);
+    }
+
     /**
      *
      * Get layer connection and geom info
@@ -217,9 +230,10 @@ class Helpers
         // Cache
         static $pg_layer_infos = array();
 
-        if ((string)$layer->provider != 'postgres' && (string)$layer->provider != 'spatialite') {
-            return self::msg(false, 'Only postgis or spatialite layers are supported!</br>'. (string)$layer->layername.': ' . (string)$layer->provider);
-        }
+        //if ((string)$layer->provider != 'postgres' && (string)$layer->provider != 'spatialite') {
+        //    return self::msg(false, 'Only postgis or spatialite layers are supported!</br>' . (string)$layer->layername . ': ' . (string)$layer->provider);
+        //}
+
         // Datasource
         $datasource = (string)$layer->datasource;
 
@@ -229,25 +243,33 @@ class Helpers
 
         // Parse datasource
         $ds_parms = array(
-            'provider' => (string)$layer->provider
+            'provider' => (string)$layer->provider,
+            'type' => '',
+            'geom_column' => ''
         );
-        // First extract sql=
-        if (preg_match('/sql=(.*)/', $datasource, $matches)) {
-            $datasource = str_replace($matches[0], '', $datasource);
-            $ds_parms['sql'] = $matches[1];
-        }
-        foreach (explode(' ', $datasource) as $token) {
-            $kvn = explode('=', $token);
-            if (count($kvn) == 2) {
-                $ds_parms[$kvn[0]] = $kvn[1];
-            } else { // Parse (geom)
-                if (preg_match('/\(([^\)]+)\)/', $kvn[0], $matches)) {
-                    $ds_parms['geom_column'] = $matches[1];
-                }
-                // ... maybe other parms ...
+
+        //only for postgres and spatialite layers
+        if ((string)$layer->provider == 'postgres' or (string)$layer->provider == 'spatialite') {
+
+
+            // First extract sql=
+            if (preg_match('/sql=(.*)/', $datasource, $matches)) {
+                $datasource = str_replace($matches[0], '', $datasource);
+                $ds_parms['sql'] = $matches[1];
             }
+            foreach (explode(' ', $datasource) as $token) {
+                $kvn = explode('=', $token);
+                if (count($kvn) == 2) {
+                    $ds_parms[$kvn[0]] = $kvn[1];
+                } else { // Parse (geom)
+                    if (preg_match('/\(([^\)]+)\)/', $kvn[0], $matches)) {
+                        $ds_parms['geom_column'] = $matches[1];
+                    }
+                    // ... maybe other parms ...
+                }
+            }
+            $pg_layer_infos[$datasource] = $ds_parms;
         }
-        $pg_layer_infos[$datasource] = $ds_parms;
         return self::msg(true, $ds_parms);
     }
 
@@ -265,24 +287,35 @@ class Helpers
 
     }
 
-    /**
-     * @param $groupname
-     * @param $el
-     * @param $i
-     */
-    private static function LayerToMobileClientArray($groupname, $el, $i)
+    public function LayersToClientArray($group,$groupname,$cnt)
     {
-        $lay = new \stdClass();
+        foreach ($group->children() as $el) {
+            $type = $el->getName();
+            $lay = new \stdClass();
+            if ($type == 'layer-tree-group') {
 
-        $lay->topic = 'Topic';
-        $lay->groupname = $groupname;
-        $lay->layername = (string)$el->attributes()["name"];
-        $lay->toclayertitle = (string)$el->attributes()["name"];
-        $lay->visini = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
-        $lay->id = (string)$el->attributes()["id"];
-        $lay->wms_sort = $i;
-        $lay->toc_sort = $i;
+                $this->LayersToClientArray($el,(string)$el->attributes()["name"],$cnt);
 
-        return $lay;
+            } else {
+
+                if ($el->attributes()["id"] > '') {
+                    ++$cnt;
+                    $lay->topic = 'Topic';
+                    $lay->groupname = $groupname;
+                    $lay->layername = (string)$el->attributes()["name"];
+                    $lay->toclayertitle = (string)$el->attributes()["name"];
+                    $lay->visini = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
+                    $lay->id = (string)$el->attributes()["id"];
+                    $lay->wms_sort = (900-$cnt);
+                    $lay->toc_sort = $cnt;
+                    $lay->wfs = false;      //fill later
+                    $lay->provider = '';    //fill later
+                    $lay->geom_type = '';   //fill later
+                    $lay->geom_column = ''; //fill later
+
+                    array_push($this->qgs_layers, $lay);
+                }
+            }
+        }
     }
 }

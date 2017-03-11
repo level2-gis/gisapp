@@ -217,6 +217,7 @@ class Login
         $pass = false;
 
         $gisApp = new DbLoader($user, $project, $this->db_connection);
+        $helpers = new Helpers();
 
         //check if we have guest user
         if (strtolower($user == 'guest')) {
@@ -263,7 +264,7 @@ class Login
                 $gis_projects = $gisApp->getGisProjectsFromDB();
 
                 //get QGIS project properties
-                $project_qgs = Helpers::getQgsProjectProperties(PROJECT_PATH . $project . '.qgs');
+                $project_qgs = $helpers->getQgsProjectProperties(PROJECT_PATH . $project . '.qgs');
                 if (property_exists($project_qgs,"message")) {
                     $this->feedback = $project_qgs->message;
                     return false;
