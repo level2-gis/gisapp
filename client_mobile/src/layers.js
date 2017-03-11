@@ -38,8 +38,8 @@ Layers.loadLayers = function(url, callback) {
 
         // group by groupname
         groups = {};
-        for (var i=0;i<wmslayers.length; i++) {
-            var layer = wmslayers[i];
+        for (var id in wmslayers) {
+            var layer = wmslayers[id];
 
             if (layer.groupname === null) {
                 // mark layers without group
