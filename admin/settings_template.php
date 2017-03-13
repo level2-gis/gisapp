@@ -15,7 +15,7 @@ define('DB_USER', 'username');
 define('DB_PWD', 'password');
 
 //project location
-define('PROJECT_PATH', '/var/www/html/gisapp/_demo');
+define('PROJECT_PATH', '/var/www/html/gisapp/_demo/');
 
 //superuser, currently irrelevant
 define('SUPERUSER', 'gisadmin');

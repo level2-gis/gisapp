@@ -250,6 +250,15 @@ try {
     }
     elseif ($request_method == 'POST') {
 
+        //check if user is guest
+        $user = null;
+        if (isset($_SESSION["user_name"])) {
+            $user = $_SESSION["user_name"];
+        }
+        if ($user != null && $user == 'guest') {
+            throw new Exception\ClientException("Guest users are not allowed to edit data!", new Request('GET', QGISSERVERURL));
+        }
+
         doPostRequest($query_arr, $client, $http_ver);
     }
 
