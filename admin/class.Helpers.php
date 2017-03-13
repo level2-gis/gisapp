@@ -121,7 +121,7 @@ class Helpers
                 return self::msg(false, 'Project not valid XML!');
             }
         } else {
-            return self::msg(false, 'Project not found!');
+            return self::msg(false, 'Project not found or no permission: '.$map);
         }
         return self::msg(true, $project);
     }

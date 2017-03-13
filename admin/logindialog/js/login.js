@@ -62,7 +62,7 @@ Ext.onReady(function () {
                         window.location.href = map + "?" + startParams;
                     }
                     else {
-                        Ext.Msg.alert("Error", eval(result.message));
+                        Ext.Msg.alert("Error", result.message);
                     }
                 }
             });
