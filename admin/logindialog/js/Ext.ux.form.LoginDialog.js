@@ -24,7 +24,7 @@ Ext.ux.form.LoginDialog = function (config) {
 
     // The CSS needed to style the dialog.
     var css = '.ux-auth-header-icon {background: url("' + this.basePath + '/small/locked.png") 0 4px no-repeat !important;}'
-        + '.ux-auth-header {background:transparent url("' + this.basePath + '/large/lock.png") no-repeat center right;padding:10px;padding-right:45px;font-weight:bold;}'
+        + '.ux-auth-header {background:transparent url("' + this.basePath + '/large/lock.png") no-repeat center right;padding:10px;padding-right:45px;padding-bottom:1px;font-weight:bold;}'
         + '.ux-auth-login {background-image: url("' + this.basePath + '/medium/key.png") !important;}'
         + '.ux-auth-guest {background-image: url("' + this.basePath + '/medium/guest.png") !important;}'
         + '.ux-auth-close {background-image: url("' + this.basePath + '/medium/close.png") !important;}'

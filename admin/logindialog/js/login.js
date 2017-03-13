@@ -35,7 +35,7 @@ Ext.onReady(function () {
 
     if (map == '') {
 
-        Ext.Msg.alert(TR.noProject, TR.noProjectText);
+        Ext.Msg.alert('Missing project', 'Type project name in URL and try again.</br></br>Example: '+urlString+'helloworld');
 
     }
     else {
@@ -62,7 +62,9 @@ Ext.onReady(function () {
                         window.location.href = map + "?" + startParams;
                     }
                     else {
-                        Ext.Msg.alert("Error", result.message);
+                        var x = result.message;
+                        if (x.indexOf('TR.')>-1) x = eval(result.message);
+                        Ext.Msg.alert("Error", x);
                     }
                 }
             });
@@ -102,7 +104,7 @@ Ext.onReady(function () {
                     }
                 },
                 //text strings, leave this, look language files
-                title: TR.loginTitle,
+                title: TR.loginTitle + " " + map,
                 message: TR.loginMessage,
                 failMessage: TR.loginFailMessage,
                 waitMessage: TR.loginWaitMessage,
