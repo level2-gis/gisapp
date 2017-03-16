@@ -145,7 +145,8 @@ class Helpers
             $prop->title = (string)$qgs["message"]->title == "" ? basename($map, ".qgs") : (string)$qgs["message"]->title;
             $prop->extent = (array)($qgs["message"]->properties->WMSExtent->value);
             $prop->layers = [];
-            $prop->use_ids = (bool)$qgs["message"]->properties->WMSUseLayerIDs;
+            //parsing boolean values, be careful (bool)"false" = true!!!
+            $prop->use_ids = filter_var($qgs["message"]->properties->WMSUseLayerIDs,FILTER_VALIDATE_BOOLEAN);
 
             try {
 

@@ -16,15 +16,7 @@ Config.parseExtentToArray = function(str){
 
 Config.getLayerName = function (lid) {
 
-    if(!(projectData.use_ids)) {
-        return lid;
-    }
-
-    var lay = projectData.layers.filter(function( obj ) {
-        return obj.id == lid;
-    });
-
-    return lay[0].layername;
+    return projectData.use_ids ? projectData.layers[lid].layername : lid;
 };
 
 // flag to activate debug code
