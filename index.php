@@ -34,7 +34,7 @@ function goMobile($lang) {
         <link rel="apple-touch-icon" href="client_mobile/img/app_icon.png"/>
         <link rel="icon" href="favicon.ico" />
 
-        <script type="text/javascript" src="load.php"></script>
+        <script type="text/javascript" src="client_common/load.php"></script>
 
         <!-- jQuery -->
         <script src="client_mobile/lib/jquery/jquery-1.9.1.min.js"></script>
@@ -51,13 +51,13 @@ function goMobile($lang) {
         <link rel="stylesheet" href="client_mobile/lib/jquery/jquery.mobile-1.3.1.min.css" />
 
         <!-- Proj4js -->
-<!--        CHECK IF THIS IS OK-->
-<!--        <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>-->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.14/proj4.js"></script>
-        <script type="text/javascript" src="https://epsg.io/3006.js"></script>
+        <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
+        <script type="text/javascript" src="client_common/customProjections.js"></script>
+
 
         <!-- OpenLayers 3 -->
-        <script src="client_mobile/lib/ol3/ol-debug.js?v=3.19.1"></script>
+        <script src="client_mobile/lib/ol3/ol.js?v=3.19.1"></script>
+<!--        <script src="client_mobile/lib/ol3/ol-debug.js"></script>-->
         <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css" />
 
         <script type="text/javascript" src="admin/languages/<?php echo $lang ?>.js?v=1.1.3"></script>
@@ -83,11 +83,6 @@ function goMobile($lang) {
         <script src="client_mobile/src/topics.js"></script>
         <script src="client_mobile/src/layers.js"></script>
         <script src="client_mobile/src/gui.js"></script>
-
-
-<!--        TEST REMOVE-->
-<!--        <script type="text/javascript" src="client/site/libs/proj4js/defs/EPSG3006.js"></script>-->
-
 <!--        <script src="client_mobile/src/high_resolution_printing.js"></script>-->
         <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css" />
@@ -274,9 +269,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css"/>
 
-<!--                <link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css"/>-->
-
-                <script type="text/javascript" src="load.php"></script>
+                <script type="text/javascript" src="client_common/load.php"></script>
 
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
 
@@ -287,14 +280,15 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="admin/languages/locale/ext-lang-<?php echo $def_lang ?>.js?v=1.1.2"></script>
                 <script type="text/javascript" src="admin/languages/<?php echo $def_lang ?>.js?v=1.1.3"></script>
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
-                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20170309"></script>
+                <script type="text/javascript" src="client_common/customProjections.js"></script>
 
-<!--                        <script type="text/javascript" src="client/site/libs/openlayers/LayerSwitcher.js"></script>-->
+                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20170317"></script>
+
+<!--                FOR DEBUGGING-->
+<!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
+<!--                <script type="text/javascript" src="../ol2/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
-
-<!--                <script type="text/javascript" src="plugins/editing/ole/editor_debug.js"></script>-->
-
                 <script type="text/javascript" src="client/eqwc_debug.php"></script>
 
                 <style type="text/css">

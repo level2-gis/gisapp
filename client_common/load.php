@@ -54,6 +54,7 @@ projectData.locationServices = eval(<?php echo json_encode($settings->locationSe
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';
 projectData.crs = '<?php echo $qgs->crs ?>';
+projectData.proj4 = '<?php echo $qgs->proj4 ?>';
 projectData.title = '<?php echo $qgs->title ?>';
 projectData.extent = '<?php echo implode(',',$qgs->extent) ?>';
 projectData.layers = eval(<?php echo json_encode($qgs->layers) ?>);

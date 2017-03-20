@@ -366,29 +366,21 @@ function postLoading() {
     //if not, set map parameters from GetProjectSettings/GetCapabilities
     //get values from first layer group (root) of project settings
     if (maxExtent instanceof OpenLayers.Bounds == false) {
+        var proj = OpenLayers.Projection.defaults[authid];
+        var reverseAxisOrder = proj == undefined ? false : proj.yx;
+
         var boundingBox = wmsLoader.projectSettings.capability.nestedLayers[0].bbox;
-        //iterate over bbox - there should be only one entry
-        for (var key in boundingBox) {
-            if (key.match(/^EPSG:*/)) {
-                var bboxArray = boundingBox[key].bbox;
-                var srs = boundingBox[key].srs;
-                // dummyLayer is created only to check if reverseAxisOrder is true
-                var dummyLayer = new OpenLayers.Layer.WMS("dummy",
-                    wmsURI, {
-                        VERSION: "1.3.0"
-                    },
-                    LayerOptions
-                );
-                dummyLayer.projection = new OpenLayers.Projection(authid);
-                var reverseAxisOrder = dummyLayer.reverseAxisOrder();
-                maxExtent = OpenLayers.Bounds.fromArray(bboxArray, reverseAxisOrder);
+        //get bbox for map crs
+        var bboxArray = boundingBox[authid].bbox;
+
+        if (bboxArray != undefined) {
+            maxExtent = OpenLayers.Bounds.fromArray(bboxArray, reverseAxisOrder);
+            // never change the map extents when using WMTS base layers
+            if (!enableWmtsBaseLayers) {
+                MapOptions.maxExtent = maxExtent;
             }
         }
     }
-	// never change the map extents when using WMTS base layers
-	if (!enableWmtsBaseLayers) {
-        MapOptions.maxExtent = maxExtent;
-	}
 
     //now collect all selected layers (with checkbox enabled in tree)
     selectedLayers = [];
@@ -617,10 +609,10 @@ function postLoading() {
             //alert("startExtentOL="+startExtent.toString());
             geoExtMap.map.zoomToExtent(startExtent,false);
             //alert(geoExtMap.map.getExtent().toString());
-        } else {
+        } //else {
             //why this?, map is already loaded, commenting
             //geoExtMap.map.zoomToMaxExtent();
-        }
+        //}
         //add listener to adapt map on panel resize (only needed because of IE)
         MapPanelRef.on('resize', function (panel, w, h) {
             geoExtMap.setSize(panel.getInnerWidth(),panel.getInnerHeight());

@@ -49,13 +49,19 @@ function makeLayer(layDef) {
                 name: title,
                 url: options.url,
                 layer: options.layer,
-                style: options.style,
-                matrixSet: options.matrixSet,
                 requestEncoding: options.requestEncoding,
+                matrixSet: options.matrixSet,
+                format: options.format,
+                style: options.style,
+                displayOutsideMaxExtent: false,
                 tileFullExtent: eval(options.tileFullExtent),
                 tileOrigin: eval(options.tileOrigin),
                 maxExtent: eval(options.maxExtent),
-                numZoomLevels: options.numZoomLevels
+                zoomOffset: eval(options.zoomOffset),
+                numZoomLevels: eval(options.numZoomLevels),
+                maxResolution: eval(options.maxResolution),
+                resolutions: eval(options.resolutions),
+                serverResolutions: eval(options.serverResolutions)
             });
 
             break;
@@ -227,9 +233,7 @@ var LayerOptions = {
   transitionEffect:"resize",
   isBaseLayer: false,
   projection:authid,
-  yx: {"EPSG:900913": false},
-  // If your projection is known to have an inverse axis order in WMS 1.3 compared to WMS 1.1 enter true for yx.
-  // For EPSG:900913 OpenLayers should know it by default but because of a bug in OL 2.12 we enter it here.
+  displayOutsideMaxExtent: true,
   tileOptions: {
     // use POST for long URLs
     maxGetUrlLength: 2048
@@ -375,3 +379,11 @@ var streetViewMarkerStyle = {
 };
 
 OpenLayers.Renderer.symbol.arrow = [0, 4, 2, 0, 4, 4, 2, 3, 0, 4];
+
+//projection defaults from customProjections.js
+var projDef = CustomProj[authid];
+if (projDef !== undefined)
+OpenLayers.Projection.defaults[authid] = {
+    maxExtent: projDef.extent,
+    yx: projDef.yx !== undefined ? projDef.yx : false
+};
