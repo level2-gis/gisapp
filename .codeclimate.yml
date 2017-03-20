@@ -23,3 +23,6 @@ exclude_paths:
 - "client/site/libs/**/*"
 - "client_mobile/lib/**/*"
 - "vendor/**/*"
+- "**.gif"
+- "**.png"
+- "**.txt"
