@@ -217,26 +217,70 @@ Map.setBackgroundLayer = function(layerName, layerId) {
 
             var definition = $.parseJSON(lay.definition);
             //first load capabilities
-            $.ajax(definition.capabilitiesUrl).then(function(response) {
-                var result = new ol.format.WMTSCapabilities().read(response);
-                var options = ol.source.WMTS.optionsFromCapabilities(result, {
+            //not used because certain capabilities does not return tileGrid extent
+            //$.ajax(definition.capabilitiesUrl).then(function(response) {
+            //    var result = new ol.format.WMTSCapabilities().read(response);
+            //    var options = ol.source.WMTS.optionsFromCapabilities(result, {
+            //        layer: definition.layer,
+            //        matrixSet: definition.matrixSet,
+            //        requestEncoding: definition.requestEncoding,
+            //        style: definition.style,
+            //        projection: Config.map.projection,
+            //        format: definition.format
+            //    });
+            //
+            //    var layOl3 = new ol.layer.Tile({
+            //        visible: visible,
+            //        //name: lay.name,
+            //        source: new ol.source.WMTS(options)
+            //    });
+            //
+            //    layOl3.name = lay.name;
+            //
+            //    // add background as base layer
+            //    Map.map.getLayers().insertAt(0, layOl3);
+            //});
+
+            var matrixIds = [];
+            var resolutions = [];
+            var serverResolutions = eval(definition.serverResolutions);
+            var projectionExtent = Config.map.projection.getExtent();
+            var size = ol.extent.getWidth(projectionExtent) / 256;
+            var num = serverResolutions !== undefined ? serverResolutions.length : eval(definition.numZoomLevels);
+
+            //FIX for removing extent from OL2 definition
+            var extent = Config.extractStringFromObject("OpenLayers", definition.maxExtent);
+
+            for (var z = 0; z < num; ++z) {
+                matrixIds[z] = z;
+                resolutions[z] = size / Math.pow(2, z);
+            }
+
+            if (serverResolutions !== undefined){
+                resolutions = serverResolutions;
+            }
+
+            layOl3 = new ol.layer.Tile({
+                visible: visible,
+                source: new ol.source.WMTS({
+                    url: definition.url,
                     layer: definition.layer,
                     matrixSet: definition.matrixSet,
                     requestEncoding: definition.requestEncoding,
-                    style: definition.style
-                });
-
-                var layOl3 = new ol.layer.Tile({
-                    visible: visible,
-                    //name: lay.name,
-                    source: new ol.source.WMTS(options)
-                });
-
-                layOl3.name = lay.name;
-
-                // add background as base layer
-                Map.map.getLayers().insertAt(0, layOl3);
+                    style: definition.style,
+                    projection: Config.map.projection,
+                    format: definition.format,
+                    tileGrid: new ol.tilegrid.WMTS({
+                        extent: eval(extent),
+                        resolutions: resolutions,
+                        matrixIds: matrixIds
+                    })
+                })
             });
+
+            layOl3.name = lay.name;
+
+            Map.map.getLayers().insertAt(0, layOl3);
 
             break;
 
@@ -632,7 +676,7 @@ Map.toggleClickMarker = function(enabled) {
 Map.toggleScalebar = function(enabled) {
   if (Map.scaleLine == null) {
     Map.scaleLine = new ol.control.ScaleLine({
-      units: 'metric',
+      units: 'metric'
     });
   }
   if (enabled && Map.scaleLine.getMap() == null) {

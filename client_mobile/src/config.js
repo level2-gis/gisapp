@@ -14,6 +14,20 @@ Config.parseExtentToArray = function(str){
     return ext2;
 };
 
+Config.extractStringFromObject = function (objName, string) {
+
+    if (string.indexOf(objName)==-1) {
+        return string;
+    }
+
+    var ret = '';
+    var start = string.indexOf('(')+1;
+    var end = string.indexOf(')');
+    ret = '['+string.substring(start, end)+']';
+
+    return ret;
+};
+
 Config.getLayerName = function (lid) {
 
     return projectData.use_ids ? projectData.layers[lid].layername : lid;
@@ -154,7 +168,23 @@ Config.map.init = {
 };
 
 // ol.proj.Projection
-Config.map.projection = ol.proj.get(projectData.crs);
+// add definition if doesn't exist
+if(proj4.defs[projectData.crs] === undefined) {
+    proj4.defs(projectData.crs, projectData.proj4);
+
+    var projDef = CustomProj[projectData.crs];
+
+    Config.map.projection = new ol.proj.Projection({
+        code: projectData.crs,
+        extent: projDef.extent,
+        units: projDef.units,
+        axisOrientation: projDef.yx === false ? 'enu' : 'neu'
+    });
+}
+else {
+    Config.map.projection = ol.proj.get(projectData.crs);
+}
+
 //Config.map.projection.setExtent(Config.map.extent);
 
 // calculate resolutions from scales
