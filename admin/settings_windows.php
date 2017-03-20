@@ -1,4 +1,4 @@
-, chec<?php
+<?php
 
 /**
  * settings.php -- part of Server side of Extended QGIS Web Client

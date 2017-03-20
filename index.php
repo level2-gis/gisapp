@@ -6,19 +6,6 @@ require_once("admin/class.Helpers.php");
 require_once("admin/settings.php");
 require 'vendor/autoload.php';
 
-function checkModulexist($name) {
-    $dir = dirname(__FILE__) . "/plugins/";
-    $scan = array_slice(scandir($dir), 2);
-
-    foreach ($scan as $item) {
-        if ($item == $name) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 function goMobile($lang) {
  ?>
     <!DOCTYPE html>
@@ -219,7 +206,7 @@ $server_os = php_uname('s');
 $def_lang = strtolower(filter_input(INPUT_GET,'lang',FILTER_SANITIZE_STRING));
 $mobile = strtolower(filter_input(INPUT_GET,'mobile',FILTER_SANITIZE_STRING));
 
-$edit = checkModulexist("editing");
+$edit = Helpers::checkModulexist("editing");
 
 session_start();
 
@@ -269,6 +256,10 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css"/>
 
+                <?php if ($edit) {
+                    echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css"/>';
+                }?>
+
                 <script type="text/javascript" src="client_common/load.php"></script>
 
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
@@ -290,6 +281,10 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
                 <script type="text/javascript" src="client/eqwc_debug.php"></script>
+
+                <?php if ($edit) {
+                    echo '<script type="text/javascript" src="plugins/editing/ole/editor_debug.js"></script>';
+                }?>
 
                 <style type="text/css">
                     #dpiDetection {
