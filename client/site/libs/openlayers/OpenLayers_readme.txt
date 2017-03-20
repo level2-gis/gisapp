@@ -1,1 +1,1 @@
-Build with eqwc configuration with latest developers version Open Layers 2.14 dev (12.8.2016)
+Build with eqwc configuration with latest developers version Open Layers 2.14 dev (16.3.2017)
