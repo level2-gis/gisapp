@@ -8,7 +8,7 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * Desktop client is based on original **[QGIS Web client (QWC)](https://github.com/qgis/QGIS-Web-Client)**.
 * Mobile client is based on **[OL3 Mobile Viewer](https://github.com/sourcepole/ol3-mobile-viewer)**.
 
-##Modifications and new features regarding QWC:
+## Modifications and new features regarding QWC:
 * user authorization with optional guest access
 * server side (database for storing info about projects, base layers, external layers (WMS) and users; user authentication, specific project settings)
 * QGIS server proxy (caching and validating requests)
@@ -19,9 +19,9 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * separating project settings and code
 * user Interface changes
 
-**[Longer Description](http://level2.si/2015/06/whats-new-in-extended-qgis-web-client/)**
+** [Longer Description](http://level2.si/2015/06/whats-new-in-extended-qgis-web-client/)**
 
-##New features in 2016:
+## New features in 2016:
 * mobile client
 * using external location services for address and elevation
 * table filtering also reflects on graphics (layer is filtered as table)
@@ -30,18 +30,18 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 
 *Only PostGIS layers
 
-##Demo
+## Demo
 Visit **<a target="_blank" href="http://test.level2.si/gisapp/eu_demo?public=on">Demo by Level2</a>**
 
-##Services
+## Services
 * Support with installation and setting up
 * Custom development
 * Hosting of projects on our servers
 
-##Documentation
+## Documentation
 Read **[Wiki](../../wiki)**
 
-##Contributing
+## Contributing
 
 Support this project by donating.
 
@@ -52,7 +52,7 @@ Read this [tutorial about making changes to repositories](https://help.github.co
 
 Thank you!
 
-##Translations
+## Translations
 Available languages:
 * English
 * German
@@ -64,11 +64,11 @@ New language:
 * Read this **[page](../../wiki/6.-Translations)**
 
 
-##Contact
+## Contact
 **Uroš Preložnik**<br>
-uros@level2.si
+info@level2.si
 
-##License
+## License
 This software is released under a BSD license.
 
 Copyright (2010-2012), The QGIS Project and Level2 team (2014-2016), All rights reserved.
