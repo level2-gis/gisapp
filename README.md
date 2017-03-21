@@ -17,7 +17,7 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * Google StreetView integration
 * legend in layer tree
 * separating project settings and code
-* user Interface changes
+7* user Interface changes
 
 ** [Longer Description](http://level2.si/2015/06/whats-new-in-extended-qgis-web-client/)**
 
@@ -27,7 +27,6 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * table filtering also reflects on graphics (layer is filtered as table)
 * replace GeoNames Search with more powerful Mapzen Search API
 * baselayers refactoring, added support for BING Maps and WMTS layers on both clients
-
 *Only PostGIS layers
 
 ## Demo
@@ -71,7 +70,7 @@ info@level2.si
 ## License
 This software is released under a BSD license.
 
-Copyright (2010-2012), The QGIS Project and Level2 team (2014-2016), All rights reserved.
+Copyright (2010-2012), The QGIS Project and Level2 team (2014-2017), All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted
 provided that the following conditions are met:
