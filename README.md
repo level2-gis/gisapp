@@ -17,9 +17,9 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * Google StreetView integration
 * legend in layer tree
 * separating project settings and code
-7* user Interface changes
+* user Interface changes
 
-** [Longer Description](http://level2.si/2015/06/whats-new-in-extended-qgis-web-client/)**
+**[Longer Description](http://level2.si/2015/06/whats-new-in-extended-qgis-web-client/)**
 
 ## New features in 2016:
 * mobile client
