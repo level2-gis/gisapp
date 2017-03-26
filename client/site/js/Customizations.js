@@ -38,6 +38,7 @@ function customBeforeMapInit() {
     for (var j=0; j < tablesOnStart.length;j++) {
         var myLayerName = tablesOnStart[j];
         var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
+        var editable = projectData.layers[layerId].wfs;
 
         if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId)>=0) {
             var layer = new QGIS.SearchPanel({
@@ -48,7 +49,7 @@ function customBeforeMapInit() {
                 gridTitle: myLayerName,
                 gridResults: 2000,
                 gridResultsPageSize: 20,
-                gridEditable: true,
+                gridEditable: editable,
                 selectionLayer: myLayerName,
                 formItems: [],
                 doZoomToExtent: true,

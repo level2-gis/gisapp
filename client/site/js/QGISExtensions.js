@@ -1101,10 +1101,12 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                                 var tableId = 'table_' + this.queryLayer;
                                 var table = Ext.getCmp(tableId);
 
-                                if (cnt_filt < cnt_all) {
-                                    table.setTitle(this.queryLayer + "* (" + cnt_filt + ")");
-                                } else {
-                                    table.setTitle(this.queryLayer + " (" + cnt_all + ")");
+                                if(table != undefined) {
+                                    if (cnt_filt < cnt_all) {
+                                        table.setTitle(this.queryLayer + "* (" + cnt_filt + ")");
+                                    } else {
+                                        table.setTitle(this.queryLayer + " (" + cnt_all + ")");
+                                    }
                                 }
                             }
                         }

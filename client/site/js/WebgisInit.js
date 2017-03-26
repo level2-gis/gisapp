@@ -16,7 +16,7 @@ var selectedQueryableLayers; //later an array of all visible (selected and query
 var allLayers; //later an array containing all leaf layers
 var thematicLayer, highlightLayer, featureInfoHighlightLayer;
 var highLightGeometry = [];
-var WMSGetFInfo, WMSGetFInfoHover;
+var WMSGetFInfo , WMSGetFInfoHover;
 //var lastLayer, lastFeature;
 var featureInfoResultLayers;
 var measureControls;
@@ -48,8 +48,6 @@ var help_active = false; //help window is active or not
 var helpWin; //Ext window that will display the help file
 var legendMetadataWindow_active = false; //legend graphic and metadata window is active or not
 var legendMetadataWindow; //Ext window that will hold the legend and metatadata
-var editFormWindow_active = false;
-var editFormWindow;
 var legendMetaTabPanel; //a reference to the Ext tabpanel holding the tabs for legend graphic and metadata
 var legendTab; //a reference to the Ext tab holding the legend graphic
 var metadataTab; //a reference to the Ext tab holding the metadata information
@@ -1726,33 +1724,24 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 {
 
 
-                    iconCls : 'x-clearfilter-icon',
+                    iconCls: 'x-clearfilter-icon',
                     tooltip: TR.clearFilter,
                     //scale: 'medium',
                     //disabled: true,
                     handler: function () {
                         searchPanelInstance.resultsGrid.filters.clearFilters();
                     }
-                },{
+                },
+                {
 
-                    iconCls : 'x-edit-icon',
-                    tooltip: TR.editDisabled,
-                    id: 'editButton_'+searchPanelInstance.queryLayer,
+
+                    iconCls: 'x-clear-icon',
+                    tooltip: TR.clearSelection,
                     //scale: 'medium',
-                    disabled: true,
-                    handler: editHandler
+                    //disabled: true,
+                    handler: clearTableSelection
                 }
             ]);
-
-            //enable edit button in toolbar if table is editable
-            if (searchPanelInstance.gridEditable==true) {
-                var edBtn = Ext.getCmp('editButton_'+searchPanelInstance.queryLayer);
-                edBtn.disabled = false;
-                edBtn.tooltip = TR.editData;
-            }
-
-
-
         }
 
         searchPanelInstance.resultsGrid.on('rowclick', searchPanelInstance.onRowClick, searchPanelInstance);

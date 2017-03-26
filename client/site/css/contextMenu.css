@@ -26,6 +26,10 @@
     background-image:url(../gis_icons/filter_delete.png);
 }
 
+.x-clear-icon {
+    background-image:url(../gis_icons/mActionClear.png);
+}
+
 .icon-save { background-image: url(../gis_icons/save.gif) !important; background-repeat: no-repeat; }
 
 .icon-delete { background-image: url(../gis_icons/editor_delete.png) !important; background-repeat: no-repeat; }

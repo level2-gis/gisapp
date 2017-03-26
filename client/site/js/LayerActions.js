@@ -216,6 +216,8 @@ function exportData(layer,format) {
 function openAttTable() {
     var node = layerTree.getSelectionModel().getSelectedNode();
     var myLayerName = node.text;
+    var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
+    var editable = projectData.layers[layerId].wfs;
     var filter = null;
     var name = myLayerName;
 
@@ -224,7 +226,7 @@ function openAttTable() {
         filter = m.getFilter();
     }
 
-    name = myLayerName;// + filter;
+    name = myLayerName;// + filter;¸
 
     var layer = new QGIS.SearchPanel({
         useWmsRequest: true,
@@ -232,6 +234,7 @@ function openAttTable() {
         queryLayer: myLayerName,
         gridColumns: getLayerAttributes(myLayerName).columns,
         gridLocation: 'bottom',
+        gridEditable: editable,
         gridTitle: name,
         gridResults: 2000,
         gridResultsPageSize: 20,
@@ -251,6 +254,14 @@ function openAttTable() {
 
 }
 
+function clearTableSelection() {
+    var selmod = this.ownerCt.ownerCt.getSelectionModel();
+    selmod.clearSelections();
+
+    //clears selection in map
+    clearFeatureSelected();
+}
+
 function applyWMSFilter(item) {
     var idx = item.itemId.split('_')[1]-1;
     var node = layerTree.getSelectionModel().getSelectedNode();
@@ -260,7 +271,6 @@ function applyWMSFilter(item) {
     thematicLayer.redraw();
 
 }
-
 
 /**
  *
@@ -309,121 +319,16 @@ function getLayerAttributes(layer) {
         }
     }
 
+    var pluginColumn = getPluginColumns();
+    if(pluginColumn!=null) {
+        ret.columns.unshift(pluginColumn);
+    }
+
     ret.columns.unshift(new Ext.ux.grid.RowNumberer({width: 32}));
 
     return ret;
 }
 
-function setupEditFormWindow(title) {
-    editFormWindow = new Ext.Window({
-        title: title,
-        width: geoExtMap.getWidth() * 0.4,
-        autoScroll: true,
-        maximizable: true,
-        layout: 'fit',
-        shadow: false,
-        listeners: {
-            show:function() {
-                editFormWindow_active = true;
-            },
-            hide:function() {
-                editFormWindow_active = false;
-            },
-            close: function() {
-                editFormWindow = undefined;
-            }
-        }
-    });
-}
-
-function editHandler() {
-
-    var selmod = this.ownerCt.ownerCt.getSelectionModel();
-    if (selmod.selections.items.length==0) {
-        //TODO TRANSLATE
-        Ext.Msg.alert("Napaka","Izberi vrstico!");
-    }
-    else {
-        var selectedLayer = this.ownerCt.ownerCt.title;
-        var recId = selmod.getSelected().id;
-
-
-
-//        var saveStrategy = new OpenLayers.Strategy.Save();
-//        var refreshStrategy = new OpenLayers.Strategy.Refresh();
-
-//        var edit_1 = new OpenLayers.Layer.Vector("Editable Features", {
-//            strategies: [refreshStrategy,saveStrategy],
-//            projection: new OpenLayers.Projection("EPSG:2170"),
-//            protocol: new OpenLayers.Protocol.WFS({
-//                version: "1.0.0",
-//                srsName: "EPSG:2170",
-//                url: wmsURI,
-//                featureNS: "http://www.qgis.org/gml",
-//                featureType: selectedLayer,
-//                geometryName: "geometry"
-//                //styleMap: styleMapHighLightLayer
-//                //,schema: "http://demo.opengeo.org/geoserver/wfs/DescribeFeatureType?version=1.1.0&typename=og:restricted"
-//            })
-//        });
-
-        //edit_1.filter(new OpenLayers.Filter.Logical)
-
-        //refreshStrategy.activate();
-        //refreshStrategy.refresh();
-        //alert(edit_1.getFeatureById(0));
-        //geoExtMap.map.addLayers([edit_1]);
-
-
-        //initialize Ext Window if undefined
-        var editFormWindowTitle = TR.editData+ ": " + selectedLayer+" ID"+recId;
-        if (editFormWindow == undefined) {
-            setupEditFormWindow(editFormWindowTitle);
-        }
-        else {
-            editFormWindow.destroy();
-            setupEditFormWindow(editFormWindowTitle);
-        }
-
-        var editor = new QGIS.Editor({
-            editLayer: selectedLayer
-        });
-
-        //getfeature request
-        var getFeatureRequest = OpenLayers.Request.GET({
-            url: wmsURI,
-            params: {
-                typeName: editor.editLayer,
-                service: "WFS",
-                version: "1.0.0",
-                request: "GetFeature",
-                featureid: editor.editLayer+"."+recId
-            },
-            success: function(reply) {
-                var resultFormat = new OpenLayers.Format.GML();
-                var record = resultFormat.read(reply.responseText)[0];
-                editor.loadRecord(record);
-
-                //var feature = resultFormat.parseFeature(record);
-
-                //edit_1.removeAllFeatures();
-                //edit_1.addFeatures(record);
-
-                //refreshStrategy.refresh();
-
-            },
-            failure: function(reply) {
-                alert("failed");
-            }
-        });
-
-        //console.log("GetFeatureRequestReadyState="+getFeatureRequest.readyState);
-
-        editFormWindow.add(editor);
-        editFormWindow.doLayout();
-
-        if (editFormWindow_active == false) {
-            editFormWindow.show();
-        }
-    }
+function getPluginColumns() {
+    return null;
 }
