@@ -27,8 +27,10 @@ var TR = {
     noPermission: 'Nemate pravo pouzivat tento projekt.',
     noPublicAccess: 'Volný pristup pre tento projekt nie je nastavený.',
     clearFilter: 'Zmaz vetky filtre',
+    clearSelection: 'Clear selection',
     menuFilterText: 'Filtre',
     editData: 'Editovat data',
+    editMode: 'Edit mode',
     editDisabled: 'Editovanie nie je povolene.',
     editDelete: 'Zmaz',
     editSave: 'Uloz',
@@ -37,7 +39,9 @@ var TR = {
     mapHybrid: 'Hybridna mapa',
     mapTerrain: 'Teren',
     fiLocation: 'Pozicia',
-    fiElevation: 'nad morom'
+    fiElevation: 'nad morom',
+    cancel: 'Cancel',
+    transactionFail: 'Transaction failed'
 };
 
 /**

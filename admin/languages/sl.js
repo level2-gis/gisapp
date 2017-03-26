@@ -27,8 +27,10 @@ var TR = {
     noPermission: 'Nimate pravic za uporabo projekta',
     noPublicAccess: 'Javni dostop ni omogočen za ta projekt.',
     clearFilter: 'Pobriši vse filtre',
+    clearSelection: 'Clear selection',
     menuFilterText: 'Filtri',
     editData: 'Uredi podatke',
+    editMode: 'Edit mode',
     editDisabled: 'Urejanje onemogočeno',
     editDelete: 'Briši',
     editSave: 'Shrani',
@@ -37,7 +39,9 @@ var TR = {
     mapHybrid: 'Hibridni prikaz',
     mapTerrain: 'Topografska karta',
     fiLocation: 'Lokacija',
-    fiElevation: 'nadmorska višina'
+    fiElevation: 'nadmorska višina',
+    cancel: 'Prekini',
+    transactionFail: 'Transaction failed'
 };
 
 /**

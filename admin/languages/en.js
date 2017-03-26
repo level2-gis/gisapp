@@ -27,8 +27,10 @@ var TR = {
     noPermission: 'You don\'t have permissions to use this project.',
     noPublicAccess: 'Public access is not allowed with this project.',
     clearFilter: 'Clear all filters',
+    clearSelection: 'Clear selection',
     menuFilterText: 'Filters',
     editData: 'Edit data',
+    editMode: 'Edit mode',
     editDisabled: 'Editing disabled',
     editDelete: 'Delete',
     editSave: 'Save',
@@ -37,7 +39,9 @@ var TR = {
     mapHybrid: 'Hybrid',
     mapTerrain: 'Terrain',
     fiLocation: 'Location',
-    fiElevation: 'above sea level'
+    fiElevation: 'above sea level',
+    cancel: 'Cancel',
+    transactionFail: 'Transaction failed'
 };
 
 /**
