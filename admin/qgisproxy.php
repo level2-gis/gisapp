@@ -132,17 +132,14 @@ function doGetRequest($query_arr, $map, $client, $http_ver)
                 $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS']);
                 $contentType = "image/png";
                 break;
-            case "GetFeatureInfo":
-                //only caching large responses (whole tables)
-                if (array_key_exists("FEATURE_COUNT", $query_arr)) {
-                    $count = $query_arr['FEATURE_COUNT'];
-                    if (is_numeric($count)) {
-                        if (intval($count) > 100) {
-                            $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['FILTER']);
-                        }
-                    }
-                }
-                break;
+//            case "GetFeatureInfo":
+//                //skip for now
+//                if (array_key_exists("QUERY_LAYERS", $query_arr)) {
+//                    if($_SESSION->qgs->layers[$query_arr['QUERY_LAYERS']]->wfs===false) {
+//                            $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['FILTER']);
+//                    }
+//                }
+//                break;
         }
     }
 

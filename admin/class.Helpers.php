@@ -323,7 +323,7 @@ class Helpers
     }
 
     public static function checkModulexist($name) {
-        $dir = dirname(dirname(__FILE__)) . "/plugins123/";
+        $dir = dirname(dirname(__FILE__)) . "/plugins/";
         if (file_exists($dir)) {
             $scan = array_slice(scandir($dir), 2);
 

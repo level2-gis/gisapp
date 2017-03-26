@@ -21,7 +21,7 @@ Header("content-type: application/x-javascript");
 (function () {
 
     var jsFiles = [
-        "client/site/js/Translations.js",
+        "client/site/js/Translations_eqwc.js",
         "client/site/js/PagingStore.js",
         "client/site/js/LoadAppProjectData.js",
         "client/site/js/Customizations.js",
