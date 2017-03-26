@@ -1,0 +1,1 @@
+EQWC plugins folder
