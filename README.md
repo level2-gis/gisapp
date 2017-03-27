@@ -12,7 +12,7 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * user authorization with optional guest access
 * server side (database for storing info about projects, base layers, external layers (WMS) and users; user authentication, specific project settings)
 * QGIS server proxy (caching and validating requests)
-* layer context menu with Zoom to layer extent, Open attribute data, Data Export* (SHP, DXF, CSV)
+* layer context menu with Zoom to layer extent, Open attribute data, Data Export (SHP, DXF, CSV)
 * geolocation button
 * Google StreetView integration
 * legend in layer tree
@@ -27,7 +27,6 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * table filtering also reflects on graphics (layer is filtered as table)
 * replace GeoNames Search with more powerful Mapzen Search API
 * baselayers refactoring, added support for BING Maps and WMTS layers on both clients
-*Only PostGIS layers
 
 ## Demo
 Visit **<a target="_blank" href="http://test.level2.si/gisapp/eu_demo?public=on">Demo by Level2</a>**
