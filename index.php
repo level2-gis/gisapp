@@ -282,9 +282,15 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
                 <script type="text/javascript" src="client/eqwc_debug.php"></script>
 
+
                 <?php if ($edit) {
-                    echo '<script type="text/javascript" src="plugins/editing/ole/editor_debug.js"></script>';
-                }?>
+                    echo '<script type="text/javascript" src="plugins/editing/lang/' . $def_lang . '.js"></script>';
+                    //DEBUG, remove editor.js before
+                    //echo '<script type="text/javascript" src="plugins/editing/editor_debug.js"></script>';
+                } ?>
+                <script type="text/javascript">
+                    OpenLayers.Lang.setCode('<?php echo $def_lang ?>');
+                </script>
 
                 <style type="text/css">
                     #dpiDetection {

@@ -253,7 +253,7 @@ try {
             $user = $_SESSION["user_name"];
         }
         if ($user != null && $user == 'guest') {
-            throw new Exception\ClientException("Guest users are not allowed to edit data!", new Request('GET', QGISSERVERURL));
+            throw new Exception\ClientException("No permission for guest users!", new Request('GET', QGISSERVERURL));
         }
 
         doPostRequest($query_arr, $client, $http_ver);

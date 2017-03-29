@@ -319,7 +319,7 @@ function getLayerAttributes(layer) {
         }
     }
 
-    var pluginColumn = getPluginColumns();
+    var pluginColumn = getPluginActionColumns(layerId);
     if(pluginColumn!=null) {
         ret.columns.unshift(pluginColumn);
     }
@@ -329,6 +329,6 @@ function getLayerAttributes(layer) {
     return ret;
 }
 
-function getPluginColumns() {
+function getPluginActionColumns(layerId) {
     return null;
 }
