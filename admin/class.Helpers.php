@@ -126,9 +126,18 @@ class Helpers
         return self::msg(true, $project);
     }
 
+    public static function getQgsTimeStamp($map) {
+        $time = 0;
+        if (file_exists($map)) {
+            $time = filemtime($map);
+        }
+        return $time;
+    }
+
     public function getQgsProjectProperties($map)
     {
         $qgs = self::getQgsProject($map);
+        $time = self::getQgsTimeStamp($map);
         $prop = new \stdClass();
 
         if (!($qgs["status"])) {
@@ -139,6 +148,7 @@ class Helpers
             $prop->extent = [];
             $prop->layers = [];
             $prop->use_ids = false;
+            $prop->time = $time;
             $prop->message = $qgs["message"];
             //return false;
         } else {
@@ -149,7 +159,7 @@ class Helpers
             $prop->layers = [];
             //parsing boolean values, be careful (bool)"false" = true!!!
             $prop->use_ids = filter_var($qgs["message"]->properties->WMSUseLayerIDs,FILTER_VALIDATE_BOOLEAN);
-
+            $prop->time = $time;
             try {
 
                 $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],$prop->title,0);
@@ -166,6 +176,7 @@ class Helpers
                             $lay->provider = (string)$lay_info["message"]["provider"];
                             $lay->geom_type = (string)$lay_info["message"]["type"];
                             $lay->geom_column = (string)$lay_info["message"]["geom_column"];
+                            $lay->crs = (string)$lay_info["message"]["crs"];
                         }
                     }
 
@@ -248,7 +259,8 @@ class Helpers
         $ds_parms = array(
             'provider' => (string)$layer->provider,
             'type' => '',
-            'geom_column' => ''
+            'geom_column' => '',
+            'crs' => (string)$layer->srs->spatialrefsys->authid
         );
 
         //only for postgres and spatialite layers
@@ -315,6 +327,7 @@ class Helpers
                     $lay->provider = '';    //fill later
                     $lay->geom_type = '';   //fill later
                     $lay->geom_column = ''; //fill later
+                    $lay->crs = ''; //fill later
 
                     array_push($this->qgs_layers, $lay);
                 }

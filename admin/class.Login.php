@@ -16,7 +16,9 @@
 
 namespace GisApp;
 
+use Exception;
 use \PDO;
+use PDOException;
 
 require_once("settings.php");
 require_once("class.DbLoader.php");
@@ -257,6 +259,7 @@ class Login
                 //get additional project info
                 $project_data = $gisApp->getProjectDataFromDB();
                 if($project_data==false) {
+                    $this->feedback = $gisApp->feedback;
                     return false;
                 }
 

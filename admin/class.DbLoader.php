@@ -31,12 +31,18 @@ class DbLoader
         $query = $this->db_connection->prepare($sql);
         $query->bindValue(':user_name', $this->user);
         $query->bindValue(':project', $this->project);
-        $query->execute();
-        $result_row = $query->fetchObject();
-        if ($result_row) {
-            return $result_row->check_user_project;
-        } else
-            return 'TR.loginFailMessage';
+        $exec = $query->execute();
+        if($exec) {
+            $result_row = $query->fetchObject();
+            if ($result_row) {
+                return $result_row->check_user_project;
+            } else
+                return 'TR.loginFailMessage';
+        }
+        else {
+            //SQL execute error, get error message
+            return $query->errorInfo()[2];
+        }
     }
 
     public function getProjectDataFromDB()
@@ -48,8 +54,11 @@ class DbLoader
         $result_row = $query->fetchObject();
         if ($result_row) {
             return $result_row->data;
-        } else
+        } else {
+            $this->feedback = $query->errorInfo()[2];
             return false;
+        }
+
 
     }
 
