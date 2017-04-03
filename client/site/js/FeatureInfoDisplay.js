@@ -386,9 +386,13 @@ function showFeatureSelected(args) {
 
 function clearFeatureSelected() {
     // clear selection
-    thematicLayer.mergeNewParams({
-        "SELECTION": null
-    });
+    if (thematicLayer.params['SELECTION'] != undefined) {
+        thematicLayer.mergeNewParams({
+            "SELECTION": null
+        });
+    }
+
+    featureInfoHighlightLayer.removeAllFeatures();
 }
 
 function parseFIResult(node) {

@@ -56,7 +56,7 @@ function customBeforeMapInit() {
                 tabClosable: false
             });
             layer.onSubmit();
-            layer.on("featureselected", showFeatureSelected);
+            //layer.on("featureselected", showFeatureSelected);
             layer.on("featureselectioncleared", clearFeatureSelected);
             layer.on("beforesearchdataloaded", showSearchPanelResults);
         }

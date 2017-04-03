@@ -1864,7 +1864,8 @@ function mapToolbarHandler(btn, evt) {
             activateGetFeatureInfo(false);
             if (hoverPopup) {removeHoverPopup();}
             if (clickPopup) {removeClickPopup();}
-            featureInfoHighlightLayer.removeAllFeatures();
+            //featureInfoHighlightLayer.removeAllFeatures();
+            clearFeatureSelected();
             mainStatusText.setText(modeNavigationString[lang]);
         }
     }

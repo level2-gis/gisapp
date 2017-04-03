@@ -7,8 +7,7 @@ require_once("admin/settings.php");
 require 'vendor/autoload.php';
 
 function goMobile($lang) {
- ?>
-    <!DOCTYPE html>
+ ?><!DOCTYPE html>
     <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -235,10 +234,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
         goMobile($def_lang);
     }
     else {
-
-            ?>
-
-            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+            ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
             <html>
             <head>
@@ -268,8 +264,6 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
                 <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
 
-                <script type="text/javascript" src="admin/languages/locale/ext-lang-<?php echo $def_lang ?>.js?v=1.1.2"></script>
-                <script type="text/javascript" src="admin/languages/<?php echo $def_lang ?>.js?v=1.1.3"></script>
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
                 <script type="text/javascript" src="client_common/customProjections.js"></script>
 
@@ -283,11 +277,9 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/eqwc_debug.php"></script>
 
 
-                <?php if ($edit) {
-                    echo '<script type="text/javascript" src="plugins/editing/lang/' . $def_lang . '.js"></script>';
-                    //DEBUG, remove editor.js before
-                    //echo '<script type="text/javascript" src="plugins/editing/editor_debug.js"></script>';
-                } ?>
+<!--                DEBUG remove editor.js before-->
+<!--                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>-->
+
                 <script type="text/javascript">
                     OpenLayers.Lang.setCode('<?php echo $def_lang ?>');
                 </script>

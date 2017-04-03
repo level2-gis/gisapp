@@ -7,6 +7,8 @@
  *
  */
 
+/* global projectData */
+
 function buildLayerContextMenu(node) {
 
     // prepare the generic context menu for Layer
@@ -162,6 +164,24 @@ function contextMenuHandler(node) {
     node.menu.show ( node.ui.getAnchor());
 }
 
+function zoomHandler(grid, rowIndex, colIndex, item, e) {
+    var store = grid.getStore();
+    var record = store.getAt(rowIndex);
+    var recId = record.id;
+    var selectedLayer = grid.itemId;
+
+    grid.getSelectionModel().selectRow(rowIndex);
+
+    //add fields as it would be from search results
+    //fix bbox
+    var bbox = record.data.bbox;
+    record.data.layer = selectedLayer;
+    record.data.doZoomToExtent = true;
+    record.data.id= recId;
+    record.data.bbox = OpenLayers.Bounds.fromArray( [bbox.minx, bbox.miny, bbox.maxx, bbox.maxy] );
+
+    showFeatureSelected(record.data);
+}
 
 function exportData(layer,format) {
 
@@ -217,7 +237,7 @@ function openAttTable() {
     var node = layerTree.getSelectionModel().getSelectedNode();
     var myLayerName = node.text;
     var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
-    var editable = projectData.layers[layerId].wfs;
+    var editable = projectData.use_ids ? projectData.layers[layerId].wfs : false;
     var filter = null;
     var name = myLayerName;
 
@@ -248,7 +268,7 @@ function openAttTable() {
 
     layer.onSubmit();
 
-    layer.on("featureselected", showFeatureSelected);
+    //layer.on("featureselected", showFeatureSelected);
     layer.on("featureselectioncleared", clearFeatureSelected);
     layer.on("beforesearchdataloaded", showSearchPanelResults);
 
@@ -319,9 +339,9 @@ function getLayerAttributes(layer) {
         }
     }
 
-    var pluginColumn = getPluginActionColumns(layerId);
-    if(pluginColumn!=null) {
-        ret.columns.unshift(pluginColumn);
+    var actionColumn = getActionColumns(layerId);
+    if(actionColumn!=null) {
+        ret.columns.unshift(actionColumn);
     }
 
     ret.columns.unshift(new Ext.ux.grid.RowNumberer({width: 32}));
@@ -329,6 +349,17 @@ function getLayerAttributes(layer) {
     return ret;
 }
 
-function getPluginActionColumns(layerId) {
-    return null;
+function getActionColumns(layerId) {
+
+    var action = new Ext.grid.ActionColumn({
+        width: 22,
+        items: [{
+            icon: iconDirectory + "contextmenu/zoom.png",
+            tooltip: TR.show,
+            disabled: false,
+            handler: zoomHandler
+        }]
+    });
+
+    return action;
 }
