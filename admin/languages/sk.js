@@ -41,7 +41,8 @@ var TR = {
     fiLocation: 'Pozicia',
     fiElevation: 'nad morom',
     cancel: 'Cancel',
-    transactionFail: 'Transaction failed'
+    transactionFail: 'Transaction failed',
+    show: 'Show'
 };
 
 /**

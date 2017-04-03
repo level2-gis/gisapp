@@ -41,7 +41,8 @@ var TR = {
     fiLocation: 'Position',
     fiElevation: 'über dem Meeresspiegel',
     cancel: 'Abbrechen',
-    transactionFail: 'Transaction failed'
+    transactionFail: 'Transaction failed',
+    show: 'Show'
 };
 
 /**

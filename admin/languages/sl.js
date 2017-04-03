@@ -41,7 +41,8 @@ var TR = {
     fiLocation: 'Lokacija',
     fiElevation: 'nadmorska višina',
     cancel: 'Prekini',
-    transactionFail: 'Transaction failed'
+    transactionFail: 'Transaction failed',
+    show: 'Show'
 };
 
 /**
