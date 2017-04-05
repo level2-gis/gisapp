@@ -35308,434 +35308,6 @@ OpenLayers.Control.PanZoomBar = OpenLayers.Class(OpenLayers.Control.PanZoom, {
     CLASS_NAME: "OpenLayers.Control.PanZoomBar"
 });
 /* ======================================================================
-    OpenLayers/Control/DragPan.js
-   ====================================================================== */
-
-/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
- * full list of contributors). Published under the 2-clause BSD license.
- * See license.txt in the OpenLayers distribution or repository for the
- * full text of the license. */
-
-/**
- * @requires OpenLayers/Control.js
- * @requires OpenLayers/Handler/Drag.js
- */
-
-/**
- * Class: OpenLayers.Control.DragPan
- * The DragPan control pans the map with a drag of the mouse.
- *
- * Inherits from:
- *  - <OpenLayers.Control>
- */
-OpenLayers.Control.DragPan = OpenLayers.Class(OpenLayers.Control, {
-
-    /** 
-     * Property: type
-     * {OpenLayers.Control.TYPES}
-     */
-    type: OpenLayers.Control.TYPE_TOOL,
-    
-    /**
-     * Property: panned
-     * {Boolean} The map moved.
-     */
-    panned: false,
-    
-    /**
-     * Property: interval
-     * {Integer} The number of milliseconds that should ellapse before
-     *     panning the map again. Defaults to 0 milliseconds, which means that
-     *     no separate cycle is used for panning. In most cases you won't want
-     *     to change this value. For slow machines/devices larger values can be
-     *     tried out.
-     */
-    interval: 0,
-    
-    /**
-     * APIProperty: documentDrag
-     * {Boolean} If set to true, mouse dragging will continue even if the
-     *     mouse cursor leaves the map viewport. Default is false.
-     */
-    documentDrag: false,
-
-    /**
-     * Property: kinetic
-     * {<OpenLayers.Kinetic>} The OpenLayers.Kinetic object.
-     */
-    kinetic: null,
-
-    /**
-     * APIProperty: enableKinetic
-     * {Boolean} Set this option to enable "kinetic dragging". Can be
-     *     set to true or to an object. If set to an object this
-     *     object will be passed to the {<OpenLayers.Kinetic>}
-     *     constructor. Defaults to true.
-     *     To get kinetic dragging, ensure that OpenLayers/Kinetic.js is
-     *     included in your build config.
-     */
-    enableKinetic: true,
-
-    /**
-     * APIProperty: kineticInterval
-     * {Integer} Interval in milliseconds between 2 steps in the "kinetic
-     *     scrolling". Applies only if enableKinetic is set. Defaults
-     *     to 10 milliseconds.
-     */
-    kineticInterval: 10,
-
-
-    /**
-     * Method: draw
-     * Creates a Drag handler, using <panMap> and
-     * <panMapDone> as callbacks.
-     */    
-    draw: function() {
-        if (this.enableKinetic && OpenLayers.Kinetic) {
-            var config = {interval: this.kineticInterval};
-            if(typeof this.enableKinetic === "object") {
-                config = OpenLayers.Util.extend(config, this.enableKinetic);
-            }
-            this.kinetic = new OpenLayers.Kinetic(config);
-        }
-        this.handler = new OpenLayers.Handler.Drag(this, {
-                "move": this.panMap,
-                "done": this.panMapDone,
-                "down": this.panMapStart
-            }, {
-                interval: this.interval,
-                documentDrag: this.documentDrag
-            }
-        );
-    },
-
-    /**
-     * Method: panMapStart
-     */
-    panMapStart: function() {
-        if(this.kinetic) {
-            this.kinetic.begin();
-        }
-    },
-
-    /**
-    * Method: panMap
-    *
-    * Parameters:
-    * xy - {<OpenLayers.Pixel>} Pixel of the mouse position
-    */
-    panMap: function(xy) {
-        if(this.kinetic) {
-            this.kinetic.update(xy);
-        }
-        this.panned = true;
-        this.map.pan(
-            this.handler.last.x - xy.x,
-            this.handler.last.y - xy.y,
-            {dragging: true, animate: false}
-        );
-    },
-    
-    /**
-     * Method: panMapDone
-     * Finish the panning operation.  Only call setCenter (through <panMap>)
-     *     if the map has actually been moved.
-     *
-     * Parameters:
-     * xy - {<OpenLayers.Pixel>} Pixel of the mouse position
-     */
-    panMapDone: function(xy) {
-        if(this.panned) {
-            var res = null;
-            if (this.kinetic) {
-                res = this.kinetic.end(xy);
-            }
-            this.map.pan(
-                this.handler.last.x - xy.x,
-                this.handler.last.y - xy.y,
-                {dragging: !!res, animate: false}
-            );
-            if (res) {
-                var self = this;
-                this.kinetic.move(res, function(x, y, end) {
-                    self.map.pan(x, y, {dragging: !end, animate: false});
-                });
-            }
-            this.panned = false;
-        }
-    },
-
-    CLASS_NAME: "OpenLayers.Control.DragPan"
-});
-/* ======================================================================
-    OpenLayers/Handler/MouseWheel.js
-   ====================================================================== */
-
-/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
- * full list of contributors). Published under the 2-clause BSD license.
- * See license.txt in the OpenLayers distribution or repository for the
- * full text of the license. */
-
-/**
- * @requires OpenLayers/Handler.js
- */
-
-/**
- * Class: OpenLayers.Handler.MouseWheel
- * Handler for wheel up/down events.
- * 
- * Inherits from:
- *  - <OpenLayers.Handler>
- */
-OpenLayers.Handler.MouseWheel = OpenLayers.Class(OpenLayers.Handler, {
-    /** 
-     * Property: wheelListener 
-     * {function} 
-     */
-    wheelListener: null,
-
-    /**
-     * Property: interval
-     * {Integer} In order to increase server performance, an interval (in 
-     *     milliseconds) can be set to reduce the number of up/down events 
-     *     called. If set, a new up/down event will not be set until the 
-     *     interval has passed. 
-     *     Defaults to 0, meaning no interval. 
-     */
-    interval: 0,
-    
-    /**
-     * Property: maxDelta
-     * {Integer} Maximum delta to collect before breaking from the current
-     *    interval. In cumulative mode, this also limits the maximum delta
-     *    returned from the handler. Default is Number.POSITIVE_INFINITY.
-     */
-    maxDelta: Number.POSITIVE_INFINITY,
-    
-    /**
-     * Property: delta
-     * {Integer} When interval is set, delta collects the mousewheel z-deltas
-     *     of the events that occur within the interval.
-     *      See also the cumulative option
-     */
-    delta: 0,
-    
-    /**
-     * Property: cumulative
-     * {Boolean} When interval is set: true to collect all the mousewheel 
-     *     z-deltas, false to only record the delta direction (positive or
-     *     negative)
-     */
-    cumulative: true,
-    
-    /**
-     * Constructor: OpenLayers.Handler.MouseWheel
-     *
-     * Parameters:
-     * control - {<OpenLayers.Control>} 
-     * callbacks - {Object} An object containing a single function to be
-     *                          called when the drag operation is finished.
-     *                          The callback should expect to receive a single
-     *                          argument, the point geometry.
-     * options - {Object} 
-     */
-    initialize: function(control, callbacks, options) {
-        OpenLayers.Handler.prototype.initialize.apply(this, arguments);
-        this.wheelListener = OpenLayers.Function.bindAsEventListener(
-            this.onWheelEvent, this
-        );
-    },
-
-    /**
-     * Method: destroy
-     */    
-    destroy: function() {
-        OpenLayers.Handler.prototype.destroy.apply(this, arguments);
-        this.wheelListener = null;
-    },
-
-    /**
-     *  Mouse ScrollWheel code thanks to http://adomas.org/javascript-mouse-wheel/
-     */
-
-    /** 
-     * Method: onWheelEvent
-     * Catch the wheel event and handle it xbrowserly
-     * 
-     * Parameters:
-     * e - {Event} 
-     */
-    onWheelEvent: function(e){
-        
-        // make sure we have a map and check keyboard modifiers
-        if (!this.map || !this.checkModifiers(e)) {
-            return;
-        }
-        
-        // Ride up the element's DOM hierarchy to determine if it or any of 
-        //  its ancestors was: 
-        //   * specifically marked as scrollable (CSS overflow property)
-        //   * one of our layer divs or a div marked as scrollable
-        //     ('olScrollable' CSS class)
-        //   * the map div
-        //
-        var overScrollableDiv = false;
-        var allowScroll = false;
-        var overMapDiv = false;
-        
-        var elem = OpenLayers.Event.element(e);
-        while((elem != null) && !overMapDiv && !overScrollableDiv) {
-
-            if (!overScrollableDiv) {
-                try {
-                    var overflow;
-                    if (elem.currentStyle) {
-                        overflow = elem.currentStyle["overflow"];
-                    } else {
-                        var style = 
-                            document.defaultView.getComputedStyle(elem, null);
-                        overflow = style.getPropertyValue("overflow");
-                    }
-                    overScrollableDiv = ( overflow && 
-                        (overflow == "auto") || (overflow == "scroll") );
-                } catch(err) {
-                    //sometimes when scrolling in a popup, this causes 
-                    // obscure browser error
-                }
-            }
-
-            if (!allowScroll) {
-                allowScroll = OpenLayers.Element.hasClass(elem, 'olScrollable');
-                if (!allowScroll) {
-                    for (var i = 0, len = this.map.layers.length; i < len; i++) {
-                        // Are we in the layer div? Note that we have two cases
-                        // here: one is to catch EventPane layers, which have a
-                        // pane above the layer (layer.pane)
-                        var layer = this.map.layers[i];
-                        if (elem == layer.div || elem == layer.pane) {
-                            allowScroll = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            overMapDiv = (elem == this.map.div);
-
-            elem = elem.parentNode;
-        }
-        
-        // Logic below is the following:
-        //
-        // If we are over a scrollable div or not over the map div:
-        //  * do nothing (let the browser handle scrolling)
-        //
-        //    otherwise 
-        // 
-        //    If we are over the layer div or a 'olScrollable' div:
-        //     * zoom/in out
-        //     then
-        //     * kill event (so as not to also scroll the page after zooming)
-        //
-        //       otherwise
-        //
-        //       Kill the event (dont scroll the page if we wheel over the 
-        //        layerswitcher or the pan/zoom control)
-        //
-        if (!overScrollableDiv && overMapDiv) {
-            if (allowScroll) {
-                var delta = 0;
-                
-                if (e.wheelDelta) {
-                    delta = e.wheelDelta;
-                    if (delta % 160 === 0) {
-                        // opera have steps of 160 instead of 120
-                        delta = delta * 0.75;
-                    }
-                    delta = delta / 120;
-                } else if (e.detail) {
-                    // detail in Firefox on OS X is 1/3 of Windows
-                    // so force delta 1 / -1
-                    delta = - (e.detail / Math.abs(e.detail));
-                }
-                this.delta += delta;
-
-                window.clearTimeout(this._timeoutId);
-                if(this.interval && Math.abs(this.delta) < this.maxDelta) {
-                    // store e because window.event might change during delay
-                    var evt = OpenLayers.Util.extend({}, e);
-                    this._timeoutId = window.setTimeout(
-                        OpenLayers.Function.bind(function(){
-                            this.wheelZoom(evt);
-                        }, this),
-                        this.interval
-                    );
-                } else {
-                    this.wheelZoom(e);
-                }
-            }
-            OpenLayers.Event.stop(e);
-        }
-    },
-
-    /**
-     * Method: wheelZoom
-     * Given the wheel event, we carry out the appropriate zooming in or out,
-     *     based on the 'wheelDelta' or 'detail' property of the event.
-     * 
-     * Parameters:
-     * e - {Event}
-     */
-    wheelZoom: function(e) {
-        var delta = this.delta;
-        this.delta = 0;
-        
-        if (delta) {
-            e.xy = this.map.events.getMousePosition(e);
-            if (delta < 0) {
-                this.callback("down",
-                    [e, this.cumulative ? Math.max(-this.maxDelta, delta) : -1]);
-            } else {
-                this.callback("up",
-                    [e, this.cumulative ? Math.min(this.maxDelta, delta) : 1]);
-            }
-        }
-    },
-    
-    /**
-     * Method: activate 
-     */
-    activate: function (evt) {
-        if (OpenLayers.Handler.prototype.activate.apply(this, arguments)) {
-            //register mousewheel events specifically on the window and document
-            var wheelListener = this.wheelListener;
-            OpenLayers.Event.observe(window, "DOMMouseScroll", wheelListener);
-            OpenLayers.Event.observe(window, "mousewheel", wheelListener);
-            OpenLayers.Event.observe(document, "mousewheel", wheelListener);
-            return true;
-        } else {
-            return false;
-        }
-    },
-
-    /**
-     * Method: deactivate 
-     */
-    deactivate: function (evt) {
-        if (OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {
-            // unregister mousewheel events specifically on the window and document
-            var wheelListener = this.wheelListener;
-            OpenLayers.Event.stopObserving(window, "DOMMouseScroll", wheelListener);
-            OpenLayers.Event.stopObserving(window, "mousewheel", wheelListener);
-            OpenLayers.Event.stopObserving(document, "mousewheel", wheelListener);
-            return true;
-        } else {
-            return false;
-        }
-    },
-
-    CLASS_NAME: "OpenLayers.Handler.MouseWheel"
-});
-/* ======================================================================
     OpenLayers/Handler/Click.js
    ====================================================================== */
 
@@ -36243,6 +35815,1436 @@ OpenLayers.Handler.Click = OpenLayers.Class(OpenLayers.Handler, {
     },
 
     CLASS_NAME: "OpenLayers.Handler.Click"
+});
+/* ======================================================================
+    OpenLayers/Handler/Hover.js
+   ====================================================================== */
+
+/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
+ * full text of the license. */
+
+/**
+ * @requires OpenLayers/Handler.js
+ */
+
+/**
+ * Class: OpenLayers.Handler.Hover
+ * The hover handler is to be used to emulate mouseovers on objects
+ *      on the map that aren't DOM elements. For example one can use
+ *      this handler to send WMS/GetFeatureInfo requests as the user
+ *      moves the mouve over the map.
+ * 
+ * Inherits from:
+ *  - <OpenLayers.Handler> 
+ */
+OpenLayers.Handler.Hover = OpenLayers.Class(OpenLayers.Handler, {
+
+    /**
+     * APIProperty: delay
+     * {Integer} - Number of milliseconds between mousemoves before
+     *      the event is considered a hover. Default is 500.
+     */
+    delay: 500,
+    
+    /**
+     * APIProperty: pixelTolerance
+     * {Integer} - Maximum number of pixels between mousemoves for
+     *      an event to be considered a hover. Default is null.
+     */
+    pixelTolerance: null,
+
+    /**
+     * APIProperty: stopMove
+     * {Boolean} - Stop other listeners from being notified on mousemoves.
+     *      Default is false.
+     */
+    stopMove: false,
+
+    /**
+     * Property: px
+     * {<OpenLayers.Pixel>} - The location of the last mousemove, expressed
+     *      in pixels.
+     */
+    px: null,
+
+    /**
+     * Property: timerId
+     * {Number} - The id of the timer.
+     */
+    timerId: null,
+ 
+    /**
+     * Constructor: OpenLayers.Handler.Hover
+     * Construct a hover handler.
+     *
+     * Parameters:
+     * control - {<OpenLayers.Control>} The control that initialized this
+     *     handler.  The control is assumed to have a valid map property; that
+     *     map is used in the handler's own setMap method.
+     * callbacks - {Object} An object with keys corresponding to callbacks
+     *     that will be called by the handler. The callbacks should
+     *     expect to receive a single argument, the event. Callbacks for
+     *     'move', the mouse is moving, and 'pause', the mouse is pausing,
+     *     are supported.
+     * options - {Object} An optional object whose properties will be set on
+     *     the handler.
+     */
+
+    /**
+     * Method: mousemove
+     * Called when the mouse moves on the map.
+     *
+     * Parameters:
+     * evt - {<OpenLayers.Event>}
+     *
+     * Returns:
+     * {Boolean} Continue propagating this event.
+     */
+    mousemove: function(evt) {
+        if(this.passesTolerance(evt.xy)) {
+            this.clearTimer();
+            this.callback('move', [evt]);
+            this.px = evt.xy;
+            // clone the evt so original properties can be accessed even
+            // if the browser deletes them during the delay
+            evt = OpenLayers.Util.extend({}, evt);
+            this.timerId = window.setTimeout(
+                OpenLayers.Function.bind(this.delayedCall, this, evt),
+                this.delay
+            );
+        }
+        return !this.stopMove;
+    },
+
+    /**
+     * Method: mouseout
+     * Called when the mouse goes out of the map.
+     *
+     * Parameters:
+     * evt - {<OpenLayers.Event>}
+     *
+     * Returns:
+     * {Boolean} Continue propagating this event.
+     */
+    mouseout: function(evt) {
+        if (OpenLayers.Util.mouseLeft(evt, this.map.viewPortDiv)) {
+            this.clearTimer();
+            this.callback('move', [evt]);
+        }
+        return true;
+    },
+
+    /**
+     * Method: passesTolerance
+     * Determine whether the mouse move is within the optional pixel tolerance.
+     *
+     * Parameters:
+     * px - {<OpenLayers.Pixel>}
+     *
+     * Returns:
+     * {Boolean} The mouse move is within the pixel tolerance.
+     */
+    passesTolerance: function(px) {
+        var passes = true;
+        if(this.pixelTolerance && this.px) {
+            var dpx = Math.sqrt(
+                Math.pow(this.px.x - px.x, 2) +
+                Math.pow(this.px.y - px.y, 2)
+            );
+            if(dpx < this.pixelTolerance) {
+                passes = false;
+            }
+        }
+        return passes;
+    },
+
+    /**
+     * Method: clearTimer
+     * Clear the timer and set <timerId> to null.
+     */
+    clearTimer: function() {
+        if(this.timerId != null) {
+            window.clearTimeout(this.timerId);
+            this.timerId = null;
+        }
+    },
+
+    /**
+     * Method: delayedCall
+     * Triggers pause callback.
+     *
+     * Parameters:
+     * evt - {<OpenLayers.Event>}
+     */
+    delayedCall: function(evt) {
+        this.callback('pause', [evt]);
+    },
+
+    /**
+     * APIMethod: deactivate
+     * Deactivate the handler.
+     *
+     * Returns:
+     * {Boolean} The handler was successfully deactivated.
+     */
+    deactivate: function() {
+        var deactivated = false;
+        if(OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {
+            this.clearTimer();
+            deactivated = true;
+        }
+        return deactivated;
+    },
+
+    CLASS_NAME: "OpenLayers.Handler.Hover"
+});
+/* ======================================================================
+    OpenLayers/Filter.js
+   ====================================================================== */
+
+/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
+ * full text of the license. */
+
+
+/**
+ * @requires OpenLayers/BaseTypes/Class.js
+ * @requires OpenLayers/Util.js
+ * @requires OpenLayers/Style.js
+ */
+
+/**
+ * Class: OpenLayers.Filter
+ * This class represents an OGC Filter.
+ */
+OpenLayers.Filter = OpenLayers.Class({
+    
+    /** 
+     * Constructor: OpenLayers.Filter
+     * This class represents a generic filter.
+     *
+     * Parameters:
+     * options - {Object} Optional object whose properties will be set on the
+     *     instance.
+     * 
+     * Returns:
+     * {<OpenLayers.Filter>}
+     */
+    initialize: function(options) {
+        OpenLayers.Util.extend(this, options);
+    },
+
+    /** 
+     * APIMethod: destroy
+     * Remove reference to anything added.
+     */
+    destroy: function() {
+    },
+
+    /**
+     * APIMethod: evaluate
+     * Evaluates this filter in a specific context.  Instances or subclasses
+     * are supposed to override this method.
+     * 
+     * Parameters:
+     * context - {Object} Context to use in evaluating the filter.  If a vector
+     *     feature is provided, the feature.attributes will be used as context.
+     * 
+     * Returns:
+     * {Boolean} The filter applies.
+     */
+    evaluate: function(context) {
+        return true;
+    },
+    
+    /**
+     * APIMethod: clone
+     * Clones this filter. Should be implemented by subclasses.
+     * 
+     * Returns:
+     * {<OpenLayers.Filter>} Clone of this filter.
+     */
+    clone: function() {
+        return null;
+    },
+    
+    /**
+     * APIMethod: toString
+     *
+     * Returns:
+     * {String} Include <OpenLayers.Format.CQL> in your build to get a CQL
+     *     representation of the filter returned. Otherwise "[Object object]"
+     *     will be returned.
+     */
+    toString: function() {
+        var string;
+        if (OpenLayers.Format && OpenLayers.Format.CQL) {
+            string = OpenLayers.Format.CQL.prototype.write(this);
+        } else {
+            string = Object.prototype.toString.call(this);
+        }
+        return string;
+    },
+    
+    CLASS_NAME: "OpenLayers.Filter"
+});
+/* ======================================================================
+    OpenLayers/Filter/Spatial.js
+   ====================================================================== */
+
+/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
+ * full text of the license. */
+
+/**
+ * @requires OpenLayers/Filter.js
+ */
+
+/**
+ * Class: OpenLayers.Filter.Spatial
+ * This class represents a spatial filter.
+ * Currently implemented: BBOX, DWithin and Intersects
+ * 
+ * Inherits from:
+ * - <OpenLayers.Filter>
+ */
+OpenLayers.Filter.Spatial = OpenLayers.Class(OpenLayers.Filter, {
+
+    /**
+     * APIProperty: type
+     * {String} Type of spatial filter.
+     *
+     * The type should be one of:
+     * - OpenLayers.Filter.Spatial.BBOX
+     * - OpenLayers.Filter.Spatial.INTERSECTS
+     * - OpenLayers.Filter.Spatial.DWITHIN
+     * - OpenLayers.Filter.Spatial.WITHIN
+     * - OpenLayers.Filter.Spatial.CONTAINS
+     */
+    type: null,
+    
+    /**
+     * APIProperty: property
+     * {String} Name of the context property to compare.
+     */
+    property: null,
+    
+    /**
+     * APIProperty: value
+     * {<OpenLayers.Bounds> || <OpenLayers.Geometry>} The bounds or geometry
+     *     to be used by the filter.  Use bounds for BBOX filters and geometry
+     *     for INTERSECTS or DWITHIN filters.
+     */
+    value: null,
+
+    /**
+     * APIProperty: distance
+     * {Number} The distance to use in a DWithin spatial filter.
+     */
+    distance: null,
+
+    /**
+     * APIProperty: distanceUnits
+     * {String} The units to use for the distance, e.g. 'm'.
+     */
+    distanceUnits: null,
+    
+    /** 
+     * Constructor: OpenLayers.Filter.Spatial
+     * Creates a spatial filter.
+     *
+     * Parameters:
+     * options - {Object} An optional object with properties to set on the
+     *     filter.
+     * 
+     * Returns:
+     * {<OpenLayers.Filter.Spatial>}
+     */
+
+   /**
+    * Method: evaluate
+    * Evaluates this filter for a specific feature.
+    * 
+    * Parameters:
+    * feature - {<OpenLayers.Feature.Vector>} feature to apply the filter to.
+    * 
+    * Returns:
+    * {Boolean} The feature meets filter criteria.
+    */
+    evaluate: function(feature) {
+        var intersect = false;
+        switch(this.type) {
+            case OpenLayers.Filter.Spatial.BBOX:
+            case OpenLayers.Filter.Spatial.INTERSECTS:
+                if(feature.geometry) {
+                    var geom = this.value;
+                    if(this.value.CLASS_NAME == "OpenLayers.Bounds") {
+                        geom = this.value.toGeometry();
+                    }
+                    if(feature.geometry.intersects(geom)) {
+                        intersect = true;
+                    }
+                }
+                break;
+            default:
+                throw new Error('evaluate is not implemented for this filter type.');
+        }
+        return intersect;
+    },
+
+    /**
+     * APIMethod: clone
+     * Clones this filter.
+     * 
+     * Returns:
+     * {<OpenLayers.Filter.Spatial>} Clone of this filter.
+     */
+    clone: function() {
+        var options = OpenLayers.Util.applyDefaults({
+            value: this.value && this.value.clone && this.value.clone()
+        }, this);
+        return new OpenLayers.Filter.Spatial(options);
+    },
+    CLASS_NAME: "OpenLayers.Filter.Spatial"
+});
+
+OpenLayers.Filter.Spatial.BBOX = "BBOX";
+OpenLayers.Filter.Spatial.INTERSECTS = "INTERSECTS";
+OpenLayers.Filter.Spatial.DWITHIN = "DWITHIN";
+OpenLayers.Filter.Spatial.WITHIN = "WITHIN";
+OpenLayers.Filter.Spatial.CONTAINS = "CONTAINS";
+/* ======================================================================
+    OpenLayers/Control/GetFeature.js
+   ====================================================================== */
+
+/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
+ * full text of the license. */
+
+/**
+ * @requires OpenLayers/Control.js
+ * @requires OpenLayers/Handler/Click.js
+ * @requires OpenLayers/Handler/Box.js
+ * @requires OpenLayers/Handler/Hover.js
+ * @requires OpenLayers/Filter/Spatial.js
+ */
+
+/**
+ * Class: OpenLayers.Control.GetFeature
+ * Gets vector features for locations underneath the mouse cursor. Can be
+ *     configured to act on click, hover or dragged boxes. Uses an
+ *     <OpenLayers.Protocol> that supports spatial filters to retrieve
+ *     features from a server and fires events that notify applications of the
+ *     selected features. 
+ *
+ * Inherits from:
+ *  - <OpenLayers.Control>
+ */
+OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
+    
+    /**
+     * APIProperty: protocol
+     * {<OpenLayers.Protocol>} Required. The protocol used for fetching
+     *     features.
+     */
+    protocol: null,
+    
+    /**
+     * APIProperty: multipleKey
+     * {String} An event modifier ('altKey' or 'shiftKey') that temporarily sets
+     *     the <multiple> property to true.  Default is null.
+     */
+    multipleKey: null,
+    
+    /**
+     * APIProperty: toggleKey
+     * {String} An event modifier ('altKey' or 'shiftKey') that temporarily sets
+     *     the <toggle> property to true.  Default is null.
+     */
+    toggleKey: null,
+    
+    /**
+     * Property: modifiers
+     * {Object} The event modifiers to use, according to the current event
+     *     being handled by this control's handlers
+     */
+    modifiers: null,
+    
+    /**
+     * APIProperty: multiple
+     * {Boolean} Allow selection of multiple geometries.  Default is false.
+     */
+    multiple: false, 
+
+    /**
+     * APIProperty: click
+     * {Boolean} Use a click handler for selecting/unselecting features. If
+     *     both <click> and <box> are set to true, the click handler takes
+     *     precedence over the box handler if a box with zero extent was
+     *     selected.  Default is true.
+     */
+    click: true,
+
+    /**
+     * APIProperty: single
+     * {Boolean} Tells whether select by click should select a single
+     *     feature. If set to false, all matching features are selected.
+     *     If set to true, only the best matching feature is selected.
+     *     This option has an effect only of the <click> option is set
+     *     to true. Default is true.
+     */
+    single: true,
+    
+    /**
+     * APIProperty: clickout
+     * {Boolean} Unselect features when clicking outside any feature.
+     *     Applies only if <click> is true.  Default is true.
+     */
+    clickout: true,
+    
+    /**
+     * APIProperty: toggle
+     * {Boolean} Unselect a selected feature on click.  Applies only if
+     *     <click> is true.  Default is false.
+     */
+    toggle: false,
+
+    /**
+     * APIProperty: clickTolerance
+     * {Integer} Tolerance for the filter query in pixels. This has the
+     *     same effect as the tolerance parameter on WMS GetFeatureInfo
+     *     requests.  Will be ignored for box selections.  Applies only if
+     *     <click> or <hover> is true.  Default is 5.  Note that this not
+     *     only affects requests on click, but also on hover.
+     */
+    clickTolerance: 5,
+    
+    /**
+     * APIProperty: hover
+     * {Boolean} Send feature requests on mouse moves.  Default is false.
+     */
+    hover: false,
+
+    /**
+     * APIProperty: box
+     * {Boolean} Allow feature selection by drawing a box. If set to
+     *     true set <click> to false to disable the click handler and
+     *     rely on the box handler only, even for "zero extent" boxes.
+     *     See the description of the <click> option for additional
+     *     information.  Default is false.
+     */
+    box: false,
+    
+    /**
+     * APIProperty: maxFeatures
+     * {Integer} Maximum number of features to return from a query in single mode
+     *     if supported by the <protocol>. This set of features is then used to
+     *     determine the best match client-side. Default is 10.
+     */
+    maxFeatures: 10,
+    
+    /**
+     * Property: features
+     * {Object} Hash of {<OpenLayers.Feature.Vector>}, keyed by fid, holding
+     *     the currently selected features
+     */
+    features: null,
+    
+    /**
+     * Proeprty: hoverFeature
+     * {<OpenLayers.Feature.Vector>} The feature currently selected by the
+     *     hover handler
+     */
+    hoverFeature: null,
+    
+    /**
+     * APIProperty: handlerOptions
+     * {Object} Additional options for the handlers used by this control. This
+     *     is a hash with the keys "click", "box" and "hover".
+     */
+    
+    /**
+     * Property: handlers
+     * {Object} Object with references to multiple <OpenLayers.Handler>
+     *     instances.
+     */
+    handlers: null,
+
+    /**
+     * Property: hoverResponse
+     * {<OpenLayers.Protocol.Response>} The response object associated with
+     *     the currently running hover request (if any).
+     */
+    hoverResponse: null,
+    
+    /**
+     * Property: filterType
+     * {<String>} The type of filter to use when sending off a request. 
+     *     Possible values: 
+     *     OpenLayers.Filter.Spatial.<BBOX|INTERSECTS|WITHIN|CONTAINS>
+     *     Defaults to: OpenLayers.Filter.Spatial.BBOX
+     */
+    filterType: OpenLayers.Filter.Spatial.BBOX,
+
+    /** 
+     * APIProperty: events
+     * {<OpenLayers.Events>} Events instance for listeners and triggering
+     *     control specific events.
+     *
+     * Register a listener for a particular event with the following syntax:
+     * (code)
+     * control.events.register(type, obj, listener);
+     * (end)
+     *
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):
+     * beforefeatureselected - Triggered when <click> is true before a
+     *      feature is selected. The event object has a feature property with
+     *      the feature about to select
+     * featureselected - Triggered when <click> is true and a feature is
+     *      selected. The event object has a feature property with the
+     *      selected feature
+     * beforefeaturesselected - Triggered when <click> is true before a
+     *      set of features is selected. The event object is an array of
+     *      feature properties with the features about to be selected.  
+     *      Return false after receiving this event to discontinue processing
+     *      of all featureselected events and the featuresselected event.
+     * featuresselected - Triggered when <click> is true and a set of
+     *      features is selected.  The event object is an array of feature
+     *      properties of the selected features
+     * featureunselected - Triggered when <click> is true and a feature is
+     *      unselected. The event object has a feature property with the
+     *      unselected feature
+     * clickout - Triggered when when <click> is true and no feature was
+     *      selected.
+     * hoverfeature - Triggered when <hover> is true and the mouse has
+     *      stopped over a feature
+     * outfeature - Triggered when <hover> is true and the mouse moves
+     *      moved away from a hover-selected feature
+     */
+
+    /**
+     * Constructor: OpenLayers.Control.GetFeature
+     * Create a new control for fetching remote features.
+     *
+     * Parameters:
+     * options - {Object} A configuration object which at least has to contain
+     *     a <protocol> property (if not, it has to be set before a request is
+     *     made)
+     */
+    initialize: function(options) {
+        options.handlerOptions = options.handlerOptions || {};
+
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);
+        
+        this.features = {};
+
+        this.handlers = {};
+        
+        if(this.click) {
+            this.handlers.click = new OpenLayers.Handler.Click(this,
+                {click: this.selectClick}, this.handlerOptions.click || {});
+        }
+
+        if(this.box) {
+            this.handlers.box = new OpenLayers.Handler.Box(
+                this, {done: this.selectBox},
+                OpenLayers.Util.extend(this.handlerOptions.box, {
+                    boxDivClassName: "olHandlerBoxSelectFeature"
+                })
+            ); 
+        }
+        
+        if(this.hover) {
+            this.handlers.hover = new OpenLayers.Handler.Hover(
+                this, {'move': this.cancelHover, 'pause': this.selectHover},
+                OpenLayers.Util.applyDefaults(this.handlerOptions.hover, {
+                    'delay': 250,
+                    'pixelTolerance': 2
+                })
+            );
+        }
+    },
+    
+    /**
+     * Method: activate
+     * Activates the control.
+     * 
+     * Returns:
+     * {Boolean} The control was effectively activated.
+     */
+    activate: function () {
+        if (!this.active) {
+            for(var i in this.handlers) {
+                this.handlers[i].activate();
+            }
+        }
+        return OpenLayers.Control.prototype.activate.apply(
+            this, arguments
+        );
+    },
+
+    /**
+     * Method: deactivate
+     * Deactivates the control.
+     * 
+     * Returns:
+     * {Boolean} The control was effectively deactivated.
+     */
+    deactivate: function () {
+        if (this.active) {
+            for(var i in this.handlers) {
+                this.handlers[i].deactivate();
+            }
+        }
+        return OpenLayers.Control.prototype.deactivate.apply(
+            this, arguments
+        );
+    },
+    
+    /**
+     * Method: selectClick
+     * Called on click
+     *
+     * Parameters:
+     * evt - {<OpenLayers.Event>} 
+     */
+    selectClick: function(evt) {
+        var bounds = this.pixelToBounds(evt.xy);
+        
+        this.setModifiers(evt);
+        this.request(bounds, {single: this.single});
+    },
+
+    /**
+     * Method: selectBox
+     * Callback from the handlers.box set up when <box> selection is on
+     *
+     * Parameters:
+     * position - {<OpenLayers.Bounds>|Object} An OpenLayers.Bounds or
+     * an object with a 'left', 'bottom', 'right' and 'top' properties.
+     */
+    selectBox: function(position) {
+        var bounds;
+        if (position instanceof OpenLayers.Bounds) {
+            var minXY = this.map.getLonLatFromPixel({
+                x: position.left,
+                y: position.bottom
+            });
+            var maxXY = this.map.getLonLatFromPixel({
+                x: position.right,
+                y: position.top
+            });
+            bounds = new OpenLayers.Bounds(
+                minXY.lon, minXY.lat, maxXY.lon, maxXY.lat
+            );
+            
+        } else {
+            if(this.click) {
+                // box without extent - let the click handler take care of it
+                return;
+            }
+            bounds = this.pixelToBounds(position);
+        }
+        this.setModifiers(this.handlers.box.dragHandler.evt);
+        this.request(bounds);
+    },
+    
+    /**
+     * Method: selectHover
+     * Callback from the handlers.hover set up when <hover> selection is on
+     *
+     * Parameters:
+     * evt - {Object} event object with an xy property
+     */
+    selectHover: function(evt) {
+        var bounds = this.pixelToBounds(evt.xy);
+        this.request(bounds, {single: true, hover: true});
+    },
+
+    /**
+     * Method: cancelHover
+     * Callback from the handlers.hover set up when <hover> selection is on
+     */
+    cancelHover: function() {
+        if (this.hoverResponse) {
+            this.protocol.abort(this.hoverResponse);
+            this.hoverResponse = null;
+
+            OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+        }
+    },
+
+    /**
+     * Method: request
+     * Sends a GetFeature request to the WFS
+     * 
+     * Parameters:
+     * bounds - {<OpenLayers.Bounds>} bounds for the request's BBOX filter
+     * options - {Object} additional options for this method.
+     * 
+     * Supported options include:
+     * single - {Boolean} A single feature should be returned.
+     *     Note that this will be ignored if the protocol does not
+     *     return the geometries of the features.
+     * hover - {Boolean} Do the request for the hover handler.
+     */
+    request: function(bounds, options) {
+        options = options || {};
+        var filter = new OpenLayers.Filter.Spatial({
+            type: this.filterType, 
+            value: bounds
+        });
+        
+        // Set the cursor to "wait" to tell the user we're working.
+        OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+
+        var response = this.protocol.read({
+            maxFeatures: options.single == true ? this.maxFeatures : undefined,
+            filter: filter,
+            callback: function(result) {
+                if(result.success()) {
+                    if(result.features.length) {
+                        if(options.single == true) {
+                            this.selectBestFeature(result.features,
+                                bounds.getCenterLonLat(), options);
+                        } else {
+                            this.select(result.features);
+                        }
+                    } else if(options.hover) {
+                        this.hoverSelect();
+                    } else {
+                        this.events.triggerEvent("clickout");
+                        if(this.clickout) {
+                            this.unselectAll();
+                        }
+                    }
+                }
+                // Reset the cursor.
+                OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            },
+            scope: this
+        });
+        if(options.hover == true) {
+            this.hoverResponse = response;
+        }
+    },
+
+    /**
+     * Method: selectBestFeature
+     * Selects the feature from an array of features that is the best match
+     *     for the click position.
+     * 
+     * Parameters:
+     * features - {Array(<OpenLayers.Feature.Vector>)}
+     * clickPosition - {<OpenLayers.LonLat>}
+     * options - {Object} additional options for this method
+     * 
+     * Supported options include:
+     * hover - {Boolean} Do the selection for the hover handler.
+     */
+    selectBestFeature: function(features, clickPosition, options) {
+        options = options || {};
+        if(features.length) {
+            var point = new OpenLayers.Geometry.Point(clickPosition.lon,
+                clickPosition.lat);
+            var feature, resultFeature, dist;
+            var minDist = Number.MAX_VALUE;
+            for(var i=0; i<features.length; ++i) {
+                feature = features[i];
+                if(feature.geometry) {
+                    dist = point.distanceTo(feature.geometry, {edge: false});
+                    if(dist < minDist) {
+                        minDist = dist;
+                        resultFeature = feature;
+                        if(minDist == 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            if(options.hover == true) {
+                this.hoverSelect(resultFeature);
+            } else {
+                this.select(resultFeature || features);
+            } 
+        }
+    },
+    
+    /**
+     * Method: setModifiers
+     * Sets the multiple and toggle modifiers according to the current event
+     * 
+     * Parameters:
+     * evt - {<OpenLayers.Event>}
+     */
+    setModifiers: function(evt) {
+        this.modifiers = {
+            multiple: this.multiple || (this.multipleKey && evt[this.multipleKey]),
+            toggle: this.toggle || (this.toggleKey && evt[this.toggleKey])
+        };        
+    },
+
+    /**
+     * Method: select
+     * Add feature to the hash of selected features and trigger the
+     * featureselected and featuresselected events.
+     * 
+     * Parameters:
+     * features - {<OpenLayers.Feature.Vector>} or an array of features
+     */
+    select: function(features) {
+        if(!this.modifiers.multiple && !this.modifiers.toggle) {
+            this.unselectAll();
+        }
+        if(!(OpenLayers.Util.isArray(features))) {
+            features = [features];
+        }
+        
+        var cont = this.events.triggerEvent("beforefeaturesselected", {
+            features: features
+        });
+        if(cont !== false) {
+            var selectedFeatures = [];
+            var feature;
+            for(var i=0, len=features.length; i<len; ++i) {
+                feature = features[i];
+                if(this.features[feature.fid || feature.id]) {
+                    if(this.modifiers.toggle) {
+                        this.unselect(this.features[feature.fid || feature.id]);
+                    }
+                } else {
+                    cont = this.events.triggerEvent("beforefeatureselected", {
+                        feature: feature
+                    });
+                    if(cont !== false) {
+                        this.features[feature.fid || feature.id] = feature;
+                        selectedFeatures.push(feature);
+                
+                        this.events.triggerEvent("featureselected",
+                            {feature: feature});
+                    }
+                }
+            }
+            this.events.triggerEvent("featuresselected", {
+                features: selectedFeatures
+            });
+        }
+    },
+    
+    /**
+     * Method: hoverSelect
+     * Sets/unsets the <hoverFeature>
+     * 
+     * Parameters:
+     * feature - {<OpenLayers.Feature.Vector>} the feature to hover-select.
+     *     If none is provided, the current <hoverFeature> will be nulled and
+     *     the outfeature event will be triggered.
+     */
+    hoverSelect: function(feature) {
+        var fid = feature ? feature.fid || feature.id : null;
+        var hfid = this.hoverFeature ?
+            this.hoverFeature.fid || this.hoverFeature.id : null;
+            
+        if(hfid && hfid != fid) {
+            this.events.triggerEvent("outfeature",
+                {feature: this.hoverFeature});
+            this.hoverFeature = null;
+        }
+        if(fid && fid != hfid) {
+            this.events.triggerEvent("hoverfeature", {feature: feature});
+            this.hoverFeature = feature;
+        }
+    },
+
+    /**
+     * Method: unselect
+     * Remove feature from the hash of selected features and trigger the
+     * featureunselected event.
+     *
+     * Parameters:
+     * feature - {<OpenLayers.Feature.Vector>}
+     */
+    unselect: function(feature) {
+        delete this.features[feature.fid || feature.id];
+        this.events.triggerEvent("featureunselected", {feature: feature});
+    },
+    
+    /**
+     * Method: unselectAll
+     * Unselect all selected features.
+     */
+    unselectAll: function() {
+        // we'll want an option to suppress notification here
+        for(var fid in this.features) {
+            this.unselect(this.features[fid]);
+        }
+    },
+    
+    /** 
+     * Method: setMap
+     * Set the map property for the control. 
+     * 
+     * Parameters:
+     * map - {<OpenLayers.Map>} 
+     */
+    setMap: function(map) {
+        for(var i in this.handlers) {
+            this.handlers[i].setMap(map);
+        }
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);
+    },
+    
+    /**
+     * Method: pixelToBounds
+     * Takes a pixel as argument and creates bounds after adding the
+     * <clickTolerance>.
+     * 
+     * Parameters:
+     * pixel - {<OpenLayers.Pixel>}
+     */
+    pixelToBounds: function(pixel) {
+        var llPx = pixel.add(-this.clickTolerance/2, this.clickTolerance/2);
+        var urPx = pixel.add(this.clickTolerance/2, -this.clickTolerance/2);
+        var ll = this.map.getLonLatFromPixel(llPx);
+        var ur = this.map.getLonLatFromPixel(urPx);
+        return new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
+    },
+
+    CLASS_NAME: "OpenLayers.Control.GetFeature"
+});
+/* ======================================================================
+    OpenLayers/Control/DragPan.js
+   ====================================================================== */
+
+/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
+ * full text of the license. */
+
+/**
+ * @requires OpenLayers/Control.js
+ * @requires OpenLayers/Handler/Drag.js
+ */
+
+/**
+ * Class: OpenLayers.Control.DragPan
+ * The DragPan control pans the map with a drag of the mouse.
+ *
+ * Inherits from:
+ *  - <OpenLayers.Control>
+ */
+OpenLayers.Control.DragPan = OpenLayers.Class(OpenLayers.Control, {
+
+    /** 
+     * Property: type
+     * {OpenLayers.Control.TYPES}
+     */
+    type: OpenLayers.Control.TYPE_TOOL,
+    
+    /**
+     * Property: panned
+     * {Boolean} The map moved.
+     */
+    panned: false,
+    
+    /**
+     * Property: interval
+     * {Integer} The number of milliseconds that should ellapse before
+     *     panning the map again. Defaults to 0 milliseconds, which means that
+     *     no separate cycle is used for panning. In most cases you won't want
+     *     to change this value. For slow machines/devices larger values can be
+     *     tried out.
+     */
+    interval: 0,
+    
+    /**
+     * APIProperty: documentDrag
+     * {Boolean} If set to true, mouse dragging will continue even if the
+     *     mouse cursor leaves the map viewport. Default is false.
+     */
+    documentDrag: false,
+
+    /**
+     * Property: kinetic
+     * {<OpenLayers.Kinetic>} The OpenLayers.Kinetic object.
+     */
+    kinetic: null,
+
+    /**
+     * APIProperty: enableKinetic
+     * {Boolean} Set this option to enable "kinetic dragging". Can be
+     *     set to true or to an object. If set to an object this
+     *     object will be passed to the {<OpenLayers.Kinetic>}
+     *     constructor. Defaults to true.
+     *     To get kinetic dragging, ensure that OpenLayers/Kinetic.js is
+     *     included in your build config.
+     */
+    enableKinetic: true,
+
+    /**
+     * APIProperty: kineticInterval
+     * {Integer} Interval in milliseconds between 2 steps in the "kinetic
+     *     scrolling". Applies only if enableKinetic is set. Defaults
+     *     to 10 milliseconds.
+     */
+    kineticInterval: 10,
+
+
+    /**
+     * Method: draw
+     * Creates a Drag handler, using <panMap> and
+     * <panMapDone> as callbacks.
+     */    
+    draw: function() {
+        if (this.enableKinetic && OpenLayers.Kinetic) {
+            var config = {interval: this.kineticInterval};
+            if(typeof this.enableKinetic === "object") {
+                config = OpenLayers.Util.extend(config, this.enableKinetic);
+            }
+            this.kinetic = new OpenLayers.Kinetic(config);
+        }
+        this.handler = new OpenLayers.Handler.Drag(this, {
+                "move": this.panMap,
+                "done": this.panMapDone,
+                "down": this.panMapStart
+            }, {
+                interval: this.interval,
+                documentDrag: this.documentDrag
+            }
+        );
+    },
+
+    /**
+     * Method: panMapStart
+     */
+    panMapStart: function() {
+        if(this.kinetic) {
+            this.kinetic.begin();
+        }
+    },
+
+    /**
+    * Method: panMap
+    *
+    * Parameters:
+    * xy - {<OpenLayers.Pixel>} Pixel of the mouse position
+    */
+    panMap: function(xy) {
+        if(this.kinetic) {
+            this.kinetic.update(xy);
+        }
+        this.panned = true;
+        this.map.pan(
+            this.handler.last.x - xy.x,
+            this.handler.last.y - xy.y,
+            {dragging: true, animate: false}
+        );
+    },
+    
+    /**
+     * Method: panMapDone
+     * Finish the panning operation.  Only call setCenter (through <panMap>)
+     *     if the map has actually been moved.
+     *
+     * Parameters:
+     * xy - {<OpenLayers.Pixel>} Pixel of the mouse position
+     */
+    panMapDone: function(xy) {
+        if(this.panned) {
+            var res = null;
+            if (this.kinetic) {
+                res = this.kinetic.end(xy);
+            }
+            this.map.pan(
+                this.handler.last.x - xy.x,
+                this.handler.last.y - xy.y,
+                {dragging: !!res, animate: false}
+            );
+            if (res) {
+                var self = this;
+                this.kinetic.move(res, function(x, y, end) {
+                    self.map.pan(x, y, {dragging: !end, animate: false});
+                });
+            }
+            this.panned = false;
+        }
+    },
+
+    CLASS_NAME: "OpenLayers.Control.DragPan"
+});
+/* ======================================================================
+    OpenLayers/Handler/MouseWheel.js
+   ====================================================================== */
+
+/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
+ * full text of the license. */
+
+/**
+ * @requires OpenLayers/Handler.js
+ */
+
+/**
+ * Class: OpenLayers.Handler.MouseWheel
+ * Handler for wheel up/down events.
+ * 
+ * Inherits from:
+ *  - <OpenLayers.Handler>
+ */
+OpenLayers.Handler.MouseWheel = OpenLayers.Class(OpenLayers.Handler, {
+    /** 
+     * Property: wheelListener 
+     * {function} 
+     */
+    wheelListener: null,
+
+    /**
+     * Property: interval
+     * {Integer} In order to increase server performance, an interval (in 
+     *     milliseconds) can be set to reduce the number of up/down events 
+     *     called. If set, a new up/down event will not be set until the 
+     *     interval has passed. 
+     *     Defaults to 0, meaning no interval. 
+     */
+    interval: 0,
+    
+    /**
+     * Property: maxDelta
+     * {Integer} Maximum delta to collect before breaking from the current
+     *    interval. In cumulative mode, this also limits the maximum delta
+     *    returned from the handler. Default is Number.POSITIVE_INFINITY.
+     */
+    maxDelta: Number.POSITIVE_INFINITY,
+    
+    /**
+     * Property: delta
+     * {Integer} When interval is set, delta collects the mousewheel z-deltas
+     *     of the events that occur within the interval.
+     *      See also the cumulative option
+     */
+    delta: 0,
+    
+    /**
+     * Property: cumulative
+     * {Boolean} When interval is set: true to collect all the mousewheel 
+     *     z-deltas, false to only record the delta direction (positive or
+     *     negative)
+     */
+    cumulative: true,
+    
+    /**
+     * Constructor: OpenLayers.Handler.MouseWheel
+     *
+     * Parameters:
+     * control - {<OpenLayers.Control>} 
+     * callbacks - {Object} An object containing a single function to be
+     *                          called when the drag operation is finished.
+     *                          The callback should expect to receive a single
+     *                          argument, the point geometry.
+     * options - {Object} 
+     */
+    initialize: function(control, callbacks, options) {
+        OpenLayers.Handler.prototype.initialize.apply(this, arguments);
+        this.wheelListener = OpenLayers.Function.bindAsEventListener(
+            this.onWheelEvent, this
+        );
+    },
+
+    /**
+     * Method: destroy
+     */    
+    destroy: function() {
+        OpenLayers.Handler.prototype.destroy.apply(this, arguments);
+        this.wheelListener = null;
+    },
+
+    /**
+     *  Mouse ScrollWheel code thanks to http://adomas.org/javascript-mouse-wheel/
+     */
+
+    /** 
+     * Method: onWheelEvent
+     * Catch the wheel event and handle it xbrowserly
+     * 
+     * Parameters:
+     * e - {Event} 
+     */
+    onWheelEvent: function(e){
+        
+        // make sure we have a map and check keyboard modifiers
+        if (!this.map || !this.checkModifiers(e)) {
+            return;
+        }
+        
+        // Ride up the element's DOM hierarchy to determine if it or any of 
+        //  its ancestors was: 
+        //   * specifically marked as scrollable (CSS overflow property)
+        //   * one of our layer divs or a div marked as scrollable
+        //     ('olScrollable' CSS class)
+        //   * the map div
+        //
+        var overScrollableDiv = false;
+        var allowScroll = false;
+        var overMapDiv = false;
+        
+        var elem = OpenLayers.Event.element(e);
+        while((elem != null) && !overMapDiv && !overScrollableDiv) {
+
+            if (!overScrollableDiv) {
+                try {
+                    var overflow;
+                    if (elem.currentStyle) {
+                        overflow = elem.currentStyle["overflow"];
+                    } else {
+                        var style = 
+                            document.defaultView.getComputedStyle(elem, null);
+                        overflow = style.getPropertyValue("overflow");
+                    }
+                    overScrollableDiv = ( overflow && 
+                        (overflow == "auto") || (overflow == "scroll") );
+                } catch(err) {
+                    //sometimes when scrolling in a popup, this causes 
+                    // obscure browser error
+                }
+            }
+
+            if (!allowScroll) {
+                allowScroll = OpenLayers.Element.hasClass(elem, 'olScrollable');
+                if (!allowScroll) {
+                    for (var i = 0, len = this.map.layers.length; i < len; i++) {
+                        // Are we in the layer div? Note that we have two cases
+                        // here: one is to catch EventPane layers, which have a
+                        // pane above the layer (layer.pane)
+                        var layer = this.map.layers[i];
+                        if (elem == layer.div || elem == layer.pane) {
+                            allowScroll = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            overMapDiv = (elem == this.map.div);
+
+            elem = elem.parentNode;
+        }
+        
+        // Logic below is the following:
+        //
+        // If we are over a scrollable div or not over the map div:
+        //  * do nothing (let the browser handle scrolling)
+        //
+        //    otherwise 
+        // 
+        //    If we are over the layer div or a 'olScrollable' div:
+        //     * zoom/in out
+        //     then
+        //     * kill event (so as not to also scroll the page after zooming)
+        //
+        //       otherwise
+        //
+        //       Kill the event (dont scroll the page if we wheel over the 
+        //        layerswitcher or the pan/zoom control)
+        //
+        if (!overScrollableDiv && overMapDiv) {
+            if (allowScroll) {
+                var delta = 0;
+                
+                if (e.wheelDelta) {
+                    delta = e.wheelDelta;
+                    if (delta % 160 === 0) {
+                        // opera have steps of 160 instead of 120
+                        delta = delta * 0.75;
+                    }
+                    delta = delta / 120;
+                } else if (e.detail) {
+                    // detail in Firefox on OS X is 1/3 of Windows
+                    // so force delta 1 / -1
+                    delta = - (e.detail / Math.abs(e.detail));
+                }
+                this.delta += delta;
+
+                window.clearTimeout(this._timeoutId);
+                if(this.interval && Math.abs(this.delta) < this.maxDelta) {
+                    // store e because window.event might change during delay
+                    var evt = OpenLayers.Util.extend({}, e);
+                    this._timeoutId = window.setTimeout(
+                        OpenLayers.Function.bind(function(){
+                            this.wheelZoom(evt);
+                        }, this),
+                        this.interval
+                    );
+                } else {
+                    this.wheelZoom(e);
+                }
+            }
+            OpenLayers.Event.stop(e);
+        }
+    },
+
+    /**
+     * Method: wheelZoom
+     * Given the wheel event, we carry out the appropriate zooming in or out,
+     *     based on the 'wheelDelta' or 'detail' property of the event.
+     * 
+     * Parameters:
+     * e - {Event}
+     */
+    wheelZoom: function(e) {
+        var delta = this.delta;
+        this.delta = 0;
+        
+        if (delta) {
+            e.xy = this.map.events.getMousePosition(e);
+            if (delta < 0) {
+                this.callback("down",
+                    [e, this.cumulative ? Math.max(-this.maxDelta, delta) : -1]);
+            } else {
+                this.callback("up",
+                    [e, this.cumulative ? Math.min(this.maxDelta, delta) : 1]);
+            }
+        }
+    },
+    
+    /**
+     * Method: activate 
+     */
+    activate: function (evt) {
+        if (OpenLayers.Handler.prototype.activate.apply(this, arguments)) {
+            //register mousewheel events specifically on the window and document
+            var wheelListener = this.wheelListener;
+            OpenLayers.Event.observe(window, "DOMMouseScroll", wheelListener);
+            OpenLayers.Event.observe(window, "mousewheel", wheelListener);
+            OpenLayers.Event.observe(document, "mousewheel", wheelListener);
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    /**
+     * Method: deactivate 
+     */
+    deactivate: function (evt) {
+        if (OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {
+            // unregister mousewheel events specifically on the window and document
+            var wheelListener = this.wheelListener;
+            OpenLayers.Event.stopObserving(window, "DOMMouseScroll", wheelListener);
+            OpenLayers.Event.stopObserving(window, "mousewheel", wheelListener);
+            OpenLayers.Event.stopObserving(document, "mousewheel", wheelListener);
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    CLASS_NAME: "OpenLayers.Handler.MouseWheel"
 });
 /* ======================================================================
     OpenLayers/Control/Navigation.js
@@ -37691,190 +38693,6 @@ OpenLayers.Control.KeyboardDefaults = OpenLayers.Class(OpenLayers.Control, {
     },
 
     CLASS_NAME: "OpenLayers.Control.KeyboardDefaults"
-});
-/* ======================================================================
-    OpenLayers/Handler/Hover.js
-   ====================================================================== */
-
-/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
- * full list of contributors). Published under the 2-clause BSD license.
- * See license.txt in the OpenLayers distribution or repository for the
- * full text of the license. */
-
-/**
- * @requires OpenLayers/Handler.js
- */
-
-/**
- * Class: OpenLayers.Handler.Hover
- * The hover handler is to be used to emulate mouseovers on objects
- *      on the map that aren't DOM elements. For example one can use
- *      this handler to send WMS/GetFeatureInfo requests as the user
- *      moves the mouve over the map.
- * 
- * Inherits from:
- *  - <OpenLayers.Handler> 
- */
-OpenLayers.Handler.Hover = OpenLayers.Class(OpenLayers.Handler, {
-
-    /**
-     * APIProperty: delay
-     * {Integer} - Number of milliseconds between mousemoves before
-     *      the event is considered a hover. Default is 500.
-     */
-    delay: 500,
-    
-    /**
-     * APIProperty: pixelTolerance
-     * {Integer} - Maximum number of pixels between mousemoves for
-     *      an event to be considered a hover. Default is null.
-     */
-    pixelTolerance: null,
-
-    /**
-     * APIProperty: stopMove
-     * {Boolean} - Stop other listeners from being notified on mousemoves.
-     *      Default is false.
-     */
-    stopMove: false,
-
-    /**
-     * Property: px
-     * {<OpenLayers.Pixel>} - The location of the last mousemove, expressed
-     *      in pixels.
-     */
-    px: null,
-
-    /**
-     * Property: timerId
-     * {Number} - The id of the timer.
-     */
-    timerId: null,
- 
-    /**
-     * Constructor: OpenLayers.Handler.Hover
-     * Construct a hover handler.
-     *
-     * Parameters:
-     * control - {<OpenLayers.Control>} The control that initialized this
-     *     handler.  The control is assumed to have a valid map property; that
-     *     map is used in the handler's own setMap method.
-     * callbacks - {Object} An object with keys corresponding to callbacks
-     *     that will be called by the handler. The callbacks should
-     *     expect to receive a single argument, the event. Callbacks for
-     *     'move', the mouse is moving, and 'pause', the mouse is pausing,
-     *     are supported.
-     * options - {Object} An optional object whose properties will be set on
-     *     the handler.
-     */
-
-    /**
-     * Method: mousemove
-     * Called when the mouse moves on the map.
-     *
-     * Parameters:
-     * evt - {<OpenLayers.Event>}
-     *
-     * Returns:
-     * {Boolean} Continue propagating this event.
-     */
-    mousemove: function(evt) {
-        if(this.passesTolerance(evt.xy)) {
-            this.clearTimer();
-            this.callback('move', [evt]);
-            this.px = evt.xy;
-            // clone the evt so original properties can be accessed even
-            // if the browser deletes them during the delay
-            evt = OpenLayers.Util.extend({}, evt);
-            this.timerId = window.setTimeout(
-                OpenLayers.Function.bind(this.delayedCall, this, evt),
-                this.delay
-            );
-        }
-        return !this.stopMove;
-    },
-
-    /**
-     * Method: mouseout
-     * Called when the mouse goes out of the map.
-     *
-     * Parameters:
-     * evt - {<OpenLayers.Event>}
-     *
-     * Returns:
-     * {Boolean} Continue propagating this event.
-     */
-    mouseout: function(evt) {
-        if (OpenLayers.Util.mouseLeft(evt, this.map.viewPortDiv)) {
-            this.clearTimer();
-            this.callback('move', [evt]);
-        }
-        return true;
-    },
-
-    /**
-     * Method: passesTolerance
-     * Determine whether the mouse move is within the optional pixel tolerance.
-     *
-     * Parameters:
-     * px - {<OpenLayers.Pixel>}
-     *
-     * Returns:
-     * {Boolean} The mouse move is within the pixel tolerance.
-     */
-    passesTolerance: function(px) {
-        var passes = true;
-        if(this.pixelTolerance && this.px) {
-            var dpx = Math.sqrt(
-                Math.pow(this.px.x - px.x, 2) +
-                Math.pow(this.px.y - px.y, 2)
-            );
-            if(dpx < this.pixelTolerance) {
-                passes = false;
-            }
-        }
-        return passes;
-    },
-
-    /**
-     * Method: clearTimer
-     * Clear the timer and set <timerId> to null.
-     */
-    clearTimer: function() {
-        if(this.timerId != null) {
-            window.clearTimeout(this.timerId);
-            this.timerId = null;
-        }
-    },
-
-    /**
-     * Method: delayedCall
-     * Triggers pause callback.
-     *
-     * Parameters:
-     * evt - {<OpenLayers.Event>}
-     */
-    delayedCall: function(evt) {
-        this.callback('pause', [evt]);
-    },
-
-    /**
-     * APIMethod: deactivate
-     * Deactivate the handler.
-     *
-     * Returns:
-     * {Boolean} The handler was successfully deactivated.
-     */
-    deactivate: function() {
-        var deactivated = false;
-        if(OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {
-            this.clearTimer();
-            deactivated = true;
-        }
-        return deactivated;
-    },
-
-    CLASS_NAME: "OpenLayers.Handler.Hover"
 });
 /* ======================================================================
     OpenLayers/Request/XMLHttpRequest.js
@@ -43492,223 +44310,6 @@ OpenLayers.Strategy.Fixed = OpenLayers.Class(OpenLayers.Strategy, {
 
     CLASS_NAME: "OpenLayers.Strategy.Fixed"
 });
-/* ======================================================================
-    OpenLayers/Filter.js
-   ====================================================================== */
-
-/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
- * full list of contributors). Published under the 2-clause BSD license.
- * See license.txt in the OpenLayers distribution or repository for the
- * full text of the license. */
-
-
-/**
- * @requires OpenLayers/BaseTypes/Class.js
- * @requires OpenLayers/Util.js
- * @requires OpenLayers/Style.js
- */
-
-/**
- * Class: OpenLayers.Filter
- * This class represents an OGC Filter.
- */
-OpenLayers.Filter = OpenLayers.Class({
-    
-    /** 
-     * Constructor: OpenLayers.Filter
-     * This class represents a generic filter.
-     *
-     * Parameters:
-     * options - {Object} Optional object whose properties will be set on the
-     *     instance.
-     * 
-     * Returns:
-     * {<OpenLayers.Filter>}
-     */
-    initialize: function(options) {
-        OpenLayers.Util.extend(this, options);
-    },
-
-    /** 
-     * APIMethod: destroy
-     * Remove reference to anything added.
-     */
-    destroy: function() {
-    },
-
-    /**
-     * APIMethod: evaluate
-     * Evaluates this filter in a specific context.  Instances or subclasses
-     * are supposed to override this method.
-     * 
-     * Parameters:
-     * context - {Object} Context to use in evaluating the filter.  If a vector
-     *     feature is provided, the feature.attributes will be used as context.
-     * 
-     * Returns:
-     * {Boolean} The filter applies.
-     */
-    evaluate: function(context) {
-        return true;
-    },
-    
-    /**
-     * APIMethod: clone
-     * Clones this filter. Should be implemented by subclasses.
-     * 
-     * Returns:
-     * {<OpenLayers.Filter>} Clone of this filter.
-     */
-    clone: function() {
-        return null;
-    },
-    
-    /**
-     * APIMethod: toString
-     *
-     * Returns:
-     * {String} Include <OpenLayers.Format.CQL> in your build to get a CQL
-     *     representation of the filter returned. Otherwise "[Object object]"
-     *     will be returned.
-     */
-    toString: function() {
-        var string;
-        if (OpenLayers.Format && OpenLayers.Format.CQL) {
-            string = OpenLayers.Format.CQL.prototype.write(this);
-        } else {
-            string = Object.prototype.toString.call(this);
-        }
-        return string;
-    },
-    
-    CLASS_NAME: "OpenLayers.Filter"
-});
-/* ======================================================================
-    OpenLayers/Filter/Spatial.js
-   ====================================================================== */
-
-/* Copyright (c) 2006-2015 by OpenLayers Contributors (see authors.txt for
- * full list of contributors). Published under the 2-clause BSD license.
- * See license.txt in the OpenLayers distribution or repository for the
- * full text of the license. */
-
-/**
- * @requires OpenLayers/Filter.js
- */
-
-/**
- * Class: OpenLayers.Filter.Spatial
- * This class represents a spatial filter.
- * Currently implemented: BBOX, DWithin and Intersects
- * 
- * Inherits from:
- * - <OpenLayers.Filter>
- */
-OpenLayers.Filter.Spatial = OpenLayers.Class(OpenLayers.Filter, {
-
-    /**
-     * APIProperty: type
-     * {String} Type of spatial filter.
-     *
-     * The type should be one of:
-     * - OpenLayers.Filter.Spatial.BBOX
-     * - OpenLayers.Filter.Spatial.INTERSECTS
-     * - OpenLayers.Filter.Spatial.DWITHIN
-     * - OpenLayers.Filter.Spatial.WITHIN
-     * - OpenLayers.Filter.Spatial.CONTAINS
-     */
-    type: null,
-    
-    /**
-     * APIProperty: property
-     * {String} Name of the context property to compare.
-     */
-    property: null,
-    
-    /**
-     * APIProperty: value
-     * {<OpenLayers.Bounds> || <OpenLayers.Geometry>} The bounds or geometry
-     *     to be used by the filter.  Use bounds for BBOX filters and geometry
-     *     for INTERSECTS or DWITHIN filters.
-     */
-    value: null,
-
-    /**
-     * APIProperty: distance
-     * {Number} The distance to use in a DWithin spatial filter.
-     */
-    distance: null,
-
-    /**
-     * APIProperty: distanceUnits
-     * {String} The units to use for the distance, e.g. 'm'.
-     */
-    distanceUnits: null,
-    
-    /** 
-     * Constructor: OpenLayers.Filter.Spatial
-     * Creates a spatial filter.
-     *
-     * Parameters:
-     * options - {Object} An optional object with properties to set on the
-     *     filter.
-     * 
-     * Returns:
-     * {<OpenLayers.Filter.Spatial>}
-     */
-
-   /**
-    * Method: evaluate
-    * Evaluates this filter for a specific feature.
-    * 
-    * Parameters:
-    * feature - {<OpenLayers.Feature.Vector>} feature to apply the filter to.
-    * 
-    * Returns:
-    * {Boolean} The feature meets filter criteria.
-    */
-    evaluate: function(feature) {
-        var intersect = false;
-        switch(this.type) {
-            case OpenLayers.Filter.Spatial.BBOX:
-            case OpenLayers.Filter.Spatial.INTERSECTS:
-                if(feature.geometry) {
-                    var geom = this.value;
-                    if(this.value.CLASS_NAME == "OpenLayers.Bounds") {
-                        geom = this.value.toGeometry();
-                    }
-                    if(feature.geometry.intersects(geom)) {
-                        intersect = true;
-                    }
-                }
-                break;
-            default:
-                throw new Error('evaluate is not implemented for this filter type.');
-        }
-        return intersect;
-    },
-
-    /**
-     * APIMethod: clone
-     * Clones this filter.
-     * 
-     * Returns:
-     * {<OpenLayers.Filter.Spatial>} Clone of this filter.
-     */
-    clone: function() {
-        var options = OpenLayers.Util.applyDefaults({
-            value: this.value && this.value.clone && this.value.clone()
-        }, this);
-        return new OpenLayers.Filter.Spatial(options);
-    },
-    CLASS_NAME: "OpenLayers.Filter.Spatial"
-});
-
-OpenLayers.Filter.Spatial.BBOX = "BBOX";
-OpenLayers.Filter.Spatial.INTERSECTS = "INTERSECTS";
-OpenLayers.Filter.Spatial.DWITHIN = "DWITHIN";
-OpenLayers.Filter.Spatial.WITHIN = "WITHIN";
-OpenLayers.Filter.Spatial.CONTAINS = "CONTAINS";
 /* ======================================================================
     OpenLayers/Strategy/BBOX.js
    ====================================================================== */
