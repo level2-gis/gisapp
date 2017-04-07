@@ -70,8 +70,10 @@ info@level2.si
 This software is released under a GPL-v3.0 license.
 
 ## Copyright 
-2010-2012, The QGIS Project and 
+2010-2012, The QGIS Project and
+
 2014-2017 Level2 team, 
+
 All rights reserved.
 
 This program is free software: you can redistribute it and/or modify
