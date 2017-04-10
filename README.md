@@ -31,6 +31,9 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 ## Demo
 Visit **<a target="_blank" href="http://test.level2.si/gisapp/eu_demo?public=on">Demo by Level2</a>**
 
+## Plugins
+Editing plugin coming up soon!
+
 ## Services
 * Support with installation and setting up
 * Custom development
