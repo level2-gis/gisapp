@@ -90,6 +90,38 @@ projectData.setBaseLayers = function (isBase) {
     return baseLayers;
 };
 
+projectData.getLegendUrl = function (layer) {
+    var legend = '';
+
+    //for raster layers show default raster legend image
+    if (layer.provider=='gdal') {
+        legend = iconDirectory+"raster.png";
+    } else {
+        legend = wmsURI + Ext.urlEncode({
+            SERVICE: "WMS",
+            VERSION: "1.3.0",
+            REQUEST: "GetLegendGraphics",
+            FORMAT: "image/png",
+            EXCEPTIONS: "application/vnd.ogc.se_inimage",
+            BOXSPACE: 1,
+            LAYERSPACE: 2,
+            SYMBOLSPACE: 1,
+            SYMBOLHEIGHT: 2,
+            LAYERFONTSIZE: 8,
+            ITEMFONTSIZE: 8,
+            ICONLABELSPACE: 2,
+            LAYERTITLE: "FALSE",
+            LAYERFONTCOLOR: '#FFFFFF',
+            LAYERTITLESPACE: 0,
+            TRANSPARENT: true,
+            LAYERS: layer.layername,
+            DPI: screenDpi
+        });
+    }
+
+    return legend;
+};
+
 var lang = "en";
 var helpfile = "help_en.html";
 
