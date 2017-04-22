@@ -142,23 +142,30 @@ function showLegendAndMetadata(layertitle) {
     var legendImage = '<img src="'+legendUrl+'" />';
     legendTab.update(legendImage);
 
-    var type = projDataLayer.geom_type;
-    if (type=='' && (projDataLayer.provider=='ogr' || projDataLayer.provider=='spatialite')){
-        type = 'vector';
-    }
-    if (type=='' && projDataLayer.provider=='gdal'){
-        type = 'raster';
-    }
+    var properties = {};
+    if (projDataLayer == undefined) {
+        //properties = {
+        //    'TYPE': 'group'
+        //};
 
-    var properties = {
-        'TYPE': type,
-        'PROVIDER': projDataLayer.provider,
-        'CRS': projDataLayer.crs,
-        'IDENTIFY': wmsLoader.layerProperties[layername].queryable,
-        'EDITABLE': projDataLayer.wfs,
-        'ID': projDataLayer.id
-    };
+    } else {
+        var type = projDataLayer.geom_type;
+        if (type == '' && (projDataLayer.provider == 'ogr' || projDataLayer.provider == 'spatialite')) {
+            type = 'vector';
+        }
+        if (type == '' && projDataLayer.provider == 'gdal') {
+            type = 'raster';
+        }
 
+        properties = {
+            'TYPE': type,
+            'PROVIDER': projDataLayer.provider,
+            'CRS': projDataLayer.crs,
+            'IDENTIFY': wmsLoader.layerProperties[layername].queryable,
+            'EDITABLE': projDataLayer.wfs,
+            'ID': projDataLayer.id
+        };
+    }
 	
 	//create metadata text
 	legendMetaTabPanel.activate(metadataTab);

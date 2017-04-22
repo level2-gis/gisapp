@@ -409,7 +409,13 @@ function postLoading() {
             }
             else {
                 //disable contextmenu on groups
-                n.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+                //n.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+
+                //create menu and filter properties from json configuration
+                buildGroupContextMenu(n);
+
+                n.on ('contextMenu', contextMenuHandler);
+
             }
         }
     );

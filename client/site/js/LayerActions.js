@@ -9,6 +9,32 @@
 
 /* global projectData */
 
+function buildGroupContextMenu(node) {
+
+    var menuItems = [];
+    //all get zoom to extent
+    menuItems.push({
+        text: contextZoomLayerExtent[lang],
+        iconCls: 'x-zoom-icon',
+        handler: zoomToLayerExtent
+    });
+
+    //properties
+    menuItems.push({
+        text: TR.properties,
+        //iconCls: 'x-table-icon',
+        handler: layerProperties
+    });
+
+    var menuCfg = {
+        //id: 'layerContextMenu',
+        items: menuItems
+    };
+
+    node.menu = new Ext.menu.Menu(menuCfg);
+}
+
+
 function buildLayerContextMenu(node) {
 
     var layerId = wmsLoader.layerTitleNameMapping[node.attributes.text];
