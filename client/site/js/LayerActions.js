@@ -11,42 +11,66 @@
 
 function buildLayerContextMenu(node) {
 
-    // prepare the generic context menu for Layer
-    var menuCfg = {
-        //id: 'layerContextMenu',
-        items: [{
-            text: contextZoomLayerExtent[lang],
-            iconCls: 'x-zoom-icon',
-            handler: zoomToLayerExtent
-        },{
+    var layerId = wmsLoader.layerTitleNameMapping[node.attributes.text];
+    var layer = wmsLoader.layerProperties[layerId];
+    var projDataLayer = projectData.layers[layerId];
+
+    var menuItems = [];
+    //all get zoom to extent
+    menuItems.push({
+        text: contextZoomLayerExtent[lang],
+        iconCls: 'x-zoom-icon',
+        handler: zoomToLayerExtent
+    });
+
+    //Open att table
+    if (layer.queryable && typeof(layer.attributes) !== 'undefined') {
+        menuItems.push({
             itemId: 'contextOpenTable',
             text: contextOpenTable[lang],
             iconCls: 'x-table-icon',
             handler: openAttTable
-        },{
+        });
+    }
+
+    //Export
+    if (projDataLayer.provider !== 'gdal') {
+        menuItems.push({
             text: contextDataExport[lang],
             iconCls: 'x-export-icon',
             menu: [{
-                itemId	: 'SHP',
-                text    : 'ESRI Shapefile',
-                handler : exportHandler
-            },{
-                itemId	: 'DXF',
-                text    : 'AutoCAD DXF',
-                handler : exportHandler
-            },{
-                itemId	: 'CSV',
-                text    : 'Text CSV',
-                handler : exportHandler
+                itemId: 'SHP',
+                text: 'ESRI Shapefile',
+                handler: exportHandler
+            }, {
+                itemId: 'DXF',
+                text: 'AutoCAD DXF',
+                handler: exportHandler
+            }, {
+                itemId: 'CSV',
+                text: 'Text CSV',
+                handler: exportHandler
             }
-                ,"-",
+                , "-",
                 {
-                    itemId  : 'currentExtent',
-                    text    : contextUseExtent[lang],
-                    checked : true,
+                    itemId: 'currentExtent',
+                    text: contextUseExtent[lang],
+                    checked: true,
                     hideOnClick: false
                 }]
-        }]
+        });
+    }
+
+    //properties
+    menuItems.push({
+        text: TR.properties,
+        //iconCls: 'x-table-icon',
+        handler: layerProperties
+    });
+
+    var menuCfg = {
+        //id: 'layerContextMenu',
+        items: menuItems
     };
 
     //storefilter
@@ -146,19 +170,24 @@ function exportHandler(item) {
     }
 }
 
+function layerProperties(item) {
+    var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
+    showLegendAndMetadata(myLayerName);
+}
+
 // Show the menu on right click of the leaf node of the layerTree object
 function contextMenuHandler(node) {
 
-    var layerId = wmsLoader.layerTitleNameMapping[node.attributes.text];
-    var layer = wmsLoader.layerProperties[layerId];
-
-    //disable option for opentable if layer is not queryableor layer has no attributes (WMS)
-    //var contTable = Ext.getCmp('contextOpenTable');
-    var contTable = node.menu.getComponent('contextOpenTable');
-    if (layer.queryable && typeof(layer.attributes) !== 'undefined')
-        contTable.setDisabled(false);
-    else
-        contTable.setDisabled(true);
+    //var layerId = wmsLoader.layerTitleNameMapping[node.attributes.text];
+    //var layer = wmsLoader.layerProperties[layerId];
+    //
+    ////disable option for opentable if layer is not queryableor layer has no attributes (WMS)
+    ////var contTable = Ext.getCmp('contextOpenTable');
+    //var contTable = node.menu.getComponent('contextOpenTable');
+    //if (layer.queryable && typeof(layer.attributes) !== 'undefined')
+    //    contTable.setDisabled(false);
+    //else
+    //    contTable.setDisabled(true);
 
     node.select();
     node.menu.show ( node.ui.getAnchor());

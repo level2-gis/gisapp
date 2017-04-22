@@ -42,7 +42,8 @@ var TR = {
     fiElevation: 'nad morom',
     cancel: 'Cancel',
     transactionFail: 'Transaction failed',
-    show: 'Show'
+    show: 'Show',
+    properties: 'Properties'
 };
 
 /**

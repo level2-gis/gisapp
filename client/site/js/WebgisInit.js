@@ -2175,27 +2175,27 @@ function createPermalink(){
     return permalink;
 }
 
-function addInfoButtonsToLayerTree() {
-    var treeRoot = layerTree.getNodeById("wmsNode");
-    treeRoot.firstChild.cascade(
-        function (n) {
-            // info button
-            var buttonId = 'layer_' + n.id;
-            Ext.DomHelper.insertBefore(n.getUI().getAnchor(), {
-                tag: 'b',
-                id: buttonId,
-                cls: 'layer-button x-tool custom-x-tool-info'
-            });
-            Ext.get(buttonId).on('click', function(e) {
-                if(typeof(interactiveLegendGetLegendURL) == 'undefined'){
-                    showLegendAndMetadata(n.text);
-                } else {
-                    showInteractiveLegendAndMetadata(n.text);
-                }
-            });
-        }
-    );
-}
+//function addInfoButtonsToLayerTree() {
+//    var treeRoot = layerTree.getNodeById("wmsNode");
+//    treeRoot.firstChild.cascade(
+//        function (n) {
+//            // info button
+//            var buttonId = 'layer_' + n.id;
+//            Ext.DomHelper.insertBefore(n.getUI().getAnchor(), {
+//                tag: 'b',
+//                id: buttonId,
+//                cls: 'layer-button x-tool custom-x-tool-info'
+//            });
+//            Ext.get(buttonId).on('click', function(e) {
+//                if(typeof(interactiveLegendGetLegendURL) == 'undefined'){
+//                    showLegendAndMetadata(n.text);
+//                } else {
+//                    showInteractiveLegendAndMetadata(n.text);
+//                }
+//            });
+//        }
+//    );
+//}
 
 function addAbstractToLayerGroups() {
     var treeRoot = layerTree.getNodeById("wmsNode");

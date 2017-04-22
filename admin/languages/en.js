@@ -42,7 +42,8 @@ var TR = {
     fiElevation: 'above sea level',
     cancel: 'Cancel',
     transactionFail: 'Transaction failed',
-    show: 'Show'
+    show: 'Show',
+    properties: 'Properties'
 };
 
 /**

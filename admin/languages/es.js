@@ -42,7 +42,8 @@ var TR = {
     fiElevation: 'Sobre el nivel del mar',
     cancel: 'Cancel',
     transactionFail: 'Transaction failed',
-    show: 'Show'
+    show: 'Show',
+    properties: 'Properties'
 };
 
 /**
