@@ -52,7 +52,7 @@ function buildLayerContextMenu(node) {
     //Open att table
     if (layer.queryable && typeof(layer.attributes) !== 'undefined') {
         menuItems.push({
-            itemId: 'contextOpenTable',
+            //itemId: 'contextOpenTable',
             text: contextOpenTable[lang],
             iconCls: 'x-table-icon',
             handler: openAttTable
@@ -62,6 +62,7 @@ function buildLayerContextMenu(node) {
     //Export
     if (projDataLayer.provider !== 'gdal') {
         menuItems.push({
+            itemId: 'contextExport',
             text: contextDataExport[lang],
             iconCls: 'x-export-icon',
             menu: [{
@@ -75,6 +76,14 @@ function buildLayerContextMenu(node) {
             }, {
                 itemId: 'CSV',
                 text: 'Text CSV',
+                handler: exportHandler
+            },{
+                itemId: 'KML',
+                text: 'Keyhole Markup Language KML',
+                handler: exportHandler
+            },{
+                itemId: 'GeoJSON',
+                text: 'GeoJSON',
                 handler: exportHandler
             }
                 , "-",
@@ -188,12 +197,7 @@ function exportHandler(item) {
 
     var exportExtent = item.ownerCt.getComponent('currentExtent');
 
-    if(exportExtent.checked==false) {
-        Ext.Msg.alert ('Error','Sorry, currently exporting only with map extent. Try again!');
-        exportExtent.setChecked(true);
-    } else {
-        exportData(myLayerName, myFormat);
-    }
+    exportData(myLayerName, myFormat, exportExtent.checked);
 }
 
 function layerProperties(item) {
@@ -207,13 +211,14 @@ function contextMenuHandler(node) {
     //var layerId = wmsLoader.layerTitleNameMapping[node.attributes.text];
     //var layer = wmsLoader.layerProperties[layerId];
     //
-    ////disable option for opentable if layer is not queryableor layer has no attributes (WMS)
-    ////var contTable = Ext.getCmp('contextOpenTable');
-    //var contTable = node.menu.getComponent('contextOpenTable');
-    //if (layer.queryable && typeof(layer.attributes) !== 'undefined')
-    //    contTable.setDisabled(false);
-    //else
-    //    contTable.setDisabled(true);
+    //disable export for guest users
+    var exportMenu = node.menu.getComponent('contextExport');
+    if (exportMenu != undefined) {
+        if (projectData.user == 'guest')
+            exportMenu.setDisabled(true);
+        else
+            exportMenu.setDisabled(false);
+    }
 
     node.select();
     node.menu.show ( node.ui.getAnchor());
@@ -238,17 +243,24 @@ function zoomHandler(grid, rowIndex, colIndex, item, e) {
     showFeatureSelected(record.data);
 }
 
-function exportData(layer,format) {
-
+function exportData(layername,format, useBbox) {
+    var layerId = wmsLoader.layerTitleNameMapping[layername];
+    var layerCrs = projectData.layers[layerId].crs;
+    var mapCrsBbox = null;
+    var layCrsBbox = null;
     //current view is used as bounding box for exporting data
-    var bbox = geoExtMap.map.calculateBounds();
+    if (useBbox) {
+        mapCrsBbox = geoExtMap.map.calculateBounds(); //.transform(authid,layerCrs);
+        layCrsBbox = geoExtMap.map.calculateBounds().transform(authid,layerCrs);
+    }
     //Ext.Msg.alert('Info',layer+' ' + bbox);
 
     var exportUrl = "./admin/export.php?" + Ext.urlEncode({
             map:projectData.project,
             SRS:authid,
-            map0_extent:bbox,
-            layer:layer,
+            map0_extent:mapCrsBbox,
+            layer_extent:layCrsBbox,
+            layer:layername,
             format:format
         });
 

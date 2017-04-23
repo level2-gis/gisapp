@@ -19,11 +19,11 @@ require_once("settings.php");
  * @param $layername
  * @param $map
  * @param $query_arr
- * @param $format
+ * @param $destinationFormat
  * @return array
  * @throws Exception
  */
-function prepareFile($layername, $map, $query_arr, $format)
+function prepareFile($layername, $map, $query_arr, $destinationFormat)
 {
     $now = date("Ymd_His");
     $layerAlias = Helpers::normalize($layername);
@@ -51,36 +51,78 @@ function prepareFile($layername, $map, $query_arr, $format)
         throw new Exception ($lay_info["message"]);
     }
 
-    //other option to get it from layer_info
-    $conn = str_replace(array('\'', '"'), '', $layer["message"]->datasource);
-    //removing text sslmode and all after that
-    $conn = "PG:" . rtrim(substr($conn, 0, strpos($conn, 'sslmode')));
+    $sourceProvider = $lay_info["message"]['provider'];
+    switch ($sourceProvider) {
+        case 'ogr':
+            $conn = $layer["message"]->datasource;
+            $source = ' "' . $conn . '"';
 
-    $table = $lay_info["message"]['table'];
-    $geom = $lay_info["message"]['geom_column'];
+            break;
+
+        case 'postgres':
+            //other option to get it from layer_info
+            $conn = str_replace(array('\'', '"'), '', $layer["message"]->datasource);
+            //removing text sslmode and all after that
+            $conn = "PG:" . rtrim(substr($conn, 0, strpos($conn, 'sslmode')));
+
+            $table = $lay_info["message"]['table'];
+
+            $source = ' "' . $conn . '" ' . $table;
+
+            break;
+
+        case 'spatialite':
+            $conn = $lay_info["message"]['dbname'];
+            $table = $lay_info["message"]['table'];
+
+            $source = ' ' . $conn . ' ' . $table;
+
+            break;
+
+        default:
+            throw new Exception ('Unknown provider: '.$sourceProvider);
+    }
+
+
     $source_srid = (string)$layer["message"]->srs->spatialrefsys->srid;
-    $extent = explode(",", $query_arr['map0_extent']);
-    $xmin = $extent[0];
-    $ymin = $extent[1];
-    $xmax = $extent[2];
-    $ymax = $extent[3];
-    $srid = substr(strrchr($query_arr['SRS'], ':'), 1);
-    $options = "";
 
-    switch ($format) {
+    $srid = substr(strrchr($query_arr['SRS'], ':'), 1);
+    $options = " ";
+
+    //export only selection inside bounding box if provided
+    //we have to transform extent to layers CRS on client side
+    //if using gdal 2.0 this will not be necessary, just use -spat_srs
+    if ($query_arr['layer_extent']!='') {
+        $extent = explode(",", $query_arr['layer_extent']);
+        $xmin = $extent[0];
+        $ymin = $extent[1];
+        $xmax = $extent[2];
+        $ymax = $extent[3];
+        $options .= '-spat '. $xmin . ' ' . $ymin . ' ' . $xmax . ' ' . $ymax . ' ';
+    }
+
+    switch ($destinationFormat) {
         case 'SHP':
             $format_name = 'ESRI Shapefile';
-            $options = "-lco ENCODING=UTF-8";
+            //$options .= "-lco ENCODING=UTF-8 ";
             break;
         case 'DXF':
-            $format_name = $format;
-            //$options = '-select field_list=""';
+            $format_name = $destinationFormat;
+            //$options .= '-select field_list="" ';
             break;
         case 'CSV':
-            $format_name = $format;
-            $options = "-lco SEPARATOR=SEMICOLON";
+            $format_name = $destinationFormat;
+            $options .= "-lco SEPARATOR=SEMICOLON ";
             $makeZip = false;
             $fileExt = 'csv';
+            break;
+        case 'KML':
+            $format_name = $destinationFormat;
+            $makeZip = true;
+            break;
+        case 'GeoJSON':
+            $format_name = $destinationFormat;
+            $makeZip = true;
             break;
         default:
             throw new Exception('Format not supported');
@@ -89,13 +131,16 @@ function prepareFile($layername, $map, $query_arr, $format)
     //putenv('CPL_LOG_ERRORS=ON');
     //putenv('CPL_LOG=/var/tmp/ogr_errors.log');
 
-    //I removed _a_srs parameter, something not right in QGIS ' -a_srs EPSG:'.$srid.
-    $mycmd = OGR2OGR . ' -f "' . $format_name . '" "' . $fileName . '.' . strtolower($format) . '" ' . $options . ' "' . $conn . '" -sql "SELECT * FROM ' . $table . ' WHERE ' . $geom . ' && ST_Transform(ST_MakeEnvelope(' . $xmin . ', ' . $ymin . ', ' . $xmax . ', ' . $ymax . ', ' . $srid . '),' . $source_srid . ')" -progress';
+    //$mycmd = OGR2OGR . ' -f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '" ' . $options . ' "' . $conn . '" -sql "SELECT * FROM ' . $table . ' WHERE ' . $geom . ' && ST_Transform(ST_MakeEnvelope(' . $xmin . ', ' . $ymin . ', ' . $xmax . ', ' . $ymax . ', ' . $srid . '),' . $source_srid . ')" -progress';
+    $mycmd = OGR2OGR . ' -s_srs EPSG:' . $source_srid . ' -t_srs EPSG:' . $srid . $options . '-f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '"' .$source . ' -progress';
 
-    //$mycmd = OGR2OGR . ' -s_srs EPSG:3857 -t_srs EPSG:2170 -f "'.$format_name.'" "'.$fileName .'.'.strtolower($format).'" ' . $options . ' "'.$conn.'" -sql "SELECT * FROM '.$table.' WHERE '.$geom.' && ST_MakeEnvelope(' .$xmin .', ' .$ymin .', ' .$xmax .', ' .$ymax .', ' .$srid .')" -progress';
-
-
+    chdir(PROJECT_PATH);
     $output = shell_exec($mycmd);
+
+    //if ($output==null) {
+    //    error_log("EQWC Data Export Failed: ".$mycmd);
+    //    throw new Exception("Export failed. Details in Apache error log!");
+    //}
 
     $fullFileNameZip = $fileName . "." . $fileExt;
 
@@ -109,8 +154,8 @@ function prepareFile($layername, $map, $query_arr, $format)
 
         //$zip->addFile("./" .$filename ,$now ."/" .$filename);
 
-        $zip->addFile($fileName . '.' . strtolower($format), basename($fileName . '.' . strtolower($format)));
-        if ($format == 'SHP') {
+        $zip->addFile($fileName . '.' . strtolower($destinationFormat), basename($fileName . '.' . strtolower($destinationFormat)));
+        if ($destinationFormat == 'SHP') {
             $zip->addFile($fileName . '.shx', basename($fileName . '.shx'));
             $zip->addFile($fileName . '.dbf', basename($fileName . '.dbf'));
             $zip->addFile($fileName . '.prj', basename($fileName . '.prj'));
@@ -118,16 +163,7 @@ function prepareFile($layername, $map, $query_arr, $format)
         }
         $zip->close();
 
-        //removing shp
-        if ($format == 'SHP') {
-            unlink($fileName . '.dbf');
-            unlink($fileName . '.shx');
-            //unlink($fileName.'.prj');
-            unlink($fileName . '.cpg');
-        }
-        if (file_exists($fileName . '.' . strtolower($format))) {
-            unlink($fileName . '.' . strtolower($format));
-        }
+        delete($fileName, $destinationFormat);
 
         //$fsize = filesize('./' .$filename_zip);
         //$fsize = filesize($fullFileNameZip);
@@ -136,7 +172,25 @@ function prepareFile($layername, $map, $query_arr, $format)
         //$fsize = filesize($fileName . '.' . strtolower($format));
     }
 
-    return base64_encode($fullFileNameZip);
+    return $fullFileNameZip;
+}
+
+/**
+ * @param $fileName
+ * @param $format
+ */
+function delete($fileName, $format)
+{
+    //removing shp
+    if ($format == 'SHP') {
+        if (file_exists($fileName . '.dbf')) unlink($fileName . '.dbf');
+        if (file_exists($fileName . '.shx')) unlink($fileName . '.shx');
+        if (file_exists($fileName . '.prj')) unlink($fileName . '.prj');
+        if (file_exists($fileName . '.cpg')) unlink($fileName . '.cpg');
+    }
+    if (file_exists($fileName . '.' . strtolower($format))) {
+        unlink($fileName . '.' . strtolower($format));
+    }
 }
 
 /**
@@ -202,7 +256,8 @@ try {
 
     //check command
     if ($cmd == 'prepare') {
-        echo json_encode(["success" => true, "message" => prepareFile($layername, $map, $query_arr, $format)]);
+        $resultFile = prepareFile($layername, $map, $query_arr, $format);
+        echo json_encode(["success" => true, "message" => base64_encode($resultFile)]);
     } elseif ($cmd == 'get') {
         $key = $query_arr["key"];
         sendFile($ctype, $key);

@@ -35,7 +35,7 @@ class Helpers
 
     public static function validateExportParams($params)
     {
-        if (isset($params['map0_extent'])) {
+        if (isset($params['map0_extent']) && $params['map0_extent']!='') {
             $extent = explode(",", $params['map0_extent']);
             $xmin = $extent[0];
             $ymin = $extent[1];
@@ -46,8 +46,6 @@ class Helpers
                 return "SQL injection prevention : bad extent";
             }
 
-        } else {
-            return "You must provide a valid bounding box";
         }
 
         if (isset($params['SRS'])) {
