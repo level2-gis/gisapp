@@ -7,7 +7,7 @@
  * https://github.com/qgis/qgis-web-client/blob/master/README
  * for the full text of the license and the list of contributors.
  *
-*/
+ */
 
 /* FeatureInfos are presented to the user in two ways using OpenLayers.Popup classes:
  * If the mouse stops and GetFeatureInfo has results for this mouse position
@@ -19,7 +19,7 @@
  * closes the currently opened clickPopup and opens a new one (if there is GetFeatureInfo response).
  * If the cursor is at a position where there is GetFeatureInfo response it indicates the possibility
  * to click by changing to "hand".
-*/
+ */
 
 var featureInfoPopupContents;
 var closePopupClick = false; // stores if the click results from closing a clickPopup
@@ -54,12 +54,12 @@ function showFeatureInfo(evt) {
                 popupItems.push(
                     {
                         xtype: 'box',
-                            html: locationText
-                        }, {
+                        html: locationText
+                    }, {
                         id: "fi_location",
-                            //margins: '5 5 5 5',
-                            xtype: 'box',
-                            html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
+                        //margins: '5 5 5 5',
+                        xtype: 'box',
+                        html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
                     });
 
                 for (var l = 0; l < projectData.locationServices.length; l++) {
@@ -70,10 +70,10 @@ function showFeatureInfo(evt) {
                     });
 
                     popupItems.push({
-                            id: "fi_"+projectData.locationServices[l].name,
-                            //margins: '5 5 5 5',
-                            xtype: 'box',
-                            html: '</br>'
+                        id: "fi_" + projectData.locationServices[l].name,
+                        //margins: '5 5 5 5',
+                        xtype: 'box',
+                        html: '</br>'
                     });
                 }
             }
@@ -88,8 +88,12 @@ function showFeatureInfo(evt) {
             featureInfoResultLayers.reverse();
             highLightGeometry.reverse();
             if (featureInfoResultLayers.length > 0 || text > '') {
-                if (hoverPopup) {removeHoverPopup();}
-                if (clickPopup) {removeClickPopup();}
+                if (hoverPopup) {
+                    removeHoverPopup();
+                }
+                if (clickPopup) {
+                    removeClickPopup();
+                }
 
                 if (identificationMode == 'topMostHit') {
                     text += featureInfoResultLayers[0];
@@ -109,19 +113,19 @@ function showFeatureInfo(evt) {
                     html: text
                 });
 
-				//new way GeoExt Popup
-				clickPopup = new GeoExt.Popup({
+                //new way GeoExt Popup
+                clickPopup = new GeoExt.Popup({
                     title: clickPopupTitleString[lang],
-					location: locationUnits,
-					map: map,
-					autoScroll: true,
-                    bodyStyle:'padding:5px',
+                    location: locationUnits,
+                    map: map,
+                    autoScroll: true,
+                    bodyStyle: 'padding:5px',
                     //layout: 'accordion',
                     items: popupItems,
-					maximizable: true,
-					collapsible: true,
+                    maximizable: true,
+                    collapsible: true,
                     listeners: {
-                        beforeshow: function() {
+                        beforeshow: function () {
 
                             var maxHeight = geoExtMap.getHeight() * 0.8;
                             var minWidth = 200;
@@ -132,24 +136,24 @@ function showFeatureInfo(evt) {
                                 this.setWidth(minWidth);
                             }
 
-                            if (this.getHeight()> maxHeight) {
+                            if (this.getHeight() > maxHeight) {
                                 this.setHeight(maxHeight);
                             }
-                       }
+                        }
                     }
-				});
-				clickPopup.show();
+                });
+                clickPopup.show();
 
-				//old way with OpenLayers.Popup
-				// clickPopup = new OpenLayers.Popup.FramedCloud(
-                    // null, // id
-                    // map.getLonLatFromPixel(evt.xy), // lonlat
-                    // null, //new OpenLayers.Size(1,1), // contentSize
-                    // text, //contentHTML
-                    // null, // anchor
-                    // true,  // closeBox
-                    // onClickPopupClosed // closeBoxCallBackFunction
-                    // );
+                //old way with OpenLayers.Popup
+                // clickPopup = new OpenLayers.Popup.FramedCloud(
+                // null, // id
+                // map.getLonLatFromPixel(evt.xy), // lonlat
+                // null, //new OpenLayers.Size(1,1), // contentSize
+                // text, //contentHTML
+                // null, // anchor
+                // true,  // closeBox
+                // onClickPopupClosed // closeBoxCallBackFunction
+                // );
                 // // For the displacement problem
                 // clickPopup.panMapIfOutOfView = Ext.isGecko;
                 // clickPopup.autoSize = true;
@@ -167,7 +171,9 @@ function showFeatureInfo(evt) {
 function showFeatureInfoHover(evt) {
     var map = geoExtMap.map; // gets OL map object
     if (identifyToolActive) {
-        if (hoverPopup) {removeHoverPopup();}
+        if (hoverPopup) {
+            removeHoverPopup();
+        }
         if (window.DOMParser) {
             var parser = new DOMParser();
             xmlDoc = parser.parseFromString(evt.text, "text/xml");
@@ -221,27 +227,27 @@ function showFeatureInfoHover(evt) {
                     }
                     text += '<hr class="hrHoverLayer"/>';
                 }
-                else if (tooltipTemplates && tooltipTemplates.hasOwnProperty(layerNodes[i].getAttribute("name"))){
+                else if (tooltipTemplates && tooltipTemplates.hasOwnProperty(layerNodes[i].getAttribute("name"))) {
                     templateText = tooltipTemplates[layerNodes[i].getAttribute("name")].template;
-                    tooltipText = templateText.replace(/<%(\w*)%>/g,function(m,key){
+                    tooltipText = templateText.replace(/<%(\w*)%>/g, function (m, key) {
                         var value = attributesDict.hasOwnProperty(key) ? attributesDict[key] : "";
                         return value.replace(/&/g, "&amp;")
-                                     .replace(/</g, "&lt;")
-                                     .replace(/>/g, "&gt;")
-                                     .replace(/"/g, "&quot;")
-                                     .replace(/'/g, "&#039;");
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;")
+                            .replace(/"/g, "&quot;")
+                            .replace(/'/g, "&#039;");
                     });
-                    text += tooltipText+"<br/>";
-                } else if (tooltipAttributeName.indexOf('[%') !== -1){ // Look into displayField for template tags...
+                    text += tooltipText + "<br/>";
+                } else if (tooltipAttributeName.indexOf('[%') !== -1) { // Look into displayField for template tags...
                     var tooltipText = tooltipAttributeName;
                     var re = new RegExp(/\[%[^"]*"(.*?)"[^"]*%\]/g);
                     var ttmatch;
-                    while(ttmatch = re.exec(tooltipAttributeName)){
+                    while (ttmatch = re.exec(tooltipAttributeName)) {
                         var key = ttmatch[1];
                         var val = attributesDict.hasOwnProperty(key) ? attributesDict[key] : "";
                         tooltipText = tooltipText.replace(ttmatch[0], val);
                     }
-                    text += tooltipText+"<br/>";
+                    text += tooltipText + "<br/>";
                 }
                 if (geometryFieldAvailable) {
                     var feature = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(attributesDict["geometry"]));
@@ -264,7 +270,7 @@ function showFeatureInfoHover(evt) {
                     }
                     result = true;
                 }
-                text += '<p>'+rasterAttributeNodes[j].getAttribute("name")+": "+rasterAttributeNodes[j].getAttribute("value")+'</p>';
+                text += '<p>' + rasterAttributeNodes[j].getAttribute("name") + ": " + rasterAttributeNodes[j].getAttribute("value") + '</p>';
                 text += '<hr class="hrHoverLayer"/>';
             }
             if (identificationMode == 'topMostHit' && result) {
@@ -277,16 +283,16 @@ function showFeatureInfoHover(evt) {
             if (!clickPopup) {
                 // only show hoverPopup if no clickPopup is open
                 //get rid of last <hr/>
-                text = text.replace(/<hr class="hrHoverLayer"\/>$/,'');
+                text = text.replace(/<hr class="hrHoverLayer"\/>$/, '');
                 hoverPopup = new OpenLayers.Popup.FramedCloud(
                     null, // id
                     map.getLonLatFromPixel(evt.xy), // lonlat
                     null, // new OpenLayers.Size(1,1), // contentSize
-                    text , //contentHTML
+                    text, //contentHTML
                     null, // anchor
                     false, // closeBox
                     null // closeBoxCallback
-                    );
+                );
                 hoverPopup.autoSize = true;
                 hoverPopup.keepInMap = true;
                 hoverPopup.panMapIfOutOfView = false;
@@ -300,12 +306,12 @@ function showFeatureInfoHover(evt) {
 }
 
 // disable all GetFeatureInfoRequest until we have a reponse
-function onBeforeGetFeatureInfoClick(evt){
+function onBeforeGetFeatureInfoClick(evt) {
 
     //workaround to avoid qgis server 500 error on empty query layers request
     //we want empty result
     //better way is to just cancel request, how?
-    if (selectedQueryableLayers.length==0) {
+    if (selectedQueryableLayers.length == 0) {
         WMSGetFInfo.vendorParams.QUERY_LAYERS = evt.object.layers[0].name;
         WMSGetFInfo.maxFeatures = 0;
     }
@@ -314,14 +320,16 @@ function onBeforeGetFeatureInfoClick(evt){
 }
 
 // reenable GetFeatureInfo
-function noFeatureInfoClick(evt){
-   activateGetFeatureInfo(true);
+function noFeatureInfoClick(evt) {
+    activateGetFeatureInfo(true);
 }
 
 /* we need this function in order to pass through the click to the map events
  * */
-function onHoverPopupClick(evt){
-    if (hoverPopup) {removeHoverPopup();}
+function onHoverPopupClick(evt) {
+    if (hoverPopup) {
+        removeHoverPopup();
+    }
     var map = geoExtMap.map; // gets OL map object
     evt.xy = map.events.getMousePosition(evt); // non api function of OpenLayers.Events
     map.events.triggerEvent("click", evt);
@@ -331,7 +339,7 @@ function onClickPopupClosed(evt) {
     removeClickPopup();
     // enable the hover popup for the curent mosue position
     if (enableHoverPopup)
-		WMSGetFInfoHover.activate();
+        WMSGetFInfoHover.activate();
     var map = geoExtMap.map; // gets OL map object
     evt.xy = map.events.getMousePosition(evt); // non api function of OpenLayers.Events
     map.events.triggerEvent("mousemove", evt);
@@ -339,16 +347,16 @@ function onClickPopupClosed(evt) {
 }
 
 function removeClickPopup() {
-	//var map = geoExtMap.map; // gets OL map object
+    //var map = geoExtMap.map; // gets OL map object
     //map.removePopup(clickPopup);
-    if(clickPopup) {
+    if (clickPopup) {
         clickPopup.destroy();
     }
     clickPopup = null;
     featureInfoHighlightLayer.removeAllFeatures();
 }
 
-function removeHoverPopup(){
+function removeHoverPopup() {
     var map = geoExtMap.map; // gets OL map object
     map.removePopup(hoverPopup);
     hoverPopup.destroy();
@@ -362,24 +370,23 @@ function showFeatureSelected(args) {
 
     var layerId = wmsLoader.layerTitleNameMapping[args["layer"]];
 
-    if(args["geometry"]==undefined) {
+    if (args["geometry"] == undefined) {
         // select feature in layer
         thematicLayer.mergeNewParams({
             "SELECTION": layerId + ":" + args["id"]
         });
     }
-    else
-    {
+    else {
         //lets higlight selected features geometry instead
         featureInfoHighlightLayer.removeAllFeatures();
         var feature = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(args["geometry"]));
         featureInfoHighlightLayer.addFeatures([feature]);
     }
 
-    if (args["doZoomToExtent"]){
+    if (args["doZoomToExtent"]) {
         geoExtMap.map.zoomToExtent(args["bbox"]);
     }
-    else{
+    else {
         geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
     }
 }
@@ -397,21 +404,21 @@ function clearFeatureSelected() {
 
 function parseFIResult(node) {
     if (node.hasChildNodes()) {
-		//test if we need to show the feature info layer title
-		//either from global setting or from project setting
-		var showFILayerTitle = showFeatureInfoLayerTitle;
-		if (mapThemeSwitcher) {
-			if (mapThemeSwitcher.activeProjectData != undefined) {
-				showFILayerTitle = mapThemeSwitcher.activeProjectData.showFeatureInfoLayerTitle;
-			}
-		}
+        //test if we need to show the feature info layer title
+        //either from global setting or from project setting
+        var showFILayerTitle = showFeatureInfoLayerTitle;
+        if (mapThemeSwitcher) {
+            if (mapThemeSwitcher.activeProjectData != undefined) {
+                showFILayerTitle = mapThemeSwitcher.activeProjectData.showFeatureInfoLayerTitle;
+            }
+        }
         if (node.hasChildNodes() && node.nodeName == "Layer") {
             var hasAttributes = false;
             var rasterData = false;
             var htmlText = "";
-			//if (showFILayerTitle) {
-			//	htmlText += "<h2>" + wmsLoader.layerProperties[node.getAttribute("name")].title + "</h2>";
-			//}
+            //if (showFILayerTitle) {
+            //	htmlText += "<h2>" + wmsLoader.layerProperties[node.getAttribute("name")].title + "</h2>";
+            //}
             var geoms = [];
             var layerChildNode = node.firstChild;
             while (layerChildNode) {
@@ -429,12 +436,12 @@ function parseFIResult(node) {
                     while (attributeNode) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
-                            var attValue = attributeNode.getAttribute("value").replace("NULL",noDataValue);
+                            var attValue = attributeNode.getAttribute("value").replace("NULL", noDataValue);
                             if ((attName !== mapInfoFieldName) && ((suppressEmptyValues == true && attValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '') !== "") || suppressEmptyValues == false)) {
                                 if (attName === "geometry") {
                                     var feature = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(attValue));
                                     geoms.push(feature);
-                                    if (! suppressInfoGeometry) {
+                                    if (!suppressInfoGeometry) {
                                         htmlText += "\n   <tr>";
                                         if (showFieldNamesInClickPopup) {
                                             htmlText += "<td>" + attName + ":</td>";
@@ -443,28 +450,33 @@ function parseFIResult(node) {
                                         hasAttributes = true;
                                     }
                                 } else {
-                                    if (attName !== "maptip") {
-                                      htmlText += "\n   <tr>";
-                                      if (showFieldNamesInClickPopup) {
-                                          htmlText += "<td>" + attName + ":</td>";
-                                      }
-                                      // add hyperlinks for URLs in attribute values
-                                      if (attValue != '' && /^((http|https|ftp):\/\/).+\..+/i.test(attValue)) {
-                                          if (! /\<a./i.test(attValue)) {
-                                              //do not reformat already formated tags
-                                              attValue = "<a class=\"popupLink\" href=\"" + attValue + "\" target=\"_blank\">" + attValue + "</a>";
-                                          }
-                                      }
-                                      // add hyperlinks for URLs containing mediaurl pattern
-                                      if (mediaurl != ''){
-                                          var mediapattern = new RegExp(mediaurl,'i');
-                                          if (mediapattern.test(attValue)){
-                                              attValue = "<a href=\"/" + attValue + "\" target=\"_blank\">" + attValue + "</a>";
-                                          }
-                                      }
-                                      htmlText += "<td>" + attValue + "</td></tr>";
-                                      hasAttributes = true;
-                                  }
+                                    //if (attName !== "maptip") {
+                                    htmlText += "\n   <tr>";
+                                    if (showFieldNamesInClickPopup && attName !== "maptip") {
+                                        htmlText += "<td>" + attName + ":</td>";
+                                    }
+                                    // add hyperlinks for URLs in attribute values
+                                    if (attValue != '' && /^((http|https|ftp):\/\/).+\..+/i.test(attValue)) {
+                                        if (!/\<a./i.test(attValue)) {
+                                            //do not reformat already formated tags
+                                            attValue = "<a class=\"popupLink\" href=\"" + attValue + "\" target=\"_blank\">" + attValue + "</a>";
+                                        }
+                                    }
+                                    // add hyperlinks for URLs containing mediaurl pattern
+                                    if (mediaurl != '') {
+                                        var mediapattern = new RegExp(mediaurl, 'i');
+                                        if (mediapattern.test(attValue)) {
+                                            attValue = "<a href=\"/" + attValue + "\" target=\"_blank\">" + attValue + "</a>";
+                                        }
+                                    }
+
+                                    if (attName == 'maptip') {
+                                        htmlText += "<td colspan='2'>" + attValue + "</td></tr>";
+                                    } else {
+                                        htmlText += "<td>" + attValue + "</td></tr>";
+                                    }
+                                    hasAttributes = true;
+                                    //}
                                 }
                             }
                         }
@@ -477,7 +489,7 @@ function parseFIResult(node) {
                     if (rasterData == false) {
                         htmlText += "\n <p></p>\n <table>\n  <tbody>";
                     }
-                    htmlText += '\n<tr><td>'+layerChildNode.getAttribute("name") + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
+                    htmlText += '\n<tr><td>' + layerChildNode.getAttribute("name") + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
                     hasAttributes = true;
                     rasterData = true;
                 }
@@ -531,14 +543,14 @@ function getFeatures(layerName, node) {
     }
 }
 
-function updateElevation(data, location, field, template){
+function updateElevation(data, location, field, template) {
 
     var pan = Ext.getCmp('fi_elevation');
     var tem = new Ext.Template(template);
 
-    if(data!==undefined) {
+    if (data !== undefined) {
         if (!(isNaN(data[field])) && data[field] !== null) {
-            if(data[field] === parseInt(data[field])) {
+            if (data[field] === parseInt(data[field])) {
                 //
             }
             else {
@@ -561,16 +573,16 @@ function updateAddress(data, location, field, template, templateMin, factor) {
     var distance = 0;
     var results;
 
-    if((field=='') || (field==null))
+    if ((field == '') || (field == null))
         results = data;
     else
         results = data[field];
 
-    if(results.distance != null) {
+    if (results.distance != null) {
         distance = results.distance;
-        results.distance = distance*factor;
+        results.distance = distance * factor;
     }
-    if (distance*factor>minimumAddressRange) {
+    if (distance * factor > minimumAddressRange) {
         tem = new Ext.Template(templateMin);
     }
     else {
