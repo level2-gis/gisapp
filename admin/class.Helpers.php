@@ -12,6 +12,7 @@
 
 namespace GisApp;
 
+use Exception;
 use SimpleXMLElement;
 
 class Helpers
@@ -99,6 +100,7 @@ class Helpers
 
     private function msg($status, $data)
     {
+        //TODO Status shuold be renamed to success to be more understadable
         return ["status" => $status, "message" => $data];
     }
 
@@ -111,17 +113,21 @@ class Helpers
      */
     public static function getQgsProject($map)
     {
-        libxml_clear_errors();
-        libxml_use_internal_errors(true);
-        if (file_exists($map) && is_readable($map)) {
-            $project = simplexml_load_file($map);
-            if (!$project) {
-                return self::msg(false, 'Project not valid XML!');
+        try {
+            libxml_clear_errors();
+            libxml_use_internal_errors(true);
+            if (file_exists($map) && is_readable($map)) {
+                $project = simplexml_load_file($map);
+                if (!$project) {
+                    return self::msg(false, 'Project not valid XML!');
+                }
+            } else {
+                return self::msg(false, 'Project not found or no permission: ' . $map);
             }
-        } else {
-            return self::msg(false, 'Project not found or no permission: '.$map);
+            return self::msg(true, $project);
+        } catch (Exception $e) {
+            return self::msg(false, $e->getMessage());
         }
-        return self::msg(true, $project);
     }
 
     public static function getQgsTimeStamp($map) {
@@ -130,6 +136,25 @@ class Helpers
             $time = filemtime($map);
         }
         return $time;
+    }
+
+    public function getProjectConfigs($file)
+    {
+        if (file_exists($file)) {
+            try {
+                $filestr = file_get_contents($file, true);
+                //check if json is valid string
+                if (json_decode($filestr) === null) {
+                    throw new Exception ("No permission or bad project json configuration!");
+                }
+
+                return self::msg(true, $filestr);
+            } catch (Exception $e) {
+                return self::msg(false, $e->getMessage());
+            }
+        } else {
+            return self::msg(true, json_encode(new \stdClass()));    //empty json object
+        }
     }
 
     public function getQgsProjectProperties($map)

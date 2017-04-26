@@ -67,24 +67,4 @@ class DbLoader
         return json_encode(array('path' => GISAPPURL));
     }
 
-    public function getProjectConfigs()
-    {
-        if (file_exists(PROJECT_PATH . $this->project . '.json')) {
-            try {
-                $filestr = file_get_contents(PROJECT_PATH . $this->project . '.json', true);
-                //check if json is valid string
-                if (json_decode($filestr) === null) {
-                    $this->feedback = "No permission or bad project json configuration!";
-                    return false;
-                } else {
-                    return $filestr;
-                }
-            } catch (Exception $e) {
-                $this->feedback = $e->getMessage();
-                return false;
-            }
-        } else {
-            return json_encode(new \stdClass()); //empty json object
-        }
-    }
 }

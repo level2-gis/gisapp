@@ -274,15 +274,15 @@ class Login
                 }
 
                 //search configs
-                $project_settings = $gisApp->getProjectConfigs();
-                if ($project_settings !== false) {
+                $project_settings = $helpers->getProjectConfigs(PROJECT_PATH . $project . '.json');
+                if ($project_settings['status']) {
                     // write user data into PHP SESSION
                     $_SESSION['user_name'] = $user;
                     $_SESSION['user_email'] = $email;
                     $_SESSION['user_is_logged_in'] = true;
                     $_SESSION['project'] = $project;
                     $_SESSION['data'] = $project_data;
-                    $_SESSION['settings'] = $project_settings;
+                    $_SESSION['settings'] = $project_settings['message'];
                     $_SESSION['gis_projects'] = $gis_projects;
                     $_SESSION['qgs'] = json_encode($project_qgs);
 
@@ -297,7 +297,7 @@ class Login
 
                     return true;
                 } else {
-                    $this->feedback = $gisApp->feedback;
+                    $this->feedback = $project_settings['message'];
                     return false;
                 }
             } else {
