@@ -60,7 +60,7 @@ function buildLayerContextMenu(node) {
     }
 
     //Export
-    if (projDataLayer.provider !== 'gdal') {
+    if (projDataLayer != undefined && projDataLayer.provider !== 'gdal') {
         menuItems.push({
             itemId: 'contextExport',
             text: contextDataExport[lang],
