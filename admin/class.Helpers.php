@@ -140,6 +140,8 @@ class Helpers
 
     public function getProjectConfigs($file)
     {
+        $file .= '.json';
+
         if (file_exists($file)) {
             try {
                 $filestr = file_get_contents($file, true);
@@ -157,8 +159,23 @@ class Helpers
         }
     }
 
+    public function getQgsFullProjectPath($project, $client) {
+
+        //first check in PROJECT_PATH
+        if (file_exists(PROJECT_PATH . $project . '.qgs')) {
+            return self::msg(true, PROJECT_PATH . $project);
+        } else if (file_exists(PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project . '.qgs')) {
+            return self::msg(true, PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project);
+        } else {
+            return self::msg(false, PROJECT_PATH . $project . '.qgs NOT FOUND!');
+        }
+    }
+
+
     public function getQgsProjectProperties($map)
     {
+        $map .= '.qgs';
+
         $qgs = self::getQgsProject($map);
         $time = self::getQgsTimeStamp($map);
         $prop = new \stdClass();

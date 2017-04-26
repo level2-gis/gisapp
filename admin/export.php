@@ -34,7 +34,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     //$fsize = -1;
 
     // Get project
-    $project = Helpers::getQgsProject(PROJECT_PATH . $map . '.qgs');
+    $project = Helpers::getQgsProject($map . '.qgs');
     if (!($project["status"])) {
         throw new Exception ($project["message"]);
     }
@@ -134,7 +134,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     //$mycmd = OGR2OGR . ' -f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '" ' . $options . ' "' . $conn . '" -sql "SELECT * FROM ' . $table . ' WHERE ' . $geom . ' && ST_Transform(ST_MakeEnvelope(' . $xmin . ', ' . $ymin . ', ' . $xmax . ', ' . $ymax . ', ' . $srid . '),' . $source_srid . ')" -progress';
     $mycmd = OGR2OGR . ' -s_srs EPSG:' . $source_srid . ' -t_srs EPSG:' . $srid . $options . '-f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '"' .$source . ' -progress';
 
-    chdir(PROJECT_PATH);
+    chdir(dirname($map));
     $output = shell_exec($mycmd);
 
     //if ($output==null) {
@@ -254,9 +254,12 @@ try {
         throw new Exception("Session time out or unathorized access!");
     }
 
+    //get project path from session
+    $projectPath = $_SESSION["project_path"];
+
     //check command
     if ($cmd == 'prepare') {
-        $resultFile = prepareFile($layername, $map, $query_arr, $format);
+        $resultFile = prepareFile($layername, $projectPath, $query_arr, $format);
         echo json_encode(["success" => true, "message" => base64_encode($resultFile)]);
     } elseif ($cmd == 'get') {
         $key = $query_arr["key"];

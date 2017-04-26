@@ -266,21 +266,32 @@ class Login
                 //get all GIS projects for user for themeswitcher
                 $gis_projects = $gisApp->getGisProjectsFromDB();
 
+                //get client alias
+                $client = json_decode($project_data)->client_name;
+
+                //get QGIS project location
+                $projectPath = $helpers->getQgsFullProjectPath($project, $client);
+                if (!($projectPath['status'])){
+                    $this->feedback = $projectPath['message'];
+                    return false;
+                }
+
                 //get QGIS project properties
-                $project_qgs = $helpers->getQgsProjectProperties(PROJECT_PATH . $project . '.qgs');
+                $project_qgs = $helpers->getQgsProjectProperties($projectPath['message']);
                 if (property_exists($project_qgs,"message")) {
                     $this->feedback = $project_qgs->message;
                     return false;
                 }
 
                 //search configs
-                $project_settings = $helpers->getProjectConfigs(PROJECT_PATH . $project . '.json');
+                $project_settings = $helpers->getProjectConfigs($projectPath['message']);
                 if ($project_settings['status']) {
                     // write user data into PHP SESSION
                     $_SESSION['user_name'] = $user;
                     $_SESSION['user_email'] = $email;
                     $_SESSION['user_is_logged_in'] = true;
                     $_SESSION['project'] = $project;
+                    $_SESSION['project_path'] = $projectPath['message'];
                     $_SESSION['data'] = $project_data;
                     $_SESSION['settings'] = $project_settings['message'];
                     $_SESSION['gis_projects'] = $gis_projects;

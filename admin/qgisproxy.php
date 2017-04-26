@@ -229,7 +229,7 @@ try {
     } else {
         $map = explode(".", $query_arr["map"])[0];
     }
-    $query_arr["map"] = PROJECT_PATH . $query_arr["map"];
+
 
 //session check
     session_start();
@@ -237,6 +237,11 @@ try {
     if (!(Helpers::isValidUserProj($map))) {
         throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
     }
+
+    //get project path from session
+    $projectPath = $_SESSION["project_path"];
+
+    $query_arr["map"] = $projectPath . '.qgs';
 
     $client = new Client();
 
