@@ -122,6 +122,11 @@ projectData.getLegendUrl = function (layer) {
     return legend;
 };
 
+//plugins
+var Eqwc = {};
+Eqwc.plugins = {};
+
+
 var lang = "en";
 var helpfile = "help_en.html";
 
@@ -399,15 +404,6 @@ var locationMarkerStyle = {
     strokeWidth: 2,
     fillOpacity: 0,
     pointRadius: 10
-};
-
-var streetViewMarkerStyle = {
-    graphicName: "arrow",
-    strokeColor: '#333333',
-    fillColor: '#FF9900',
-    strokeWidth: 2,
-    pointRadius: 8,
-    rotation: 0
 };
 
 OpenLayers.Renderer.symbol.arrow = [0, 4, 2, 0, 4, 4, 2, 3, 0, 4];

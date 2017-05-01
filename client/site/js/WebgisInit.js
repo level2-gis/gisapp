@@ -55,8 +55,6 @@ var measurePopup;
 var currentlyVisibleBaseLayer = null;
 var layerImageFormats = layerImageFormats || []; // use config from GlobalOptions if any
 
-var enableStreetView = false;
-
 // Call custom Init in Customizations.js
 customInit();
 
@@ -859,19 +857,6 @@ function postLoading() {
         });
         myTopToolbar.insert(3, zoomToNextAction);
 
-        //streetViewBtn
-        var streetView = new Ext.Button({
-            icon: iconDirectory+'mActionStreetView.png',
-            id: 'streetViewBtn',
-            scale: 'medium',
-            tooltip: 'GoogleStreetView',
-            tooltipType: 'qtip',
-            toggleGroup: 'mapTools',
-            enableToggle: true,
-            allowDepress: true,
-            handler: mapToolbarHandler
-        });
-
         //geolocate control
         var geoLocateAction = new GeoExt.Action({
             icon: iconDirectory+'mActionLocate.png',
@@ -892,7 +877,7 @@ function postLoading() {
             allowDepress: true,
             handler: mapToolbarHandler
         });
-        myTopToolbar.insert(100, geoLocateAction,streetView);
+        myTopToolbar.insert(100, geoLocateAction);
 
         //geolocation additional stuff
         var pulsate = function(feature) {
@@ -1858,10 +1843,6 @@ function mapToolbarHandler(btn, evt) {
 
     if (btn.id == "IdentifyTool") {
         if (btn.pressed) {
-            if(enableStreetView)    {
-                StreetViewControl.deactivate();
-            }
-
             identifyToolActive = true;
             activateGetFeatureInfo(true);
             mainStatusText.setText(modeObjectIdentificationString[lang]);
@@ -2026,20 +2007,6 @@ function mapToolbarHandler(btn, evt) {
 
             //firstGeolocation = true;
             gl.activate();
-        }
-    }
-
-    if(btn.id == 'streetViewBtn') {
-        if (btn.pressed) {
-            StreetViewControl.activate();
-            mainStatusText.setText(modeStreetViewString[lang]);
-            enableStreetView = true;
-        }
-        else
-        {
-            StreetViewControl.deactivate();
-            featureInfoHighlightLayer.removeAllFeatures();
-            mainStatusText.setText(modeNavigationString[lang]);
         }
     }
 }
