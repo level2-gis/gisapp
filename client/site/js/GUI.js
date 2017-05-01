@@ -373,7 +373,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                 split: true,
                 collapsible: true,
                 collapsed: true,
-                hidden: false,
+                hidden: true,
                 width: 300
             },
             {

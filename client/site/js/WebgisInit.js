@@ -877,7 +877,7 @@ function postLoading() {
             allowDepress: true,
             handler: mapToolbarHandler
         });
-        myTopToolbar.insert(100, geoLocateAction);
+        myTopToolbar.insert(13, geoLocateAction);
 
         //geolocation additional stuff
         var pulsate = function(feature) {
