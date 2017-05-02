@@ -22,7 +22,9 @@ foreach ($scan as $item) {
         if (!file_exists($lang_fn)) {
            $def_lang = 'en';
         }
-        array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/" . $def_lang . ".js");
+        if (file_exists($lang_fn)) {
+            array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/" . $def_lang . ".js");
+        }
         $js_arr = array_slice(scandir($plugin_path . '/js/'), 2);
         foreach ($js_arr  as $script) {
             array_push($plugins, "plugins/" . basename($plugin_path) . "/js/" . $script);

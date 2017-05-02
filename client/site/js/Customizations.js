@@ -51,7 +51,7 @@ function customAfterMapInit() {
             if (n.isLeaf()) {
                 if (n.attributes.checked) {
                     var layerId = wmsLoader.layerTitleNameMapping[n.text];
-                    var layer = projectData.layers[layerId];
+                    var layer = projectData.layers[layerId] == undefined ? {provider: '', layername: layerId} : projectData.layers[layerId];
                     var legendUrl = projectData.getLegendUrl(layer);
                     Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
                         "<div id='legend_"+n.text.replace(" ", "-")+"'><img style='vertical-align: middle; margin-left: 50px' src=\""+legendUrl+"\"/></div>"
