@@ -229,6 +229,8 @@ if( $detect->isMobile() && !$detect->isTablet() ){
 
 if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
+    $google = Helpers::loadGoogle();
+
 	//OK open application
     if($mobile=='on') {
         goMobile($def_lang);
@@ -258,7 +260,9 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
                 <script type="text/javascript" src="client_common/load.php"></script>
 
-                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
+                <?php if ($google) {
+                    echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>';
+                }?>
 
                 <script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
                 <script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>

@@ -388,4 +388,19 @@ class Helpers
         }
         return false;
     }
+
+
+    public static function loadGoogle() {
+        if (self::checkModulexist('streetview')) {
+            return true;
+        }
+
+        $data = $_SESSION['data'];
+
+        if (strpos($data, '"Google"') !== false) {
+            return true;
+        }
+
+        return false;
+    }
 }
