@@ -48,7 +48,7 @@ def main():
         
 
     configFile.close()
-    outFile = codecs.open("../Translations_custom.js", "w", "utf_8")
+    outFile = codecs.open("../Translations_eqwc.js", "w", "utf_8")
     outFile.write("/* \n \
 * \n \
 * Translations_cfg.js -- part of Quantum GIS Web Client \n \

@@ -57,6 +57,7 @@ Thank you!
 Available languages:
 * English
 * German
+* Italian
 * Slovenian
 * Slovak
 * Spanish
