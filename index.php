@@ -278,7 +278,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 <!--                <script type="text/javascript" src="../ol2/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
-                <script type="text/javascript" src="client/eqwc_debug.php"></script>
+                <script type="text/javascript" src="client/eqwc_load.php"></script>
 
 
 <!--                DEBUG remove editor.js before-->

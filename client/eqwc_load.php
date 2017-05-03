@@ -1,12 +1,34 @@
 <?php
 
+use GisApp\Login;
+
+require_once("../admin/class.Helpers.php");
+require_once("../admin/settings.php");
+
 session_start();
 
 $lang = [];
 $plugins = [];
+$eqwc_debug = [
+    "client/site/js/Translations_eqwc.js",
+    "client/site/js/PagingStore.js",
+    "client/site/js/LoadAppProjectData.js",
+    "client/site/js/Customizations.js",
+    "client/site/js/GetUrlParams.js",
+    "client/site/js/TriStateTree.js",
+    "client/site/js/GUI.js",
+    "client/site/js/QGISExtensions.js",
+    "client/site/js/GeocodingSearchCombo.js",
+    "client/site/js/FeatureInfoDisplay.js",
+    "client/site/js/LegendAndMetadataDisplay.js",
+    "client/site/js/LayerActions.js",
+    "client/site/js/WebgisInit_functions.js"];
+$eqwc_mini = "client/eqwc.js?v=".\GisApp\Helpers::getEqwcVersion();
 $dir = dirname(dirname(__FILE__)) . "/plugins/";
 $scan = array_slice(scandir($dir), 2);
 $def_lang = $_SESSION['lang'];
+
+$debug = defined('DEBUG') ? DEBUG : false;
 
 //eqwc language files
 array_push($lang, "admin/languages/locale/ext-lang-". $def_lang .".js");
@@ -39,18 +61,7 @@ Header("content-type: application/x-javascript");
 
     var jsFiles = [
         "<?php echo implode('","',$lang) ?>",
-        "client/site/js/Translations_eqwc.js",
-        "client/site/js/PagingStore.js",
-        "client/site/js/LoadAppProjectData.js",
-        "client/site/js/Customizations.js",
-        "client/site/js/GetUrlParams.js",
-        "client/site/js/TriStateTree.js",
-        "client/site/js/GUI.js",
-        "client/site/js/QGISExtensions.js",
-        "client/site/js/GeocodingSearchCombo.js",
-        "client/site/js/FeatureInfoDisplay.js",
-        "client/site/js/LegendAndMetadataDisplay.js",
-        "client/site/js/LayerActions.js",
+        "<?php echo $debug ? implode('","',$eqwc_debug) : $eqwc_mini ?>",
         "<?php echo implode('","',$plugins) ?>",
         "client/site/js/WebgisInit.js"
     ];

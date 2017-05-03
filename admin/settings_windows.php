@@ -7,6 +7,9 @@
  * More information at https://github.com/uprel/gisapp
  */
 
+//true loads source javascript files, false loads single minified version for production
+define('DEBUG', false);
+
 //database connection
 define('DB_CONN_STRING', 'pgsql:host=localhost;port=5432;dbname=gisapp');
 
