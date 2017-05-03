@@ -144,7 +144,17 @@ function doGetRequest($query_arr, $map, $client, $http_ver)
     }
 
     if ($cacheKey != null) {
+        $qgsTime = json_decode($_SESSION['qgs'])->time;
+
         $content = $cache->get($cacheKey);
+
+        if($content != null) {
+            $writeTime = $cache->getInfo($cacheKey)['write_time'];
+            if ($qgsTime>$writeTime) {
+                $cache->delete($cacheKey);
+                $content = null;
+            }
+        }
 
 
         if ($content == null) {
