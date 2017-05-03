@@ -10,7 +10,6 @@ session_start();
 $lang = [];
 $plugins = [];
 $eqwc_debug = [
-    "client/site/js/Translations_eqwc.js",
     "client/site/js/PagingStore.js",
     "client/site/js/LoadAppProjectData.js",
     "client/site/js/Customizations.js",
@@ -33,6 +32,7 @@ $debug = defined('DEBUG') ? DEBUG : false;
 //eqwc language files
 array_push($lang, "admin/languages/locale/ext-lang-". $def_lang .".js");
 array_push($lang, "admin/languages/". $def_lang .".js");
+array_push($lang, "client/site/js/lang/Translations_". $def_lang .".js");
 
 //add into array all js files in plugins/xxx/js subfolder
 foreach ($scan as $item) {

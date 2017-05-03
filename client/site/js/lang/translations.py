@@ -38,17 +38,17 @@ def main():
         print "!"
         return None
 
-    languages = ["en"] # default
+    languages = ["nl"] # default
     
-    for aLine in configFile:
-        if aLine[:1] != "#": # comment
-            if aLine.strip() != "": # no empty lines
-                languages = aLine.strip().split(" ")
-                break
+    #for aLine in configFile:
+    #    if aLine[:1] != "#": # comment
+    #        if aLine.strip() != "": # no empty lines
+    #            languages = aLine.strip().split(" ")
+    #            break
         
 
     configFile.close()
-    outFile = codecs.open("../Translations_eqwc.js", "w", "utf_8")
+    outFile = codecs.open("../Translations_"+languages[0]+".js", "w", "utf_8")
     outFile.write("/* \n \
 * \n \
 * Translations_cfg.js -- part of Quantum GIS Web Client \n \
