@@ -53,7 +53,8 @@ if($stats["data"]!=null) {
         //if (strpos($key,"_XML_")>-1) {
         $cmd_get = '<a href="' . $script . '?get=' . $key . '">view </a>';
         //}
-        print('</br>' . $cmd_clear . $cmd_get . '<b>' . $key . '</b>,' . $el['size'] . ',' . date('c', $el['write_time']));
+        //print('</br>' . $cmd_clear . $cmd_get . '<b>' . $key . '</b>,' . $el['size'] . ',' . date('c', $el['write_time']));
+        print('</br>' . $cmd_clear . $cmd_get . '<b>' . $key . '</b>,' . $el['size'] . ',' . $el['write_time']);
     }
 }
 
