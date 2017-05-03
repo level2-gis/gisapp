@@ -69,7 +69,7 @@ function customAfterGetMapUrls() {
 
 // called when DOM is ready (Ext.onReady in WebgisInit.js)
 function customPostLoading() {
-//    Ext.get("panel_header").addClass('sogis-header').insertHtml('beforeEnd', '<div style="float: right; width: 250px;">hello world</div>');
+    Ext.get("panel_header").addClass('sogis-header').insertHtml('beforeEnd', '<div style="float: right; width: 250px;">hello world</div>');
 }
 
 // called when starting print
