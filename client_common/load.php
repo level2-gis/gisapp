@@ -10,6 +10,7 @@ $data = json_decode($_SESSION['data']);
 $settings = json_decode($_SESSION['settings']);
 $gis_projects = json_decode($_SESSION['gis_projects']);
 $qgs = json_decode($_SESSION['qgs']);
+$lang = $_SESSION['lang'];
 
 if (!property_exists($settings, "search")) {
     $settings->search = null;
@@ -46,6 +47,7 @@ projectData.client_name = '<?php echo $data->client_name ?>';
 projectData.client_display_name = '<?php echo $data->client_display_name ?>';
 projectData.client_url = '<?php echo $data->client_url ?>';
 projectData.client_logo = '<?php echo $data->client_logo ?>';
+projectData.lang = '<?php echo $lang ?>';
 
 projectData.search = eval(<?php echo json_encode($settings->search) ?>);
 projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics) ?>);

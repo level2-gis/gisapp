@@ -127,8 +127,8 @@ var Eqwc = {};
 Eqwc.plugins = {};
 
 
-var lang = "en";
-var helpfile = "help_en.html";
+var lang = projectData.lang;
+//var helpfile = "help_en.html";
 
 //Custom function to populate GetUrlParams variables
 var customGetUrlParamsParser = null;

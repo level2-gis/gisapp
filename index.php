@@ -212,11 +212,11 @@ session_start();
 if($def_lang>'') {
     $lang_fn = filter_input(INPUT_SERVER,'DOCUMENT_ROOT',FILTER_SANITIZE_STRING) . GISAPPURL . 'admin/languages/' . $def_lang . '.js';
     if(!(file_exists($lang_fn))) {
-        $def_lang = 'en';
+        $def_lang = defined('DEFAULT_LANG') ? DEFAULT_LANG : 'en';
     }
 }
 else {
-    $def_lang = "en";
+    $def_lang = defined('DEFAULT_LANG') ? DEFAULT_LANG : 'en';
 }
 
 $_SESSION['lang'] = $def_lang;

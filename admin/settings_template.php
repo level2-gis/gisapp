@@ -7,6 +7,10 @@
  * More information at https://github.com/uprel/gisapp
  */
 
+//2 letter language code defining default language if not provided with url paramater lang
+//language must be part of translated languages for EQWC
+define('DEFAULT_LANG', 'en');
+
 //true loads source javascript files, false loads single minified version for production
 define('DEBUG', false);
 

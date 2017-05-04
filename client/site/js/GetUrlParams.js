@@ -103,10 +103,10 @@ if (urlArray.length > 1) {
 		format = urlParams.format;
 	}
 	origFormat = format;
-	if (typeof lang == "undefined") {
-		//if lang is not defined in GlobalOptions.js we set it to "en"
-		lang = "en";
-	}
+	//if (typeof lang == "undefined") {
+	//	//if lang is not defined in GlobalOptions.js we set it to "en"
+	//	lang = "en";
+	//}
 	if (urlParams.lang) {
 		//check if language is available
 		if (availableLanguages[urlParams.lang]) {
