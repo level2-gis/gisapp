@@ -8,34 +8,26 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * Desktop client is based on original **[QGIS Web client (QWC)](https://github.com/qgis/QGIS-Web-Client)**.
 * Mobile client is based on **[OL3 Mobile Viewer](https://github.com/sourcepole/ol3-mobile-viewer)**.
 
-## Modifications and new features regarding QWC:
+## Modifications and new features:
 * user authorization with optional guest access
-* server side (database for storing info about projects, base layers, external layers (WMS) and users; user authentication, specific project settings)
+* database for storing info about projects, base layers, external layers (WMS) and users; user authentication, specific project settings
 * QGIS server proxy (caching and validating requests)
+* loading Web or Mobile client based on screen size
+* using external API services for geocoding and elevation data
+* plugins support, currently available: Google StreetView and [Editor](http://level2.si/product/editor-for-extended-qgis-web-client/)
 * layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
 * geolocation button
-* Google StreetView integration
 * legend in layer tree
 * separating project settings and code
-* user Interface changes
+* user Interface changes and many minor improvements
 
-**[Longer Description](http://level2.si/2015/06/whats-new-in-extended-qgis-web-client/)**
-
-## New features in 2016:
-* mobile client
-* using external location services for address and elevation
-* table filtering also reflects on graphics (layer is filtered as table)
-* replace GeoNames Search with more powerful Mapzen Search API
-* baselayers refactoring, added support for BING Maps and WMTS layers on both clients
+**[More info](http://level2.si/solutions/gis-clients/)**
 
 ## Demo
 Visit **<a target="_blank" href="http://test.level2.si/gisapp/eu_demo?public=on">Demo by Level2</a>**
 
-## Plugins
-Editing plugin coming up soon!
-
 ## Services
-* Support with installation and setting up
+* Support with installation and usage
 * Custom development
 * Hosting of projects on our servers
 
