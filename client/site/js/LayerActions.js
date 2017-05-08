@@ -233,13 +233,15 @@ function zoomHandler(grid, rowIndex, colIndex, item, e) {
     grid.getSelectionModel().selectRow(rowIndex);
 
     //add fields as it would be from search results
-    //fix bbox
-    var bbox = record.data.bbox;
     record.data.layer = selectedLayer;
     record.data.doZoomToExtent = true;
     record.data.id= recId;
-    record.data.bbox = OpenLayers.Bounds.fromArray( [bbox.minx, bbox.miny, bbox.maxx, bbox.maxy] );
 
+    //fix bbox
+    var bbox = record.data.bbox;
+    if(!(record.data.bbox instanceof OpenLayers.Bounds)) {
+        record.data.bbox = OpenLayers.Bounds.fromArray([bbox.minx, bbox.miny, bbox.maxx, bbox.maxy]);
+    }
     showFeatureSelected(record.data);
 }
 
