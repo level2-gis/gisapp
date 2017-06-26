@@ -61,6 +61,12 @@ function loadWMSConfig(topicName) {
 
 function postLoading() {
 
+    //DescriptionPanel
+    var descPanel = Ext.getCmp('DescriptionPanel');
+    if (descPanel.el.dom.innerHTML.length>5) {
+        descPanel.setVisible(true);
+    }
+
     layerTreeSelectionChangeHandlerFunction = function (selectionModel, treeNode) {
         if (!themeChangeActive) {
             //change selected activated layers for GetFeatureInfo requests

@@ -1,5 +1,5 @@
 /**
- * English translation for administration part of Extended Qgis Web Client
+ * English translation for Extended Qgis Web Client
  *
  * Translators: Uros Preloznik
  *
@@ -43,7 +43,8 @@ var TR = {
     cancel: 'Cancel',
     transactionFail: 'Transaction failed',
     show: 'Show',
-    properties: 'Properties'
+    properties: 'Properties',
+    description: 'Description'
 };
 
 /**

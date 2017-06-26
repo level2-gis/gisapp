@@ -1,5 +1,5 @@
 /**
- * German translation for administration part of Extended Qgis Web Client
+ * German translation for Extended Qgis Web Client
  *
  * Translators: Dreanor
  *
@@ -43,7 +43,8 @@ var TR = {
     cancel: 'Abbrechen',
     transactionFail: 'Transaction failed',
     show: 'Show',
-    properties: 'Properties'
+    properties: 'Properties',
+    description: 'Description'
 };
 
 /**

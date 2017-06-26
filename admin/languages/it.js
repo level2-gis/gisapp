@@ -1,5 +1,5 @@
 /**
- * Italian translation for administration part of Extended Qgis Web Client
+ * Italian translation for Extended Qgis Web Client
  *
  * Translators: Alessandro Sferrazza
  *
@@ -43,7 +43,8 @@ var TR = {
     cancel: 'Cancella',
     transactionFail: 'Transazzione fallita',
     show: 'Mostra',
-    properties: 'Proprietà'
+    properties: 'Proprietà',
+    description: 'Description'
 };
 
 /**

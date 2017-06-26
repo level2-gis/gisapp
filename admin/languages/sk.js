@@ -1,5 +1,5 @@
 /**
- * Slovak translation for administration part of Extended Qgis Web Client
+ * Slovak translation for Extended Qgis Web Client
  *
  * Translators: Martin Baloga
  *
@@ -43,7 +43,8 @@ var TR = {
     cancel: 'Cancel',
     transactionFail: 'Transaction failed',
     show: 'Show',
-    properties: 'Properties'
+    properties: 'Properties',
+    description: 'Description'
 };
 
 /**

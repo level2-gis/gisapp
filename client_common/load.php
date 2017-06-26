@@ -8,6 +8,7 @@ $project = "" . $_SESSION['project'];
 
 $data = json_decode($_SESSION['data']);
 $settings = json_decode($_SESSION['settings']);
+$description = $_SESSION['description'];
 $gis_projects = json_decode($_SESSION['gis_projects']);
 $qgs = json_decode($_SESSION['qgs']);
 $lang = $_SESSION['lang'];
@@ -55,6 +56,7 @@ projectData.geoCode = eval(<?php echo json_encode($settings->geoCode) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';
+projectData.description = <?php echo json_encode($description) ?>;
 projectData.crs = '<?php echo $qgs->crs ?>';
 projectData.proj4 = '<?php echo $qgs->proj4 ?>';
 projectData.title = '<?php echo $qgs->title ?>';

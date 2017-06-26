@@ -1,5 +1,5 @@
 /**
- * Slovene translation for administration part of Extended Qgis Web Client
+ * Slovene translation for Extended Qgis Web Client
  *
  * Translators: Uros Preloznik
  *
@@ -43,7 +43,8 @@ var TR = {
     cancel: 'Prekini',
     transactionFail: 'Transakcija neuspešna',
     show: 'Prikaži',
-    properties: 'Lastnosti'
+    properties: 'Lastnosti',
+    description: 'Opis'
 };
 
 /**

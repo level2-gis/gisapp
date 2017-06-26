@@ -213,7 +213,15 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						//	frame: false
 						//}
                         ] // map items
-					}] // accordion items
+					}, {
+                        id: 'DescriptionPanel',
+                        xtype: 'panel',
+                        title: TR.description,
+                        html: projectData.description,
+                        hidden: true,
+                        padding: 5,
+                        autoScroll: true
+                    }] // accordion items
 				}] // left panel items
 			}, {
 				xtype: 'panel',

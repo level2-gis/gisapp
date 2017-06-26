@@ -283,8 +283,11 @@ class Login
                     return false;
                 }
 
+                //description
+                $project_description = $helpers->getProjectConfigs($projectPath['message'].'.html');
+
                 //search configs
-                $project_settings = $helpers->getProjectConfigs($projectPath['message']);
+                $project_settings = $helpers->getProjectConfigs($projectPath['message'].'.json');
                 if ($project_settings['status']) {
                     // write user data into PHP SESSION
                     $_SESSION['user_name'] = $user;
@@ -294,6 +297,7 @@ class Login
                     $_SESSION['project_path'] = $projectPath['message'];
                     $_SESSION['data'] = $project_data;
                     $_SESSION['settings'] = $project_settings['message'];
+                    $_SESSION['description'] = $project_description['message'];
                     $_SESSION['gis_projects'] = $gis_projects;
                     $_SESSION['qgs'] = json_encode($project_qgs);
 

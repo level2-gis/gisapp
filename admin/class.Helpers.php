@@ -140,13 +140,13 @@ class Helpers
 
     public function getProjectConfigs($file)
     {
-        $file .= '.json';
+        $ext = explode('.',$file)[1];
 
         if (file_exists($file)) {
             try {
                 $filestr = file_get_contents($file, true);
                 //check if json is valid string
-                if (json_decode($filestr) === null) {
+                if ($ext=='json' && json_decode($filestr) === null) {
                     throw new Exception ("No permission or bad project json configuration!");
                 }
 
