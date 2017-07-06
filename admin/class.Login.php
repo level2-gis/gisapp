@@ -156,7 +156,13 @@ class Login
     {
         if ($this->checkLoginFormDataNotEmpty()) {
             if ($this->createDatabaseConnection()) {
-                $this->checkPasswordCorrectnessAndLogin();
+                if($this->checkPasswordCorrectnessAndLogin()) {
+                    $user = filter_input(INPUT_POST, 'user_name', FILTER_SANITIZE_STRING);
+                    $project = filter_input(INPUT_POST, 'project', FILTER_SANITIZE_STRING);
+                    if(!($this->loadProjectData($user, $project))) {
+                        $this->doLogout();
+                    }
+                }
             }
         }
     }
@@ -169,7 +175,7 @@ class Login
         $_SESSION = array();
         session_destroy();
         $this->user_is_logged_in = false;
-        $this->feedback = "You were just logged out.";
+        //$this->feedback = "You were just logged out.";
     }
 
     /**
@@ -214,12 +220,8 @@ class Login
     private function checkPasswordCorrectnessAndLogin()
     {
         $user = filter_input(INPUT_POST, 'user_name', FILTER_SANITIZE_STRING);
-        $project = filter_input(INPUT_POST, 'project', FILTER_SANITIZE_STRING);
         $email = "";
         $pass = false;
-
-        $gisApp = new DbLoader($user, $project, $this->db_connection);
-        $helpers = new Helpers();
 
         //check if we have guest user
         if (strtolower($user == 'guest')) {
@@ -253,77 +255,95 @@ class Login
 
 
         if ($pass) {
-            //aditional check if project and user exists and user has permission to use project
-            $check = $gisApp->checkUserProject();
-            if ($check == 'OK') {
-                //get additional project info
-                $project_data = $gisApp->getProjectDataFromDB();
-                if($project_data==false) {
-                    $this->feedback = $gisApp->feedback;
-                    return false;
-                }
 
-                //get all GIS projects for user for themeswitcher
-                $gis_projects = $gisApp->getGisProjectsFromDB();
+            // write user data into PHP SESSION
+            $_SESSION['user_name'] = $user;
+            $_SESSION['user_email'] = $email;
+            $_SESSION['user_is_logged_in'] = true;
 
-                //get client alias
-                $client = json_decode($project_data)->client_name;
+            $_SESSION['message'] = $this->feedback;
+            $this->user_is_logged_in = true;
 
-                //get QGIS project location
-                $projectPath = $helpers->getQgsFullProjectPath($project, $client);
-                if (!($projectPath['status'])){
-                    $this->feedback = $projectPath['message'];
-                    return false;
-                }
+            //update lastlogin and count
+            $sql = "UPDATE users SET last_login=now(),count_login = count_login + 1 WHERE user_name = :user_name";
+            $query = $this->db_connection->prepare($sql);
+            $query->bindValue(':user_name', $user);
+            $query->execute();
 
-                //get QGIS project properties
-                $project_qgs = $helpers->getQgsProjectProperties($projectPath['message']);
-                if (property_exists($project_qgs,"message")) {
-                    $this->feedback = $project_qgs->message;
-                    return false;
-                }
+            return true;
 
-                //description
-                $project_description = $helpers->getProjectConfigs($projectPath['message'].'.html');
-
-                //search configs
-                $project_settings = $helpers->getProjectConfigs($projectPath['message'].'.json');
-                if ($project_settings['status']) {
-                    // write user data into PHP SESSION
-                    $_SESSION['user_name'] = $user;
-                    $_SESSION['user_email'] = $email;
-                    $_SESSION['user_is_logged_in'] = true;
-                    $_SESSION['project'] = $project;
-                    $_SESSION['project_path'] = $projectPath['message'];
-                    $_SESSION['data'] = $project_data;
-                    $_SESSION['settings'] = $project_settings['message'];
-                    $_SESSION['description'] = $project_description['message'];
-                    $_SESSION['gis_projects'] = $gis_projects;
-                    $_SESSION['qgs'] = json_encode($project_qgs);
-
-                    $_SESSION['message'] = $this->feedback;
-                    $this->user_is_logged_in = true;
-
-                    //update lastlogin and count
-                    $sql = "UPDATE users SET last_login=now(),count_login = count_login + 1 WHERE user_name = :user_name";
-                    $query = $this->db_connection->prepare($sql);
-                    $query->bindValue(':user_name', $user);
-                    $query->execute();
-
-                    return true;
-                } else {
-                    $this->feedback = $project_settings['message'];
-                    return false;
-                }
-            } else {
-                $this->feedback = $check;
-                return false;
-            }
         } else {
             $this->feedback = 'TR.wrongPassword';
             return false;
         }
     }
+
+    public function loadProjectData($user, $project)
+    {
+        //if user login OK then load everything for desired project
+
+        $gisApp = new DbLoader($user, $project, $this->db_connection);
+        $helpers = new Helpers();
+
+        //aditional check if project and user exists and user has permission to use project
+        $check = $gisApp->checkUserProject();
+        if ($check == 'OK') {
+            //get additional project info
+            $project_data = $gisApp->getProjectDataFromDB();
+            if ($project_data == false) {
+                $this->feedback = $gisApp->feedback;
+                return false;
+            }
+
+            //get all GIS projects for user for themeswitcher
+            $gis_projects = $gisApp->getGisProjectsFromDB();
+
+            //get client alias
+            $client = json_decode($project_data)->client_name;
+
+            //get QGIS project location
+            $projectPath = $helpers->getQgsFullProjectPath($project, $client);
+            if (!($projectPath['status'])) {
+                $this->feedback = $projectPath['message'];
+                return false;
+            }
+
+            //get QGIS project properties
+            $project_qgs = $helpers->getQgsProjectProperties($projectPath['message']);
+            if (property_exists($project_qgs, "message")) {
+                $this->feedback = $project_qgs->message;
+                return false;
+            }
+
+            //description
+            $project_description = $helpers->getProjectConfigs($projectPath['message'] . '.html');
+            if (!($project_description['status'])) {
+                $this->feedback = $project_description['message'];
+                return false;
+            }
+
+            //search configs
+            $project_settings = $helpers->getProjectConfigs($projectPath['message'] . '.json');
+            if (!($project_settings['status'])) {
+                $this->feedback = $project_settings['message'];
+                return false;
+            }
+
+            $_SESSION['project'] = $project;
+            $_SESSION['project_path'] = $projectPath['message'];
+            $_SESSION['data'] = $project_data;
+            $_SESSION['settings'] = $project_settings['message'];
+            $_SESSION['description'] = $project_description['message'];
+            $_SESSION['gis_projects'] = $gis_projects;
+            $_SESSION['qgs'] = json_encode($project_qgs);
+
+            return true;
+        } else {
+            $this->feedback = $check;
+            return false;
+        }
+    }
+
 
     /**
      * Validates the user's registration input

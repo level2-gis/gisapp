@@ -25,9 +25,9 @@ class Helpers
         $valid = isset($_SESSION['user_is_logged_in']);
 
         if (($valid === true) && ($project !== null)) {
-            if ($project !== $_SESSION['project']) {
+            if (isset($_SESSION['project']) && $project !== $_SESSION['project']) {
                 $valid = false;
-                $_SESSION['project'] = $project;
+                //$_SESSION['project'] = $project;
                 $_SESSION['user_is_logged_in'] = null;
             }
         }
