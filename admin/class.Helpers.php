@@ -25,18 +25,13 @@ class Helpers
     public static function isValidUserProj($project)
     {
         $valid = isset($_SESSION['user_is_logged_in']);
+        $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;
 
-        if (($valid === true) && ($project !== null)) {
-            if (isset($_SESSION['project']) && $project !== $_SESSION['project']) {
-                //change projects
-                $user = $_SESSION['user_name'];
-                $change = new Login();
-                $valid = $change->changeProject($user, $project);
-
-                //$valid = false;
-                //$_SESSION['project'] = $project;
-                //$_SESSION['user_is_logged_in'] = null;
-            }
+        if (($valid === true) && ($project !== $sess)) {
+            //change projects
+            $user = $_SESSION['user_name'];
+            $change = new Login();
+            $valid = $change->changeProject($user, $project);
         }
         return $valid;
     }
