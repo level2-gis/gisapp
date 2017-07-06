@@ -167,6 +167,17 @@ class Login
         }
     }
 
+    public function changeProject($user, $project) {
+        if ($this->createDatabaseConnection()) {
+            if(!($this->loadProjectData($user, $project))) {
+                $this->doLogout();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Logs the user out
      */
@@ -278,7 +289,7 @@ class Login
         }
     }
 
-    public function loadProjectData($user, $project)
+    private function loadProjectData($user, $project)
     {
         //if user login OK then load everything for desired project
 

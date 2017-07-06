@@ -15,6 +15,8 @@ namespace GisApp;
 use Exception;
 use SimpleXMLElement;
 
+require_once("class.Login.php");
+
 class Helpers
 {
 
@@ -26,9 +28,14 @@ class Helpers
 
         if (($valid === true) && ($project !== null)) {
             if (isset($_SESSION['project']) && $project !== $_SESSION['project']) {
-                $valid = false;
+                //change projects
+                $user = $_SESSION['user_name'];
+                $change = new Login();
+                $valid = $change->changeProject($user, $project);
+
+                //$valid = false;
                 //$_SESSION['project'] = $project;
-                $_SESSION['user_is_logged_in'] = null;
+                //$_SESSION['user_is_logged_in'] = null;
             }
         }
         return $valid;
