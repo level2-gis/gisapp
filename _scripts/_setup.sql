@@ -222,6 +222,9 @@ ALTER SEQUENCE layers_id_seq OWNED BY layers.id;
 CREATE TABLE projects (
     id integer NOT NULL,
     name text NOT NULL,
+    display_name text,
+    crs text,
+    description text,
     overview_layer_id integer,
     base_layers_ids integer[],
     extra_layers_ids integer[],
@@ -309,6 +312,7 @@ CREATE TABLE users (
     user_email text,
     display_name text,
     last_login timestamp with time zone,
+    registered timestamp with time zone,
     count_login integer DEFAULT 0,
     project_ids integer[]
 );
@@ -419,8 +423,10 @@ SELECT pg_catalog.setval('layers_id_seq', 5, true);
 -- Dependencies: 174
 -- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: -
 --
-
-INSERT INTO projects VALUES (1, 'helloworld', 4, '{2,4}', NULL, 1, NULL, true);
+INSERT INTO projects(
+id, name, overview_layer_id, base_layers_ids, extra_layers_ids,
+client_id, tables_onstart, public)
+VALUES (1, 'helloworld', 4, '{2,4}', NULL, 1, NULL, true);
 
 
 --
@@ -438,7 +444,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (6, '2016-11-12');
+INSERT INTO settings VALUES (7, '2017-07-12');
 
 
 --
@@ -574,6 +580,8 @@ ALTER TABLE ONLY users
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_user_name_key UNIQUE (user_name);
 
+ALTER TABLE ONLY users
+ADD CONSTRAINT users_user_email_key UNIQUE (user_email);
 
 --
 -- TOC entry 2001 (class 2606 OID 96006)
