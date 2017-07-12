@@ -191,6 +191,7 @@ class Helpers
             $prop->layers = [];
             $prop->use_ids = false;
             $prop->time = $time;
+            $prop->description = "";
             $prop->message = $qgs["message"];
             //return false;
         } else {
@@ -202,6 +203,7 @@ class Helpers
             //parsing boolean values, be careful (bool)"false" = true!!!
             $prop->use_ids = filter_var($qgs["message"]->properties->WMSUseLayerIDs,FILTER_VALIDATE_BOOLEAN);
             $prop->time = $time;
+            $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
             try {
 
                 $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],$prop->title,0);

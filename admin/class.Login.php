@@ -170,7 +170,7 @@ class Login
     public function changeProject($user, $project) {
         if ($this->createDatabaseConnection()) {
             if(!($this->loadProjectData($user, $project))) {
-                $this->doLogout();
+                //$this->doLogout();
                 return false;
             }
         }
@@ -323,6 +323,13 @@ class Login
             $project_qgs = $helpers->getQgsProjectProperties($projectPath['message']);
             if (property_exists($project_qgs, "message")) {
                 $this->feedback = $project_qgs->message;
+                return false;
+            }
+
+            //write project data in db for use in gis portal
+            $project_update = $gisApp->writeProjectData($project_qgs);
+            if ($project_update == false) {
+                $this->feedback = $gisApp->feedback;
                 return false;
             }
 

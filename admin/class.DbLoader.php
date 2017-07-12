@@ -67,4 +67,21 @@ class DbLoader
         return json_encode(array('path' => GISAPPURL));
     }
 
+    public function writeProjectData($newData) {
+        $sql = 'UPDATE projects SET display_name = :title, crs = :crs, description = :description WHERE name = :project';
+
+        $query = $this->db_connection->prepare($sql);
+        $query->bindValue(':title', $newData->title);
+        $query->bindValue(':crs', $newData->crs);
+        $query->bindValue(':description', $newData->description);
+        $query->bindValue(':project', $this->project);
+        $query->execute();
+        $result_row = $query->fetchObject();
+        if (!($result_row)) {
+            $this->feedback = $query->errorInfo()[2];
+            return false;
+        }
+        return true;
+    }
+
 }

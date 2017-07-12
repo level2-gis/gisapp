@@ -63,11 +63,11 @@ if($stats["data"]!=null) {
 
 if($get != null) {
     echo '</br></br>' . '<b>Contents: '.$get.'</b></br>';
-    if (strpos($get,"_XML_")>-1) {
-        echo htmlentities($cache->get($get), ENT_COMPAT, "UTF-8");
-    } elseif (strpos($get,"_PNG_")>-1) {
+    if (strpos($get,"_PNG_")>-1) {
         $im = base64_encode($cache->get($get));
         echo '<img src="data:image/png;base64,'.$im.'" alt="legend" />';
+    } else {
+        echo htmlentities($cache->get($get), ENT_COMPAT, "UTF-8");
     }
 }
 echo "</pre>";
