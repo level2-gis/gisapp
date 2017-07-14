@@ -151,7 +151,8 @@ CREATE TABLE clients (
     name text NOT NULL,
     display_name text,
     theme_id integer,
-    url text
+    url text,
+    description text
 );
 
 
@@ -444,7 +445,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (7, '2017-07-12');
+INSERT INTO settings VALUES (8, '2017-07-14');
 
 
 --
@@ -621,6 +622,7 @@ CREATE OR REPLACE VIEW public.clients_view AS
     clients.name,
     clients.display_name,
     clients.url,
+    clients.description,
     count(projects.id) AS count,
     sort(array_agg(projects.id)) AS project_ids
   FROM clients,
