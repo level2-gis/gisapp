@@ -224,6 +224,7 @@ CREATE TABLE projects (
     id integer NOT NULL,
     name text NOT NULL,
     display_name text,
+    contact text,
     crs text,
     description text,
     overview_layer_id integer,
@@ -630,6 +631,10 @@ CREATE OR REPLACE VIEW public.clients_view AS
   WHERE clients.id = projects.client_id
   GROUP BY projects.client_id, clients.id, clients.name, clients.display_name, clients.url;
 
+-- View: public.projects_view
+
+-- DROP VIEW public.projects_view;
+
 CREATE OR REPLACE VIEW public.projects_view AS
   SELECT projects.id,
     projects.name,
@@ -639,15 +644,13 @@ CREATE OR REPLACE VIEW public.projects_view AS
     WHEN projects.display_name IS NULL THEN projects.name
     ELSE projects.display_name
     END AS display_name,
-    CASE
-    WHEN projects.crs IS NULL THEN '_'::text
-    ELSE projects.crs
-    END AS crs,
-    CASE
-    WHEN projects.description IS NULL THEN '_'::text
-    ELSE projects.description
-    END AS description,
+    projects.crs,
+    projects.description,
+    projects.contact,
     clients.display_name AS client
   FROM projects,
     clients
   WHERE projects.client_id = clients.id;
+ALTER TABLE public.projects_view
+OWNER TO pguser;
+

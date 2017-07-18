@@ -68,12 +68,12 @@ class DbLoader
     }
 
     public function writeProjectData($newData) {
-        $sql = 'UPDATE projects SET display_name = :title, crs = :crs, description = :description WHERE name = :project';
+        $sql = 'UPDATE projects SET display_name = :title, crs = :crs WHERE name = :project';
 
         $query = $this->db_connection->prepare($sql);
         $query->bindValue(':title', $newData->title);
         $query->bindValue(':crs', $newData->crs);
-        $query->bindValue(':description', $newData->description);
+        //$query->bindValue(':description', $newData->description);
         $query->bindValue(':project', $this->project);
         $query->execute();
         $result_row = $query->fetchObject();
