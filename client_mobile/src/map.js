@@ -284,7 +284,26 @@ Map.setBackgroundLayer = function(layerName, layerId) {
 
             break;
 
+        case 'WMS' :
 
+            var definition = $.parseJSON(lay.definition);
+
+            //tiled wms layer
+            layOl3 = new ol.layer.Tile({
+                visible: visible,
+                //name: lay.name,
+                source: new ol.source.TileWMS({
+                    url: definition.url,
+                    params: definition.params
+                })
+            });
+
+            layOl3.name = lay.name;
+
+            // add background as base layer
+            Map.map.getLayers().insertAt(0, layOl3);
+
+            break;
     }
 
 };

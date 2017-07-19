@@ -66,6 +66,14 @@ function makeLayer(layDef) {
 
             break;
 
+        case 'WMS' :
+            var layer = new OpenLayers.Layer.WMS(
+                title,
+                options.url,
+                options.params,
+                options.options);
+            break;
+
     }
     return layer;
 }
