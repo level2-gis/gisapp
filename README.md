@@ -5,7 +5,7 @@ Extended QGIS Web Client (EQWC)
 
 This is modified and extended version of original QGIS Web Client I. It turns your QGIS project into Web GIS application with tools to view, navigate, search and print your data. On top of that, there is a simple administration part to manage different projects, users, delegate permissions and set some specific settings not in QGIS project.
 
-* Desktop client is based on original **[QGIS Web client (QWC)](https://github.com/qgis/QGIS-Web-Client)**.
+* Desktop client is based on original **[QGIS Web client I (QWC I)](https://github.com/qgis/QGIS-Web-Client)**.
 * Mobile client is based on **[OL3 Mobile Viewer](https://github.com/sourcepole/ol3-mobile-viewer)**.
 
 ## Modifications and new features:
@@ -53,6 +53,7 @@ Available languages:
 * Slovenian
 * Slovak
 * Spanish
+* Swedish
 
 New language:
 * Read this **[page](../../wiki/6.-Translations)**
