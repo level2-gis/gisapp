@@ -10,7 +10,7 @@
 
 //This file is used instead of GlobalOptions.js from QWC
 
-function makeLayer(layDef) {
+function makeLayer(layDef, visible) {
 
     if (layDef==null) {
         return null;
@@ -47,6 +47,7 @@ function makeLayer(layDef) {
         case 'WMTS' :
             var layer = new OpenLayers.Layer.WMTS({
                 name: title,
+                visibility: visible,
                 url: options.url,
                 layer: options.layer,
                 requestEncoding: options.requestEncoding,
@@ -68,6 +69,9 @@ function makeLayer(layDef) {
             break;
 
         case 'WMS' :
+
+            options.options.visibility = visible;
+
             var layer = new OpenLayers.Layer.WMS(
                 title,
                 options.url,
@@ -90,7 +94,7 @@ projectData.setBaseLayers = function (isBase) {
 
     if (bl != null) {
         for (var k = 0; k < bl.length; k++) {
-            baseLayers.push(makeLayer(bl[k]));
+            baseLayers.push(makeLayer(bl[k], isBase));
         }
     }
 
@@ -176,7 +180,7 @@ var enablePermalink = true;
 var permaLinkURLShortener = null; // "/wsgi/createShortPermalink.wsgi";
 
 var enableBGMaps = true;
-var enableExtraLayers = false;
+var enableExtraLayers = true;
 
 // enable to use WMTS base layers
 var enableWmtsBaseLayers = false;

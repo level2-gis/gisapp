@@ -78,7 +78,7 @@ function postLoading() {
     var initialBGMap = 0;
     var baseLayers = projectData.setBaseLayers(true);
     var extraLayers = projectData.setBaseLayers(false);
-    var overviewLayer = makeLayer(projectData.overViewLayer());
+    var overviewLayer = makeLayer(projectData.overViewLayer(), true);
 
     // run the function from Customizations.js
     customBeforeMapInit();
@@ -1111,7 +1111,6 @@ function postLoading() {
     if(enableExtraLayers) {
         var extraLayGroup = new Ext.tree.TreeNode({
             leaf: false,
-            //checked: false,
             expanded: true,
             text: externalLayerTitleString[lang]
         });
