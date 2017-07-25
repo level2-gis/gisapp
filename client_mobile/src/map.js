@@ -256,6 +256,10 @@ Map.setBackgroundLayer = function(layerName, layerId) {
                 resolutions[z] = size / Math.pow(2, z);
             }
 
+            if (definition.matrixIds  !== undefined) {
+                matrixIds = definition.matrixIds;
+            }
+
             if (serverResolutions !== undefined){
                 resolutions = serverResolutions;
             }
