@@ -63,7 +63,7 @@ function postLoading() {
 
     //DescriptionPanel
     var descPanel = Ext.getCmp('DescriptionPanel');
-    if (descPanel.el.dom.innerHTML.length>5) {
+    if (descPanel.el.dom.innerText.length>15) {
         descPanel.setVisible(true);
     }
 
@@ -1108,7 +1108,7 @@ function postLoading() {
     layerTree.addListener('leafschange',leafsChangeFunction);
 
     //externalWMSlayers
-    if(enableExtraLayers) {
+    if(enableExtraLayers && extraLayers.length>0) {
         var extraLayGroup = new Ext.tree.TreeNode({
             leaf: false,
             expanded: true,

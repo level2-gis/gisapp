@@ -22,5 +22,3 @@ CREATE OR REPLACE VIEW public.projects_view AS
     clients
   WHERE projects.client_id = clients.id;
 
-ALTER TABLE public.projects_view
-  OWNER TO pguser;
