@@ -16,7 +16,7 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * using external API services for geocoding and elevation data
 * plugins support, currently available: Google StreetView and [Editor](http://level2.si/product/editor-for-extended-qgis-web-client/)
 * layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
-* geolocation button (for Chrome you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/)
+* geolocation button (for Chrome you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/))
 * legend in layer tree
 * separating project settings and code
 * user Interface changes and many minor improvements
