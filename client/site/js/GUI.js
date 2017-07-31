@@ -152,8 +152,16 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						animate: true,
 						activeOnTop: false
 					},
-					activeItem: 1,
+					activeItem: 2,
 					items: [{
+                        id: 'DescriptionPanel',
+                        xtype: 'panel',
+                        title: TR.description,
+                        html: projectData.description,
+                        hidden: true,
+                        padding: 5,
+                        autoScroll: true
+                        }, {
 						xtype: 'panel',
 						title: searchPanelTitleString[lang],
 						id: 'SearchPanel',
@@ -213,15 +221,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						//	frame: false
 						//}
                         ] // map items
-					}, {
-                        id: 'DescriptionPanel',
-                        xtype: 'panel',
-                        title: TR.description,
-                        html: projectData.description,
-                        hidden: true,
-                        padding: 5,
-                        autoScroll: true
-                    }] // accordion items
+					}] // accordion items
 				}] // left panel items
 			}, {
 				xtype: 'panel',
