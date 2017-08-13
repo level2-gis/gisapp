@@ -136,9 +136,7 @@ projectData.getLegendUrl = function (layer) {
 };
 
 //plugins
-var Eqwc = {};
 Eqwc.plugins = {};
-
 
 var lang = projectData.lang;
 //var helpfile = "help_en.html";

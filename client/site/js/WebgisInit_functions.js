@@ -729,93 +729,97 @@ function postLoading() {
         myTopToolbar.insert(3, zoomToNextAction);
 
         //geolocate control
-        var geoLocateAction = new GeoExt.Action({
-            icon: iconDirectory+'mActionLocate.png',
-            id: 'geoLocate',
-            scale: 'medium',
-            control: new OpenLayers.Control.Geolocate({
-                bind: false,
-                geolocationOptions: {
-                    enableHighAccuracy: true,
-                    maximumAge: 0,
-                    timeout: 7000
-                }
-            }),
-            map: geoExtMap.map,
-            tooltip: showLocationTooltipString[lang],
-            tooltipType: 'qtip',
-            enableToggle: false,
-            allowDepress: true,
-            handler: mapToolbarHandler
-        });
-        myTopToolbar.insert(13, geoLocateAction);
+        if (Eqwc.settings.enableGeolocation) {
+            var geoLocateAction = new GeoExt.Action({
+                icon: iconDirectory + 'mActionLocate.png',
+                id: 'geoLocate',
+                scale: 'medium',
+                control: new OpenLayers.Control.Geolocate({
+                    bind: false,
+                    geolocationOptions: {
+                        enableHighAccuracy: true,
+                        maximumAge: 0,
+                        timeout: 7000
+                    }
+                }),
+                map: geoExtMap.map,
+                tooltip: showLocationTooltipString[lang],
+                tooltipType: 'qtip',
+                enableToggle: false,
+                allowDepress: true,
+                handler: mapToolbarHandler
+            });
+            myTopToolbar.insert(13, geoLocateAction);
 
-        //geolocation additional stuff
-        var pulsate = function(feature) {
-            var point = feature.geometry.getCentroid(),
-                bounds = feature.geometry.getBounds(),
-                radius = Math.abs((bounds.right - bounds.left)/2),
-                count = 0,
-                grow = 'up';
+            //geolocation additional stuff
+            var pulsate = function (feature) {
+                var point = feature.geometry.getCentroid(),
+                    bounds = feature.geometry.getBounds(),
+                    radius = Math.abs((bounds.right - bounds.left) / 2),
+                    count = 0,
+                    grow = 'up';
 
-            var resize = function(){
-                if (count>16) {
-                    clearInterval(window.resizeInterval);
-                }
-                var interval = radius * 0.03;
-                var ratio = interval/radius;
-                switch(count) {
-                    case 4:
-                    case 12:
-                        grow = 'down'; break;
-                    case 8:
-                        grow = 'up'; break;
-                }
-                if (grow!=='up') {
-                    ratio = - Math.abs(ratio);
-                }
-                feature.geometry.resize(1+ratio, point);
-                featureInfoHighlightLayer.drawFeature(feature);
-                count++;
+                var resize = function () {
+                    if (count > 16) {
+                        clearInterval(window.resizeInterval);
+                    }
+                    var interval = radius * 0.03;
+                    var ratio = interval / radius;
+                    switch (count) {
+                        case 4:
+                        case 12:
+                            grow = 'down';
+                            break;
+                        case 8:
+                            grow = 'up';
+                            break;
+                    }
+                    if (grow !== 'up') {
+                        ratio = -Math.abs(ratio);
+                    }
+                    feature.geometry.resize(1 + ratio, point);
+                    featureInfoHighlightLayer.drawFeature(feature);
+                    count++;
+                };
+                window.resizeInterval = window.setInterval(resize, 50, point, radius);
             };
-            window.resizeInterval = window.setInterval(resize, 50, point, radius);
-        };
 
-        var firstGeolocation = true;
+            var firstGeolocation = true;
 
-        geoLocateAction.control.events.register("locationupdated",geoLocateAction.control,function(e) {
-            //TODO UROS PAZI TO
-            featureInfoHighlightLayer.removeAllFeatures();
-            var circle = new OpenLayers.Feature.Vector(
-                OpenLayers.Geometry.Polygon.createRegularPolygon(
-                    new OpenLayers.Geometry.Point(e.point.x, e.point.y),
-                    e.position.coords.accuracy/2,
-                    40,
-                    0
-                ),
-                {},
-                locationAccuracyStyle
-            );
-            featureInfoHighlightLayer.addFeatures([
-                new OpenLayers.Feature.Vector(
-                    e.point,
+            geoLocateAction.control.events.register("locationupdated", geoLocateAction.control, function (e) {
+                //TODO UROS PAZI TO
+                featureInfoHighlightLayer.removeAllFeatures();
+                var circle = new OpenLayers.Feature.Vector(
+                    OpenLayers.Geometry.Polygon.createRegularPolygon(
+                        new OpenLayers.Geometry.Point(e.point.x, e.point.y),
+                        e.position.coords.accuracy / 2,
+                        40,
+                        0
+                    ),
                     {},
-                    locationMarkerStyle
-                ),
-                circle
-            ]);
-            if (firstGeolocation) {
-                geoExtMap.map.zoomToExtent(featureInfoHighlightLayer.getDataExtent());
-                pulsate(circle);
-                //firstGeolocation = false;
-                geoLocateAction.control.bind = true;
-            }
-        });
-        geoLocateAction.control.events.register("locationfailed",this,function() {
-            //TODO TRANSLATE
-            Ext.Msg.alert("Error","Location detection failed");
-            geoLocateAction.control.deactivate();
-        });
+                    locationAccuracyStyle
+                );
+                featureInfoHighlightLayer.addFeatures([
+                    new OpenLayers.Feature.Vector(
+                        e.point,
+                        {},
+                        locationMarkerStyle
+                    ),
+                    circle
+                ]);
+                if (firstGeolocation) {
+                    geoExtMap.map.zoomToExtent(featureInfoHighlightLayer.getDataExtent());
+                    pulsate(circle);
+                    //firstGeolocation = false;
+                    geoLocateAction.control.bind = true;
+                }
+            });
+            geoLocateAction.control.events.register("locationfailed", this, function () {
+                //TODO TRANSLATE
+                Ext.Msg.alert("Error", "Location detection failed");
+                geoLocateAction.control.deactivate();
+            });
+        }
 
         //add QGISSearchCombo
         if (useGeoCodeSearchBox || searchBoxQueryURL != null) {

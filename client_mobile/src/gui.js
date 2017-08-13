@@ -1001,6 +1001,10 @@ Gui.initViewer = function() {
   });
 
   // geolocation
+  if (!Eqwc.settings.enableGeolocation) {
+    $("#btnLocation").hide();
+  }
+
   $('#btnLocation').on('tap', function() {
     Gui.tracking = !Gui.tracking;
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !Gui.tracking);

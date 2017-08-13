@@ -40,10 +40,12 @@ function goMobile($lang) {
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
         <script type="text/javascript" src="client_common/customProjections.js"></script>
 
+        <!--        eqwc settings-->
+        <script type="text/javascript" src="client_common/settings.js"></script>
 
         <!-- OpenLayers 3 -->
         <script src="client_mobile/lib/ol3/ol.js?v=3.19.1"></script>
-<!--        <script src="client_mobile/lib/ol3/ol-debug.js"></script>-->
+        <!--        <script src="client_mobile/lib/ol3/ol-debug.js"></script>-->
         <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css" />
 
         <script type="text/javascript" src="admin/languages/<?php echo $lang ?>.js?v=1.1.3"></script>
@@ -270,6 +272,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
                 <script type="text/javascript" src="client_common/customProjections.js"></script>
+                <script type="text/javascript" src="client_common/settings.js"></script>
 
                 <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20170317"></script>
 
