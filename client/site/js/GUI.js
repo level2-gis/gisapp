@@ -285,7 +285,8 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							tooltip: measureDistanceTooltipString[lang],
 							tooltipType: 'qtip',
 							scale: 'medium',
-							id: 'measureDistance'
+							id: 'measureDistance',
+                            hidden: !Eqwc.settings.enableMeasurement
 						}, {
 							xtype: 'button',
 							enableToggle: true,
@@ -295,7 +296,8 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							icon: iconDirectory+'mActionMeasureArea.png',
 							tooltipType: 'qtip',
 							tooltip: measureAreaTooltipString[lang],
-							id: 'measureArea'
+							id: 'measureArea',
+                            hidden: !Eqwc.settings.enableMeasurement
 						}, {
 							xtype: 'tbseparator',
                             id: 'separator3'
@@ -322,16 +324,18 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							xtype: 'tbseparator',
                             id: 'separator4'
 						}
-						// , {
-							// xtype: 'button',
-							// enableToggle: false,
-							// allowDepress: false,
-							// scale: 'medium',
-							// icon: 'gis_icons/mActionHelp.png',
-							// tooltipType: 'qtip',
-							// tooltip: showHelpTooltipString[lang],
-							// id: 'ShowHelp'
-						// }
+						,   {
+                                xtype: 'button',
+                                enableToggle: false,
+                                allowDepress: false,
+                                scale: 'medium',
+                                icon: iconDirectory+'mActionHelp.png',
+                                tooltipType: 'qtip',
+                                tooltip: TR.feedback,
+                                id: 'ShowFeedback',
+                                handler: mapToolbarHandler,
+                                hidden: !Eqwc.settings.enableUserFeedback
+						    }
 						]
 					},
 					bbar: {

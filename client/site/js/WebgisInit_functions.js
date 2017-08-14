@@ -1829,6 +1829,13 @@ function mapToolbarHandler(btn, evt) {
             openPermaLink(permalink);
         }
     }
+
+    if (btn.id == 'ShowFeedback') {
+        openFeedbackWin();
+    }
+
+
+
     if (btn.id == "ShowHelp") {
         if (help_active == true){
             help_active = false;
@@ -2239,6 +2246,126 @@ function openPermaLink(permalink) {
         }]
     }).show();
 }
+
+function openFeedbackWin() {
+
+    var form = new Ext.form.FormPanel({
+        baseCls: 'x-plain',
+        labelWidth: 55,
+        url: 'save-form.php',
+        layout: {
+            type: 'vbox',
+            align: 'stretch'  // Child items are stretched to full width
+        },
+        defaults: {
+            xtype: 'textfield'
+        },
+
+        items: [
+        //    {
+        //    xtype: 'combo',
+        //    store: ['test@example.com', 'someone-else@example.com' ],
+        //    plugins: [ Ext.ux.FieldReplicator, Ext.ux.FieldLabeler ],
+        //    fieldLabel: 'Send To',
+        //    name: 'to'
+        //},{
+        //    plugins: [ Ext.ux.FieldLabeler ],
+        //    fieldLabel: 'Subject',
+        //    name: 'subject'
+        //},
+            {
+            xtype: 'textarea',
+            fieldLabel: 'Message text',
+            hideLabel: true,
+            name: 'msg',
+            flex: 1  // Take up all *remaining* vertical space
+        }, {
+                xtype: 'label',
+                text: TR.feedbackDescription,
+                hideLabel: true
+            }]
+    });
+
+
+    if (typeof(feedbackWin) != 'undefined'){
+        feedbackWin.show();
+    } else {
+
+        feedbackWin = new Ext.Window({
+            title: TR.feedbackTitle,
+            width: 450,
+            height: 300,
+            minWidth: 300,
+            minHeight: 200,
+            layout: 'fit',
+            closeAction: 'hide',
+            plain: true,
+            //bodyStyle: 'padding:5px;',
+            buttonAlign: 'center',
+            items:form,
+            buttons: [{
+                itemId: 'send',
+                text: TR.send,
+                handler: feedbackHandler
+                //scope: this
+            },{
+                itemId: 'cancel',
+                text: TR.cancel,
+                handler: feedbackHandler
+                //scope: this
+            }]
+
+        }).show();
+    }
+}
+
+function feedbackHandler(btn) {
+    var id = btn.itemId;
+    var silent = false;
+    if (id == 'cancel') {
+        feedbackWin.hide();
+    }
+    if (id == 'send') {
+        var data = [];
+        var form = feedbackWin.items.get(0).getForm();
+        var message = form.findField('msg').getValue();
+        var link = createPermalink();
+        data.push('USER: '+projectData.user);
+        data.push('MESSAGE: '+message);
+        data.push('LINK: '+link);
+        feedbackWin.hide();
+        form.reset();
+        sendMail(null, 'EQWC '+projectData.project+" "+ TR.feedback, data.join('\r\n'), silent);
+    }
+}
+
+function sendMail(to, subject, body, silent) {
+
+    var data = {};
+    data.mailto = to;
+    data.subject = subject;
+    data.body = body;
+
+    if (Eqwc.settings.mailServiceUrl > '') {
+
+        Ext.Ajax.request({
+            url: Eqwc.settings.mailServiceUrl,
+            params: data,
+            method: 'POST',
+            success: function (response) {
+            },
+            failure: function (response) {
+                if (!silent) {
+                    Ext.Msg.alert('Error sending feedback', response.statusText);
+                }
+            }
+        });
+    }
+
+}
+
+
+
 
 function receiveShortPermalinkFromDB(result, request) {
     var result = eval("("+result.responseText+")");

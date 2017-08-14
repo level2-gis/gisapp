@@ -48,6 +48,7 @@ var help_active = false; //help window is active or not
 var helpWin; //Ext window that will display the help file
 var legendMetadataWindow_active = false; //legend graphic and metadata window is active or not
 var legendMetadataWindow; //Ext window that will hold the legend and metatadata
+var feedbackWin;
 var legendMetaTabPanel; //a reference to the Ext tabpanel holding the tabs for legend graphic and metadata
 var legendTab; //a reference to the Ext tab holding the legend graphic
 var metadataTab; //a reference to the Ext tab holding the metadata information
