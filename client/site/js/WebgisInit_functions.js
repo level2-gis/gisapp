@@ -729,7 +729,7 @@ function postLoading() {
         myTopToolbar.insert(3, zoomToNextAction);
 
         //geolocate control
-        if (Eqwc.settings.enableGeolocation) {
+        if (projectData.geolocation) {
             var geoLocateAction = new GeoExt.Action({
                 icon: iconDirectory + 'mActionLocate.png',
                 id: 'geoLocate',
@@ -2335,7 +2335,7 @@ function feedbackHandler(btn) {
         data.push('LINK: '+link);
         feedbackWin.hide();
         form.reset();
-        sendMail(null, 'EQWC '+projectData.project+" "+ TR.feedback, data.join('\r\n'), silent);
+        sendMail(projectData.userFeedbackMailto, 'EQWC '+projectData.project+" "+ TR.feedback, data.join('\r\n'), silent);
     }
 }
 

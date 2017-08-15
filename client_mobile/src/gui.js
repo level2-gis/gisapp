@@ -1001,7 +1001,7 @@ Gui.initViewer = function() {
   });
 
   // geolocation
-  if (!Eqwc.settings.enableGeolocation) {
+  if (!projectData.geolocation) {
     $("#btnLocation").hide();
   }
 

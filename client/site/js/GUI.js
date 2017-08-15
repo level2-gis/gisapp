@@ -286,7 +286,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							tooltipType: 'qtip',
 							scale: 'medium',
 							id: 'measureDistance',
-                            hidden: !Eqwc.settings.enableMeasurement
+                            hidden: !projectData.measurements
 						}, {
 							xtype: 'button',
 							enableToggle: true,
@@ -297,7 +297,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							tooltipType: 'qtip',
 							tooltip: measureAreaTooltipString[lang],
 							id: 'measureArea',
-                            hidden: !Eqwc.settings.enableMeasurement
+                            hidden: !projectData.measurements
 						}, {
 							xtype: 'tbseparator',
                             id: 'separator3'
@@ -334,7 +334,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                                 tooltip: TR.feedback,
                                 id: 'ShowFeedback',
                                 handler: mapToolbarHandler,
-                                hidden: !Eqwc.settings.enableUserFeedback
+                                hidden: !projectData.userFeedback
 						    }
 						]
 					},

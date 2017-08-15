@@ -26,6 +26,19 @@ if (!property_exists($settings, "locationServices")) {
     $settings->locationServices = null;
 }
 
+if (!property_exists($settings, "geolocation")) {
+    $settings->geolocation = true;
+}
+if (!property_exists($settings, "userFeedback")) {
+    $settings->userFeedback = true;
+}
+if (!property_exists($settings, "userFeedbackMailto")) {
+    $settings->userFeedbackMailto = '';
+}
+if (!property_exists($settings, "measurements")) {
+    $settings->measurements = true;
+}
+
 if (!property_exists($data, "client_url")) {
     $data->client_url = "";
 }
@@ -54,6 +67,11 @@ projectData.search = eval(<?php echo json_encode($settings->search) ?>);
 projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics) ?>);
 projectData.geoCode = eval(<?php echo json_encode($settings->geoCode) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
+projectData.geolocation = <?php echo json_encode($settings->geolocation) ?>;
+projectData.userFeedback = <?php echo json_encode($settings->userFeedback) ?>;
+projectData.userFeedbackMailto = <?php echo json_encode($settings->userFeedbackMailto) ?>;
+projectData.measurements = <?php echo json_encode($settings->measurements) ?>;
+
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';
 projectData.description = <?php echo json_encode($description) ?>;
