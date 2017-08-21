@@ -269,8 +269,8 @@ var MapOptions = {
   fractionalZoom: !enableBGMaps,
   transitionEffect:"resize",
   zoomDuration: 1,
-  //restrictedExtent: [-81245.54989633860532194,7554571.3447839068248868,524135.17702297557843849,7947516.23852463811635971],
-    controls: []
+  restrictedExtent: projectData.restrictToStartExtent ? projectData.extent.split(',') : null,
+  controls: []
 };
 
 // Options for the main map layer (OpenLayers.layer)

@@ -59,6 +59,7 @@ projectData.geolocation = <?php echo json_encode($data->geolocation) ?>;
 projectData.userFeedback = <?php echo json_encode($data->feedback) ?>;
 projectData.userFeedbackMailto = <?php echo json_encode($data->feedback_email) ?>;
 projectData.measurements = <?php echo json_encode($data->measurements) ?>;
+projectData.restrictToStartExtent = <?php echo json_encode($data->restrict_to_start_extent) ?>;
 
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';

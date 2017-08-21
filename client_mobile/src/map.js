@@ -61,6 +61,8 @@ Map.createMap = function() {
     controls:[]
   });
 
+  Map.map.getView().fit(Config.map.extent, Map.map.getSize());
+
   Map.map.getView().on('change:rotation', function() {
     $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
   });
@@ -266,6 +268,7 @@ Map.setBackgroundLayer = function(layerName, layerId) {
 
             layOl3 = new ol.layer.Tile({
                 visible: visible,
+                extent: projectData.restrictToStartExtent ? projectData.extent.split(',') : undefined,
                 source: new ol.source.WMTS({
                     url: definition.url,
                     layer: definition.layer,

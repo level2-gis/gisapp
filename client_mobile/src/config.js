@@ -86,6 +86,8 @@ if (projectData.baseLayers() !== null) {
     }
 }
 
+Config.data.extralayers = projectData.extraLayers();
+
 // default properties
 Config.defaultProperties = {
   following: true,
@@ -199,8 +201,9 @@ else {
 Config.map.viewOptions = {
   projection: Config.map.projection,
   //resolutions: Config.map.scaleDenomsToResolutions(Config.map.scaleDenoms),
-  center: Config.map.init.center,
-  zoom: Config.map.init.zoom
+  //center: Config.map.init.center,
+  extent: projectData.restrictToStartExtent ? Config.map.extent : undefined
+  //zoom: Config.map.init.zoom,
 };
 
 // WMS server type ('geoserver', 'mapserver', 'qgis'), used for adding WMS dpi parameters
