@@ -106,20 +106,11 @@ begin
 base:=null;
 overview:=null;
 
---SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
---FROM projects,layers where layers.id = ANY(projects.base_layers_ids) AND base_layer=true and projects.name=$1 INTO base;
+  SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
+  FROM projects,layers where layers.id = ANY(projects.base_layers_ids) AND projects.name=$1 INTO base;
 
   SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
-  FROM projects,layers where layers.id = ANY(projects.base_layers_ids) AND base_layer=true and projects.name=$1 INTO base;
-
---SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
---FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND base_layer=false and projects.name=$1 INTO extra;
-
-  SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
-  FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND base_layer=false and projects.name=$1 INTO extra;
-
---SELECT json_agg(('new OpenLayers.Layer.'|| layers.type) || '(' || layers.definition || ');')
---FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
+  FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND projects.name=$1 INTO extra;
 
   SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
   FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
@@ -188,7 +179,6 @@ CREATE TABLE layers (
     name text NOT NULL,
     display_name text,
     type text NOT NULL,
-    base_layer boolean NOT NULL,
     definition text NOT NULL
 );
 
@@ -232,7 +222,12 @@ CREATE TABLE projects (
     extra_layers_ids integer[],
     client_id integer,
     tables_onstart text[],
-    public boolean DEFAULT false NOT NULL
+    public boolean DEFAULT false NOT NULL,
+    restrict_to_start_extent boolean NOT NULL default FALSE,
+    geolocation boolean NOT NULL default TRUE,
+    feedback boolean NOT NULL default TRUE,
+    measurements boolean NOT NULL default TRUE,
+    feedback_email text
 );
 
 
@@ -446,7 +441,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (9, '2017-07-18');
+INSERT INTO settings VALUES (10, '2017-08-21');
 
 
 --
