@@ -40,15 +40,15 @@ var TR = {
     mapTerrain: 'Terräng',
     fiLocation: 'Plats',
     fiElevation: 'ovanför havet',
-    cancel: 'Annulera',
-    send: 'Send',
+    cancel: 'Ångra',
+    send: 'Skicka',
     feedback: 'Feedback',
-    feedbackTitle: 'Send your feedback',
-    feedbackDescription: 'Your name, project and current map link will be added to the message!',
+    feedbackTitle: 'Skicka din feedback',
+    feedbackDescription: 'Beskriv ditt ärende. Vill du bli kontaktad så skriv gärna ditt namn och din e-post',
     transactionFail: 'Genomförandet misslyckat',
     show: 'Visa',
     properties: 'Egenskaper',
-	description: 'Information'
+    description: 'Information'
 };
 
 /**
