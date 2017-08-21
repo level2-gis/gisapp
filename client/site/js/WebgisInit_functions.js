@@ -97,8 +97,7 @@ function postLoading() {
         // if (title in projectTitles) {
         // title = projectTitles[title];
         // }
-        document.title = titleBarText+projectData.client_display_name;
-        Ext.get('panel_header_title').update(document.title);
+        document.title = titleBarText;
 
         // set header logo and link
         if (headerLogoLink > '') {
@@ -118,6 +117,7 @@ function postLoading() {
             var paddingTop = (headerLogoHeight - 18) / 2;
             Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
         }
+        Ext.get('panel_header_title').update(document.title);
 
         //user
         paddingTop = (headerLogoHeight - 12) / 2;

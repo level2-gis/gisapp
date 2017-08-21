@@ -226,8 +226,8 @@ var mapThemeSwitcherActive = false;
 //you can provide an alternative template for the theme-switcher - see also file ThemeSwitcher.js (ThemeSwitcher.prototype.initialize)
 var themeSwitcherTemplate = null;
 
-//first part of titlebar text
-var titleBarText = TR.appName; // will be appended with project title
+//titlebar text
+var titleBarText = Ext.decode(Eqwc.settings.title);
 
 // header logo image and link
 var headerLogoImg = projectData.client_logo;
@@ -269,7 +269,8 @@ var MapOptions = {
   fractionalZoom: !enableBGMaps,
   transitionEffect:"resize",
   zoomDuration: 1,
-  controls: []
+  //restrictedExtent: [-81245.54989633860532194,7554571.3447839068248868,524135.17702297557843849,7947516.23852463811635971],
+    controls: []
 };
 
 // Options for the main map layer (OpenLayers.layer)
