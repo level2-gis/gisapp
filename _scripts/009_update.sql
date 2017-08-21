@@ -13,7 +13,26 @@ ALTER TABLE projects ADD column feedback_email text;
 ALTER TABLE layers DROP COLUMN base_layer;
 
 DROP FUNCTION get_project_data(project text);
-CREATE FUNCTION get_project_data(project text) RETURNS TABLE(client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[])
+CREATE FUNCTION get_project_data(project text) RETURNS TABLE(
+  client_name text,
+  client_display_name text,
+  client_url text,
+  theme_name text,
+  overview_layer json,
+  base_layers json,
+  extra_layers json,
+  tables_onstart text[],
+  is_public boolean,
+  project_display_name text,
+  crs text,
+  description text,
+  contact text,
+  restrict_to_start_extent boolean,
+  geolocation boolean,
+  feedback boolean,
+  measurements boolean,
+  feedback_email text
+)
     LANGUAGE plpgsql COST 1
     AS $_$
 declare base json;
@@ -33,7 +52,27 @@ overview:=null;
   FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
 
 
-RETURN QUERY SELECT clients.name, clients.display_name, clients.url, themes.name, overview,base,extra, projects.tables_onstart FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
+RETURN QUERY SELECT
+               clients.name,
+               clients.display_name,
+               clients.url,
+               themes.name,
+               overview,
+               base,
+               extra,
+               projects.tables_onstart,
+               projects.public,
+               projects.display_name,
+               projects.crs,
+               projects.description,
+               projects.contact,
+               projects.restrict_to_start_extent,
+               projects.geolocation,
+               projects.feedback,
+               projects.measurements,
+               projects.feedback_email
+
+             FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
 end;
 $_$;
 
