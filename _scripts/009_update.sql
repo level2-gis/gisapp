@@ -1,7 +1,5 @@
 ﻿--gisapp update script
 
---TODO popravi setup skripto!!!!
-
 INSERT INTO settings (version, date) VALUES (10, now());
 
 ALTER TABLE projects ADD column restrict_to_start_extent boolean NOT NULL default FALSE;
