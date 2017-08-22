@@ -135,7 +135,7 @@ Map.setTopicLayer = function() {
   Map.map.addLayer(Map.topicLayer);
 };
 
-Map.setBackgroundLayer = function(layerName, layerId) {
+Map.setBackgroundLayer = function(layerName, layerId, isBase) {
   //var wmsParams = $.extend({}, Config.map.wmsParams, {
   //  'LAYERS': Map.backgroundLayers
   //});
@@ -158,10 +158,10 @@ Map.setBackgroundLayer = function(layerName, layerId) {
   //  });
   //}
 
-    var lay = Config.data.baselayers[layerId];
+    var lay = isBase ? Config.data.baselayers[layerId] : Config.data.extralayers[layerId];
 
     var layOl3 = {};
-    var visible = (layerId == 0) ? true : false;
+    var visible = (layerId == 0 && isBase) ? true : false;
 
     switch (lay.type) {
         case 'OSM' :
