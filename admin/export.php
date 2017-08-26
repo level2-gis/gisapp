@@ -144,6 +144,11 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
 
     $fullFileNameZip = $fileName . "." . $fileExt;
 
+    if(!file_exists($fileName . '.' . strtolower($destinationFormat))) {
+        error_log("EQWC Data Export Failed with command: ".$mycmd);
+        throw new Exception("Export failed".$output."</br>Details in Apache error log!");
+    }
+
     if ($makeZip) {
 
         $zip = new ZipArchive();
