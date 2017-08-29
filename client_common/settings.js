@@ -16,8 +16,7 @@ Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 
 //use separate gisportal code to browse projects, register users and login
 //code available here - https://github.com/uprel/gisportal
-//TODO logout mora iti na portal, url na headerju gre na portal, no project mora iti na portal
-Eqwc.settings.useGisPortal = true;
+Eqwc.settings.useGisPortal = false;
 
 //setup gisportal first
 Eqwc.settings.gisPortalRoot = '/gisportal/';
