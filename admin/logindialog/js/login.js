@@ -35,8 +35,11 @@ Ext.onReady(function () {
 
     if (map == '') {
 
-        Ext.Msg.alert('Missing project', 'Type project name in URL and try again.</br></br>Example: '+urlString+'helloworld');
-
+        if (Eqwc.settings.useGisPortal) {
+            window.location.href = Eqwc.settings.gisPortalRoot;
+        } else {
+            Ext.Msg.alert('Missing project', 'Type project name in URL and try again.</br></br>Example: ' + urlString + 'helloworld');
+        }
     }
     else {
 

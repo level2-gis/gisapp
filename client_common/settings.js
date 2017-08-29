@@ -2,7 +2,7 @@
  * Eqwc client settings
  *
  * This is proper location for settings, since this file is used by both clients
- * and is aleways loaded regardless debug variable.
+ * and is always loaded regardless debug variable.
  */
 
 var Eqwc = {};
@@ -19,9 +19,10 @@ Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 //TODO logout mora iti na portal, url na headerju gre na portal, no project mora iti na portal
 Eqwc.settings.useGisPortal = true;
 
-//only relevant if user feedback is enabled
 //setup gisportal first
-Eqwc.settings.mailServiceUrl = '/gisportal/index.php/mail/send';
+Eqwc.settings.gisPortalRoot = '/gisportal/';
+Eqwc.settings.mailServiceUrl = Eqwc.settings.gisPortalRoot + 'index.php/mail/send';
+Eqwc.settings.gisPortalProfile = Eqwc.settings.gisPortalRoot + 'index.php/profile';
 
 
 

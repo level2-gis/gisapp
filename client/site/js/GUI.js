@@ -72,7 +72,7 @@ var layoutHeaderCfg = {
 		{
 			tag: 'div',
 			id: 'panel_header_user',
-			html: '<a></a>'+projectData.user+'&nbsp;'
+            html: '<a href="'+Eqwc.settings.gisPortalProfile+'" style="text-decoration-line: none;/*!  */color: inherit;"><img height="14px" src="'+userLogoImg+'"></img>'+projectData.user+'</a>&nbsp;'
 		}		
 	]
 };

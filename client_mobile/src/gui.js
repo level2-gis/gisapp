@@ -1015,7 +1015,11 @@ Gui.loginStatus = function(result) {
 
     if (result.success) {
     $('#dlgLogin').popup('close');
-    $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+    if (Eqwc.settings.useGisPortal) {
+        $('#buttonSignOut .ui-btn-text').html(result.user);
+    } else {
+        $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+    }
     $('#panelProperties').panel('close');
   }
   Gui.toggleLogin(result.success);
@@ -1027,7 +1031,11 @@ Gui.login = function(result) {
     Topics.loadTopics(null, Gui.loadTopics);
 
     $('#dlgLogin').popup('close');
-    $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+    if (Eqwc.settings.useGisPortal) {
+        $('#buttonSignOut .ui-btn-text').html(result.user);
+    } else {
+        $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+    }
     Gui.toggleLogin(true);
     $('#panelProperties').panel('close');
   }
@@ -1042,7 +1050,9 @@ Gui.logout = function() {
 
   //Gui.toggleLogin(false);
   $('#panelProperties').panel('close');
-  window.location.href = "./admin/login.php?action=logout";
+
+  //change to profile view if gisportal
+  window.location.href = Eqwc.settings.useGisPortal ? Eqwc.settings.gisPortalProfile : "./admin/login.php?action=logout";
 };
 
 Gui.toggleLogin = function(signedIn) {

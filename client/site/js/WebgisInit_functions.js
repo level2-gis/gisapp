@@ -120,22 +120,12 @@ function postLoading() {
         Ext.get('panel_header_title').update(document.title);
 
         //user
-        paddingTop = (headerLogoHeight - 12) / 2;
-        Ext.select('#panel_header_user a').replaceWith({
-            tag: 'a',
-            children: [{
-                tag: 'img',
-                src: userLogoImg,
-                height: 14
-            }]
-        });
-
         // adjust position
+        paddingTop = (headerLogoHeight - 12) / 2;
         Ext.get('panel_header_user').setStyle('padding-top', paddingTop + 'px');
 
         // set terms of use link
-
-        if (headerTermsOfUseText != null) {
+        if ((headerTermsOfUseText != null) && !Eqwc.settings.useGisPortal) {
             Ext.select('#panel_header_terms_of_use a').replaceWith({
                 tag: 'a',
                 href: headerTermsOfUseLink,
