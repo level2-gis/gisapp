@@ -365,6 +365,7 @@ else {
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.Crypto.SHA1.js"></script>
         <script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.IconCombo.js"></script>
 		<script type="text/javascript" src="admin/logindialog/js/Ext.ux.form.LoginDialog.js?v=20170313"></script>
+		<script type="text/javascript" src="client_common/settings.js"></script>
         <script type="text/javascript" src="admin/logindialog/js/login.js?v=20170313"></script>
 				
 		</head>
