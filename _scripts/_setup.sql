@@ -1,4 +1,4 @@
---
+﻿--
 -- PostgreSQL database dump
 --
 
@@ -440,9 +440,9 @@ SELECT pg_catalog.setval('clients_id_seq', 1, false);
 -- Data for Name: layers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO layers VALUES (1, 'google_map', 'Google Map', 'Google', true, '{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true, useTiltImages: false}');
-INSERT INTO layers VALUES (2, 'google_sat', 'Google Satellite', 'Google', true, '{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
-INSERT INTO layers VALUES (4, 'osm_mapnik', 'OpenStreetMap (mapnik)', 'OSM', true, '');
+INSERT INTO layers VALUES (1, 'google_map', 'Google Map', 'Google', '{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true, useTiltImages: false}');
+INSERT INTO layers VALUES (2, 'google_sat', 'Google Satellite', 'Google', '{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
+INSERT INTO layers VALUES (4, 'osm_mapnik', 'OpenStreetMap (mapnik)', 'OSM', '');
 
 
 --
