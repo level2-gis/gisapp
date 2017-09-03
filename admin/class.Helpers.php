@@ -189,7 +189,8 @@ class Helpers
             $prop->title = "";
             $prop->extent = [];
             $prop->layers = [];
-            $prop->use_ids = false;
+            $prop->use_ids = null;
+            $prop->add_geom_to_fi = null;
             $prop->time = $time;
             $prop->description = "";
             $prop->message = $qgs["message"];
@@ -202,6 +203,7 @@ class Helpers
             $prop->layers = [];
             //parsing boolean values, be careful (bool)"false" = true!!!
             $prop->use_ids = filter_var($qgs["message"]->properties->WMSUseLayerIDs,FILTER_VALIDATE_BOOLEAN);
+            $prop->add_geom_to_fi = filter_var($qgs["message"]->properties->WMSAddWktGeometry,FILTER_VALIDATE_BOOLEAN);
             $prop->time = $time;
             $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
             try {

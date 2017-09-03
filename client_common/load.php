@@ -70,6 +70,7 @@ projectData.title = '<?php echo $qgs->title ?>';
 projectData.extent = '<?php echo implode(',',$qgs->extent) ?>';
 projectData.layers = eval(<?php echo json_encode($qgs->layers) ?>);
 projectData.use_ids = <?php echo json_encode($qgs->use_ids) ?>;
+projectData.add_geom = <?php echo json_encode($qgs->add_geom_to_fi) ?>;
 
 projectData.baseLayers = function () {
     var bl = eval(<?php echo json_encode($data->base_layers) ?>);
