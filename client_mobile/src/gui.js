@@ -370,6 +370,10 @@ Gui.loadBackgroundLayers = function(data) {
 
 Gui.loadExtraLayers = function(data) {
 
+    if (Config.data.extralayers == undefined) {
+        return;
+    }
+
     var html = '<div data-role="collapsible" data-theme="c"';
     //if (Config.gui.useLayertreeGroupCheckboxes) {
     //    html += ' data-groupcheckbox="true"';
