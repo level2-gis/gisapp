@@ -86,25 +86,25 @@ function showFeatureInfo(evt) {
             highLightGeometry = [];
             parseFIResult(xmlDoc);
             featureInfoResultLayers.reverse();
-            highLightGeometry.reverse();
+            //highLightGeometry.reverse();
             if (featureInfoResultLayers.length > 0 || text > '') {
-                if (hoverPopup) {
-                    removeHoverPopup();
-                }
-                if (clickPopup) {
-                    removeClickPopup();
-                }
-
-                if (identificationMode == 'topMostHit') {
-                    text += featureInfoResultLayers[0];
-                    featureInfoHighlightLayer.addFeatures(highLightGeometry[0]);
-                    //feature.geometry.getBounds().getCenterLonLat()
-                } else {
+            //    if (hoverPopup) {
+            //        removeHoverPopup();
+            //    }
+            //    if (clickPopup) {
+            //        removeClickPopup();
+            //    }
+            //
+            //    if (identificationMode == 'topMostHit') {
+            //        text += featureInfoResultLayers[0];
+            //        featureInfoHighlightLayer.addFeatures(highLightGeometry[0]);
+            //        //feature.geometry.getBounds().getCenterLonLat()
+            //    } else {
                     for (var i = 0; i < featureInfoResultLayers.length; i++) {
                         text += featureInfoResultLayers[i];
-                        featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
+                        //featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
                     }
-                }
+                //}
 
                 popupItems.push({
                     id: "fi_qgis",
@@ -368,27 +368,32 @@ function showFeatureSelected(args) {
 
     //TODO It would be useful to switch on layer if it is off
 
-    var layerId = wmsLoader.layerTitleNameMapping[args["layer"]];
+    var layer = args["layer"] == null ? args["fid"].split('.')[0] : args["layer"];
+    var layerId = wmsLoader.layerTitleNameMapping[layer];
+    //var layerData = projectData.layers[layerId];
 
     if (args["geometry"] == undefined) {
         // select feature in layer
         thematicLayer.mergeNewParams({
-            "SELECTION": layerId + ":" + args["id"]
+            "SELECTION": layerId + ":" + args["feature_id"]
         });
+
+        if (args["doZoomToExtent"]) {
+            geoExtMap.map.zoomToExtent(args["bbox"]);
+        }
+        else {
+            geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
+        }
     }
     else {
         //lets higlight selected features geometry instead
         featureInfoHighlightLayer.removeAllFeatures();
-        var feature = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(args["geometry"]));
-        featureInfoHighlightLayer.addFeatures([feature]);
+        featureInfoHighlightLayer.addFeatures([args]);
+
+        geoExtMap.map.zoomToExtent(args.geometry.bounds);
     }
 
-    if (args["doZoomToExtent"]) {
-        geoExtMap.map.zoomToExtent(args["bbox"]);
-    }
-    else {
-        geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
-    }
+
 }
 
 function clearFeatureSelected() {
@@ -419,10 +424,11 @@ function parseFIResult(node) {
             //if (showFILayerTitle) {
             //	htmlText += "<h2>" + wmsLoader.layerProperties[node.getAttribute("name")].title + "</h2>";
             //}
-            var geoms = [];
             var layerChildNode = node.firstChild;
+            var layerTitle = wmsLoader.layerProperties[node.getAttribute("name")].title;
+            var fid = layerTitle+"."+node.firstElementChild.id;
             while (layerChildNode) {
-                var layerTitle = wmsLoader.layerProperties[node.getAttribute("name")].title;
+
                 if (layerChildNode.hasChildNodes() && layerChildNode.nodeName === "Feature") {
                     var attributeNode = layerChildNode.firstChild;
 
@@ -433,6 +439,22 @@ function parseFIResult(node) {
                     htmlText += '\n <p></p>\n <table>\n  <tbody>';
                     //case vector data
 
+                    //add geometry actions if layer is WFS published or geometry is added to response
+                    var addActions = projectData.use_ids ? (projectData.layers[node.getAttribute("name")].wfs || projectData.add_geom)  : false;
+
+                    if (projectData.user == 'guest') {
+                        addActions = false;
+                    }
+
+                    if (addActions) {
+                        var select = '<a class="i-select" href="javascript:;" onclick="identifyAction(\'select\',\'' + fid + '\');"></a>';
+                        var clear = '<a class="i-clear" href="javascript:;" onclick="identifyAction(\'clear\',\'\');"></a>';
+                        var edit = '';
+                        if (Eqwc.plugins["editing"] !== undefined) {
+                            edit = '<a class="i-edit" href="javascript:;" onclick="identifyAction(\'edit\',\'' + fid + '\');"></a>';
+                        }
+                        htmlText += "<tr><td colspan='2'>" + select + edit + clear + "</td></tr>";
+                    }
                     while (attributeNode) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
@@ -440,7 +462,10 @@ function parseFIResult(node) {
                             if ((attName !== mapInfoFieldName) && ((suppressEmptyValues == true && attValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '') !== "") || suppressEmptyValues == false)) {
                                 if (attName === "geometry") {
                                     var feature = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(attValue));
-                                    geoms.push(feature);
+                                    //var feature = {};
+                                    //feature.geometry = attValue;
+                                    feature.fid = fid;
+                                    highLightGeometry.push(feature);
                                     if (!suppressInfoGeometry) {
                                         htmlText += "\n   <tr>";
                                         if (showFieldNamesInClickPopup) {
@@ -502,7 +527,6 @@ function parseFIResult(node) {
                 }
                 //alert(htmlText);
                 featureInfoResultLayers.push(htmlText);
-                highLightGeometry.push(geoms);
             }
         } else {
             var child = node.firstChild;
@@ -592,5 +616,95 @@ function updateAddress(data, location, field, template, templateMin, factor) {
     var label = tem.apply(results);
 
     pan.update(label);
+
+}
+
+function identifyAction(type,id) {
+
+    var layer = id.split('.')[0];
+    var layerId = wmsLoader.layerTitleNameMapping[layer];
+
+    switch (type) {
+        case 'clear' :
+
+            clearFeatureSelected();
+            break;
+
+        case 'edit' :
+
+            var check = checkEditorState(layerId);
+            if(check) {
+                var preparePass = prepareEdit(projectData.layers[layerId]);
+
+                if (preparePass) {
+                    editor.attributesForm.requestAndLoadFeature(id);
+                }
+            }
+
+            break;
+
+        case 'select' :
+
+            var hasGeom = false;
+
+            Ext.each(highLightGeometry, function (feature, index, array) {
+                if (feature.fid === this[1]) {
+                    showFeatureSelected(feature);
+                    hasGeom = true;
+                }
+            }, arguments);
+
+            //no geometry, make WFS call
+            if (!hasGeom) {
+                var filter = new OpenLayers.Filter.FeatureId({
+                    fids: [id]
+                });
+
+                var protocol = new OpenLayers.Protocol.WFS({
+                    version: '1.0.0',
+                    url: wmsURI,
+                    headers: {'Content-Type':'text/xml; charset=utf-8'},
+                    featureType: layer,
+                    //featureNS: "http://www.qgis.org/gml",
+                    geometryName: "geometry",       //always geometry not this:  layer.geom_column,
+                    filter: filter
+                    //srsName: projectData.crs //doesn't work, have to transform results
+                });
+
+                function callback(response) {
+                    //check response status
+                    if(response.priv.status==200) {
+                        if(response.features.length==1) {
+                            var feat = response.features[0];
+                            var layer = feat.fid.split('.')[0];
+                            var layerId = wmsLoader.layerTitleNameMapping[layer];
+                            var layerData = projectData.layers[layerId];
+
+                            feat.geometry.transform(layerData.crs,projectData.crs);
+
+                            highLightGeometry.push(feat);
+                            showFeatureSelected(feat);
+                        }
+                    } else {
+                        Ext.Msg.alert('Get feature error', response.priv.status + ' ' + response.priv.statusText+ '</br></br>'+response.priv.responseText);
+                    }
+
+                }
+
+                protocol.read({
+                    maxFeatures: 1,
+                    callback: callback,
+                    scope: this
+                });
+            }
+
+
+            break;
+
+    }
+
+
+
+
 
 }
