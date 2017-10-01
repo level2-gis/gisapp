@@ -221,12 +221,12 @@ Config.map.useTiledOverlayWMS = false;
 //UROS don't see point of this
 Config.map.minScaleDenom = {
   map: 5000, // if topic.minscale is not set
-  geolocation: 5000, // on location following
+  geolocation: null, // on location following
   search: 5000 // jump to search results
 };
 
 // limit min zoom to this scale on the initial geolocation update (null to disable)
-Config.map.initialGeolocationMaxScale = 5000;
+Config.map.initialGeolocationMaxScale = 2000;
 
 
 // search configuration

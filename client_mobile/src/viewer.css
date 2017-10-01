@@ -65,7 +65,7 @@
 /* geolocation */
 
 #locationMarker {
-  background-image: url("../img/location.svg");
+  background-image: url("../img/location-cross.svg");
   width: 20px;
   height: 20px;
 }
@@ -399,7 +399,7 @@ input[data-type='search']::-ms-clear { display: none; }
   #locationMarker {
     background-image: none;
     display: list-item !important;
-    list-style-image: url("../img/location.svg");
+    list-style-image: url("../img/location-cross.svg");
     list-style-position: inside;
   }
 
