@@ -512,8 +512,8 @@ function postLoading() {
         // loading listeners
         thematicLayer.events.register('loadstart', this, function() {
             mapIsLoading = true;
-            // show the loadMask with a delay of one second, no need to show it for quick changes
-            setTimeout("displayLoadMask()", 1000);
+            // show the loadMask with a delay of two second, no need to show it for quick changes
+            setTimeout("displayLoadMask()", 2000);
         });
 
         thematicLayer.events.register('loadend', this, function() {
@@ -1803,7 +1803,7 @@ function mapToolbarHandler(btn, evt) {
     if (btn.id == "SendPermalink") {
         var permalink = createPermalink();
         if (permaLinkURLShortener) {
-            var servername = "http://"+location.href.split(/\/+/)[1];
+            var servername = location.protocol+"//"+location.href.split(/\/+/)[1];
             Ext.Ajax.request({
                 url: servername + permaLinkURLShortener,
                 success: receiveShortPermalinkFromDB,
@@ -1952,7 +1952,7 @@ function createPermalink(){
 
     if (!norewrite){
         var servername = location.href.split(/\/+/)[1];
-        permalink = "http://"+servername;
+        permalink = location.protocol+"//"+servername;
         if (projectData.gis_projects) {
             permalink += projectData.gis_projects.path;
         }
