@@ -70,7 +70,7 @@ else
 		if is_public = true then return 'OK';
 		else return 'TR.noPublicAccess'; end if;
 	else
-		select idx(project_ids,proj_id) from users where user_name=$1 INTO proj_id;
+		select case when admin = true then proj_id else idx(project_ids,proj_id) end from users where user_name=$1 INTO proj_id;
 		--RAISE NOTICE '%', proj_id;
 		if proj_id=0 then return 'TR.noPermission';
 		elseif proj_id IS NULL then return 'TR.noUser';
@@ -330,7 +330,8 @@ CREATE TABLE users (
     last_login timestamp with time zone,
     registered timestamp with time zone,
     count_login integer DEFAULT 0,
-    project_ids integer[]
+    project_ids integer[],
+    admin boolean DEFAULT false
 );
 
 
@@ -460,7 +461,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (10, '2017-08-21');
+INSERT INTO settings VALUES (11, '2017-10-09');
 
 
 --
