@@ -1,28 +1,27 @@
 <?php
 
-use GisApp\Login;
-
 require_once("../admin/class.Helpers.php");
 require_once("../admin/settings.php");
 
 session_start();
 
+$version = \GisApp\Helpers::getEqwcVersion();
 $lang = [];
 $plugins = [];
 $eqwc_debug = [
-    "client/site/js/PagingStore.js",
-    "client/site/js/LoadAppProjectData.js",
-    "client/site/js/Customizations.js",
-    "client/site/js/GetUrlParams.js",
-    "client/site/js/TriStateTree.js",
-    "client/site/js/GUI.js",
-    "client/site/js/QGISExtensions.js",
-    "client/site/js/GeocodingSearchCombo.js",
-    "client/site/js/FeatureInfoDisplay.js",
-    "client/site/js/LegendAndMetadataDisplay.js",
-    "client/site/js/LayerActions.js",
-    "client/site/js/WebgisInit_functions.js"];
-$eqwc_mini = "client/eqwc.js?v=".\GisApp\Helpers::getEqwcVersion();
+    "client/site/js/PagingStore.js?v=".$version,
+    "client/site/js/LoadAppProjectData.js?v=".$version,
+    "client/site/js/Customizations.js?v=".$version,
+    "client/site/js/GetUrlParams.js?v=".$version,
+    "client/site/js/TriStateTree.js?v=".$version,
+    "client/site/js/GUI.js?v=".$version,
+    "client/site/js/QGISExtensions.js?v=".$version,
+    "client/site/js/GeocodingSearchCombo.js?v=".$version,
+    "client/site/js/FeatureInfoDisplay.js?v=".$version,
+    "client/site/js/LegendAndMetadataDisplay.js?v=".$version,
+    "client/site/js/LayerActions.js?v=".$version,
+    "client/site/js/WebgisInit_functions.js?v=".$version];
+$eqwc_mini = "client/eqwc.js?v=".$version;
 $dir = dirname(dirname(__FILE__)) . "/plugins/";
 $scan = array_slice(scandir($dir), 2);
 $def_lang = $_SESSION['lang'];
