@@ -132,6 +132,13 @@ function doGetRequest($query_arr, $map, $client, $http_ver)
                 $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS']);
                 $contentType = "image/png";
                 break;
+            case "DescribeFeatureType":
+                $layer = $query_arr["TYPENAME"];
+                if (file_exists(PROJECT_PATH.'_data_definitions/'.$layer.'.xml')) {
+                    $content = file_get_contents(PROJECT_PATH.'_data_definitions/'.$layer.'.xml');
+                }
+                $contentType = "text/xml";
+                break;
 //            case "GetFeatureInfo":
 //                //skip for now
 //                if (array_key_exists("QUERY_LAYERS", $query_arr)) {
@@ -190,17 +197,20 @@ function doGetRequest($query_arr, $map, $client, $http_ver)
             }
         }
     } else {
-        //no caching request
-        $response = $client->send($new_request, [
-            'query' => $query_arr,
-            'http_errors' => true,
-            //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
-            'verify' => false
-        ]);
 
-        $contentType = $response->getHeaderLine('Content-Type');
-        $contentLength = $response->getHeaderLine('Content-Length');
-        $content = $response->getBody();
+        if ($content == null) {
+            //no caching request
+            $response = $client->send($new_request, [
+                'query' => $query_arr,
+                'http_errors' => true,
+                //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+                'verify' => false
+            ]);
+
+            $contentType = $response->getHeaderLine('Content-Type');
+            $contentLength = $response->getHeaderLine('Content-Length');
+            $content = $response->getBody();
+        }
     }
 
     //get client headers

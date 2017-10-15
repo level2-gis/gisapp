@@ -107,7 +107,7 @@ projectData.getLegendUrl = function (layer) {
     var legend = '';
 
     //for raster layers show default raster legend image
-    if (layer.provider=='gdal') {
+    if (layer.provider == 'gdal' || layer.provider == 'wms') {
         legend = iconDirectory+"raster.png";
     } else {
         legend = wmsURI + Ext.urlEncode({

@@ -153,7 +153,7 @@ function showLegendAndMetadata(layertitle) {
         if (type == '' && (projDataLayer.provider == 'ogr' || projDataLayer.provider == 'spatialite')) {
             type = 'vector';
         }
-        if (type == '' && projDataLayer.provider == 'gdal') {
+        if (type == '' && (projDataLayer.provider == 'gdal' || projDataLayer.provider == 'wms')) {
             type = 'raster';
         }
 

@@ -60,7 +60,7 @@ function buildLayerContextMenu(node) {
     }
 
     //Export
-    if (projDataLayer != undefined && projDataLayer.provider !== 'gdal') {
+    if (projDataLayer != undefined && projDataLayer.provider !== 'gdal' && projDataLayer.provider !== 'wms') {
         menuItems.push({
             itemId: 'contextExport',
             text: contextDataExport[lang],
@@ -371,41 +371,64 @@ function getLayerAttributes(layer) {
     var layerId = wmsLoader.layerTitleNameMapping[layer];
     var ret = {};
     ret.columns = [];
-    ret.fields = [];
+    //ret.fields = [];
 
     for (var i=0;i<wmsLoader.layerProperties[layerId].attributes.length;i++) {
         ret.columns[i] = {};
         //ret.fields[i] = {};
         var attribute = wmsLoader.layerProperties[layerId].attributes[i];
         var fieldType = attribute.type;
-        if(fieldType=='int' || fieldType=='date' || fieldType=='boolean') {
-            ret.fields.push({name: attribute.name,type:fieldType});
+        var editType = attribute.editType;
+
+        //boolean is type QString, to correct this we look at editType
+        if (editType == 'CheckBox') {
+            fieldType='boolean';
         }
-        else {
-            if (fieldType == 'double') {
-                ret.fields.push({name: attribute.name, type: 'float'});
-            } else {
-                ret.fields.push({name: attribute.name, type: 'string'});
-            }
+
+        if (fieldType == 'QDateTime') {
+            fieldType = 'date';
         }
+
+        //if(fieldType=='int' || fieldType=='date' || fieldType=='boolean') {
+        //    ret.fields.push({name: attribute.name,type:fieldType});
+        //}
+        //else {
+        //    if (fieldType == 'double') {
+        //        ret.fields.push({name: attribute.name, type: 'float'});
+        //    } else {
+        //        ret.fields.push({name: attribute.name, type: 'string'});
+        //    }
+        //}
 
         ret.columns[i].header = attribute.name;
         ret.columns[i].dataIndex = attribute.name;
         ret.columns[i].menuDisabled = false;
         ret.columns[i].sortable = true;
         ret.columns[i].filterable = true;
-        if(attribute.type=='double') {
+        if(fieldType=='double') {
             ret.columns[i].xtype = 'numbercolumn';
             ret.columns[i].format = '0.000,00/i';
             ret.columns[i].align = 'right';
             //no effect
             //ret[i].style = 'text-align:left'
         }
-        if(attribute.type=='int') {
+        if(fieldType=='int') {
             ret.columns[i].xtype = 'numbercolumn';
             ret.columns[i].format = '000';
             ret.columns[i].align = 'right';
         }
+
+        if(fieldType=='date') {
+            ret.columns[i].xtype = 'datecolumn';
+            ret.columns[i].format = 'Y-m-d H:i:s';
+
+        }
+
+        //if(fieldType=='boolean') {
+        //    ret.columns[i].xtype = 'booleancolumn';
+        //    //ret.columns[i].falseText = 'f';
+        //    //ret.columns[i].trueText = 't';
+        //}
     }
 
     var actionColumn = getActionColumns(layerId);

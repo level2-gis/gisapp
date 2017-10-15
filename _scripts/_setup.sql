@@ -461,7 +461,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (11, '2017-10-09');
+INSERT INTO settings VALUES (12, '2017-10-09');
 
 
 --

@@ -1059,16 +1059,26 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                 for (var i=0; i<wmsLayerFields.length; i++) {
 
                     var fieldType = wmsLayerFields[i].type;
-                    if(fieldType=='int' || fieldType=='date' || fieldType=='boolean') {
-                        storeFields.push({name: wmsLayerFields[i].name,type:fieldType});
+                    var editType = wmsLayerFields[i].editType;
+
+                    //boolean is type QString, to correct this we look at editType
+                    //if (editType == 'CheckBox') {
+                    //    fieldType='boolean';
+                    //}
+
+                    if (fieldType == 'QDateTime') {
+                        fieldType = 'date';
                     }
-                    else {
-                        if (fieldType == 'double') {
-                            storeFields.push({name: wmsLayerFields[i].name, type: 'float'});
-                        } else {
-                            storeFields.push({name: wmsLayerFields[i].name});
-                        }
+
+                    if (fieldType == 'double') {
+                        fieldType = 'float';
                     }
+
+                    //if (fieldType=='date') {
+                    //    storeFields.push({name: wmsLayerFields[i].name, type: fieldType, dateFormat: "Y-m-d H:i:s"});
+                    //} else {
+                        storeFields.push({name: wmsLayerFields[i].name, type: fieldType});
+                    //}
                 }
 
                 //maptip field is also in GetFEatureInfo response in case of such setting in QGIS layer properties and not in WMS loader

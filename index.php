@@ -48,30 +48,8 @@ function goMobile($lang) {
         <!--        <script src="client_mobile/lib/ol3/ol-debug.js"></script>-->
         <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css" />
 
-        <script type="text/javascript" src="admin/languages/<?php echo $lang ?>.js?v=1.1.3"></script>
+        <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <script src="client_mobile/src/url_params.js"></script>
-        <script src="client_mobile/src/permalink.js"></script>
-        <script src="client_mobile/src/login.js"></script>
-        <script src="client_mobile/src/search.js"></script>
-        <script src="client_mobile/src/geocode.js"></script>
-
-        <!-- NOTE: remove unused classes -->
-<!--        <script src="client_mobile/src/mapfish_permalink.js"></script>-->
-        <script src="client_mobile/src/qgis_permalink.js"></script>
-<!--        <script src="client_mobile/src/mapfish_login.js"></script>-->
-<!--        <script src="client_mobile/src/mapfish_search.js"></script>-->
-<!--        <script src="client_mobile/src/swiss_search.js"></script>-->
-<!--        <script src="client_mobile/src/wsgi_search.js"></script>-->
-
-        <script src="client_mobile/src/config.js"></script>
-        <script src="client_mobile/src/map.js?v=1.3.3"></script>
-        <script src="client_mobile/src/map_click_handler.js"></script>
-        <script src="client_mobile/src/feature_info.js"></script>
-        <script src="client_mobile/src/topics.js"></script>
-        <script src="client_mobile/src/layers.js"></script>
-        <script src="client_mobile/src/gui.js"></script>
-<!--        <script src="client_mobile/src/high_resolution_printing.js"></script>-->
         <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css" />
     </head>

@@ -1,6 +1,6 @@
-﻿--gisapp update script
+﻿--gisapp update script from version 11 to version 12
 
-INSERT INTO settings (version, date) VALUES (11, now());
+INSERT INTO settings (version, date) VALUES (12, now());
 
 ALTER TABLE users ADD COLUMN admin boolean NOT NULL DEFAULT false;
 
