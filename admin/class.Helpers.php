@@ -161,10 +161,12 @@ class Helpers
         }
     }
 
-    public function getQgsFullProjectPath($project, $client) {
+    public function getQgsFullProjectPath($project, $client, $project_path) {
 
         //first check in PROJECT_PATH
-        if (file_exists(PROJECT_PATH . $project . '.qgs')) {
+        if (file_exists(PROJECT_PATH . $project_path)) {
+            return self::msg(true, PROJECT_PATH . $project_path);
+        }else if (file_exists(PROJECT_PATH . $project . '.qgs')) {
             return self::msg(true, PROJECT_PATH . $project);
         } else if (file_exists(PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project . '.qgs')) {
             return self::msg(true, PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project);
