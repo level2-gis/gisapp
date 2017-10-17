@@ -317,9 +317,10 @@ class Login
 
             //get client alias
             $client = json_decode($project_data)->client_name;
+            $project_path = json_decode($project_data)->project_path;
 
             //get QGIS project location
-            $projectPath = $helpers->getQgsFullProjectPath($project, $client);
+            $projectPath = $helpers->getQgsFullProjectPath($project, $client, $project_path);
             if (!($projectPath['status'])) {
                 $this->feedback = $projectPath['message'];
                 return false;
