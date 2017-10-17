@@ -1,4 +1,4 @@
-﻿--gisapp update script from version 11 to version 12
+﻿--gisapp update script from version 12 to version 13
 
 INSERT INTO settings (version, date) VALUES (13, now());
 
