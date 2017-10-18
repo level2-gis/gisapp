@@ -220,10 +220,10 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
             <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<!--                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>-->
-                <meta name='viewport'
-                      content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
-                <!--<title></title>-->
+                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
+                <meta name="apple-mobile-web-app-capable" content="yes">
+                <title></title>
                 <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css"/>
@@ -314,7 +314,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 else {
 	//no session, open login panel
 	?>
-	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+	<!DOCTYPE html>
 	<html>
 		<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

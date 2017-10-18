@@ -372,28 +372,10 @@ function showFeatureSelected(args) {
     var layerId = wmsLoader.layerTitleNameMapping[layer];
     //var layerData = projectData.layers[layerId];
 
-    if (args["geometry"] == undefined) {
-        // select feature in layer
-        thematicLayer.mergeNewParams({
-            "SELECTION": layerId + ":" + args["feature_id"]
-        });
+    featureInfoHighlightLayer.removeAllFeatures();
+    featureInfoHighlightLayer.addFeatures([args]);
 
-        if (args["doZoomToExtent"]) {
-            geoExtMap.map.zoomToExtent(args["bbox"]);
-        }
-        else {
-            geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
-        }
-    }
-    else {
-        //lets higlight selected features geometry instead
-        featureInfoHighlightLayer.removeAllFeatures();
-        featureInfoHighlightLayer.addFeatures([args]);
-
-        geoExtMap.map.zoomToExtent(args.geometry.bounds);
-    }
-
-
+    geoExtMap.map.zoomToExtent(args.geometry.bounds);
 }
 
 function clearFeatureSelected() {

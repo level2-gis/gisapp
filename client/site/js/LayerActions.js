@@ -242,7 +242,26 @@ function zoomHandler(grid, rowIndex, colIndex, item, e) {
     if(!(record.data.bbox instanceof OpenLayers.Bounds)) {
         record.data.bbox = OpenLayers.Bounds.fromArray([bbox.minx, bbox.miny, bbox.maxx, bbox.maxy]);
     }
-    showFeatureSelected(record.data);
+
+    showRecordSelected(record.data);
+}
+
+function showRecordSelected(args) {
+
+        var layer = args["layer"] == null ? args["fid"].split('.')[0] : args["layer"];
+        var layerId = wmsLoader.layerTitleNameMapping[layer];
+
+        // select feature in layer
+        thematicLayer.mergeNewParams({
+            "SELECTION": layerId + ":" + args["feature_id"]
+        });
+
+        if (args["doZoomToExtent"]) {
+            geoExtMap.map.zoomToExtent(args["bbox"]);
+        }
+        else {
+            geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
+        }
 }
 
 function exportData(layername,format, useBbox) {
