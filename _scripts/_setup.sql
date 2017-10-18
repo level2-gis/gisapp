@@ -96,9 +96,15 @@ COMMENT ON FUNCTION check_user_project(uname text, project text) IS 'IN uname, p
 -- Name: get_project_data(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE OR REPLACE FUNCTION public.get_project_data(IN project text)
-  RETURNS TABLE(client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[], is_public boolean, project_display_name text, crs text, description text, contact text, restrict_to_start_extent boolean, geolocation boolean, feedback boolean, measurements boolean, feedback_email text) AS
-  $BODY$
+CREATE OR REPLACE FUNCTION public.get_project_data(project text)
+  RETURNS TABLE(client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[], is_public boolean, project_display_name text, crs text, description text, contact text, restrict_to_start_extent boolean, geolocation boolean, feedback boolean, measurements boolean, feedback_email text, project_path text)
+LANGUAGE 'plpgsql'
+
+COST 1
+VOLATILE
+ROWS 1000
+AS $BODY$
+
 declare base json;
 declare overview json;
 declare extra json;
@@ -116,7 +122,6 @@ overview:=null;
 
   SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
   FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
-
 
 RETURN QUERY SELECT
                clients.name,
@@ -136,18 +141,16 @@ RETURN QUERY SELECT
                projects.geolocation,
                projects.feedback,
                projects.measurements,
-               projects.feedback_email
+               projects.feedback_email,
+			         projects.project_path
 
              FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
 end;
-$BODY$
-LANGUAGE plpgsql VOLATILE
-COST 1
-ROWS 1000;
-ALTER FUNCTION public.get_project_data(text)
-OWNER TO pguser;
-COMMENT ON FUNCTION public.get_project_data(text) IS 'IN project --> client, theme, baselayers, overview layer, extra layers and tables_onstart for project_name.';
 
+$BODY$;
+
+COMMENT ON FUNCTION public.get_project_data(text)
+IS 'IN project --> client, theme, baselayers, overview layer, extra layers and tables_onstart for project_name.';
 
 SET default_with_oids = false;
 
@@ -246,7 +249,8 @@ CREATE TABLE projects (
     geolocation boolean NOT NULL default TRUE,
     feedback boolean NOT NULL default TRUE,
     measurements boolean NOT NULL default TRUE,
-    feedback_email text
+    feedback_email text,
+    project_path text
 );
 
 
@@ -461,7 +465,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (12, '2017-10-09');
+INSERT INTO settings VALUES (13, '2017-10-17');
 
 
 --
@@ -666,6 +670,5 @@ CREATE OR REPLACE VIEW public.projects_view AS
   FROM projects,
     clients
   WHERE projects.client_id = clients.id;
-ALTER TABLE public.projects_view
-OWNER TO pguser;
+
 
