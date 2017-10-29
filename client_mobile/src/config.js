@@ -211,7 +211,7 @@ Config.map.wmsServerType = 'qgis';
 
 Config.map.wmsParams = {
   'FORMAT': 'image/png; mode=8bit',
-  'TRANSPARENT': true
+  'TRANSPARENT': (projectData.baseLayers() == null && projectData.extraLayers() == null) ? false : true
 };
 
 Config.map.useTiledBackgroundWMS = true;

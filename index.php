@@ -231,7 +231,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/popup.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css"/>
+                <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20171026"/>
 
                 <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css"/>';
@@ -248,9 +248,6 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
 
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
-                <script type="text/javascript" src="client_common/customProjections.js"></script>
-                <script type="text/javascript" src="client_common/settings.js"></script>
-
                 <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20170317"></script>
 
 <!--                FOR DEBUGGING-->

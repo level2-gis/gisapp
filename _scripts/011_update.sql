@@ -36,8 +36,7 @@ end;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
-ALTER FUNCTION check_user_project(text, text)
-  OWNER TO pguser;
+
 COMMENT ON FUNCTION check_user_project(text, text) IS 'IN uname, project --> validates project, user and user permissions on project';
 
 

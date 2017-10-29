@@ -61,8 +61,5 @@ end;
 
 $BODY$;
 
-ALTER FUNCTION public.get_project_data(text)
-    OWNER TO pguser;
-
 COMMENT ON FUNCTION public.get_project_data(text)
     IS 'IN project --> client, theme, baselayers, overview layer, extra layers and tables_onstart for project_name.';
