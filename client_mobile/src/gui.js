@@ -156,7 +156,7 @@ Gui.loadLayers = function(data) {
           html +=   'data-role="none" ';
         }
         html +=     'name="' + layer.layername + '" ';
-        html +=     'data-layer="' + layer.layername + '" ';
+        html +=     'data-layer="' + layer.id + '" ' ;
         if (layer.visini) {
           html +=   'checked ';
         }
@@ -164,6 +164,7 @@ Gui.loadLayers = function(data) {
         html += '</label>';
 
         layers.push({
+          id: layer.id,
           layername: layer.layername,
           title: layer.toclayertitle,
           wms_sort: layer.wms_sort,
@@ -224,7 +225,8 @@ Gui.loadLayers = function(data) {
   Map.layers = {};
   for (var i=0; i<layers.length; i++) {
     var layer = layers[i];
-    Map.layers[layer.layername] = {
+    Map.layers[layer.id] = {
+      id: layer.id,
       title: layer.title,
       visible: layer.visible,
       wms_sort: layer.wms_sort,
@@ -1113,7 +1115,8 @@ Gui.initViewer = function() {
 
   // layer change
   $('#panelLayerAll').delegate(':checkbox[data-layer]', 'change', function(e) {
-    var layerVisible = (Map.visibleLayers().indexOf($(this).data('layer')) != -1);
+    var layer = projectData.use_ids ? $(this).data('layer') : projectData.layers[$(this).data('layer')].layername;
+    var layerVisible = (Map.visibleLayers().indexOf(layer) != -1);
     if (layerVisible != $(this).is(':checked')) {
       Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
       Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));

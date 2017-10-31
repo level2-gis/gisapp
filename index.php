@@ -38,10 +38,6 @@ function goMobile($lang) {
 
         <!-- Proj4js -->
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
-        <script type="text/javascript" src="client_common/customProjections.js"></script>
-
-        <!--        eqwc settings-->
-        <script type="text/javascript" src="client_common/settings.js"></script>
 
         <!-- OpenLayers 3 -->
         <script src="client_mobile/lib/ol3/ol.js?v=3.19.1"></script>

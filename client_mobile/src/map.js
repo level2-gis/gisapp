@@ -436,7 +436,7 @@ Map.visibleLayers = function() {
   var visibleLayers = [];
   for (var key in Map.layers) {
     if (Map.layers[key].visible) {
-      visibleLayers.push(key);
+      projectData.use_ids ? visibleLayers.push(Map.layers[key].id) : visibleLayers.push(Map.layers[key].title);
     }
   }
   return visibleLayers;

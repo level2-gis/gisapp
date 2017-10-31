@@ -38,9 +38,15 @@ array_push($lang, "admin/languages/". $def_lang .".js");
 Header("content-type: application/x-javascript");
 ?>
 
+function getRandomNum() {
+    return Math.floor((Math.random() * 100000) + 1);
+}
+
 (function () {
 
     var jsFiles = [
+        "client_common/customProjections.js?n="+getRandomNum(),
+        "client_common/settings.js?n="+getRandomNum(),
         "<?php echo implode('","',$lang) ?>",
         "<?php echo implode('","',$eqwc_debug) ?>"
     ];
