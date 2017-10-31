@@ -389,6 +389,25 @@ function clearFeatureSelected() {
     featureInfoHighlightLayer.removeAllFeatures();
 }
 
+function createHyperlink(att) {
+    // add hyperlinks for URLs in attribute values
+    if (att != '' && /^((http|https|ftp):\/\/).+\..+/i.test(att)) {
+        if (!/\<a./i.test(att)) {
+            //do not reformat already formated tags
+            att = "<a class=\"popupLink\" href=\"" + att + "\" target=\"_blank\">" + att + "</a>";
+        }
+    }
+    // add hyperlinks for URLs containing mediaurl pattern
+    if (mediaurl != '') {
+        var mediapattern = new RegExp(mediaurl, 'i');
+        if (mediapattern.test(att)) {
+            att = "<a href=\"/" + attValue + "\" target=\"_blank\">" + att + "</a>";
+        }
+    }
+
+    return att;
+}
+
 function parseFIResult(node) {
     if (node.hasChildNodes()) {
         //test if we need to show the feature info layer title
@@ -462,20 +481,8 @@ function parseFIResult(node) {
                                     if (showFieldNamesInClickPopup && attName !== "maptip") {
                                         htmlText += "<td>" + attName + ":</td>";
                                     }
-                                    // add hyperlinks for URLs in attribute values
-                                    if (attValue != '' && /^((http|https|ftp):\/\/).+\..+/i.test(attValue)) {
-                                        if (!/\<a./i.test(attValue)) {
-                                            //do not reformat already formated tags
-                                            attValue = "<a class=\"popupLink\" href=\"" + attValue + "\" target=\"_blank\">" + attValue + "</a>";
-                                        }
-                                    }
-                                    // add hyperlinks for URLs containing mediaurl pattern
-                                    if (mediaurl != '') {
-                                        var mediapattern = new RegExp(mediaurl, 'i');
-                                        if (mediapattern.test(attValue)) {
-                                            attValue = "<a href=\"/" + attValue + "\" target=\"_blank\">" + attValue + "</a>";
-                                        }
-                                    }
+
+                                    attValue = createHyperlink(attValue);
 
                                     if (attName == 'maptip') {
                                         htmlText += "<td colspan='2'>" + attValue + "</td></tr>";

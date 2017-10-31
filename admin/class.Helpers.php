@@ -415,7 +415,7 @@ class Helpers
     public static function getEqwcVersion() {
         $version = '0';
         if (file_exists('../version.txt')) {
-            $version = file_get_contents('../version.txt',null,null,null,8);
+            $version = trim(file_get_contents('../version.txt',null,null,null,8));
         }
         return $version;
     }

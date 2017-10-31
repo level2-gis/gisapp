@@ -3,6 +3,7 @@
  *
  * This is proper location for settings, since this file is used by both clients
  * and is always loaded regardless debug variable.
+ *
  */
 
 var Eqwc = {};
@@ -13,6 +14,9 @@ Eqwc.settings = {};
 //example with Application name from translation string
 //Eqwc.settings.title = "TR.appName+projectData.title+' '+projectData.client_display_name";
 Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
+
+//limit number of features to request from server for displaying layer attribute table
+Eqwc.settings.limitAttributeFeatures = 2000;
 
 //use separate gisportal code to browse projects, register users and login
 //code available here - https://github.com/uprel/gisportal

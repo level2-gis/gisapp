@@ -106,6 +106,8 @@ projectData.setBaseLayers = function (isBase) {
 projectData.getLegendUrl = function (layer) {
     var legend = '';
 
+    var layername = wmsLoader.layerTitleNameMapping[layer.layername];
+
     //for raster layers show default raster legend image
     if (layer.provider == 'gdal' || layer.provider == 'wms') {
         legend = iconDirectory+"raster.png";
@@ -127,7 +129,7 @@ projectData.getLegendUrl = function (layer) {
             LAYERFONTCOLOR: '#FFFFFF',
             LAYERTITLESPACE: 0,
             TRANSPARENT: true,
-            LAYERS: layer.layername,
+            LAYERS: layername,
             DPI: screenDpi
         });
     }
@@ -257,7 +259,8 @@ var authid = projectData.crs;
 
 //background transparency for the QGIS server generated layer (commercial background layers not effected)
 //set to true if you want the background to be transparent, layer image will be bigger (32 vs 24bit)
-var qgisLayerTransparency = true;
+// if project contain any base or extra layer transparency is true, otherwise false
+var qgisLayerTransparency = (projectData.baseLayers() == null && projectData.extraLayers() == null) ? false : true;
 
 
 // OpenLayers global options

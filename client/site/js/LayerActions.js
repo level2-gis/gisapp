@@ -344,7 +344,7 @@ function openAttTable() {
         gridLocation: 'bottom',
         gridEditable: editable,
         gridTitle: name,
-        gridResults: 2000,
+        gridResults: Eqwc.settings.limitAttributeFeatures,
         gridResultsPageSize: 20,
         selectionLayer: myLayerName,
         formItems: [],
@@ -424,6 +424,10 @@ function getLayerAttributes(layer) {
         ret.columns[i].menuDisabled = false;
         ret.columns[i].sortable = true;
         ret.columns[i].filterable = true;
+        ret.columns[i].renderer = function(value) {
+            return createHyperlink(value);
+        };
+
         if(fieldType=='double') {
             ret.columns[i].xtype = 'numbercolumn';
             ret.columns[i].format = '0.000,00/i';

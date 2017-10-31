@@ -24,7 +24,7 @@ function customBeforeMapInit() {
                 gridColumns: getLayerAttributes(myLayerName).columns,
                 gridLocation: 'bottom',
                 gridTitle: myLayerName,
-                gridResults: 2000,
+                gridResults: Eqwc.settings.limitAttributeFeatures,
                 gridResultsPageSize: 20,
                 gridEditable: editable,
                 selectionLayer: myLayerName,

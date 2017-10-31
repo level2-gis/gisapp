@@ -56,19 +56,29 @@ foreach ($scan as $item) {
 Header("content-type: application/x-javascript");
 ?>
 
+function getRandomNum() {
+    return Math.floor((Math.random() * 100000) + 1);
+}
+
+
 (function () {
 
+    var version = "<?php echo $version ?>";
     var jsFiles = [
+        "client_common/customProjections.js?n="+getRandomNum(),
+        "client_common/settings.js?n="+getRandomNum(),
         "<?php echo implode('","',$lang) ?>",
         "<?php echo $debug ? implode('","',$eqwc_debug) : $eqwc_mini ?>",
         "<?php echo implode('","',$plugins) ?>",
-        "client/site/js/WebgisInit.js"
+        "client/site/js/WebgisInit.js?v="+version
     ];
 
     // use "parser-inserted scripts" for guaranteed execution order
     var scriptTags = new Array(jsFiles.length);
     for (var i = 0, len = jsFiles.length; i < len; i++) {
-        scriptTags[i] = "<script src='" + jsFiles[i] + "'></script>";
+        if (jsFiles[i].length>0) {
+            scriptTags[i] = "<script src='" + jsFiles[i] + "'></script>";
+        }
     }
     if (scriptTags.length > 0) {
         document.write(scriptTags.join(""));
