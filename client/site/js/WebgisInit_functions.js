@@ -922,7 +922,7 @@ function postLoading() {
                 panel.gridLocation = 'default';
                 panel.gridTitle = searchResultString[lang];
                 panel.gridResults = simpleWmsSearchMaxResults;
-                panel.on("featureselected", showFeatureSelected);
+                panel.on("featureselected", showRecordSelected);
                 panel.on("featureselectioncleared", clearFeatureSelected);
                 panel.on("beforesearchdataloaded", showSearchPanelResults);
                 // Just for debugging...
@@ -1514,7 +1514,12 @@ function showSearchPanelResults(searchPanelInstance, features) {
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             autoHeight: autoHeight, // No vert. scrollbars in popup if true!!
             viewConfig: {
-                forceFit: horFit
+                forceFit: horFit,
+                templates: {cell: new Ext.Template(
+                    '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
+                    '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
+                    '</td>'
+                )}
             },
             // paging bar on the bottom
             bbar: pagingConfig,

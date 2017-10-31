@@ -258,13 +258,18 @@ function setupLegendAndMetadataWindow() {
                         //title: 'Properties Grid',
                         itemId: 'propertyGrid',
                         autoHeight: true,
-                        stripeRows: true,
+                        stripeRows: false,
                         hideHeaders: true,
                         //width: 300,
                         //renderTo: 'grid-ct',
                         viewConfig: {
                             forceFit: true,
-                            scrollOffset: 2 // the grid will never have scrollbars
+                            scrollOffset: 2, // the grid will never have scrollbars
+                            templates: {cell: new Ext.Template(
+                                '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
+                                '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
+                                '</td>'
+                                )}
                         },
                         listeners: {
                             'beforeedit': function (e) {

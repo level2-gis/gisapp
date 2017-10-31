@@ -33,3 +33,9 @@
 .icon-save { background-image: url(../gis_icons/save.gif) !important; background-repeat: no-repeat; }
 
 .icon-delete { background-image: url(../gis_icons/editor_delete.png) !important; background-repeat: no-repeat; }
+
+/* to select and copy grid cell */
+.x-selectable, .x-selectable * {
+    -moz-user-select: text!important;
+    -khtml-user-select: text!important;
+}
