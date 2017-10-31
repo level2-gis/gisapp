@@ -1,2 +1,2 @@
-1.5.2d  - Application
-13      - Database
+1.5.2  - Application
+13     - Database
