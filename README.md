@@ -51,6 +51,7 @@ Available languages:
 * English
 * German
 * Italian
+* Polish
 * Slovenian
 * Slovak
 * Spanish
