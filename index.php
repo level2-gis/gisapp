@@ -227,7 +227,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/popup.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20171031"/>
+                <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20171101"/>
 
                 <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css"/>';
