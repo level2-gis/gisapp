@@ -8,6 +8,9 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * Desktop client is based on original **[QGIS Web client I (QWC I)](https://github.com/qgis/QGIS-Web-Client)**.
 * Mobile client is based on **[OL3 Mobile Viewer](https://github.com/sourcepole/ol3-mobile-viewer)**.
 
+## Coming up:
+**[Release 1.6](https://github.com/uprel/gisapp/milestone/2)**
+
 ## Modifications and new features:
 * user authorization with optional guest access
 * database for storing info about projects, base layers, external layers (WMS, WMTS, XYZ) and users; user authentication, specific project settings
