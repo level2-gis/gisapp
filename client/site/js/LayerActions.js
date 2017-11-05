@@ -253,7 +253,7 @@ function showRecordSelected(args) {
 
         // select feature in layer
         thematicLayer.mergeNewParams({
-            "SELECTION": layerId + ":" + args["feature_id"]
+            "SELECTION": layerId + ":" + args["id"]
         });
 
         if (args["doZoomToExtent"]) {
