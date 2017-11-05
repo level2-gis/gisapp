@@ -194,6 +194,8 @@ class Helpers
             $prop->use_ids = null;
             $prop->add_geom_to_fi = null;
             $prop->time = $time;
+            $prop->version = "";
+            $prop->crs_list = [];
             $prop->description = "";
             $prop->message = $qgs["message"];
             //return false;
@@ -207,11 +209,12 @@ class Helpers
             $prop->use_ids = filter_var($qgs["message"]->properties->WMSUseLayerIDs,FILTER_VALIDATE_BOOLEAN);
             $prop->add_geom_to_fi = filter_var($qgs["message"]->properties->WMSAddWktGeometry,FILTER_VALIDATE_BOOLEAN);
             $prop->time = $time;
+            $prop->version = (string)$qgs["message"]["version"];
+            $prop->crs_list = (array)($qgs["message"]->properties->WMSCrsList->value);
             $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
             try {
 
                 $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],$prop->title,0);
-
 
                 //get wfs layers
                 $wfs = (array)($qgs["message"]->properties->WFSLayers->value);
@@ -225,6 +228,7 @@ class Helpers
                             $lay->geom_type = (string)$lay_info["message"]["type"];
                             $lay->geom_column = (string)$lay_info["message"]["geom_column"];
                             $lay->crs = (string)$lay_info["message"]["crs"];
+                            $lay->sql = (string)$lay_info["message"]["sql"];
                         }
                     }
 
@@ -308,7 +312,8 @@ class Helpers
             'provider' => (string)$layer->provider,
             'type' => '',
             'geom_column' => '',
-            'crs' => (string)$layer->srs->spatialrefsys->authid
+            'crs' => (string)$layer->srs->spatialrefsys->authid,
+            'sql' => ''
         );
 
         //only for postgres and spatialite layers
@@ -415,7 +420,7 @@ class Helpers
     public static function getEqwcVersion() {
         $version = '0';
         if (file_exists('../version.txt')) {
-            $version = trim(file_get_contents('../version.txt',null,null,null,8));
+            $version = trim(file_get_contents('../version.txt',null,null,null,7));
         }
         return $version;
     }

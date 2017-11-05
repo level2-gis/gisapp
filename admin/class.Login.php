@@ -241,7 +241,7 @@ class Login
             //no user and password verify
             $pass = true;
         } else {
-            $sql = 'SELECT user_id, user_name, user_email, user_password_hash, admin
+            $sql = 'SELECT user_id, user_name, user_email, user_password_hash, display_name, admin
                 FROM users
                 WHERE user_name = :user_name
                 LIMIT 1';
@@ -262,6 +262,7 @@ class Login
                 $email = $result_row->user_email;
                 $uid = $result_row->user_id;
                 $admin = $result_row->admin;
+                $display = $result_row->display_name;
             } else {
                 $this->feedback = 'TR.noUser';
                 return false;
@@ -273,6 +274,7 @@ class Login
 
             // write user data into PHP SESSION
             $_SESSION['user_name'] = $user;
+            $_SESSION['user_display_name'] = $display;
             $_SESSION['user_email'] = $email;
             $_SESSION['user_is_logged_in'] = true;
             $_SESSION['uid'] = $uid;
