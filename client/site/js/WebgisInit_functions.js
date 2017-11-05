@@ -462,6 +462,11 @@ function postLoading() {
 
     if (!initialLoadDone) {
 
+        //listeners for thematicLayer
+        //thematicLayer.events.register('loadend', this, function () {
+        //    console.log('loadend '+selectedQueryableLayers.length);
+        //});
+
         //set EPSG text from OpenLayers
         var proj = geoExtMap.map.getProjectionObject();
         rightStatusText.setText(proj.getCode());
@@ -605,11 +610,22 @@ function postLoading() {
         if (enableHoverPopup)
             geoExtMap.map.removeControl(WMSGetFInfoHover);
         geoExtMap.map.removeControl(WMSGetFInfo);
+        geoExtMap.map.removeControl(ExtraFInfo);
     }
     var fiLayer = new OpenLayers.Layer.WMS(layerTree.root.firstChild.text, wmsURI, {
         layers: [],
         VERSION: "1.3.0"
     }, LayerOptions);
+
+    ExtraFInfo = new OpenLayers.Control.WMSGetFeatureInfo({
+        layers: [],
+        infoFormat: "text/xml",
+        queryVisible: true
+    });
+    //ExtraFInfo.events.register("getfeatureinfo", this, showExtraFeatureInfo);
+    ExtraFInfo.events.register("beforegetfeatureinfo", this, onBeforeGetExtraFeatureInfoClick);
+    //ExtraFInfo.events.register("nogetfeatureinfo", this, noExtraFeatureInfoClick);
+    geoExtMap.map.addControl(ExtraFInfo);
 
     WMSGetFInfo = new OpenLayers.Control.WMSGetFeatureInfo({
         layers: [fiLayer],
@@ -1037,6 +1053,13 @@ function postLoading() {
             selectedActiveLayers = layersInDrawingOrder(selectedActiveLayers);
             selectedActiveQueryableLayers = layersInDrawingOrder(selectedActiveQueryableLayers);
         }
+
+        if (selectedQueryableLayers.length == 0) {
+            thematicLayer.setVisibility(false);
+        } else {
+            thematicLayer.setVisibility(true);
+        }
+
         thematicLayer.mergeNewParams({
             LAYERS: selectedLayers.join(","),
             OPACITIES: layerOpacities(selectedLayers),
@@ -2209,10 +2232,12 @@ function activateGetFeatureInfo(doIt) {
     // activate/deactivate FeatureInfo
     if (doIt) {
         WMSGetFInfo.activate();
+        ExtraFInfo.activate();
         if (enableHoverPopup)
             WMSGetFInfoHover.activate();
     } else {
         WMSGetFInfo.deactivate();
+        ExtraFInfo.deactivate();
         if (enableHoverPopup)
             WMSGetFInfoHover.deactivate();
     }

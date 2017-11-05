@@ -308,15 +308,18 @@ function showFeatureInfoHover(evt) {
 // disable all GetFeatureInfoRequest until we have a reponse
 function onBeforeGetFeatureInfoClick(evt) {
 
-    //workaround to avoid qgis server 500 error on empty query layers request
-    //we want empty result
-    //better way is to just cancel request, how?
-    if (selectedQueryableLayers.length == 0) {
-        WMSGetFInfo.vendorParams.QUERY_LAYERS = evt.object.layers[0].name;
-        WMSGetFInfo.maxFeatures = 0;
-    }
+    evt.object.layers[0].setVisibility(thematicLayer.getVisibility());
 
     activateGetFeatureInfo(false);
+}
+
+function onBeforeGetExtraFeatureInfoClick(evt) {
+    var lay = geoExtMap.map.getLayersBy('metadata','identify');
+
+    //WATCH: only first one is used
+    if (lay.length>0) {
+        evt.object.layers = [geoExtMap.map.getLayersBy('metadata', 'identify')[0]];
+    }
 }
 
 // reenable GetFeatureInfo
@@ -559,6 +562,9 @@ function getFeatures(layerName, node) {
 function updateElevation(data, location, field, template) {
 
     var pan = Ext.getCmp('fi_elevation');
+    if (pan == undefined) {
+        return;
+    }
     var tem = new Ext.Template(template);
 
     if (data !== undefined) {
@@ -582,6 +588,9 @@ function updateElevation(data, location, field, template) {
 function updateAddress(data, location, field, template, templateMin, factor) {
 
     var pan = Ext.getCmp('fi_address');
+    if (pan == undefined) {
+        return;
+    }
 
     var distance = 0;
     var results;
