@@ -419,7 +419,7 @@ function getLayerAttributes(layer) {
         //    }
         //}
 
-        ret.columns[i].header = attribute.name;
+        ret.columns[i].header = attribute.alias == null ? attribute.name : attribute.alias;
         ret.columns[i].dataIndex = attribute.name;
         ret.columns[i].menuDisabled = false;
         ret.columns[i].sortable = true;

@@ -213,12 +213,13 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                     },
 
                     "Attributes": function(node, obj) {
-                        obj.attributes = []
+                        obj.attributes = [];
                         this.readChildNodes(node, obj.attributes);
                     },
                     "Attribute": function(node, obj) {
                         var attribute = {
-                            name: validateFieldName(node.getAttribute("name"),node.getAttribute("alias")),
+                            name: validateFieldName(node.getAttribute("name")),
+                            alias: node.getAttribute("alias"),
                             type: node.getAttribute("type"),
                             precision: parseInt(node.getAttribute("precision")),
                             length: parseInt(node.getAttribute("length")),
@@ -357,14 +358,11 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
 });
 
 /**
- * Remove dot from field name and use alias if exists
+ * Remove dot from field name
  * @param name
- * @param alias
  * @returns {string}
  */
-function validateFieldName(name,alias) {
-    if (alias!=null)
-        name = alias;
+function validateFieldName(name) {
     var str='';
     str=name.replace(/\./g,'');
     return str;
