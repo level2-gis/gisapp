@@ -10,6 +10,10 @@
 
 //This file is used instead of GlobalOptions.js from QWC
 
+function getRootUrl(url) {
+    return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
+}
+
 function makeLayer(layDef, visible) {
 
     if (layDef==null) {
@@ -71,6 +75,14 @@ function makeLayer(layDef, visible) {
         case 'WMS' :
 
             options.options.visibility = visible;
+
+            //extralayer on same host (like different qgis project) add for identify (another GetFeatureInfo control)
+            //we use layer metadata property for this
+            var server = window.location.hostname;
+            var urlHost = getRootUrl(options.url).split('//')[1];
+            if (!visible && server==urlHost) {
+                options.options.metadata = 'identify';
+            }
 
             var layer = new OpenLayers.Layer.WMS(
                 title,
