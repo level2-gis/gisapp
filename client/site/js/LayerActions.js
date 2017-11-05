@@ -74,6 +74,10 @@ function buildLayerContextMenu(node) {
                 text: 'AutoCAD DXF',
                 handler: exportHandler
             }, {
+                itemId: 'XLSX',
+                text: 'MS Office Open XLSX',
+                handler: exportHandler
+            }, {
                 itemId: 'CSV',
                 text: 'Text CSV',
                 handler: exportHandler

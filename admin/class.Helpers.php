@@ -36,6 +36,36 @@ class Helpers
         return $valid;
     }
 
+    /**
+     * return crs list of all layers as published in project properties OWS Server
+     */
+    public static function getCrsListFromSession() {
+        $list = [];
+        if (!isset($_SESSION['qgs'])) {
+            return $list;
+        }
+        try {
+            $qgs = json_decode($_SESSION['qgs']);
+            return $qgs->crs_list;
+        } catch (Exception $e) {
+            error_log("EQWC Error: ".$e->getMessage());
+            return $list;
+        }
+    }
+
+    public static function getProjectCrsFromSession() {
+        if (!isset($_SESSION['qgs'])) {
+            return "EPSG:3857";
+        }
+        try {
+            $qgs = json_decode($_SESSION['qgs']);
+            return $qgs->crs;
+        } catch (Exception $e) {
+            error_log("EQWC Error: ".$e->getMessage());
+            return "EPSG:3857";
+        }
+    }
+
     public static function validateExportParams($params)
     {
         if (isset($params['map0_extent']) && $params['map0_extent']!='') {

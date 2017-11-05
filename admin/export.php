@@ -97,6 +97,8 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
         $options = " -where \"".$sql."\" ";
     }
 
+    $options .= "-preserve_fid ";
+
     //export only selection inside bounding box if provided
     //we have to transform extent to layers CRS on client side
     //if using gdal 2.0 this will not be necessary, just use -spat_srs
@@ -123,6 +125,11 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             $options .= "-lco SEPARATOR=SEMICOLON ";
             $makeZip = false;
             $fileExt = 'csv';
+            break;
+        case 'XLSX':
+            $format_name = $destinationFormat;
+            $makeZip = false;
+            $fileExt = 'xlsx';
             break;
         case 'KML':
             $format_name = $destinationFormat;
@@ -248,8 +255,13 @@ try {
     $cmd = $query_arr["cmd"];
     $ctype = "application/zip";
 
+    //TODO FIX this
     if ($format == 'CSV') {
         $ctype = "text/csv";
+    }
+
+    if ($format == 'XLSX') {
+        $ctype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     }
 
     //check if user is guest

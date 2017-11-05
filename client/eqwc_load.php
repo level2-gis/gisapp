@@ -8,6 +8,17 @@ session_start();
 $version = \GisApp\Helpers::getEqwcVersion();
 $lang = [];
 $plugins = [];
+
+$crs_list =  \GisApp\Helpers::getCrsListFromSession();
+$crs_project = \GisApp\Helpers::getProjectCrsFromSession();
+$crs_files = [];
+
+foreach ($crs_list as $crs) {
+    if ($crs != $crs_project && $crs != "EPSG:4326") {
+        array_push($crs_files, "client/site/libs/proj4js/defs/" . str_replace(":","",$crs)  . ".js");
+    }
+}
+
 $eqwc_debug = [
     "client/site/js/PagingStore.js?v=".$version,
     "client/site/js/LoadAppProjectData.js?v=".$version,
@@ -65,6 +76,7 @@ function getRandomNum() {
 
     var version = "<?php echo $version ?>";
     var jsFiles = [
+        "<?php echo implode('","',$crs_files) ?>",
         "client_common/customProjections.js?n="+getRandomNum(),
         "client_common/settings.js?n="+getRandomNum(),
         "<?php echo implode('","',$lang) ?>",
