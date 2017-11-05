@@ -168,7 +168,6 @@ var useGetProjectSettings = true;
 var showLayerOrderTab = false;
 var grayLayerNameWhenOutsideScale = true;
 var showMetaDataInLegend = true;
-var enableHoverPopup = false;
 var defaultIdentificationMode = "allLayers";
 var useGeodesicMeasurement = true;
 var useGeoCodeSearchBox = projectData.geoCode != null;

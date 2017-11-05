@@ -26,6 +26,10 @@ var closePopupClick = false; // stores if the click results from closing a click
 
 function showFeatureInfo(evt) {
     removeClickPopup();
+    if (hoverPopup) {
+        removeHoverPopup();
+    }
+
     if (identifyToolActive) {
         if (!closePopupClick) {
             var map = geoExtMap.map; // gets OL map object
@@ -125,6 +129,7 @@ function showFeatureInfo(evt) {
                     maximizable: true,
                     collapsible: true,
                     listeners: {
+                        close: onClickPopupClosed,
                         beforeshow: function () {
 
                             var maxHeight = geoExtMap.getHeight() * 0.8;
@@ -341,7 +346,7 @@ function onHoverPopupClick(evt) {
 function onClickPopupClosed(evt) {
     removeClickPopup();
     // enable the hover popup for the curent mosue position
-    if (enableHoverPopup)
+    if (Eqwc.settings.enableHoverPopup)
         WMSGetFInfoHover.activate();
     var map = geoExtMap.map; // gets OL map object
     evt.xy = map.events.getMousePosition(evt); // non api function of OpenLayers.Events

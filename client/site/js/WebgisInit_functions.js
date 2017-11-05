@@ -607,7 +607,7 @@ function postLoading() {
     selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
 
     if (initialLoadDone) {
-        if (enableHoverPopup)
+        if (Eqwc.settings.enableHoverPopup)
             geoExtMap.map.removeControl(WMSGetFInfoHover);
         geoExtMap.map.removeControl(WMSGetFInfo);
         geoExtMap.map.removeControl(ExtraFInfo);
@@ -640,7 +640,7 @@ function postLoading() {
     WMSGetFInfo.events.register("nogetfeatureinfo", this, noFeatureInfoClick);
     geoExtMap.map.addControl(WMSGetFInfo);
 
-    if (enableHoverPopup) {
+    if (Eqwc.settings.enableHoverPopup) {
         WMSGetFInfoHover = new OpenLayers.Control.WMSGetFeatureInfo({
             layers: [fiLayer],
             infoFormat: "text/xml",
@@ -1069,7 +1069,7 @@ function postLoading() {
             WMSGetFInfo.vendorParams = {
                 'QUERY_LAYERS': selectedQueryableLayers.join(',')
             };
-            if (enableHoverPopup) {
+            if (Eqwc.settings.enableHoverPopup) {
                 WMSGetFInfoHover.vendorParams = {
                     'QUERY_LAYERS': selectedQueryableLayers.join(',')
                 };
@@ -1078,7 +1078,7 @@ function postLoading() {
             WMSGetFInfo.vendorParams = {
                 'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
             };
-            if (enableHoverPopup) {
+            if (Eqwc.settings.enableHoverPopup) {
                 WMSGetFInfoHover.vendorParams = {
                     'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
                 };
@@ -1741,6 +1741,7 @@ function mapToolbarHandler(btn, evt) {
         } else {
             identifyToolActive = false;
             activateGetFeatureInfo(false);
+            changeCursorInMap("default");
             if (hoverPopup) {removeHoverPopup();}
             if (clickPopup) {removeClickPopup();}
             //featureInfoHighlightLayer.removeAllFeatures();
@@ -2233,12 +2234,12 @@ function activateGetFeatureInfo(doIt) {
     if (doIt) {
         WMSGetFInfo.activate();
         ExtraFInfo.activate();
-        if (enableHoverPopup)
+        if (Eqwc.settings.enableHoverPopup)
             WMSGetFInfoHover.activate();
     } else {
         WMSGetFInfo.deactivate();
         ExtraFInfo.deactivate();
-        if (enableHoverPopup)
+        if (Eqwc.settings.enableHoverPopup)
             WMSGetFInfoHover.deactivate();
     }
 }

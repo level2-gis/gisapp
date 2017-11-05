@@ -18,6 +18,11 @@ Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 //limit number of features to request from server for displaying layer attribute table
 Eqwc.settings.limitAttributeFeatures = 2000;
 
+//enable tooltip hoover on features
+//many server requests, default disabled
+//only regular client
+Eqwc.settings.enableHoverPopup = false;
+
 //use separate gisportal code to browse projects, register users and login
 //code available here - https://github.com/uprel/gisportal
 Eqwc.settings.useGisPortal = false;
