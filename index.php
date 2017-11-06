@@ -215,9 +215,9 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
             ?><!DOCTYPE html>
             <html>
             <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-                <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
                 <meta name="apple-mobile-web-app-capable" content="yes">
                 <title></title>
                 <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
@@ -250,7 +250,11 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 <!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
 <!--                <script type="text/javascript" src="../ol2/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
+
                 <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
+                <!--                DEBUG-->
+<!--                <script type="text/javascript" src="../geoext/lib/GeoExt.js"></script>-->
+
                 <script type="text/javascript" src="client/eqwc_load.php"></script>
 
 
@@ -291,6 +295,15 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
                     .olTileImage.olImageLoadError {
                         display: none !important;
+                    }
+
+                    div.olMap {
+                        z-index: 0;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                        cursor: default;
+                        -ms-touch-action: none;
+                        touch-action: none;
                     }
 
                 </style>
