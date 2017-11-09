@@ -135,11 +135,21 @@ function customMapToolbarHandler(btn, evt) {
 // n is a Ext.TreeNode object
 function customActionLayerTreeCheck(n) {
     if (n.isLeaf()) {
+
+        var layerId = wmsLoader.layerTitleNameMapping[n.text];
+        //check if we have to enable/disable layer vector data and measurements
+        if (typeof activatedEditors == 'object') {
+            var layerEditor = activatedEditors[layerId];
+            if (layerEditor != undefined) {
+                layerEditor.editLayer.setVisibility(n.attributes.checked);
+                layerEditor.attributesForm.drawControl.setVisibleLabelLayers(n.attributes.checked && projectData.visibleEditLabels);
+            }
+        }
+
         if (n.attributes.checked) {
             var toAdd = Ext.get ( "legend_"+n.text.replace(" ", "-") );
             if (toAdd) {
             } else {
-                var layerId = wmsLoader.layerTitleNameMapping[n.text];
                 var layer = projectData.layers[layerId] == undefined ? {provider: '', layername: layerId} : projectData.layers[layerId];
                 var legendUrl = projectData.getLegendUrl(layer);
 
