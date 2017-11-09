@@ -225,7 +225,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/popup.css"/>
+                <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20171108"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20171101"/>
 

@@ -1,5 +1,13 @@
 .gx-popup-anc{background:transparent url(../libs/geoext/resources/images/default/anchor.png) no-repeat 0 0;position:absolute;left:5px;z-index:2;height:16px;width:31px;pointer-events:none;}.gx-popup-anc.top{background:transparent url(../libs/geoext/resources/images/default/anchor-top.png) no-repeat 0 0;top:-16px;}.gx-popup-anc.right{left:auto;right:5px;}
 
+/* popup related styles */
+.olPopup {
+    overflow: inherit;
+    pointer-events: none;
+    max-height: 400px;
+}
+
+
 /*styles for identify icons*/
 .i-select {
     display: inline-block;
