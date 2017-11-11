@@ -30,6 +30,10 @@ define('SUPERUSER', 'gisadmin');
 //qgis server
 define('QGISSERVERURL', 'http://localhost/cgi-bin/qgis_mapserv.fcgi');
 
+//GOOGLE MAPS JAVASCRIPT API KEY
+//Only set this if you intent to use Google Maps layers or Google StreetView
+define('GOOGLE_MAPS_KEY','your_key');
+
 //other settings
 define('OGR2OGR', 'ogr2ogr');
 define('TEMP_PATH', '/var/tmp/');

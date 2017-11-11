@@ -281,8 +281,7 @@ var MapOptions = {
   units: "m",
   numZoomLevels:22,
   fractionalZoom: !enableBGMaps,
-  transitionEffect:"resize",
-  zoomDuration: 1,
+  zoomDuration: 5,
   restrictedExtent: projectData.restrictToStartExtent ? projectData.extent.split(',') : null,
   controls: []
 };

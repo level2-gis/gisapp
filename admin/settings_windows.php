@@ -30,6 +30,10 @@ define('SUPERUSER', 'gisadmin');
 //qgis server, check your port, if you are using default port 80, then simply go: /localhost/cgi-bin...
 define('QGISSERVERURL', 'http://localhost:8080/cgi-bin/qgis_mapserv.fcgi.exe');
 
+//GOOGLE MAPS JAVASCRIPT API KEY
+//Only set this if you intent to use Google Maps layers or Google StreetView
+define('GOOGLE_MAPS_KEY','your_key');
+
 //other settings
 define('OGR2OGR', 'C:/OSGeo4W64/bin/ogr2ogr');
 define('TEMP_PATH', 'C:/Windows/Temp/');

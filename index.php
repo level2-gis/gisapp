@@ -236,7 +236,8 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <script type="text/javascript" src="client_common/load.php"></script>
 
                 <?php if ($google) {
-                    echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>';
+                    $key = (defined('GOOGLE_MAPS_KEY') && GOOGLE_MAPS_KEY != 'your_key') ? '&key='.GOOGLE_MAPS_KEY : null;
+                    echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3'.$key.'"></script>';
                 }?>
 
                 <script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
