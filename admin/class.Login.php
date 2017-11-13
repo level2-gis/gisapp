@@ -235,6 +235,7 @@ class Login
         $pass = false;
         $uid = null;
         $admin = false;
+        $display = "";
 
         //check if we have guest user
         if (strtolower($user == 'guest')) {
