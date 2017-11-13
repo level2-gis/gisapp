@@ -430,9 +430,10 @@ function postLoading() {
                             isBaseLayer: false,
                             styleMap: styleMapHighLightLayer
                         }),
-                        featureInfoHighlightLayer = new OpenLayers.Layer.Vector("featureInfoHighlight", {
+                        featureInfoHighlightLayer = new OpenLayers.Layer.Vector("Selection", {
                             isBaseLayer: false,
-                            styleMap: styleMapHighLightLayer
+                            styleMap: styleMapHighLightLayer,
+                            metadata:'editor'   //to use geometry in editor plugin
                         })
                     ])
             ),
@@ -1745,7 +1746,7 @@ function mapToolbarHandler(btn, evt) {
             if (hoverPopup) {removeHoverPopup();}
             if (clickPopup) {removeClickPopup();}
             //featureInfoHighlightLayer.removeAllFeatures();
-            clearFeatureSelected();
+            //clearFeatureSelected();
             mainStatusText.setText(modeNavigationString[lang]);
         }
     }

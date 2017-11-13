@@ -137,12 +137,12 @@ function customActionLayerTreeCheck(n) {
     if (n.isLeaf()) {
 
         var layerId = wmsLoader.layerTitleNameMapping[n.text];
-        //check if we have to enable/disable layer vector data and measurements
+        //check if we have to enable/disable layer vector data
         if (typeof activatedEditors == 'object') {
             var layerEditor = activatedEditors[layerId];
             if (layerEditor != undefined) {
                 layerEditor.editLayer.setVisibility(n.attributes.checked);
-                layerEditor.attributesForm.drawControl.setVisibleLabelLayers(n.attributes.checked && projectData.visibleEditLabels);
+                //layerEditor.attributesForm.drawControl.setVisibleLabelLayers(n.attributes.checked && projectData.visibleEditLabels);
             }
         }
 

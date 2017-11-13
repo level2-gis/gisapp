@@ -21,9 +21,6 @@
  * to click by changing to "hand".
  */
 
-var featureInfoPopupContents;
-var closePopupClick = false; // stores if the click results from closing a clickPopup
-
 function showFeatureInfo(evt) {
     removeClickPopup();
     if (hoverPopup) {
@@ -31,7 +28,6 @@ function showFeatureInfo(evt) {
     }
 
     if (identifyToolActive) {
-        if (!closePopupClick) {
             var map = geoExtMap.map; // gets OL map object
             if (window.DOMParser) {
                 var parser = new DOMParser();
@@ -166,9 +162,6 @@ function showFeatureInfo(evt) {
                 // map.addPopup(clickPopup); //*/
                 changeCursorInMap("default");
             }
-        } else {
-            closePopupClick = false;
-        }
         activateGetFeatureInfo(true);
     }
 }
@@ -351,7 +344,6 @@ function onClickPopupClosed(evt) {
     var map = geoExtMap.map; // gets OL map object
     evt.xy = map.events.getMousePosition(evt); // non api function of OpenLayers.Events
     map.events.triggerEvent("mousemove", evt);
-    closePopupClick = true; // indicate to not open a new clickPopup
 }
 
 function removeClickPopup() {
@@ -361,7 +353,7 @@ function removeClickPopup() {
         clickPopup.destroy();
     }
     clickPopup = null;
-    featureInfoHighlightLayer.removeAllFeatures();
+    //featureInfoHighlightLayer.removeAllFeatures();
 }
 
 function removeHoverPopup() {
