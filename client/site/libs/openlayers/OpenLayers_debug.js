@@ -34487,12 +34487,14 @@ OpenLayers.Events.buttonclick = OpenLayers.Class({
      */
     completeRegEx: /^mouseup|touchend$/,
 
-    /**
-     * Property: isDeviceTouchCapable
-     * {Boolean} Tells whether the browser detects touch events.
-     */
-    isDeviceTouchCapable: 'ontouchstart' in window ||
-        window.DocumentTouch && document instanceof window.DocumentTouch,
+    
+	//Reverting commit 1218 due to this problem https://github.com/openlayers/ol2/issues/1495
+	///**
+    // * Property: isDeviceTouchCapable
+    // * {Boolean} Tells whether the browser detects touch events.
+    // */
+    //isDeviceTouchCapable: 'ontouchstart' in window ||
+    //    window.DocumentTouch && document instanceof window.DocumentTouch,
     
     /**
      * Property: startEvt
@@ -34584,12 +34586,15 @@ OpenLayers.Events.buttonclick = OpenLayers.Class({
         var propagate = true,
             element = OpenLayers.Event.element(evt);
 
-        if (element &&
-           (OpenLayers.Event.isLeftClick(evt) &&
-            !this.isDeviceTouchCapable ||
-            !~evt.type.indexOf("mouse"))) {
-            // was a button pressed?
-            var button = this.getPressedButton(element);
+        //if (element &&
+        //   (OpenLayers.Event.isLeftClick(evt) &&
+        //    !this.isDeviceTouchCapable ||
+        //    !~evt.type.indexOf("mouse"))) {
+        //    // was a button pressed?
+        
+		if (element && (OpenLayers.Event.isLeftClick(evt) || !~evt.type.indexOf("mouse"))) { 
+		
+		    var button = this.getPressedButton(element);
             if (button) {
                 if (evt.type === "keydown") {
                     switch (evt.keyCode) {
