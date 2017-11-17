@@ -28,142 +28,143 @@ function showFeatureInfo(evt) {
     }
 
     if (identifyToolActive) {
-            var map = geoExtMap.map; // gets OL map object
-            if (window.DOMParser) {
-                var parser = new DOMParser();
-                xmlDoc = parser.parseFromString(evt.text, "text/xml");
-            } else {
-                xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-                xmlDoc.async = "false";
-                xmlDoc.loadXML(evt.text);
-            }
+        var map = geoExtMap.map; // gets OL map object
+        if (window.DOMParser) {
+            var parser = new DOMParser();
+            xmlDoc = parser.parseFromString(evt.text, "text/xml");
+        } else {
+            xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+            xmlDoc.async = "false";
+            xmlDoc.loadXML(evt.text);
+        }
 
-            //start locationservices
-            var text = "";
-            var locationText = "";
-            var locationUnits = map.getLonLatFromPixel(evt.xy);
-            var locationObj = new QGIS.LocationService({location: locationUnits});
-            var popupItems = [];
+        //start locationservices
+        var text = "";
+        var locationText = "";
+        var locationUnits = map.getLonLatFromPixel(evt.xy);
+        var locationObj = new QGIS.LocationService({location: locationUnits});
+        var popupItems = [];
 
-            if (projectData.locationServices != null) {
+        if (projectData.locationServices != null) {
 
-                text = "</br>";
-                locationText = "<h2>" + TR.fiLocation + "</h2>";
-                //locationText += '<table><tbody>';
+            text = "</br>";
+            locationText = "<h2>" + TR.fiLocation + "</h2>";
+            //locationText += '<table><tbody>';
 
-                popupItems.push(
-                    {
-                        xtype: 'box',
-                        html: locationText
-                    }, {
-                        id: "fi_location",
-                        //margins: '5 5 5 5',
-                        xtype: 'box',
-                        html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
-                    });
+            popupItems.push(
+                {
+                    xtype: 'box',
+                    html: locationText
+                }, {
+                    id: "fi_location",
+                    //margins: '5 5 5 5',
+                    xtype: 'box',
+                    html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
+                });
 
-                for (var l = 0; l < projectData.locationServices.length; l++) {
-                    locationObj.getService({
-                        name: projectData.locationServices[l].name,
-                        key: projectData.locationServices[l].key,
-                        provider: projectData.locationServices[l].provider
-                    });
-
-                    popupItems.push({
-                        id: "fi_" + projectData.locationServices[l].name,
-                        //margins: '5 5 5 5',
-                        xtype: 'box',
-                        html: '</br>'
-                    });
-                }
-            }
-
-            locationObj.on("elevation", updateElevation);
-            locationObj.on("address", updateAddress);
-
-            // open AttributeTree panel
-            featureInfoResultLayers = [];
-            highLightGeometry = [];
-            parseFIResult(xmlDoc);
-            featureInfoResultLayers.reverse();
-            //highLightGeometry.reverse();
-            if (featureInfoResultLayers.length > 0 || text > '') {
-            //    if (hoverPopup) {
-            //        removeHoverPopup();
-            //    }
-            //    if (clickPopup) {
-            //        removeClickPopup();
-            //    }
-            //
-            //    if (identificationMode == 'topMostHit') {
-            //        text += featureInfoResultLayers[0];
-            //        featureInfoHighlightLayer.addFeatures(highLightGeometry[0]);
-            //        //feature.geometry.getBounds().getCenterLonLat()
-            //    } else {
-                    for (var i = 0; i < featureInfoResultLayers.length; i++) {
-                        text += featureInfoResultLayers[i];
-                        //featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
-                    }
-                //}
+            for (var l = 0; l < projectData.locationServices.length; l++) {
+                locationObj.getService({
+                    name: projectData.locationServices[l].name,
+                    key: projectData.locationServices[l].key,
+                    provider: projectData.locationServices[l].provider
+                });
 
                 popupItems.push({
-                    id: "fi_qgis",
+                    id: "fi_" + projectData.locationServices[l].name,
+                    //margins: '5 5 5 5',
                     xtype: 'box',
-                    //margins: '3 0 3 3',
-                    html: text
+                    html: '</br>'
                 });
-
-                //new way GeoExt Popup
-                clickPopup = new GeoExt.Popup({
-                    title: clickPopupTitleString[lang],
-                    location: locationUnits,
-                    map: map,
-                    autoScroll: true,
-                    bodyStyle: 'padding:5px',
-                    //layout: 'accordion',
-                    items: popupItems,
-                    maximizable: true,
-                    collapsible: true,
-                    listeners: {
-                        close: onClickPopupClosed,
-                        beforeshow: function () {
-
-                            var maxHeight = geoExtMap.getHeight() * 0.8;
-                            var minWidth = 200;
-
-                            if ((geoExtMap.getWidth() * 0.2) > minWidth) {
-                                this.setWidth(geoExtMap.getWidth() * 0.2);
-                            } else {
-                                this.setWidth(minWidth);
-                            }
-
-                            if (this.getHeight() > maxHeight) {
-                                this.setHeight(maxHeight);
-                            }
-                        }
-                    }
-                });
-                clickPopup.show();
-
-                //old way with OpenLayers.Popup
-                // clickPopup = new OpenLayers.Popup.FramedCloud(
-                // null, // id
-                // map.getLonLatFromPixel(evt.xy), // lonlat
-                // null, //new OpenLayers.Size(1,1), // contentSize
-                // text, //contentHTML
-                // null, // anchor
-                // true,  // closeBox
-                // onClickPopupClosed // closeBoxCallBackFunction
-                // );
-                // // For the displacement problem
-                // clickPopup.panMapIfOutOfView = Ext.isGecko;
-                // clickPopup.autoSize = true;
-                // clickPopup.events.fallThrough = false;
-                // map.addPopup(clickPopup); //*/
-                changeCursorInMap("default");
             }
-        activateGetFeatureInfo(true);
+        }
+
+        locationObj.on("elevation", updateElevation);
+        locationObj.on("address", updateAddress);
+
+        // open AttributeTree panel
+        featureInfoResultLayers = [];
+        highLightGeometry = [];
+        parseFIResult(xmlDoc);
+        featureInfoResultLayers.reverse();
+        //highLightGeometry.reverse();
+
+        //    if (hoverPopup) {
+        //        removeHoverPopup();
+        //    }
+        //    if (clickPopup) {
+        //        removeClickPopup();
+        //    }
+        //
+        if (featureInfoResultLayers.length > 0) {
+            if (identificationMode == 'topMostHit') {
+                text += featureInfoResultLayers[0];
+                //        featureInfoHighlightLayer.addFeatures(highLightGeometry[0]);
+                //        //feature.geometry.getBounds().getCenterLonLat()
+            } else {
+                for (var i = 0; i < featureInfoResultLayers.length; i++) {
+                    text += featureInfoResultLayers[i];
+                    //featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
+                }
+            }
+        }
+        popupItems.push({
+            id: "fi_qgis",
+            xtype: 'box',
+            //margins: '3 0 3 3',
+            html: text
+        });
+
+        //new way GeoExt Popup
+        clickPopup = new GeoExt.Popup({
+            title: clickPopupTitleString[lang],
+            location: locationUnits,
+            map: map,
+            autoScroll: true,
+            bodyStyle: 'padding:5px',
+            //layout: 'accordion',
+            items: popupItems,
+            maximizable: true,
+            collapsible: true,
+            listeners: {
+                close: onClickPopupClosed,
+                beforeshow: function () {
+
+                    var maxHeight = geoExtMap.getHeight() * 0.8;
+                    var minWidth = 200;
+
+                    if ((geoExtMap.getWidth() * 0.25) > minWidth) {
+                        this.setWidth(geoExtMap.getWidth() * 0.25);
+                    } else {
+                        this.setWidth(minWidth);
+                    }
+
+                    if (this.getHeight() > maxHeight) {
+                        this.setHeight(maxHeight);
+                    }
+                }
+            }
+        });
+        clickPopup.show();
+
+        //old way with OpenLayers.Popup
+        // clickPopup = new OpenLayers.Popup.FramedCloud(
+        // null, // id
+        // map.getLonLatFromPixel(evt.xy), // lonlat
+        // null, //new OpenLayers.Size(1,1), // contentSize
+        // text, //contentHTML
+        // null, // anchor
+        // true,  // closeBox
+        // onClickPopupClosed // closeBoxCallBackFunction
+        // );
+        // // For the displacement problem
+        // clickPopup.panMapIfOutOfView = Ext.isGecko;
+        // clickPopup.autoSize = true;
+        // clickPopup.events.fallThrough = false;
+        // map.addPopup(clickPopup); //*/
+        changeCursorInMap("default");
     }
+    activateGetFeatureInfo(true);
+
 }
 
 function showFeatureInfoHover(evt) {

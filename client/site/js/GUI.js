@@ -262,7 +262,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							xtype: 'tbtext',
 							text: objectIdentificationTextLabel[lang],
                             id: 'ObjectIdentificationText',
-                            hidden: true
+                            hidden: !projectData.identify_mode
 						}, {
 							xtype: 'combo',
 							width: 120,
@@ -272,7 +272,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							displayField: 'name',
 							triggerAction: 'all',
 							id: 'ObjectIdentificationModeCombo',
-                            hidden: true
+                            hidden: !projectData.identify_mode
 						//}, {
 						//	xtype: 'tbseparator',
                         //    id: 'separator2'
@@ -310,7 +310,8 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							icon: iconDirectory+'mActionFilePrint.png',
 							tooltipType: 'qtip',
 							tooltip: printMapTooltipString[lang],
-							id: 'PrintMap'
+							id: 'PrintMap',
+                            hidden: !projectData.print
 						}, {
 							xtype: 'button',
 							enableToggle: false,

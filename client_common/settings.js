@@ -23,6 +23,11 @@ Eqwc.settings.limitAttributeFeatures = 2000;
 //only regular client
 Eqwc.settings.enableHoverPopup = false;
 
+//Set default mode for identify option, possible values are:
+// "allLayers", "topMostHit", "activeLayers"
+//Note that you control visibility of this combo per specific project in database
+Eqwc.settings.defaultIdentificationMode = "topMostHit";
+
 //use separate gisportal code to browse projects, register users and login
 //code available here - https://github.com/uprel/gisportal
 Eqwc.settings.useGisPortal = false;

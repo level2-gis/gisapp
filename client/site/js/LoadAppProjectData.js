@@ -159,6 +159,8 @@ var lang = projectData.lang;
 var customGetUrlParamsParser = null;
 
 var serverAndCGI = "/proxy";
+// For direct access to QGIS Server
+//var serverAndCGI = "/wms";
 
 //Optional url for print server hosted on a different server. Default: same as above.
 // var serverAndCGI = "http://otherserver/cgi-bin/qgis_mapserv.fcgi";
@@ -168,7 +170,7 @@ var useGetProjectSettings = true;
 var showLayerOrderTab = false;
 var grayLayerNameWhenOutsideScale = true;
 var showMetaDataInLegend = true;
-var defaultIdentificationMode = "allLayers";
+var defaultIdentificationMode = Eqwc.settings.defaultIdentificationMode == undefined ? "allLayers" : Eqwc.settings.defaultIdentificationMode;
 var useGeodesicMeasurement = true;
 var useGeoCodeSearchBox = projectData.geoCode != null;
 var iconDirectory = 'client/site/gis_icons/';

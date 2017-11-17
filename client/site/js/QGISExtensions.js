@@ -460,12 +460,23 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
               }
             }
 
-            var printUrl = this.url+'&SRS='+authid+'&DPI='+printResolution+'&TEMPLATE='+this.layout.get("name")+'&map0:extent='+printExtent.page.getPrintExtent(map).toBBOX(1,false)+'&map0:rotation='+(printExtent.page.rotation * -1)+'&map0:scale='+mapScale+'&map0:grid_interval_x='+grid_interval+'&map0:grid_interval_y='+grid_interval+'&LAYERS='+encodeURIComponent(layers);
+            var printUrl = this.url + '&' + Ext.urlEncode({
+                    'SRS': authid,
+                    'DPI': printResolution,
+                    'TEMPLATE': this.layout.get("name"),
+                    'map0:extent': printExtent.page.getPrintExtent(map).toBBOX(1, false),
+                    'map0:scale': mapScale,
+                    'map0:rotation': (printExtent.page.rotation * -1),
+                    'map0:grid_interval_x': grid_interval,
+                    'map0:grid_interval_y': grid_interval,
+                    'LAYERS': layers
+                });
+
+            printUrl += '&' + Ext.urlEncode(this.customParams);
+
             if (thematicLayer.params.OPACITIES) {
                 printUrl += '&OPACITIES='+encodeURIComponent(thematicLayer.params.OPACITIES);
             }
-
-
 
             // add highlight
             //var highlightParams = highlighter.printParams("map0");

@@ -60,6 +60,9 @@ projectData.userFeedback = <?php echo json_encode($data->feedback) ?>;
 projectData.userFeedbackMailto = <?php echo json_encode($data->feedback_email) ?>;
 projectData.measurements = <?php echo json_encode($data->measurements) ?>;
 projectData.restrictToStartExtent = <?php echo json_encode($data->restrict_to_start_extent) ?>;
+projectData.print = <?php echo json_encode($data->print) ?>;
+projectData.zoom_back_forward = <?php echo json_encode($data->zoom_back_forward) ?>;
+projectData.identify_mode = <?php echo json_encode($data->identify_mode) ?>;
 
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';
