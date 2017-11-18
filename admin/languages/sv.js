@@ -48,7 +48,9 @@ var TR = {
     transactionFail: 'Genomförandet misslyckat',
     show: 'Visa',
     properties: 'Egenskaper',
-    description: 'Information'
+    description: 'Information',
+    emptyPrintTitleText: 'Add Title ...',
+    emptyPrintDescriptionText: 'Add Description ...'
 };
 
 /**

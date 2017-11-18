@@ -48,7 +48,9 @@ var TR = {
     transactionFail: 'Transakcija neuspešna',
     show: 'Prikaži',
     properties: 'Lastnosti',
-    description: 'Opis'
+    description: 'Opis',
+    emptyPrintTitleText: 'Dodaj naslov ...',
+    emptyPrintDescriptionText: 'Dodaj opis ...'
 };
 
 /**

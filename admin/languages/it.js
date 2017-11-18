@@ -48,7 +48,9 @@ var TR = {
     transactionFail: 'Transazzione fallita',
     show: 'Mostra',
     properties: 'Proprietà',
-    description: 'Description'
+    description: 'Description',
+    emptyPrintTitleText: 'Add Title ...',
+    emptyPrintDescriptionText: 'Add Description ...'
 };
 
 /**
