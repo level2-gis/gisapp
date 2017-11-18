@@ -63,6 +63,7 @@ projectData.restrictToStartExtent = <?php echo json_encode($data->restrict_to_st
 projectData.print = <?php echo json_encode($data->print) ?>;
 projectData.zoom_back_forward = <?php echo json_encode($data->zoom_back_forward) ?>;
 projectData.identify_mode = <?php echo json_encode($data->identify_mode) ?>;
+projectData.permalink = <?php echo json_encode($data->permalink) ?>;
 
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';

@@ -320,7 +320,8 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							icon: iconDirectory+'mActionPermalink.png',
 							tooltipType: 'qtip',
 							tooltip: sendPermalinkTooltipString[lang],
-							id: 'SendPermalink'
+							id: 'SendPermalink',
+                            hidden: !projectData.permalink
 						}, {
 							xtype: 'tbseparator',
                             id: 'separator4'
@@ -330,7 +331,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                                 enableToggle: false,
                                 allowDepress: false,
                                 scale: 'medium',
-                                icon: iconDirectory+'mActionHelp.png',
+                                icon: iconDirectory+'mActionMailSend.png',
                                 tooltipType: 'qtip',
                                 tooltip: TR.feedback,
                                 id: 'ShowFeedback',
