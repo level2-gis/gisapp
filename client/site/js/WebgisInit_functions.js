@@ -24,6 +24,21 @@ function loadWMSConfig(topicName) {
         // customize the createNode method to add a checkbox to nodes and the ui provider
         createNode: function (attr) {
             attr.checked = false;
+
+            //check if we need to hide it
+            attr.hidden = attr.text == Eqwc.settings.QgisUsersPrintName;
+
+            //hide layer if we have same baselayer name
+            var baseArr = projectData.baseLayers();
+            baseArr.find(function(currentValue, index, arr) {
+                var attr = this;
+                if (currentValue.title == attr.text) {
+                    attr.hidden = true;
+                    attr.layer.metadata.visible = false;
+                }
+
+            },attr);
+
             if (!attr.layer.metadata.showCheckbox) {
                 // hide checkbox
                 attr.cls = 'layer-checkbox-hidden';
@@ -720,7 +735,8 @@ function postLoading() {
             disabled: true,
             tooltip: navigationHistoryBackwardTooltipString[lang],
             tooltipType: 'qtip',
-            id: 'zoomLast'
+            id: 'zoomLast',
+            hidden: !projectData.zoom_back_forward
         });
         myTopToolbar.insert(2, zoomToPreviousAction);
         //zoom next
@@ -731,7 +747,8 @@ function postLoading() {
             disabled: true,
             tooltip: navigationHistoryForwardTooltipString[lang],
             tooltipType: 'qtip',
-            id: 'zoomNext'
+            id: 'zoomNext',
+            hidden: !projectData.zoom_back_forward
         });
         myTopToolbar.insert(3, zoomToNextAction);
 
@@ -1044,9 +1061,12 @@ function postLoading() {
             activeNode.cascade(
                 function (n) {
                     if (n.isLeaf() && n.attributes.checked) {
-                        selectedActiveLayers.push(n.text);
-                        if (wmsLoader.layerProperties[n.text].queryable) {
-                            selectedActiveQueryableLayers.push(n.text);
+                        var layerId = wmsLoader.layerTitleNameMapping[n.text];
+                        if (layerId != undefined) {
+                            selectedActiveLayers.push(layerId);
+                            if (wmsLoader.layerProperties[layerId].queryable) {
+                                selectedActiveQueryableLayers.push(layerId);
+                            }
                         }
                     }
                 }
@@ -1149,7 +1169,7 @@ function postLoading() {
     }
 
     //deal with commercial external bg layers
-    if (enableBGMaps) {
+    if (enableBGMaps && baseLayers.length>0) {
         var BgLayerList = new Ext.tree.TreeNode({
             leaf: false,
             expanded: true,
@@ -1190,161 +1210,198 @@ function postLoading() {
         if (printLayoutsDefined == true) {
             //create new window to hold printing toolbar
             printWindow = new Ext.Window({
-                title: printSettingsToolbarTitleString[lang],
-                height: 67,
-                width: 530,
-                layout: "fit",
-                renderTo: "geoExtMapPanel",
-                resizable: false,
-                closable: false,
-                x: 50,
-                y: 10,
-                items: [{
-                    tbar: {
-                        xtype: 'toolbar',
-                        autoHeight: true,
-                        id: 'myPrintToolbar',
-                        items: [{
-                            xtype: 'combo',
-                            id: 'PrintLayoutsCombobox',
-                            width: 100,
-                            mode: 'local',
-                            triggerAction: 'all',
-                            readonly: true,
-                            store: new Ext.data.JsonStore({
-                                // store configs
-                                data: printCapabilities,
-                                storeId: 'printLayoutsStore',
-                                // reader configs
-                                root: 'layouts',
-                                fields: [{
-                                    name: 'name',
-                                    type: 'string'
-                                }, 'map', 'size', 'rotation']
-                            }),
-                            valueField: 'name',
-                            displayField: 'name',
-                            listeners: {
-                                'select': function (combo, record, index) {
-                                    printProvider.setLayout(record);
+                    title: printSettingsToolbarTitleString[lang],
+                    height: projectData.user=='guest' ? 80: 160,
+                    width: 390,
+                    layout: "fit",
+                    renderTo: "geoExtMapPanel",
+                    resizable: false,
+                    closable: false,
+                    x: 8,
+                    y: 8,
+                    items: [{
+                        xtype: 'form',
+                        padding: '3',
+                        items: [
+                            {
+                                id: 'printTitle',
+                                xtype: 'textfield',
+                                maxLength: 70,
+                                //fieldLabel: 'TITLE',
+                                hideLabel: true,
+                                emptyText: TR.emptyPrintTitleText,
+                                hidden: projectData.user=='guest',
+                                anchor:'100%'
+
+
+                            },{
+                                id: 'printDescription',
+                                xtype: 'textarea',
+                                maxLength: 150,
+                                boxMaxHeight: 35,
+                                boxMinHeight: 35,
+                                height: 35,
+                                //fieldLabel: 'DESCRIPTION',
+                                hideLabel: true,
+                                emptyText: TR.emptyPrintDescriptionText,
+                                hidden: projectData.user=='guest',
+                                anchor:'100%'
+                            }],
+
+
+                        bbar: {
+                            xtype: 'toolbar',
+                            autoHeight: true,
+                            id: 'myPrintToolbar',
+                            items: [{
+                                xtype: 'combo',
+                                id: 'PrintLayoutsCombobox',
+                                width: 100,
+                                mode: 'local',
+                                triggerAction: 'all',
+                                readonly: true,
+                                store: new Ext.data.JsonStore({
+                                    // store configs
+                                    data: printCapabilities,
+                                    storeId: 'printLayoutsStore',
+                                    // reader configs
+                                    root: 'layouts',
+                                    fields: [{
+                                        name: 'name',
+                                        type: 'string'
+                                    }, 'map', 'size', 'rotation']
+                                }),
+                                valueField: 'name',
+                                displayField: 'name',
+                                listeners: {
+                                    'select': function (combo, record, index) {
+                                        printProvider.setLayout(record);
+                                    }
                                 }
-                            }
-                        }, {
-                            xtype: 'tbspacer'
-                        }, {
-                            xtype: 'combo',
-                            id: 'PrintScaleCombobox',
-                            width: 95,
-                            mode: 'local',
-                            triggerAction: 'all',
-                            store: new Ext.data.JsonStore({
-                                // store configs
-                                data: printCapabilities,
-                                storeId: 'printScalesStore',
-                                // reader configs
-                                root: 'scales',
-                                fields: [{
-                                    name: 'name',
-                                    type: 'string'
-                                }, {
-                                    name: 'value',
-                                    type: 'int'
-                                }]
-                            }),
-                            valueField: 'value',
-                            displayField: 'name',
-                            listeners: {
-                                'select': function (combo, record, index) {
-                                    printExtent.page.setScale(record);
+                            }, {
+                                xtype: 'tbspacer'
+                            }, {
+                                xtype: 'combo',
+                                id: 'PrintScaleCombobox',
+                                width: 95,
+                                mode: 'local',
+                                triggerAction: 'all',
+                                store: new Ext.data.JsonStore({
+                                    // store configs
+                                    data: printCapabilities,
+                                    storeId: 'printScalesStore',
+                                    // reader configs
+                                    root: 'scales',
+                                    fields: [{
+                                        name: 'name',
+                                        type: 'string'
+                                    }, {
+                                        name: 'value',
+                                        type: 'int'
+                                    }]
+                                }),
+                                valueField: 'value',
+                                displayField: 'name',
+                                listeners: {
+                                    'select': function (combo, record, index) {
+                                        printExtent.page.setScale(record);
+                                    }
                                 }
-                            }
-                        }, {
-                            xtype: 'tbspacer'
-                        }, {
-                            xtype: 'combo',
-                            id: 'PrintDPICombobox',
-                            width: 70,
-                            mode: 'local',
-                            triggerAction: 'all',
-                            store: new Ext.data.JsonStore({
-                                // store configs
-                                data: printCapabilities,
-                                storeId: 'printDPIStore',
-                                // reader configs
-                                root: 'dpis',
-                                fields: [{
-                                    name: 'name',
-                                    type: 'string'
-                                }, {
-                                    name: 'value',
-                                    type: 'int'
-                                }]
-                            }),
-                            valueField: 'value',
-                            displayField: 'name',
-                            listeners: {
-                                'select': function (combo, record, index) {
-                                    printProvider.setDpi(record);
+                            }, {
+                                xtype: 'tbspacer'
+                            }, {
+                                xtype: 'combo',
+                                id: 'PrintDPICombobox',
+                                width: 70,
+                                mode: 'local',
+                                triggerAction: 'all',
+                                store: new Ext.data.JsonStore({
+                                    // store configs
+                                    data: printCapabilities,
+                                    storeId: 'printDPIStore',
+                                    // reader configs
+                                    root: 'dpis',
+                                    fields: [{
+                                        name: 'name',
+                                        type: 'string'
+                                    }, {
+                                        name: 'value',
+                                        type: 'int'
+                                    }]
+                                }),
+                                valueField: 'value',
+                                displayField: 'name',
+                                listeners: {
+                                    'select': function (combo, record, index) {
+                                        printProvider.setDpi(record);
+                                    }
                                 }
-                            }
-                        }, {
-                            xtype: 'tbspacer'
-                        }, {
-                            xtype: 'tbspacer'
-                        }, {
-                            xtype: 'label',
-                            text: printSettingsRotationTextlabelString[lang]
-                        }, {
-                            xtype: 'tbspacer'
-                        }, {
-                            xtype: 'spinnerfield',
-                            id: 'PrintLayoutRotation',
-                            width: 60,
-                            value: 0,
-                            allowNegative: true,
-                            autoStripChars: true,
-                            allowDecimals: false,
-                            minValue: -360,
-                            maxValue: 360,
-                            enableKeyEvents: true,
-                            listeners: {
-                                'spin': function () {
-                                    printExtent.page.setRotation(Ext.getCmp('PrintLayoutRotation').getValue(), true);
-                                },
-                                'keyup': function (textField, event) {
-                                    printExtent.page.setRotation(Ext.getCmp('PrintLayoutRotation').getValue(), true);
-                                    event.stopPropagation();
-                                },
-                                'keydown': function (textField, event) {
-                                    event.stopPropagation();
-                                },
-                                'keypress': function (textField, event) {
-                                    event.stopPropagation();
+                            }, {
+                                xtype: 'tbspacer'
+                            }, {
+                                xtype: 'label',
+                                text: printSettingsRotationTextlabelString[lang]
+                            }, {
+                                xtype: 'tbspacer'
+                            }, {
+                                xtype: 'spinnerfield',
+                                id: 'PrintLayoutRotation',
+                                width: 50,
+                                value: 0,
+                                allowNegative: true,
+                                autoStripChars: true,
+                                allowDecimals: false,
+                                minValue: -360,
+                                maxValue: 360,
+                                enableKeyEvents: true,
+                                listeners: {
+                                    'spin': function () {
+                                        printExtent.page.setRotation(Ext.getCmp('PrintLayoutRotation').getValue(), true);
+                                    },
+                                    'keyup': function (textField, event) {
+                                        printExtent.page.setRotation(Ext.getCmp('PrintLayoutRotation').getValue(), true);
+                                        event.stopPropagation();
+                                    },
+                                    'keydown': function (textField, event) {
+                                        event.stopPropagation();
+                                    },
+                                    'keypress': function (textField, event) {
+                                        event.stopPropagation();
+                                    }
                                 }
-                            }
-                        }, {
-                            xtype: 'tbspacer'
-                        }, {
-                            xtype: 'button',
+                            }, {
+                                xtype: 'tbspacer'
+                            }]
+                        },
+                        buttons: [{
                             tooltip: printButtonTooltipString[lang],
                             text: printButtonTextString[lang],
                             tooltipType: 'qtip',
                             iconCls: '',
-                            scale: 'medium',
+                            scale: 'small',
                             id: 'StartPrinting',
                             listeners: {
                                 'click': function () {
                                     Ext.getCmp('PrintMap').toggle(false);
+
+                                    var usersPrint = wmsLoader.layerTitleNameMapping[Eqwc.settings.QgisUsersPrintName];
+
+                                    //adding title,decription and user for filter to PrintProvider
+                                    printProvider.customParams = {
+                                        description: Ext.getCmp('printDescription').getValue(),
+                                        title: Ext.getCmp('printTitle').getValue(),
+                                        filter: usersPrint+':"user_name" = \''+projectData.user+'\''
+                                    };
+
                                     printProvider.print(geoExtMap, [printExtent.page]);
                                 }
                             }
                         }, {
-                            xtype: 'button',
                             tooltip: printCancelButtonTooltipString[lang],
                             text: printCancelButtonTextString[lang],
                             tooltipType: 'qtip',
                             iconCls: '',
-                            scale: 'medium',
+                            scale: 'small',
                             id: 'CancelPrinting',
                             listeners: {
                                 'click': function () {
@@ -1352,9 +1409,9 @@ function postLoading() {
                                 }
                             }
                         }]
-                    }
-                }]
-            });
+                    }]
+                }
+            );
         }
     }
     else {
@@ -1376,7 +1433,7 @@ function postLoading() {
         //need to manually fire the event, because .setValue doesn't; index omitted, not needed
         printDPICombobox.fireEvent("select", printDPICombobox, printDPICombobox.findRecord(printDPICombobox.valueField, "300"));
         //if the var fixedPrintResolution in GlobalOptions.js is set, the printLayoutsCombobox will be hidden
-        if (fixedPrintResolution != null && parseInt(fixedPrintResolution) > 0){
+        if (fixedPrintResolution != null && parseInt(fixedPrintResolution) > 0) {
             printDPICombobox.hide(); // hide dpi combobox
             printWindow.setWidth(printWindow.width - 80); // reduce the legth of the print window
         }

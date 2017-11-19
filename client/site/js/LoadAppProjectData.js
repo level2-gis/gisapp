@@ -110,8 +110,6 @@ projectData.setBaseLayers = function (isBase) {
         }
     }
 
-    if (baseLayers.length > 0) enableBGMaps = true;
-
     return baseLayers;
 };
 
@@ -295,7 +293,6 @@ var LayerOptions = {
   singleTile:true,
   ratio:1,
   transitionEffect:"resize",
-  isBaseLayer: false,
   projection:authid,
   displayOutsideMaxExtent: true,
   tileOptions: {

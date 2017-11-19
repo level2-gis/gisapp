@@ -160,8 +160,7 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                                 (parent.opaque || false),
 
                                         // QGIS extensions
-                            visible: (visible && visible !== "") ?
-                                ( visible === "1" || visible === "true" ) : true,
+                            visible: (visible && visible !== "") ? ( visible === "1" || visible === "true" ) : true,
                             displayField: displayField,
                             showCheckbox: (showCheckbox && showCheckbox !== "") ?
                                 ( showCheckbox === "1" || showCheckbox === "true" ) : true,
@@ -263,6 +262,7 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
         }
 
         //fill the list of layer properties
+        //TODO UROS this part should done in Layer functions, duplication totally
         for (var i=0; i<this.projectSettings.capability.layers.length; i++) {
             var layer = this.projectSettings.capability.layers[i];
             this.layerProperties[layer.name] = {
@@ -444,6 +444,13 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
 
             var layers = thematicLayer.params.LAYERS;
 
+            //add currently visible base layer for printing if exists in projects
+            var printBaseLayer = wmsLoader.layerTitleNameMapping[currentlyVisibleBaseLayer];
+
+            if (printBaseLayer != undefined) {
+                layers = printBaseLayer + ',' + layers;
+            }
+
             if (enableWmtsBaseLayers) {
               // collect print layers for visible WMTS layers
               var printLayers = [];
@@ -485,6 +492,7 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             //}
 
             // makes spatial query from map to use the attributes in the print template (more in README chap 4.5)
+            // TODO Explore whats the purpose of this
             var lonlat = printExtent.page.getPrintExtent(map).getCenterLonLat();
             var mapCenter = new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat);
             var myfilter = new OpenLayers.Filter.Comparison({
