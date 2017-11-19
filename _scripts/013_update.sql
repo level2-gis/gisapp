@@ -17,7 +17,7 @@ CREATE TABLE users_print
 	description text,
 	print_time timestamp with time zone default now(),
 	CONSTRAINT print_user_name_fkey FOREIGN KEY (user_name) REFERENCES public.users (user_name) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
-)
+);
 
 
 DROP FUNCTION public.get_project_data(text);
