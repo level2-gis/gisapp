@@ -97,7 +97,7 @@ COMMENT ON FUNCTION check_user_project(uname text, project text) IS 'IN uname, p
 --
 
 CREATE OR REPLACE FUNCTION public.get_project_data(project text)
-  RETURNS TABLE(client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[], is_public boolean, project_display_name text, crs text, description text, contact text, restrict_to_start_extent boolean, geolocation boolean, feedback boolean, measurements boolean, feedback_email text, project_path text)
+  RETURNS TABLE(client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[], is_public boolean, project_display_name text, crs text, description text, contact text, restrict_to_start_extent boolean, geolocation boolean, feedback boolean, measurements boolean, print boolean, zoom_back_forward boolean, identify_mode boolean, permalink boolean, feedback_email text, project_path text)
 LANGUAGE 'plpgsql'
 
 COST 1
@@ -141,6 +141,10 @@ RETURN QUERY SELECT
                projects.geolocation,
                projects.feedback,
                projects.measurements,
+               projects.print,
+               projects.zoom_back_forward,
+               projects.identify_mode,
+               projects.permalink,
                projects.feedback_email,
 			         projects.project_path
 
@@ -249,6 +253,10 @@ CREATE TABLE projects (
     geolocation boolean NOT NULL default TRUE,
     feedback boolean NOT NULL default TRUE,
     measurements boolean NOT NULL default TRUE,
+    print boolean NOT NULL DEFAULT true,
+    zoom_back_forward boolean NOT NULL DEFAULT true,
+    identify_mode boolean NOT NULL DEFAULT false,
+    permalink boolean NOT NULL DEFAULT true,
     feedback_email text,
     project_path text
 );
@@ -335,7 +343,8 @@ CREATE TABLE users (
     registered timestamp with time zone,
     count_login integer DEFAULT 0,
     project_ids integer[],
-    admin boolean DEFAULT false
+    admin boolean DEFAULT false,
+    lang text
 );
 
 
@@ -425,9 +434,9 @@ SELECT pg_catalog.setval('clients_id_seq', 1, false);
 -- Data for Name: layers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO layers VALUES (1, 'google_map', 'Google Map', 'Google', '{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true, useTiltImages: false}');
+INSERT INTO layers VALUES (1, 'google_map', 'Google Streets', 'Google', '{type: google.maps.MapTypeId.MAP, numZoomLevels: 20, isBaseLayer: true, useTiltImages: false}');
 INSERT INTO layers VALUES (2, 'google_sat', 'Google Satellite', 'Google', '{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, isBaseLayer: true}');
-INSERT INTO layers VALUES (4, 'osm_mapnik', 'OpenStreetMap (mapnik)', 'OSM', '');
+INSERT INTO layers VALUES (4, 'osm_mapnik', 'OpenStreetMap', 'OSM', '');
 
 
 --
@@ -447,7 +456,7 @@ SELECT pg_catalog.setval('layers_id_seq', 5, true);
 INSERT INTO projects(
 id, name, overview_layer_id, base_layers_ids, extra_layers_ids,
 client_id, tables_onstart, public)
-VALUES (1, 'helloworld', 4, '{2,4}', NULL, 1, NULL, true);
+VALUES (1, 'helloworld', 4, '{4}', NULL, 1, NULL, true);
 
 
 --
@@ -465,7 +474,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (13, '2017-10-17');
+INSERT INTO settings VALUES (14, '2017-11-15');
 
 
 --
@@ -672,3 +681,38 @@ CREATE OR REPLACE VIEW public.projects_view AS
   WHERE projects.client_id = clients.id;
 
 
+CREATE OR REPLACE VIEW public.users_print_view AS
+  SELECT users_print.user_name,
+    users.user_email,
+    users.display_name,
+    users_print.title,
+    users_print.description,
+    users_print.print_time,
+    users.user_id
+  FROM users,
+    users_print
+  WHERE users_print.user_name = users.user_name;
+
+
+CREATE TABLE public.users_print
+(
+  id integer NOT NULL DEFAULT nextval('users_print_id_seq'::regclass),
+  user_name text,
+  title text,
+  description text,
+  print_time timestamp with time zone DEFAULT now(),
+  CONSTRAINT users_print_pkey PRIMARY KEY (id),
+  CONSTRAINT print_user_name_fkey FOREIGN KEY (user_name)
+  REFERENCES public.users (user_name) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+OIDS=FALSE
+);
+
+CREATE SEQUENCE public.users_print_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
