@@ -14,7 +14,36 @@ use GisApp\Helpers;
 
 require '../vendor/autoload.php';
 require_once("class.Helpers.php");
+require_once("class.DbLoader.php");
 require_once("settings.php");
+
+
+function handleGetPrint($data, $project, $user) {
+
+    if ($data["description"] == null) {
+        $data["description"] = "";
+    }
+
+    if ($data["title"] == null) {
+        $data["title"] = "";
+    }
+
+    try {
+        //connection to database
+        $conn = new PDO(DB_CONN_STRING, DB_USER, DB_PWD);
+        $db = new \GisApp\DbLoader($user,$project,$conn);
+
+        $db->writeUserPrintData($data["title"],$data["description"]);
+
+        return true;
+
+    } catch (PDOException $e) {
+        error_log("EQWC PRINT: PDO database connection problem: " . $e->getMessage());
+    } catch (Exception $e) {
+        error_log("EQWCPRINT: General problem: " . $e->getMessage());
+    }
+}
+
 
 /**
  * @param $query_arr
@@ -106,8 +135,9 @@ function doPostRequest($query_arr, $client)
  * @param $map
  * @param $client
  * @param $http_ver
+ * @param $user
  */
-function doGetRequest($query_arr, $map, $client, $http_ver)
+function doGetRequest($query_arr, $map, $client, $http_ver, $user)
 {
     $new_request = new Request('GET', QGISSERVERURL);
 
@@ -138,6 +168,9 @@ function doGetRequest($query_arr, $map, $client, $http_ver)
                     $content = file_get_contents(PROJECT_PATH.'_data_definitions/'.$layer.'.xml');
                 }
                 $contentType = "text/xml";
+                break;
+            case "GetPrint":
+                handleGetPrint($query_arr, $map, $user);
                 break;
 //            case "GetFeatureInfo":
 //                //skip for now
@@ -261,22 +294,23 @@ try {
     //get project path from session
     $projectPath = $_SESSION["project_path"];
 
+    $user = null;
+    if (isset($_SESSION["user_name"])) {
+        $user = $_SESSION["user_name"];
+    }
+
     $query_arr["map"] = $projectPath . '.qgs';
 
     $client = new Client();
 
     if ($request_method == 'GET') {
 
-        doGetRequest($query_arr, $map, $client, $http_ver);
+        doGetRequest($query_arr, $map, $client, $http_ver, $user);
 
     }
     elseif ($request_method == 'POST') {
 
         //check if user is guest
-        $user = null;
-        if (isset($_SESSION["user_name"])) {
-            $user = $_SESSION["user_name"];
-        }
         if ($user != null && $user == 'guest') {
             throw new Exception\ClientException("No permission for guest users!", new Request('GET', QGISSERVERURL));
         }

@@ -84,4 +84,23 @@ class DbLoader
         return true;
     }
 
+    public function writeUserPrintData($title,$description) {
+        $sql = 'DELETE FROM users_print WHERE user_name = :user';
+        $query = $this->db_connection->prepare($sql);
+        $query->bindValue(':user', $this->user);
+        $succes = $query->execute();
+        if (!$succes){
+            return false;
+        }
+
+        $sql = 'INSERT INTO users_print(user_name, title, description) VALUES (:user, :title, :description)';
+        $query = $this->db_connection->prepare($sql);
+        $query->bindValue(':user', $this->user);
+        $query->bindValue(':title', $title);
+        $query->bindValue(':description', $description);
+        $succes = $query->execute();
+
+        return $succes;
+    }
+
 }
