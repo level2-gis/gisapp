@@ -235,32 +235,6 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
         }).read(this.WMSCapabilities);
         this.processLayer(this.projectSettings.capability, this.projectSettings.capability.request.getmap.href, node);
 
-        // WMTS base layers
-        var wmtsLayers = [];
-        if (enableWmtsBaseLayers) {
-          // use root layer name from project settings as topic name on first load
-          var topicName = this.topicName || this.projectSettings.capability.nestedLayers[0].name;
-
-          // collect print layers for WMTS layers
-          var wmtsLayersConfig = getWmtsLayersConfig(topicName);
-          if (wmtsLayersConfig != null) {
-            for (var i=0; i<wmtsLayersConfig.length; i++) {
-              var config = wmtsLayersConfig[i];
-              wmtsLayers.push(config.wmsLayerName);
-            }
-          }
-
-          // prepend WMTS base layers in drawing order
-          var layerDrawingOrder = wmtsLayers.concat();
-          for (var i=0; i<this.projectSettings.capability.layerDrawingOrder.length; i++) {
-            var layer = this.projectSettings.capability.layerDrawingOrder[i];
-            if (wmtsLayers.indexOf(layer) == -1) {
-              layerDrawingOrder.push(layer);
-            }
-          }
-          this.projectSettings.capability.layerDrawingOrder = layerDrawingOrder;
-        }
-
         //fill the list of layer properties
         //TODO UROS this part should done in Layer functions, duplication totally
         for (var i=0; i<this.projectSettings.capability.layers.length; i++) {
@@ -279,7 +253,6 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                 bbox: layer.llbbox,
                 minScale: (layer.minScale != null) ? parseFloat(layer.minScale) : null,
                 maxScale: (layer.maxScale != null) ? parseFloat(layer.maxScale) : null,
-                wmtsLayer: (wmtsLayers.indexOf(layer.name) != -1), // mark WMTS base layers
                 showLegend: layer.showLegend,
                 showMetadata: layer.showMetadata
             };
@@ -449,22 +422,6 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
 
             if (printBaseLayer != undefined) {
                 layers = printBaseLayer + ',' + layers;
-            }
-
-            if (enableWmtsBaseLayers) {
-              // collect print layers for visible WMTS layers
-              var printLayers = [];
-              var wmtsLayers = getWmtsLayers();
-              for (var i=0; i<wmtsLayers.length; i++) {
-                var wmtsLayer = wmtsLayers[i];
-                if (wmtsLayer.show) {
-                    printLayers.push(wmtsLayer.wmsLayerName);
-                }
-              }
-              if (printLayers.length > 0) {
-                // prepend WMTS print layers
-                layers = printLayers.join(',') + "," + layers;
-              }
             }
 
             var printUrl = this.url + '&' + Ext.urlEncode({

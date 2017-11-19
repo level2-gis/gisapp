@@ -193,10 +193,6 @@ var permaLinkURLShortener = null; // "/wsgi/createShortPermalink.wsgi";
 var enableBGMaps = true;
 var enableExtraLayers = true;
 
-// enable to use WMTS base layers
-var enableWmtsBaseLayers = false;
-// NOTE: also set MapOptions according to WMTS
-
 var mediaurl = '';
 var suppressEmptyValues = false;
 var suppressInfoGeometry = true;

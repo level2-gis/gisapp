@@ -247,10 +247,7 @@ function postLoading() {
 
         if (bboxArray != undefined) {
             maxExtent = OpenLayers.Bounds.fromArray(bboxArray, reverseAxisOrder);
-            // never change the map extents when using WMTS base layers
-            if (!enableWmtsBaseLayers) {
-                MapOptions.maxExtent = maxExtent;
-            }
+            MapOptions.maxExtent = maxExtent;
         }
     }
 
@@ -258,18 +255,13 @@ function postLoading() {
     selectedLayers = [];
     selectedQueryableLayers = [];
     allLayers = [];
-    var wmtsLayers = [];
 
     layerTree.root.firstChild.cascade(
         function (n) {
             if (n.isLeaf()) {
                 if (n.attributes.checked) {
-                    if (!wmsLoader.layerProperties[wmsLoader.layerTitleNameMapping[n.text]].wmtsLayer) {
-                        selectedLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
-                    }
-                    else {
-                        wmtsLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
-                    }
+                    selectedLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
+
                     if (wmsLoader.layerProperties[wmsLoader.layerTitleNameMapping[n.text]].queryable) {
                         selectedQueryableLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
                     }
@@ -370,22 +362,7 @@ function postLoading() {
     function layersInDrawingOrder(layers) {
         var layerDrawingOrder = wmsLoader.projectSettings.capability.layerDrawingOrder;
         if (layerOrderPanel != null) {
-            // override project settings (after first load)
-            if (enableWmtsBaseLayers) {
-                // prepend ordered WMTS layers
-                var orderedLayers = layerOrderPanel.orderedLayers();
-                var wmtsLayers = [];
-                for (var i = 0; i < layerDrawingOrder.length; i++) {
-                    var layer = layerDrawingOrder[i];
-                    if (orderedLayers.indexOf(layer) == -1) {
-                        wmtsLayers.push(layer);
-                    }
-                }
-                layerDrawingOrder = wmtsLayers.concat(orderedLayers);
-            }
-            else {
-                layerDrawingOrder = layerOrderPanel.orderedLayers();
-            }
+            layerDrawingOrder = layerOrderPanel.orderedLayers();
         }
 
         if (layerDrawingOrder != null) {
