@@ -680,19 +680,12 @@ CREATE OR REPLACE VIEW public.projects_view AS
     clients
   WHERE projects.client_id = clients.id;
 
-
-CREATE OR REPLACE VIEW public.users_print_view AS
-  SELECT users_print.user_name,
-    users.user_email,
-    users.display_name,
-    users_print.title,
-    users_print.description,
-    users_print.print_time,
-    users.user_id
-  FROM users,
-    users_print
-  WHERE users_print.user_name = users.user_name;
-
+CREATE SEQUENCE public.users_print_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 
 CREATE TABLE public.users_print
 (
@@ -710,9 +703,14 @@ WITH (
 OIDS=FALSE
 );
 
-CREATE SEQUENCE public.users_print_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+CREATE OR REPLACE VIEW public.users_print_view AS
+  SELECT users_print.user_name,
+    users.user_email,
+    users.display_name,
+    users_print.title,
+    users_print.description,
+    users_print.print_time,
+    users.user_id
+  FROM users,
+    users_print
+  WHERE users_print.user_name = users.user_name;
