@@ -193,15 +193,20 @@ class Helpers
 
     public function getQgsFullProjectPath($project, $client, $project_path) {
 
-        //first check in PROJECT_PATH
-        if ((file_exists(PROJECT_PATH . $project_path) && is_file(PROJECT_PATH . $project_path))) {
-            return self::msg(true, PROJECT_PATH . $project_path);
+        //first check for database project_path wih complete filename if exists
+        //this overrides default PROJECT_PATH from settings.php
+        $error = "PROJECT_PATH . $project . '.qgs";
+        if ($project_path !== null) {
+            $error = $project_path;
+        }
+        if ((file_exists($project_path) && is_file($project_path))) {
+            return self::msg(true, dirname($project_path) . DIRECTORY_SEPARATOR . $project);
         }else if (file_exists(PROJECT_PATH . $project . '.qgs')) {
             return self::msg(true, PROJECT_PATH . $project);
         } else if (file_exists(PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project . '.qgs')) {
             return self::msg(true, PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project);
         } else {
-            return self::msg(false, PROJECT_PATH . $project . '.qgs NOT FOUND!');
+            return self::msg(false, $error.' NOT FOUND OR NO PERMISSION!');
         }
     }
 
