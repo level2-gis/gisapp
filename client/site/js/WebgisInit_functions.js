@@ -30,14 +30,16 @@ function loadWMSConfig(topicName) {
 
             //hide layer if we have same baselayer name
             var baseArr = projectData.baseLayers();
-            baseArr.find(function(currentValue, index, arr) {
-                var attr = this;
-                if (currentValue.title == attr.text) {
-                    attr.hidden = true;
-                    attr.layer.metadata.visible = false;
-                }
+            if (baseArr !== null) {
+                baseArr.find(function (currentValue, index, arr) {
+                    var attr = this;
+                    if (currentValue.title == attr.text) {
+                        attr.hidden = true;
+                        attr.layer.metadata.visible = false;
+                    }
 
-            },attr);
+                }, attr);
+            }
 
             if (!attr.layer.metadata.showCheckbox) {
                 // hide checkbox
