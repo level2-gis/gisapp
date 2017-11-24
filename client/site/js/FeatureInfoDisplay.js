@@ -39,28 +39,27 @@ function showFeatureInfo(evt) {
         }
 
         //start locationservices
-        var text = "";
-        var locationText = "";
+        var text = "</br>";
+        var locationText = "<h2>" + TR.fiLocation + "</h2>";
         var locationUnits = map.getLonLatFromPixel(evt.xy);
         var locationObj = new QGIS.LocationService({location: locationUnits});
         var popupItems = [];
 
+        popupItems.push(
+            {
+                xtype: 'box',
+                html: locationText
+            }, {
+                id: "fi_location",
+                //margins: '5 5 5 5',
+                xtype: 'box',
+                html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
+            });
+
+
         if (projectData.locationServices != null) {
 
-            text = "</br>";
-            locationText = "<h2>" + TR.fiLocation + "</h2>";
-            //locationText += '<table><tbody>';
 
-            popupItems.push(
-                {
-                    xtype: 'box',
-                    html: locationText
-                }, {
-                    id: "fi_location",
-                    //margins: '5 5 5 5',
-                    xtype: 'box',
-                    html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
-                });
 
             for (var l = 0; l < projectData.locationServices.length; l++) {
                 locationObj.getService({
