@@ -192,7 +192,12 @@ if($def_lang>'') {
     }
 }
 else {
-    $def_lang = defined('DEFAULT_LANG') ? DEFAULT_LANG : 'en';
+    if (isset($_SESSION['lang'])){
+        $def_lang = $_SESSION['lang'];
+    }
+    else {
+        $def_lang = defined('DEFAULT_LANG') ? DEFAULT_LANG : 'en';
+    }
 }
 
 $_SESSION['lang'] = $def_lang;
