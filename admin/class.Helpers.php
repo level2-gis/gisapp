@@ -195,7 +195,7 @@ class Helpers
 
         //first check for database project_path wih complete filename if exists
         //this overrides default PROJECT_PATH from settings.php
-        $error = "PROJECT_PATH . $project . '.qgs";
+        $error = PROJECT_PATH . $project . '.qgs';
         if ($project_path !== null) {
             $error = $project_path;
         }
@@ -235,8 +235,8 @@ class Helpers
             $prop->message = $qgs["message"];
             //return false;
         } else {
-            $prop->crs = (string)$qgs["message"]->properties->SpatialRefSys->ProjectCrs;
-            $prop->proj4 = (string)$qgs["message"]->properties->SpatialRefSys->ProjectCRSProj4String;
+            $prop->crs = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->authid;
+            $prop->proj4 = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->proj4;
             $prop->title = (string)$qgs["message"]->title == "" ? basename($map, ".qgs") : (string)$qgs["message"]->title;
             $prop->extent = (array)($qgs["message"]->properties->WMSExtent->value);
             $prop->layers = [];
