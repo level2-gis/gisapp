@@ -62,7 +62,8 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
 
         case 'postgres':
             //other option to get it from layer_info
-            $conn = str_replace(array('\'', '"'), '', $layer["message"]->datasource);
+            //$conn = str_replace(array('\'', '"'), '', $layer["message"]->datasource);
+            $conn = $layer["message"]->datasource;
             //removing text sslmode and all after that
             $conn = "PG:" . rtrim(substr($conn, 0, strpos($conn, 'sslmode')));
 
