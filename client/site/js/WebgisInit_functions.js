@@ -31,13 +31,13 @@ function loadWMSConfig(topicName) {
             //hide layer if we have same baselayer name
             var baseArr = projectData.baseLayers();
             if (baseArr !== null) {
-                baseArr.find(function (currentValue, index, arr) {
+                Ext.each(baseArr, function (currentValue, index, array) {
                     var attr = this;
                     if (currentValue.title == attr.text) {
                         attr.hidden = true;
                         attr.layer.metadata.visible = false;
+                        return false;   //exit from looping array
                     }
-
                 }, attr);
             }
 
@@ -1368,9 +1368,12 @@ function postLoading() {
                                     //adding title,decription and user for filter to PrintProvider
                                     printProvider.customParams = {
                                         description: Ext.getCmp('printDescription').getValue(),
-                                        title: Ext.getCmp('printTitle').getValue(),
-                                        filter: usersPrint+':"user_name" = \''+projectData.user+'\''
+                                        title: Ext.getCmp('printTitle').getValue()
                                     };
+
+                                    if (usersPrint !== undefined) {
+                                        printProvider.customParams.filter = usersPrint+':"user_name" = \''+projectData.user+'\'';
+                                    }
 
                                     printProvider.print(geoExtMap, [printExtent.page]);
                                 }
