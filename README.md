@@ -15,6 +15,7 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * QGIS server proxy (caching and validating requests)
 * [GIS portal](https://github.com/uprel/gisportal) for browsing projects
 * loading Web or Mobile client based on screen size
+* PDF printing improved with user title, description and inclusion of base layers 
 * using external API services for geocoding and elevation data
 * plugins support, currently available: Google StreetView and [Editor](http://level2.si/product/editor-for-extended-qgis-web-client/)
 * layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
