@@ -300,10 +300,20 @@ class Login
 
     private function loadProjectData($user, $project)
     {
+
+
         //if user login OK then load everything for desired project
 
         $gisApp = new DbLoader($user, $project, $this->db_connection);
         $helpers = new Helpers();
+
+        $settings = $helpers->checkSettings();
+        if (!($settings['status'])) {
+            $this->feedback = $settings['message'];
+            return false;
+        }
+
+
 
         //aditional check if project and user exists and user has permission to use project
         $check = $gisApp->checkUserProject();

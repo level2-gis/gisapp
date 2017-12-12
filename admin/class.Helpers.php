@@ -22,6 +22,18 @@ class Helpers
 
     public $qgs_layers = [];
 
+    public static function checkSettings() {
+        if (!file_exists('settings.php')){
+            return self::msg(false, "Create and adjust settings.php from template in /admin folder!");
+        }
+
+        if (!file_exists('../client_common/settings.js')){
+            return self::msg(false, "Create and adjust settings.js from template in /client_common folder!");
+        }
+
+        return self::msg(true,null);
+    }
+
     public static function isValidUserProj($project)
     {
         $valid = isset($_SESSION['user_is_logged_in']);
