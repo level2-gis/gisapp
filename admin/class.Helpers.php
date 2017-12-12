@@ -23,11 +23,11 @@ class Helpers
     public $qgs_layers = [];
 
     public static function checkSettings() {
-        if (!file_exists('settings.php')){
+        if (!file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'settings.php')){
             return self::msg(false, "Create and adjust settings.php from template in /admin folder!");
         }
 
-        if (!file_exists('../client_common/settings.js')){
+        if (!file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . '../client_common/settings.js')){
             return self::msg(false, "Create and adjust settings.js from template in /client_common folder!");
         }
 
