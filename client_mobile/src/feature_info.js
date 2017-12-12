@@ -104,7 +104,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
         $(this).find('Attribute').each(function() {
           attributes.push({
             name: $(this).attr('name'),
-            value: $(this).attr('value')
+            value: $(this).attr('value').replace("NULL", Eqwc.settings.noDataValue)
           });
         });
         features.push({

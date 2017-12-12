@@ -21,7 +21,7 @@
 }
 
 .ui-icon-layers {
-  background-image: url("../img/layers.svg");
+  background-image: url("../img/layers.png");
 }
 
 .ui-icon-properties {
@@ -52,10 +52,10 @@
 }
 
 #btnLayers {
-  left: -16px;
-  bottom: 5px;
-  -webkit-border-radius: 0 1em 1em 0;
-  border-radius: 0 1em 1em 0;
+  left: 5px;
+  bottom: 0px;
+  /*-webkit-border-radius: 0 1em 1em 0;*/
+  /*border-radius: 0 1em 1em 0;*/
 }
 
 #btnProperties {
