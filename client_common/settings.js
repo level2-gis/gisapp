@@ -35,6 +35,12 @@ Eqwc.settings.defaultIdentificationMode = "allLayers";
 //This table is removed from EQWC legend tree
 Eqwc.settings.QgisUsersPrintName = "users_print_view";
 
+//If true first baselayer is visible on startup
+Eqwc.settings.visibleFirstBaseLayer = true;
+
+//what do you want to display instead of NULL values
+//Relevant for 2.14, since 2.18 already returns blank string
+Eqwc.settings.noDataValue = '';
 
 //use separate gisportal code to browse projects, register users and login
 //code available here - https://github.com/uprel/gisportal

@@ -92,7 +92,7 @@ function postLoading() {
     };
 
     //setting up project specific data
-    var initialBGMap = 0;
+    var initialBGMap = Eqwc.settings.visibleFirstBaseLayer ? 0 : -1;
     var baseLayers = projectData.setBaseLayers(true);
     var extraLayers = projectData.setBaseLayers(false);
     var overviewLayer = makeLayer(projectData.overViewLayer(), true);
@@ -245,6 +245,9 @@ function postLoading() {
 
         var boundingBox = wmsLoader.projectSettings.capability.nestedLayers[0].bbox;
         //get bbox for map crs
+        if (boundingBox[authid] == undefined) {
+            exceptionLoading({status: 200, responseText: 'Map CRS ' + authid + ' not published in QGIS Project properties OWS Server!'});
+        }
         var bboxArray = boundingBox[authid].bbox;
 
         if (bboxArray != undefined) {
@@ -1159,7 +1162,7 @@ function postLoading() {
         BgLayerList.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
 
         if (visibleBackgroundLayer != null) {
-            initialBGMap = -1;
+            //initialBGMap = -1;
             // do not show any baseLayer if passed visibleBackgroundLayer is not found
             for (var i = 0; i < baseLayers.length; i++) {
                 if (baseLayers[i].name == visibleBackgroundLayer) {

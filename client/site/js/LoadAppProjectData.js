@@ -198,7 +198,6 @@ var suppressEmptyValues = false;
 var suppressInfoGeometry = true;
 var showFieldNamesInClickPopup = true;
 var showFeatureInfoLayerTitle = true;
-var noDataValue = '';    //what do you want to display instead of NULL values
 
 //config for QGIS.SearchPanel
 //Number of results: FEATURE_COUNT in WMS request
