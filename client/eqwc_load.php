@@ -59,7 +59,10 @@ foreach ($scan as $item) {
         }
         $js_arr = array_slice(scandir($plugin_path . '/js/'), 2);
         foreach ($js_arr  as $script) {
-            array_push($plugins, "plugins/" . basename($plugin_path) . "/js/" . $script);
+            //only js files
+            if (substr($script,-2) == 'js') {
+                array_push($plugins, "plugins/" . basename($plugin_path) . "/js/" . $script);
+            }
         }
     }
 }

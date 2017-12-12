@@ -140,13 +140,16 @@ function customActionLayerTreeCheck(n) {
         //check if we have to enable/disable layer vector data
         if (typeof activatedEditors == 'object') {
             var layerEditor = activatedEditors[layerId];
-            if (layerEditor != undefined) {
-                layerEditor.editLayer.setVisibility(n.attributes.checked);
-                //layerEditor.attributesForm.drawControl.setVisibleLabelLayers(n.attributes.checked && projectData.visibleEditLabels);
-            }
         }
 
         if (n.attributes.checked) {
+            if (layerEditor != undefined) {
+                if (editor.editMode) {
+                    layerEditor.editLayer.setVisibility(n.attributes.checked);
+                }
+                //layerEditor.attributesForm.drawControl.setVisibleLabelLayers(n.attributes.checked && projectData.visibleEditLabels);
+            }
+
             var toAdd = Ext.get ( "legend_"+n.text.replace(" ", "-") );
             if (toAdd) {
             } else {
@@ -158,6 +161,10 @@ function customActionLayerTreeCheck(n) {
                 );
             }
         } else {
+            if (layerEditor != undefined) {
+                    layerEditor.editLayer.setVisibility(n.attributes.checked);
+            }
+
             var toRemove = Ext.get ( "legend_"+n.text.replace(" ", "-") );
             if (toRemove) {
                 toRemove.remove();
