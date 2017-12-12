@@ -1090,7 +1090,7 @@ function postLoading() {
 
         // switch backgroundLayers
         //TODO UROS This is not OK, we need radio buttons
-        if (enableBGMaps) {
+        if (enableBGMaps && baseLayers.length>0) {
             var checkedBackgroundNodes = [];
             var newVisibleBaseLayer = null;
             layerTree.root.lastChild.cascade(
