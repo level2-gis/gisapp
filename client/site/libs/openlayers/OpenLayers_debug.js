@@ -3128,7 +3128,7 @@ OpenLayers.Util.applyDefaults = function (to, from) {
  *          http parameter notation. 
  *          (ex. <i>"key1=value1&key2=value2&key3=value3"</i>)
  *          If a parameter is actually a list, that parameter will then
- *          be set to a comma-seperated list of values (foo,bar) instead
+ *          be set to a comma-separated list of values (foo,bar) instead
  *          of being URL escaped (foo%3Abar). 
  */
 OpenLayers.Util.getParameterString = function(params) {
@@ -5493,7 +5493,7 @@ OpenLayers.Events = OpenLayers.Class({
     handleBrowserEvent: function (evt) {
         var type = evt.type, listeners = this.listeners[type];
         if(!listeners || listeners.length == 0) {
-            // noone's listening, bail out
+            // no one's listening, bail out
             return;
         }
         // add clientX & clientY to all events - corresponds to average x, y
@@ -7426,7 +7426,7 @@ OpenLayers.Map = OpenLayers.Class({
             this.zoomTween = null;
         }
 
-        // map has been destroyed. dont do it again!
+        // map has been destroyed. don't do it again!
         OpenLayers.Event.stopObserving(window, 'unload', this.unloadDestroy);
         this.unloadDestroy = null;
 
@@ -21536,7 +21536,7 @@ OpenLayers.Layer.WMS = OpenLayers.Class(OpenLayers.Layer.Grid, {
  * 
  * A note to the user that all subclasses should use getResolution() instead
  *  of directly accessing this.resolution in order to correctly use the 
- *  cacheing system.
+ *  caching system.
  *
  */
 OpenLayers.Renderer = OpenLayers.Class({
@@ -34487,7 +34487,6 @@ OpenLayers.Events.buttonclick = OpenLayers.Class({
      */
     completeRegEx: /^mouseup|touchend$/,
 
-    
 	//Reverting commit 1218 due to this problem https://github.com/openlayers/ol2/issues/1495
 	///**
     // * Property: isDeviceTouchCapable
@@ -34592,9 +34591,8 @@ OpenLayers.Events.buttonclick = OpenLayers.Class({
         //    !~evt.type.indexOf("mouse"))) {
         //    // was a button pressed?
         
-		if (element && (OpenLayers.Event.isLeftClick(evt) || !~evt.type.indexOf("mouse"))) { 
-		
-		    var button = this.getPressedButton(element);
+		if (element && (OpenLayers.Event.isLeftClick(evt) || !~evt.type.indexOf("mouse"))) {
+            var button = this.getPressedButton(element);
             if (button) {
                 if (evt.type === "keydown") {
                     switch (evt.keyCode) {
@@ -37154,7 +37152,7 @@ OpenLayers.Handler.MouseWheel = OpenLayers.Class(OpenLayers.Handler, {
         //
         //       otherwise
         //
-        //       Kill the event (dont scroll the page if we wheel over the 
+        //       Kill the event (don't scroll the page if we wheel over the
         //        layerswitcher or the pan/zoom control)
         //
         if (!overScrollableDiv && overMapDiv) {
@@ -46937,227 +46935,240 @@ OpenLayers.Format.WFST.DEFAULTS = {
 /**
  * Class: OpenLayers.Format.WFSDescribeFeatureType
  * Read WFS DescribeFeatureType response
- * 
+ *
  * Inherits from:
  *  - <OpenLayers.Format.XML>
+ *
+ * This is modified version of OpenLayers.Format.WFSDescribeFeatureType
+ * to support string restrictions with optional label attribute aside value
+ * by Level2, team
  */
 OpenLayers.Format.WFSDescribeFeatureType = OpenLayers.Class(
     OpenLayers.Format.XML, {
 
-    /**
-     * Property: regExes
-     * Compiled regular expressions for manipulating strings.
-     */
-    regExes: {
-        trimSpace: (/^\s*|\s*$/g)
-    },
-    
-    /**
-     * Property: namespaces
-     * {Object} Mapping of namespace aliases to namespace URIs.
-     */
-    namespaces: {
-        xsd: "http://www.w3.org/2001/XMLSchema"
-    },
-    
-    /**
-     * Constructor: OpenLayers.Format.WFSDescribeFeatureType
-     * Create a new parser for WFS DescribeFeatureType responses.
-     *
-     * Parameters:
-     * options - {Object} An optional object whose properties will be set on
-     *     this instance.
-     */
-    
-    /**
-     * Property: readers
-     * Contains public functions, grouped by namespace prefix, that will
-     *     be applied when a namespaced node is found matching the function
-     *     name.  The function will be applied in the scope of this parser
-     *     with two arguments: the node being read and a context object passed
-     *     from the parent.
-     */
-    readers: {
-        "xsd": {
-            "schema": function(node, obj) {
-                var complexTypes = [];
-                var customTypes = {};
-                var schema = {
-                    complexTypes: complexTypes,
-                    customTypes: customTypes
-                };
-                var i, len;
-                
-                this.readChildNodes(node, schema);
+        /**
+         * Property: regExes
+         * Compiled regular expressions for manipulating strings.
+         */
+        regExes: {
+            trimSpace: (/^\s*|\s*$/g)
+        },
 
-                var attributes = node.attributes;
-                var attr, name;
-                for(i=0, len=attributes.length; i<len; ++i) {
-                    attr = attributes[i];
-                    name = attr.name;
-                    if(name.indexOf("xmlns") === 0) {
-                        this.setNamespace(name.split(":")[1] || "", attr.value);
-                    } else {
-                        obj[name] = attr.value;
-                    }
-                }
-                obj.featureTypes = complexTypes;                
-                obj.targetPrefix = this.namespaceAlias[obj.targetNamespace];
-                
-                // map complexTypes to names of customTypes
-                var complexType, customType;
-                for(i=0, len=complexTypes.length; i<len; ++i) {
-                    complexType = complexTypes[i];
-                    customType = customTypes[complexType.typeName];
-                    if(customTypes[complexType.typeName]) {
-                        complexType.typeName = customType.name;
-                    }
-                }
-            },
-            "complexType": function(node, obj) {
-                var complexType = {
-                    // this is a temporary typeName, it will be overwritten by
-                    // the schema reader with the metadata found in the
-                    // customTypes hash
-                    "typeName": node.getAttribute("name")
-                };
-                this.readChildNodes(node, complexType);
-                obj.complexTypes.push(complexType);
-            },
-            "complexContent": function(node, obj) {
-                this.readChildNodes(node, obj);
-            },
-            "extension": function(node, obj) {
-                this.readChildNodes(node, obj);
-            },
-            "sequence": function(node, obj) {
-                var sequence = {
-                    elements: []
-                };
-                this.readChildNodes(node, sequence);
-                obj.properties = sequence.elements;
-            },
-            "element": function(node, obj) {
-                var type;
-                if(obj.elements) {
-                    var element = {};
-                    var attributes = node.attributes;
-                    var attr;
-                    for(var i=0, len=attributes.length; i<len; ++i) {
-                        attr = attributes[i];
-                        element[attr.name] = attr.value;
-                    }
-                    
-                    type = element.type;
-                    if(!type) {
-                        type = {};
-                        this.readChildNodes(node, type);
-                        element.restriction = type;
-                        element.type = type.base;
-                    }
-                    var fullType = type.base || type;
-                    element.localType = fullType.split(":").pop();
-                    obj.elements.push(element);
-                    this.readChildNodes(node, element);
-                }
-                
-                if(obj.complexTypes) {
-                    type = node.getAttribute("type");
-                    var localType = type.split(":").pop();
-                    obj.customTypes[localType] = {
-                        "name": node.getAttribute("name"),
-                        "type": type
+        /**
+         * Property: namespaces
+         * {Object} Mapping of namespace aliases to namespace URIs.
+         */
+        namespaces: {
+            xsd: "http://www.w3.org/2001/XMLSchema"
+        },
+
+        /**
+         * Constructor: OpenLayers.Format.WFSDescribeFeatureType
+         * Create a new parser for WFS DescribeFeatureType responses.
+         *
+         * Parameters:
+         * options - {Object} An optional object whose properties will be set on
+         *     this instance.
+         */
+
+        /**
+         * Property: readers
+         * Contains public functions, grouped by namespace prefix, that will
+         *     be applied when a namespaced node is found matching the function
+         *     name.  The function will be applied in the scope of this parser
+         *     with two arguments: the node being read and a context object passed
+         *     from the parent.
+         */
+        readers: {
+            "xsd": {
+                "schema": function(node, obj) {
+                    var complexTypes = [];
+                    var customTypes = {};
+                    var schema = {
+                        complexTypes: complexTypes,
+                        customTypes: customTypes
                     };
-                }
-            },
-            "annotation": function(node, obj) {
-                obj.annotation = {};
-                this.readChildNodes(node, obj.annotation);
-            },
-            "appinfo": function(node, obj) {
-                if (!obj.appinfo) {
-                    obj.appinfo = [];
-                }
-                obj.appinfo.push(this.getChildValue(node));
-            },
-            "documentation": function(node, obj) {
-                if (!obj.documentation) {
-                    obj.documentation = [];
-                }
-                var value = this.getChildValue(node);
-                obj.documentation.push({
-                    lang: node.getAttribute("xml:lang"),
-                    textContent: value.replace(this.regExes.trimSpace, "")
-                });
-            },
-            "simpleType": function(node, obj) {
-                this.readChildNodes(node, obj);
-            },
-            "restriction": function(node, obj) {
-                obj.base = node.getAttribute("base");
-                this.readRestriction(node, obj);
-            }
-        }
-    },
-    
-    /**
-     * Method: readRestriction
-     * Reads restriction defined in the child nodes of a restriction element
-     * 
-     * Parameters:
-     * node - {DOMElement} the node to parse
-     * obj - {Object} the object that receives the read result
-     */
-    readRestriction: function(node, obj) {
-        var children = node.childNodes;
-        var child, nodeName, value;
-        for(var i=0, len=children.length; i<len; ++i) {
-            child = children[i];
-            if(child.nodeType == 1) {
-                nodeName = child.nodeName.split(":").pop();
-                value = child.getAttribute("value");
-                if(!obj[nodeName]) {
-                    obj[nodeName] = value;
-                } else {
-                    if(typeof obj[nodeName] == "string") {
-                        obj[nodeName] = [obj[nodeName]];
-                    }
-                    obj[nodeName].push(value);
-                }
-            }
-        }
-    },
-    
-    /**
-     * Method: read
-     *
-     * Parameters:
-     * data - {DOMElement|String} A WFS DescribeFeatureType document.
-     *
-     * Returns:
-     * {Object} An object representing the WFS DescribeFeatureType response.
-     */
-    read: function(data) {
-        if(typeof data == "string") { 
-            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);
-        }
-        if(data && data.nodeType == 9) {
-            data = data.documentElement;
-        }
-        var schema = {};
-        if (data.nodeName.split(":").pop() === 'ExceptionReport') {
-            // an exception must have occurred, so parse it
-            var parser = new OpenLayers.Format.OGCExceptionReport();
-            schema.error = parser.read(data);
-        } else {
-            this.readNode(data, schema);
-        }
-        return schema;
-    },
-    
-    CLASS_NAME: "OpenLayers.Format.WFSDescribeFeatureType" 
+                    var i, len;
 
-});
+                    this.readChildNodes(node, schema);
+
+                    var attributes = node.attributes;
+                    var attr, name;
+                    for(i=0, len=attributes.length; i<len; ++i) {
+                        attr = attributes[i];
+                        name = attr.name;
+                        if(name.indexOf("xmlns") === 0) {
+                            this.setNamespace(name.split(":")[1] || "", attr.value);
+                        } else {
+                            obj[name] = attr.value;
+                        }
+                    }
+                    obj.featureTypes = complexTypes;
+                    obj.targetPrefix = this.namespaceAlias[obj.targetNamespace];
+
+                    // map complexTypes to names of customTypes
+                    var complexType, customType;
+                    for(i=0, len=complexTypes.length; i<len; ++i) {
+                        complexType = complexTypes[i];
+                        customType = customTypes[complexType.typeName];
+                        if(customTypes[complexType.typeName]) {
+                            complexType.typeName = customType.name;
+                        }
+                    }
+                },
+                "complexType": function(node, obj) {
+                    var complexType = {
+                        // this is a temporary typeName, it will be overwritten by
+                        // the schema reader with the metadata found in the
+                        // customTypes hash
+                        "typeName": node.getAttribute("name")
+                    };
+                    this.readChildNodes(node, complexType);
+                    obj.complexTypes.push(complexType);
+                },
+                "complexContent": function(node, obj) {
+                    this.readChildNodes(node, obj);
+                },
+                "extension": function(node, obj) {
+                    this.readChildNodes(node, obj);
+                },
+                "sequence": function(node, obj) {
+                    var sequence = {
+                        elements: []
+                    };
+                    this.readChildNodes(node, sequence);
+                    obj.properties = sequence.elements;
+                },
+                "element": function(node, obj) {
+                    var type;
+                    if(obj.elements) {
+                        var element = {};
+                        var attributes = node.attributes;
+                        var attr;
+                        for(var i=0, len=attributes.length; i<len; ++i) {
+                            attr = attributes[i];
+                            element[attr.name] = attr.value;
+                        }
+
+                        type = element.type;
+                        if(!type) {
+                            type = {};
+                            this.readChildNodes(node, type);
+                            element.restriction = type;
+                            element.type = type.base;
+                        }
+                        var fullType = type.base || type;
+                        element.localType = fullType.split(":").pop();
+                        obj.elements.push(element);
+                        this.readChildNodes(node, element);
+                    }
+
+                    if(obj.complexTypes) {
+                        type = node.getAttribute("type");
+                        var localType = type.split(":").pop();
+                        obj.customTypes[localType] = {
+                            "name": node.getAttribute("name"),
+                            "type": type
+                        };
+                    }
+                },
+                "annotation": function(node, obj) {
+                    obj.annotation = {};
+                    this.readChildNodes(node, obj.annotation);
+                },
+                "appinfo": function(node, obj) {
+                    if (!obj.appinfo) {
+                        obj.appinfo = [];
+                    }
+                    obj.appinfo.push(this.getChildValue(node));
+                },
+                "documentation": function(node, obj) {
+                    if (!obj.documentation) {
+                        obj.documentation = [];
+                    }
+                    var value = this.getChildValue(node);
+                    obj.documentation.push({
+                        lang: node.getAttribute("xml:lang"),
+                        textContent: value.replace(this.regExes.trimSpace, "")
+                    });
+                },
+                "simpleType": function(node, obj) {
+                    this.readChildNodes(node, obj);
+                },
+                "restriction": function(node, obj) {
+                    obj.base = node.getAttribute("base");
+                    this.readRestriction(node, obj);
+                }
+            }
+        },
+
+        /**
+         * Method: readRestriction
+         * Reads restriction defined in the child nodes of a restriction element
+         *
+         * Parameters:
+         * node - {DOMElement} the node to parse
+         * obj - {Object} the object that receives the read result
+         */
+        readRestriction: function(node, obj) {
+            var children = node.childNodes;
+            var child, nodeName, value, label, ret;
+            for(var i=0, len=children.length; i<len; ++i) {
+                child = children[i];
+                if(child.nodeType == 1) {
+                    nodeName = child.nodeName.split(":").pop();
+                    value = child.getAttribute("value");
+
+                    //check also if we have label attribute
+                    label = child.getAttribute("label");
+                    if (label === null) {
+                        ret = value;
+                    } else {
+                        ret = [value, label];
+                    }
+
+                    if(!obj[nodeName]) {
+                        obj[nodeName] = [ret];
+                    } else {
+                        //if(typeof obj[nodeName] == "string") {
+                        //    obj[nodeName] = [obj[nodeName]];
+                        //}
+                        obj[nodeName].push(ret);
+                    }
+                }
+            }
+        },
+
+        /**
+         * Method: read
+         *
+         * Parameters:
+         * data - {DOMElement|String} A WFS DescribeFeatureType document.
+         *
+         * Returns:
+         * {Object} An object representing the WFS DescribeFeatureType response.
+         */
+        read: function(data) {
+            if(typeof data == "string") {
+                data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);
+            }
+            if(data && data.nodeType == 9) {
+                data = data.documentElement;
+            }
+            var schema = {};
+            if (data.nodeName.split(":").pop() === 'ExceptionReport') {
+                // an exception must have occurred, so parse it
+                var parser = new OpenLayers.Format.OGCExceptionReport();
+                schema.error = parser.read(data);
+            } else {
+                this.readNode(data, schema);
+            }
+            return schema;
+        },
+
+        CLASS_NAME: "OpenLayers.Format.WFSDescribeFeatureType"
+
+    });
 /* ======================================================================
     OpenLayers/Filter/FeatureId.js
    ====================================================================== */
