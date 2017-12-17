@@ -1,2 +1,2 @@
-1.6dev3- Application
+1.6.0  - Application
 15     - Database
