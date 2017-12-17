@@ -167,7 +167,7 @@ CREATE TABLE clients (
     id integer NOT NULL,
     name text NOT NULL,
     display_name text,
-    theme_id integer,
+    theme_id integer NOT NULL DEFAULT 1,
     url text,
     description text
 );
@@ -474,7 +474,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (14, '2017-11-15');
+INSERT INTO settings VALUES (15, '2017-12-18');
 
 
 --
