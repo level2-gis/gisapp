@@ -22,6 +22,9 @@ if (!property_exists($settings, "layerSpecifics")) {
 if (!property_exists($settings, "geoCode")) {
     $settings->geoCode = null;
 }
+if (!property_exists($settings, "wsgi")) {
+    $settings->wsgi = null;
+}
 if (!property_exists($settings, "locationServices")) {
     $settings->locationServices = null;
 }
@@ -53,6 +56,7 @@ projectData.lang = '<?php echo $lang ?>';
 projectData.search = eval(<?php echo json_encode($settings->search) ?>);
 projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics) ?>);
 projectData.geoCode = eval(<?php echo json_encode($settings->geoCode) ?>);
+projectData.wsgi = eval(<?php echo json_encode($settings->wsgi) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
 
 projectData.geolocation = <?php echo json_encode($data->geolocation) ?>;

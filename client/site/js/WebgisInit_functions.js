@@ -834,6 +834,7 @@ function postLoading() {
             if (useGeoCodeSearchBox) {
                 qgisSearchCombo = new GeoExt.ux.GeocodingSearchCombo({
                     map: geoExtMap.map,
+                    highlightLayerName: 'attribHighLight',
                     width: 300,
                     minChars: 2,
                     loadingText: geonamesLoadingString[lang],
@@ -849,15 +850,6 @@ function postLoading() {
                     displayField: "name2",
                     key: projectData.geoCode.key
                 });
-                var emptySearchFieldButton = new Ext.Button({
-                    scale: 'medium',
-                    icon: iconDirectory+'mActionUndo.png',
-                    tooltipType: 'qtip',
-                    tooltip: resetSearchFieldTooltipString[lang],
-                    id: 'EmptySearchField'
-                });
-                emptySearchFieldButton.handler = mapToolbarHandler;
-                myTopToolbar.insert(myTopToolbar.items.length, emptySearchFieldButton);
             } else {
                 qgisSearchCombo = new QGIS.SearchComboBox({
                     map: geoExtMap.map,
@@ -867,7 +859,7 @@ function postLoading() {
                     searchtables: searchtables,
                     url: searchBoxQueryURL,
                     geomUrl: searchBoxGetGeomURL,
-                    srs: 3857
+                    srs: projectData.crs.split(':')[1]        //this is the map coordinate system and that's what we need to get from server
                 });
             }
             myTopToolbar.insert(myTopToolbar.items.length, qgisSearchCombo);

@@ -25,8 +25,11 @@ qwcPath = os.path.dirname(__file__)
 if not qwcPath in sys.path:
   sys.path.append(qwcPath)
 
+import qwc_connect
+
 def application(environ, start_response):
   request = Request(environ)
+  srs = request.params["srs"]
   searchtables = []; # enter your default searchtable(s) here
   searchtablesstring = '';
   if "searchtables" in request.params:
@@ -68,9 +71,9 @@ def application(environ, start_response):
     sql += "SELECT displaytext, '"+searchtables[i]+r"' AS searchtable, search_category, substring(search_category from 4) AS searchcat_trimmed, showlayer, "
     # the following line is responsible for zooming in to the features
     # this is supposed to work in PostgreSQL since version 9.0
-    sql += "'['||replace(regexp_replace(BOX2D(the_geom)::text,'BOX\(|\)','','g'),' ',',')||']'::text AS bbox "
+    sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX\(|\)','','g'),' ',',')||']'::text AS bbox "
     # if the above line does not work for you, deactivate it and uncomment the next line
-    #sql += "'['||replace(regexp_replace(BOX2D(the_geom)::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox "
+    #sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox "
     sql += "FROM "+searchtables[i]+" WHERE "
     #for each querystring
     for j in range(0, querystringsLength):
@@ -139,7 +142,7 @@ def application(environ, start_response):
   if "cb" in request.params:
     resultString = request.params["cb"] + '(' + resultString + ')'
 
-  response = Response(resultString,"200 OK",[("Content-type","application/json"),("Content-length", str(len(resultString)) )])
+  response = Response(resultString,"200 OK",[("Content-type","application/javascript"),("Content-length", str(len(resultString)) )])
 
   conn.close()
 

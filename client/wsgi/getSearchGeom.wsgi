@@ -22,13 +22,14 @@ def application(environ, start_response):
   request = Request(environ)
   searchtable = request.params["searchtable"]
   displaytext = request.params["displaytext"]
+  srs = request.params["srs"]
 
   #sanitize
   if re.search(r"[^A-Za-z,._]", searchtable):
     print >> environ['wsgi.errors'], "offending input: %s" % searchtable
     sql = ""
   else:
-    sql = "SELECT COALESCE(ST_AsText(the_geom), \'nogeom\') AS geom FROM "+searchtable+" WHERE displaytext = %(displaytext)s;"
+    sql = "SELECT COALESCE(ST_AsText(ST_Transform(the_geom,"+srs+")), \'nogeom\') AS geom FROM "+searchtable+" WHERE displaytext = %(displaytext)s;"
   
   result = "nogeom"
   

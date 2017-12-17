@@ -177,8 +177,8 @@ var elevationPrecision = 1;     //precision of height in GetFeatureInfo result w
 var minimumAddressRange = 1000;  //range in meters within address is displayed with GetFeatureInfo, if outside than only regional info is displayed
 
 //URL for custom search scripts
-var searchBoxQueryURL = null; // "/wsgi/search.wsgi?query=";
-var searchBoxGetGeomURL = null; // "/wsgi/getSearchGeom.wsgi";
+var searchBoxQueryURL = projectData.wsgi ? "/wsgi/search.wsgi?query=" : null;
+var searchBoxGetGeomURL = projectData.wsgi ? "/wsgi/getSearchGeom.wsgi" : null;
 
 var autoActivateSearchGeometryLayer = true;
 

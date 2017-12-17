@@ -645,7 +645,7 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
      * @param object record
      * @param int index
      */
-    recordSelected: function(combo, record, index) {
+    recordSelected: function (combo, record, index) {
         var bbox = record.get('bbox');
 
         if (bbox != null) {
@@ -653,27 +653,27 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
 
             //make sure that map extent is not too small for point data
             //need to improve this for units other than "m", e.g. degrees
-//UROS NO POINT IN THIS!
-//        var extWidth = extent.getWidth();
-//        var extHeight = extent.getHeight();
-//        if (extWidth < 50) {
-//          centerX = extent.left + extWidth * 0.5;
-//          extent.left = centerX - 25;
-//          extent.right = centerX + 25;
-//        }
-//        else {
-//          extent.left -= extWidth * 0.05;
-//          extent.right += extWidth * 0.05;
-//        }
-//        if (extHeight < 50) {
-//          centerY = extent.bottom + extHeight * 0.5;
-//          extent.bottom = centerY - 25;
-//          extent.top = centerY + 25;
-//        }
-//        else {
-//          extent.bottom -= extHeight = 0.05;
-//          extent.top += extHeight = 0.05;
-//        }
+
+            var extWidth = extent.getWidth();
+            var extHeight = extent.getHeight();
+            if (extWidth < 50) {
+                centerX = extent.left + extWidth * 0.5;
+                extent.left = centerX - 25;
+                extent.right = centerX + 25;
+            }
+            else {
+                extent.left -= extWidth * 0.05;
+                extent.right += extWidth * 0.05;
+            }
+            if (extHeight < 50) {
+                centerY = extent.bottom + extHeight * 0.5;
+                extent.bottom = centerY - 25;
+                extent.top = centerY + 25;
+            }
+            else {
+                extent.bottom -= extHeight = 0.05;
+                extent.top += extHeight = 0.05;
+            }
             //need to check if extent is too small
             this.map.zoomToExtent(extent);
         }
@@ -682,14 +682,14 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
             Ext.Ajax.request({
                 url: this.geomUrl,
                 success: this.showSearchGeometry,
-                failure: function ( result, request) {
-                    Ext.MessageBox.alert(errMessageSearchComboNetworkRequestFailureTitleString[lang], errMessageSearchComboNetworkRequestFailureString+result.responseText);
+                failure: function (result, request) {
+                    Ext.MessageBox.alert(errMessageSearchComboNetworkRequestFailureTitleString[lang], errMessageSearchComboNetworkRequestFailureString + result.responseText);
                 },
                 method: 'GET',
                 params: {
                     searchtable: record.get('searchtable'),
                     showlayer: record.get('showlayer'),
-                    searchtext: record.get('searchtext'),
+                    displaytext: record.get('displaytext'),
                     srs: this.srs
                 }
             });
@@ -703,9 +703,10 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
     showSearchGeometry: function(result, request) {
         // Check if we need to activate the layer and the layers exists...
         var showLayerName = request.params.showlayer ? request.params.showlayer: request.params.searchtable;
+        var layerId = wmsLoader.layerTitleNameMapping[showLayerName];
         if( typeof autoActivateSearchGeometryLayer != 'undefined'
             && autoActivateSearchGeometryLayer
-            && allLayers.indexOf(showLayerName) != -1 )
+            && allLayers.indexOf(layerId) != -1 )
         {
             var found = false;
             layerTree.root.cascade(function(n){

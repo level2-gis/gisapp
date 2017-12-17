@@ -25,6 +25,9 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
      */
     map: null,
 
+    highlightLayerName: null,
+    highlightLayer: null,
+
     /** api: config[width]
      *  See http://www.dev.sencha.com/deploy/dev/docs/source/BoxComponent.html#cfg-Ext.BoxComponent-width,
      *  default value is 350.
@@ -102,7 +105,7 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
     /** private: property[hideTrigger]
      *  Hide trigger of the combo.
      */
-    hideTrigger: true,
+    hideTrigger: false,
 
     /** private: property[displayField]
      *  Display field name
@@ -127,7 +130,20 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
     /** private: constructor
      */
     initComponent: function() {
+
+        this.triggerConfig = { // we use a default clear trigger here
+            tag: "img", src: Ext.BLANK_IMAGE_URL, cls:'x-form-trigger x-form-clear-trigger'
+        };
+        this.on("keyUp", this.keyUpHandler);
+        this.on("afterrender", this.afterrenderHandler);
+        this.on("beforeselect", this.beforeselectHandler);
+
         GeoExt.ux.GeocodingSearchCombo.superclass.initComponent.apply(this, arguments);
+
+        //reference to highlightLayer
+        if (this.highlightLayerName) {
+            this.highlightLayer = this.map.getLayersByName(this.highlightLayerName)[0];
+        }
 
         var params = {
             "size": this.maxRows,
@@ -147,7 +163,9 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
         this.store = new Ext.data.Store({
             proxy: new Ext.data.ScriptTagProxy({
                 url: this.url,
-                method: 'GET'
+                method: 'GET',
+                nocache: false,
+                autoAbort: true
             }),
             baseParams: params,
             reader: new Ext.data.JsonReader({
@@ -214,24 +232,66 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
                     {},
                     symbolizersHighLightLayer.Point
                 );
-                featureInfoHighlightLayer.removeAllFeatures();
-                featureInfoHighlightLayer.addFeatures(marker);
+                this.highlightLayer.removeAllFeatures();
+                this.highlightLayer.addFeatures(marker);
 
                 this.map.setCenter(position, this.zoom);
             }, this);
         }
     },
+    getName2: function(v, record){
+        return record.properties.street + ' ' + record.properties.housenumber;
+    },
+
+    // private
+    afterrenderHandler: function() {
+        this.trigger["hide"]();
+    },
+
+    beforeselectHandler: function(combo,record,index) {
+        if (record.get('selectable') == "1") {
+            this.collapse();
+        }
+    },
+
+    keyUpHandler: function(cmp, e) {
+        //reset if user deleted last sign
+        this.checkTrigger();
+        if (Ext.isEmpty(this.getValue())) {
+            this.resetSearch();
+        }
+        //collapse if less than minChars are left
+        if (this.getValue().length < this.minChars) {
+            this.collapse();
+        }
+    },
+
+    checkTrigger: function() {
+        // show trigger only if there is any input
+        if (this.rendered) {
+            this.trigger[!Ext.isEmpty(this.getValue()) ? 'show': 'hide']();
+        }
+    },
+
+    onTriggerClick: function() {
+        // reimplements default onTriggerClick function (which does nothing)
+        this.resetSearch();
+        this.checkTrigger();
+        this.focus();
+    },
+
+    resetSearch: function(){
+        this.collapse();
+        this.clearSearchResult();
+    },
+
     clearSearchResult: function() {
         this.setValue("");
-        //TODO, FIX THIS
         if (this.highlightLayer) {
             this.highlightLayer.removeAllFeatures();
         }
-        featureInfoHighlightLayer.removeAllFeatures();
-    },
-    getName2: function(v, record){
-        return record.properties.street + ' ' + record.properties.housenumber;
     }
+
 });
 
 /** api: xtype = gxux_GeocodingSearchCombo */

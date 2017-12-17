@@ -726,34 +726,41 @@ GlobalOptions.js see the example below:
 Permalinks: the permalinks script is not yet implemented in PHP.
 
 
-  6.2. WSGI Search
+6.2. WSGI Search
   ================
 
 
-    6.2.1. Configuration of mod_wsgi
+6.2.1. Configuration of mod_wsgi
     ================================
 
-You need to enable mod_wsgi as root. (Ubuntu: a2enmod mod_wsgi).
+You need to enable mod_wsgi as root. (Ubuntu: a2enmod wsgi).
+If you get error module not exist, installation is missing (Ubuntu: apt-get install libapache2-mod-wsgi)
+
+Install also this:
+(Ubuntu: apt-get install python-webob)
 
 You need to configure apache with the following lines (e.g. in file
-/etc/apache2/sites-available/default):
+``/etc/apache2/sites-available/default``):
+
+::
 
   #mod_wsgi
-  WSGIDaemonProcess gis processes=5 threads=15 display-name=%{GROUP}
-  WSGIScriptAlias /wsgi/ /home/www/wsgi/
-  WSGIScriptAliasMatch ^/wsgi/([^/]+) /home/www/wsgi/$1.wsgi
+  #Have to comment this
+  #WSGIDaemonProcess gis processes=5 threads=15 display-name=%{GROUP}
+  WSGIScriptAlias /wsgi/ /var/www/html/gisapp/client/wsgi/
+  WSGIScriptAliasMatch ^/wsgi/([^/]+) /var/www/html/gisapp/client/wsgi/$1.wsgi
 
 
-    6.2.2. Adaption of the wsgi scripts to your settings and needs
+6.2.2. Adaption of the wsgi scripts to your settings and needs
     ==============================================================
 
 
-      6.2.2.1. DB connection
+6.2.2.1. DB connection
       ======================
 
-In the file qwc_connect.py please edit the first line containing the db connection string. 
+In the file ``qwc_connect.py`` please edit the first line containing the db connection string.
 
-  DB_CONN_STRING="host='myhost' dbname='mydb' port='5432' user='myuser' password='secret'"
+``DB_CONN_STRING="host='myhost' dbname='mydb' port='5432' user='myuser' password='secret'"``
 
 This connection will be used in all wsgi scripts.
 
@@ -761,26 +768,30 @@ Adapt the parameters according to your server/db. It is highly recommended to
 connect with a database user having limited rights only (e.g. select rights on relevant tables only).
 
 
-      6.2.2.2. Search type to be used
+6.2.2.2. Search type to be used
       ===============================
 
 The search can use PostgreSQL's tsvector data type.
-"A tsvector value is a sorted list of distinct lexemes, which are words that have been normalized to
-merge different variants of the same word."
+**"A tsvector value is a sorted list of distinct lexemes, which are words that have been normalized to
+merge different variants of the same word."**
 from the PostgreSQL doc (http://www.postgresql.org/docs/9.0/interactive/datatype-textsearch.html#DATATYPE-TSVECTOR).
 Thus tsvector skips all the fill words and reduces nouns to their single form, a behaviour useful
 for searching texts. However as we are normally dealing with place names here we want them to stay as they are.
 If you use a language where the single form is a lot different from the plural form but your name contains a plural
 you will not get a suitable result. If you want to use the tsvector search option you should activate the lines
 
+::
+
   sql += "searchstring_tsvector @@ to_tsquery(\'not_your_language\', %s)"
   data += (querystrings[j]+":*",)
 
 not_your_language is to be replaced with an entry e.g. finnish if you have German place names.
 Thus plural forms and fillwords are kept as they are. Be aware of side effects!
-Be sure to fill the field searchstring_tsvector with `to_tsvector('not_your_language', 'yourstring')`.
+Be sure to fill the field searchstring_tsvector with ``to_tsvector('not_your_language', 'yourstring')``.
 
 The use of
+
+::
 
   sql += "searchstring::tsvector @@ lower(%s)::tsquery"
   data += (querystrings[j]+":*",)
@@ -790,14 +801,25 @@ is discouraged as it does not find a place name like Stoke-sub-Hamden when you e
 If you do not want to use tsvector at all you can enable the full string comparison on the field searchstring
 (activated by default).
 
+::
+
   sql += "searchstring ILIKE %s"
   data += ("%" + querystrings[j] + "%",)
 
 This method however is slower than tsvector but not relevantly at least if you only have a couple 1000 datasets.
 
 
-    6.2.3. PostgreSQL table setup for searching
+6.2.3. PostgreSQL table setup for searching
     ===========================================
+
+Geometry must have set CRS code.
+Check (must return <>0):
+SELECT ST_Srid(geom) from [TABLE] LIMIT 1;
+
+Set (example, table name: admin, geometry column: geom, CRS to set:4326):
+SELECT UpdateGeometrySRID('admin', 'geom', 4326);
+
+::
 
   CREATE TABLE cadastre.searchtable
   (
@@ -816,19 +838,19 @@ This method however is slower than tsvector but not relevantly at least if you o
     OIDS=FALSE
   );
   GRANT SELECT ON TABLE cadastre.searchtable TO qwc_user;
-  
+
   -- Index: cadastre.in_cadastre_searchstring_tsvector_gin
-  
+
   CREATE INDEX in_cadastre_searchstring_tsvector_gin
     ON cadastre.searchtable
     USING gin
     (searchstring_tsvector);
 
 The above search table can also be a view or materialized view. One can combine
-several search tables by specifying the `searchtables=searchtable1,searchtable_n`
-parameter when requesting the search.wsgi script. Any searchtable passed to search.wsgi may only contain
-the letters A to Z, a to z and the underscore. Double quoting the search table throws an error, thus searchtables' names must
-contain lower characters only.
+several search tables by specifying the ``searchtables=searchtable1,searchtable_n``
+parameter when requesting the search.wsgi script. Any searchtable passed to ``search.wsgi``
+may only contain the letters A to Z, a to z and the underscore. Double quoting the search
+table throws an error, thus searchtables' names must contain lower characters only.
 
 Using views is generally slower than properly indexed tables, check for yourself what works best.
 
