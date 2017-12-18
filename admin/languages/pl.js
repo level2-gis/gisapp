@@ -49,8 +49,8 @@ var TR = {
     show: 'Pokaż',
     properties: 'Właściwości',
     description: 'Opis',
-    emptyPrintTitleText: 'Add Title ...',
-    emptyPrintDescriptionText: 'Add Description ...'
+    emptyPrintTitleText: 'Wpisz własny tytuł...',
+    emptyPrintDescriptionText: 'Wpisz własny opis...'
 };
 
 /**
