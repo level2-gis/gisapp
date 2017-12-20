@@ -79,6 +79,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
     var xml = $.parseXML(featureInfos[i]);
     $(xml).find('Layer').each(function() {
       var features = [];
+      var lay = $(this).attr('name');
       if ($(this).find('Feature').length > 0) {
         // vector features
         $(this).find('Feature').each(function() {
@@ -88,7 +89,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
             if ($(this).attr('name') != 'geometry') {
               attributes.push({
                 name: $(this).attr('name'),
-                value: $(this).attr('value')
+                value: $(this).attr('value').replace("NULL", Eqwc.settings.noDataValue)
               });
             }
           });
@@ -103,7 +104,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
         var attributes = [];
         $(this).find('Attribute').each(function() {
           attributes.push({
-            name: $(this).attr('name'),
+            name: getRasterFieldName(Config.getLayerName(lay), $(this).attr('name')),
             value: $(this).attr('value').replace("NULL", Eqwc.settings.noDataValue)
           });
         });
@@ -114,9 +115,6 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
       }
 
       if (features.length > 0) {
-
-        var lay = $(this).attr('name');
-
         results.push({
           layer: Config.getLayerName(lay),
           features: features

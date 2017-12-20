@@ -422,22 +422,22 @@ function parseFIResult(node) {
             var hasAttributes = false;
             var rasterData = false;
             var htmlText = "";
-            //if (showFILayerTitle) {
-            //	htmlText += "<h2>" + wmsLoader.layerProperties[node.getAttribute("name")].title + "</h2>";
-            //}
+
             var layerChildNode = node.firstChild;
             var layerTitle = wmsLoader.layerProperties[node.getAttribute("name")].title;
+            if (showFILayerTitle) {
+                htmlText += "<h2>" + layerTitle + "</h2>";
+            }
+
             var fid = layerTitle+"."+node.firstElementChild.id;
             while (layerChildNode) {
+
+
 
                 if (layerChildNode.hasChildNodes() && layerChildNode.nodeName === "Feature") {
                     var attributeNode = layerChildNode.firstChild;
 
-                    if (showFILayerTitle) {
-                        htmlText += "<h2>" + layerTitle + "</h2>";
-                    }
-
-                    htmlText += '\n <p></p>\n <table>\n  <tbody>';
+                    htmlText += '<table><tbody>';
                     //case vector data
 
                     //add geometry actions if layer is WFS published or geometry is added to response
@@ -503,7 +503,7 @@ function parseFIResult(node) {
                     if (rasterData == false) {
                         htmlText += "\n <p></p>\n <table>\n  <tbody>";
                     }
-                    htmlText += '\n<tr><td>' + layerChildNode.getAttribute("name") + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
+                    htmlText += '\n<tr><td>' + getRasterFieldName(layerTitle, layerChildNode.getAttribute("name")) + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
                     hasAttributes = true;
                     rasterData = true;
                 }
@@ -697,9 +697,5 @@ function identifyAction(type,id) {
             break;
 
     }
-
-
-
-
 
 }

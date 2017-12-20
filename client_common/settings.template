@@ -42,6 +42,12 @@ Eqwc.settings.visibleFirstBaseLayer = true;
 //Relevant for 2.14, since 2.18 already returns blank string
 Eqwc.settings.noDataValue = '';
 
+//overwrite identify return of raster files
+//instead of Band 1 write desired value
+Eqwc.settings.overWriteRasterFieldName = {};
+//Eqwc.settings.overWriteRasterFieldName["layername"] = ["Band 1", "Your value"];
+
+
 //use separate gisportal code to browse projects, register users and login
 //code available here - https://github.com/uprel/gisportal
 Eqwc.settings.useGisPortal = false;
