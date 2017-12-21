@@ -608,25 +608,30 @@ function postLoading() {
         if (Eqwc.settings.enableHoverPopup)
             geoExtMap.map.removeControl(WMSGetFInfoHover);
         geoExtMap.map.removeControl(WMSGetFInfo);
-        geoExtMap.map.removeControl(ExtraFInfo);
+        //geoExtMap.map.removeControl(ExtraFInfo);
     }
-    var fiLayer = new OpenLayers.Layer.WMS(layerTree.root.firstChild.text, wmsURI, {
-        layers: [],
-        VERSION: "1.3.0"
-    }, LayerOptions);
 
-    ExtraFInfo = new OpenLayers.Control.WMSGetFeatureInfo({
-        layers: [],
-        infoFormat: "text/xml",
-        queryVisible: true
-    });
-    //ExtraFInfo.events.register("getfeatureinfo", this, showExtraFeatureInfo);
-    ExtraFInfo.events.register("beforegetfeatureinfo", this, onBeforeGetExtraFeatureInfoClick);
-    //ExtraFInfo.events.register("nogetfeatureinfo", this, noExtraFeatureInfoClick);
-    geoExtMap.map.addControl(ExtraFInfo);
+
+    //TEST, WHY MAKE NEW LAYER
+    //var fiLayer = new OpenLayers.Layer.WMS(layerTree.root.firstChild.text, wmsURI, {
+    //    layers: [],
+    //    VERSION: "1.3.0"
+    //}, LayerOptions);
+
+    //test, prepare for GetFeatureInfo call for external layers
+    //not finished, disabled
+    //ExtraFInfo = new OpenLayers.Control.WMSGetFeatureInfo({
+    //    layers: [],
+    //    infoFormat: "text/xml",
+    //    queryVisible: true
+    //});
+    ////ExtraFInfo.events.register("getfeatureinfo", this, showExtraFeatureInfo);
+    //ExtraFInfo.events.register("beforegetfeatureinfo", this, onBeforeGetExtraFeatureInfoClick);
+    ////ExtraFInfo.events.register("nogetfeatureinfo", this, noExtraFeatureInfoClick);
+    //geoExtMap.map.addControl(ExtraFInfo);
 
     WMSGetFInfo = new OpenLayers.Control.WMSGetFeatureInfo({
-        layers: [fiLayer],
+        layers: [thematicLayer],
         infoFormat: "text/xml",
         queryVisible: true,
         vendorParams: {
@@ -640,7 +645,7 @@ function postLoading() {
 
     if (Eqwc.settings.enableHoverPopup) {
         WMSGetFInfoHover = new OpenLayers.Control.WMSGetFeatureInfo({
-            layers: [fiLayer],
+            layers: [thematicLayer],
             infoFormat: "text/xml",
             queryVisible: true,
             hover: true,
@@ -2268,12 +2273,12 @@ function activateGetFeatureInfo(doIt) {
     // activate/deactivate FeatureInfo
     if (doIt) {
         WMSGetFInfo.activate();
-        ExtraFInfo.activate();
+        //ExtraFInfo.activate();
         if (Eqwc.settings.enableHoverPopup)
             WMSGetFInfoHover.activate();
     } else {
         WMSGetFInfo.deactivate();
-        ExtraFInfo.deactivate();
+        //ExtraFInfo.deactivate();
         if (Eqwc.settings.enableHoverPopup)
             WMSGetFInfoHover.deactivate();
     }

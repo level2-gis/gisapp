@@ -311,14 +311,14 @@ function onBeforeGetFeatureInfoClick(evt) {
     activateGetFeatureInfo(false);
 }
 
-function onBeforeGetExtraFeatureInfoClick(evt) {
-    var lay = geoExtMap.map.getLayersBy('metadata','identify');
-
-    //WATCH: only first one is used
-    if (lay.length>0) {
-        evt.object.layers = [geoExtMap.map.getLayersBy('metadata', 'identify')[0]];
-    }
-}
+//function onBeforeGetExtraFeatureInfoClick(evt) {
+//    var lay = geoExtMap.map.getLayersBy('metadata','identify');
+//
+//    //WATCH: only first one is used
+//    if (lay.length>0) {
+//        evt.object.layers = [geoExtMap.map.getLayersBy('metadata', 'identify')[0]];
+//    }
+//}
 
 // reenable GetFeatureInfo
 function noFeatureInfoClick(evt) {

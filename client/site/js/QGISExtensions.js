@@ -1219,12 +1219,14 @@ QGIS.FeatureInfoParser = Ext.extend(Object, {
 
             // get bbox of all features
             var bboxNode = node.getElementsByTagName("BoundingBox")[0];
-            this.bbox = {
-                "minx": parseFloat(bboxNode.getAttribute("minx")),
-                "miny": parseFloat(bboxNode.getAttribute("miny")),
-                "maxx": parseFloat(bboxNode.getAttribute("maxx")),
-                "maxy": parseFloat(bboxNode.getAttribute("maxy"))
-            };
+            if (bboxNode) {
+                this.bbox = {
+                    "minx": parseFloat(bboxNode.getAttribute("minx")),
+                    "miny": parseFloat(bboxNode.getAttribute("miny")),
+                    "maxx": parseFloat(bboxNode.getAttribute("maxx")),
+                    "maxy": parseFloat(bboxNode.getAttribute("maxy"))
+                };
+            }
 
             // get layer features
             var layerNode = node.getElementsByTagName("Layer")[0];
