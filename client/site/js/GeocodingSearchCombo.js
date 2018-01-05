@@ -230,7 +230,7 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
                 var marker = new OpenLayers.Feature.Vector(
                     new OpenLayers.Geometry.Point(position.lon, position.lat),
                     {},
-                    symbolizersHighLightLayer.Point
+                    Eqwc.settings.symbolizersHighLightLayer.Point
                 );
                 this.highlightLayer.removeAllFeatures();
                 this.highlightLayer.addFeatures(marker);

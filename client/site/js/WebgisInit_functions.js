@@ -354,7 +354,7 @@ function postLoading() {
         var styleHighLightLayer = new OpenLayers.Style();
         styleHighLightLayer.addRules([
             new OpenLayers.Rule({
-                symbolizer: symbolizersHighLightLayer
+                symbolizer: Eqwc.settings.symbolizersHighLightLayer
             })]);
         var styleMapHighLightLayer = new OpenLayers.StyleMap({
             "default": styleHighLightLayer
@@ -1417,7 +1417,7 @@ function postLoading() {
         //if the var fixedPrintResolution in GlobalOptions.js is set, the printLayoutsCombobox will be hidden
         if (fixedPrintResolution != null && parseInt(fixedPrintResolution) > 0) {
             printDPICombobox.hide(); // hide dpi combobox
-            printWindow.setWidth(printWindow.width - 80); // reduce the legth of the print window
+            printWindow.setWidth(printWindow.width - 71); // reduce the legth of the print window
         }
         //bug in spinnerField: need to explicitly show/hide printWindow (toolbar)
         printWindow.show();
