@@ -231,8 +231,12 @@ Config.map.initialGeolocationMaxScale = 2000;
 
 // search configuration
 var sCon = projectData.geoCode ? projectData.geoCode : null;
-Config.search = sCon != null ? new Geocode(sCon.key, sCon.layers, sCon.sources, sCon.countryString) : new Search();
-
+if (sCon != null) {
+    Config.search = new Geocode(sCon.key, sCon.layers, sCon.sources, sCon.countryString);
+}
+if (sCon == null && projectData.wsgi) {
+    Config.search = new WsgiSearch("/wsgi/search.wsgi", "/wsgi/getSearchGeom.wsgi", false, projectData.wsgi.searchtables);
+}
 
 /**
  * Mapfish Appserver search
@@ -268,10 +272,6 @@ Config.mapfishHighlightWmsUrl = "/wms/FullSearch";
 //Config.search = new MapfishSearch(Config.mapfishSearchUrl, Config.mapfishParseFeature, Config.mapfishHighlightWmsUrl);
 
 
-/**
- * WSGI search
- */
-//Config.search = new WsgiSearch("/wsgi/search.wsgi", "/wsgi/getSearchGeom.wsgi", false);
 
 
 // permalink configuration
@@ -315,7 +315,7 @@ Config.print = {
 Config.customInitViewer = function() {
     //this is marker to display location of search result (geocoding)
     Map.searchMarker = new ol.Overlay({
-        element: ($('<div id="locationMarker"></div>'))[0],
+        element: ($('<div id="searchMarker"></div>'))[0],
         positioning: 'center-center'
     });
     Map.map.addOverlay(Map.searchMarker);

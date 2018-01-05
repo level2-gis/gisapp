@@ -70,6 +70,14 @@
   height: 20px;
 }
 
+/* search */
+#searchMarker {
+    background-image: url("../img/location.svg");
+    width: 20px;
+    height: 20px;
+}
+
+
 /* layer panel */
 
 #panelLayer .ui-navbar .ui-btn.selected .ui-btn-inner {

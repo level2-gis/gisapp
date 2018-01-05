@@ -2,13 +2,15 @@
  * WSGI search from QGIS Web Client
  */
 
-function WsgiSearch(url, geomUrl, showHighlightLabel) {
+function WsgiSearch(url, geomUrl, showHighlightLabel, searchTables) {
   // search URL
   this.url = url;
   // geometry URL for highlighting
   this.geomUrl = geomUrl;
   // show highlight label
   this.showHighlightLabel = showHighlightLabel;
+
+  this.searchTables = searchTables;
 }
 
 // inherit from Search
@@ -21,7 +23,9 @@ WsgiSearch.prototype.submit = function(searchParams, callback) {
   var request = $.ajax({
     url: this.url,
     data: {
-      query: $.trim(searchParams)
+      query: $.trim(searchParams),
+      searchtables: this.searchTables,
+      srs: projectData.crs.split(':')[1]
     },
     dataType: 'json',
     context: this
@@ -108,9 +112,10 @@ WsgiSearch.prototype.highlight = function(highlight, callback) {
     url: this.geomUrl,
     data: {
       searchtable: highlight.searchtable,
-      displaytext: highlight.displaytext
+      displaytext: highlight.displaytext,
+      srs: projectData.crs.split(':')[1]
     },
-    dataType: 'text',
+    dataType: 'text'
   });
 
   var showHighlightLabel = this.showHighlightLabel;
@@ -130,11 +135,12 @@ WsgiSearch.prototype.highlight = function(highlight, callback) {
     // feature style
     var style = function(feature, resolution) {
       var stroke = new ol.style.Stroke({
-        color: 'rgba(255, 140, 0, 1.0)',
-        width: 3
+        color: Eqwc.settings.symbolizersHighLightLayer.Line.strokeColor,
+        width: Eqwc.settings.symbolizersHighLightLayer.Line.strokeWidth
       });
       var fill = new ol.style.Fill({
-        color: 'rgba(255, 140, 0, 0.3)'
+        //transparent
+        color: 'rgba(255, 140, 0, 0)'
       });
 
       var text = null;
@@ -176,6 +182,11 @@ WsgiSearch.prototype.highlight = function(highlight, callback) {
       style: style
     });
     layer.name = 'highlight';
+
+    //zoomTo
+    var extent = features[0].getGeometry().getExtent();
+    Map.zoomToExtent(extent, Config.map.minScaleDenom.search);
+
     callback(layer);
   });
 };

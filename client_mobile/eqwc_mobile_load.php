@@ -19,7 +19,7 @@ $eqwc_debug = [
     //"client_mobile/src/mapfish_login.js"
     //"client_mobile/src/mapfish_search.js"
     //"client_mobile/src/swiss_search.js"
-    //"client_mobile/src/wsgi_search.js"
+    "client_mobile/src/wsgi_search.js?v=".$version,
     "client_mobile/src/config.js?v=".$version,
     "client_mobile/src/map.js?v=".$version,
     "client_mobile/src/map_click_handler.js?v=".$version,

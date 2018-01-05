@@ -1171,6 +1171,9 @@ Gui.initViewer = function() {
   });
 
   // search
+  if (!Config.search) {
+      $("#btnSearching").addClass('ui-disabled');
+  }
   var resetSearchResults = function() {
     // reset search panel
     $('#searchResults').hide();
