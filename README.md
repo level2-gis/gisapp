@@ -36,9 +36,7 @@ Read **[Wiki](../../wiki)**
 
 ## Contributing
 
-Support this project by donating.
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3EV5P3XZQW84J)
+Support this project by [**DONATING**](http://level2.si/product/donation-extended-qgis-web-client/).
 
 You are also welcome to contribute to the project by testing, requesting new features, translating, submitting code, ...
 Read this [tutorial about making changes to repositories](https://help.github.com/articles/fork-a-repo/).
