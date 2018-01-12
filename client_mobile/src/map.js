@@ -16,7 +16,7 @@ Map.layers = {};
 // current background topic
 Map.backgroundTopic = null;
 // current background WMS layers
-Map.backgroundLayers = null;
+Map.backgroundLayers = {};
 // OpenLayers 3 map object
 Map.map = null;
 // min resolution to limit max zoom
@@ -94,7 +94,7 @@ Map.clearLayers = function() {
   Map.topicLayer = null;
   Map.backgroundLayer = null;
   Map.backgroundTopic = null;
-  Map.backgroundLayers = null;
+  Map.backgroundLayers = {};
   Map.selectionLayer = null;
   Map.redliningLayer = null;
   Map.highlightLayer = null;
@@ -135,33 +135,33 @@ Map.setTopicLayer = function() {
   Map.map.addLayer(Map.topicLayer);
 };
 
-Map.setBackgroundLayer = function(layerName, layerId, isBase) {
-  //var wmsParams = $.extend({}, Config.map.wmsParams, {
-  //  'LAYERS': Map.backgroundLayers
-  //});
-  //var wmsOptions = {
-  //  url: Map.topics[Map.backgroundTopic].wms_url,
-  //  params: wmsParams,
-  //  extent: Config.map.extent,
-  //  serverType: Config.map.wmsServerType,
-  //  dpi: Config.map.dpi
-  //};
-  //Map.backgroundLayer = null;
-  //if (Config.map.useTiledBackgroundWMS) {
-  //  Map.backgroundLayer = new ol.layer.Tile({
-  //    source: new ol.source.TileWMS(wmsOptions)
-  //  });
-  //}
-  //else {
-  //  Map.backgroundLayer = new ol.layer.Image({
-  //    source: new ol.source.ImageWMS(wmsOptions)
-  //  });
-  //}
+Map.setBackgroundLayer = function (layerName, layerId, isBase) {
+    //var wmsParams = $.extend({}, Config.map.wmsParams, {
+    //  'LAYERS': Map.backgroundLayers
+    //});
+    //var wmsOptions = {
+    //  url: Map.topics[Map.backgroundTopic].wms_url,
+    //  params: wmsParams,
+    //  extent: Config.map.extent,
+    //  serverType: Config.map.wmsServerType,
+    //  dpi: Config.map.dpi
+    //};
+    //Map.backgroundLayer = null;
+    //if (Config.map.useTiledBackgroundWMS) {
+    //  Map.backgroundLayer = new ol.layer.Tile({
+    //    source: new ol.source.TileWMS(wmsOptions)
+    //  });
+    //}
+    //else {
+    //  Map.backgroundLayer = new ol.layer.Image({
+    //    source: new ol.source.ImageWMS(wmsOptions)
+    //  });
+    //}
 
     var lay = isBase ? Config.data.baselayers[layerId] : Config.data.extralayers[layerId];
 
     var layOl3 = {};
-    var visible = (layerId == 0 && isBase) ? true : false;
+    var visible = (layerId == 0 && isBase && Eqwc.settings.visibleFirstBaseLayer) ? true : false;
 
     switch (lay.type) {
         case 'OSM' :
@@ -171,12 +171,6 @@ Map.setBackgroundLayer = function(layerName, layerId, isBase) {
                 source: new ol.source.OSM
             });
 
-            //this is layer id, must be same as layer name from database!
-            layOl3.name = lay.name;
-
-            // add background as base layer
-            Map.map.getLayers().insertAt(0, layOl3);
-
             break;
 
         case 'XYZ' :
@@ -185,14 +179,9 @@ Map.setBackgroundLayer = function(layerName, layerId, isBase) {
                 visible: visible,
                 //name: lay.name,
                 source: new ol.source.XYZ({
-                            url: definition.url
+                    url: definition.url
                 })
             });
-
-            layOl3.name = lay.name;
-
-            // add background as base layer
-            Map.map.getLayers().insertAt(0, layOl3);
 
             break;
 
@@ -207,11 +196,6 @@ Map.setBackgroundLayer = function(layerName, layerId, isBase) {
                     imagerySet: definition.imagerySet
                 })
             });
-
-            layOl3.name = lay.name;
-
-            // add background as base layer
-            Map.map.getLayers().insertAt(0, layOl3);
 
             break;
 
@@ -258,11 +242,11 @@ Map.setBackgroundLayer = function(layerName, layerId, isBase) {
                 resolutions[z] = size / Math.pow(2, z);
             }
 
-            if (definition.matrixIds  !== undefined) {
+            if (definition.matrixIds !== undefined) {
                 matrixIds = definition.matrixIds;
             }
 
-            if (serverResolutions !== undefined){
+            if (serverResolutions !== undefined) {
                 resolutions = serverResolutions;
             }
 
@@ -285,10 +269,6 @@ Map.setBackgroundLayer = function(layerName, layerId, isBase) {
                 })
             });
 
-            layOl3.name = lay.name;
-
-            Map.map.getLayers().insertAt(0, layOl3);
-
             break;
 
         case 'WMS' :
@@ -305,21 +285,23 @@ Map.setBackgroundLayer = function(layerName, layerId, isBase) {
                 })
             });
 
-            layOl3.name = lay.name;
-
-            // add background as base layer
-            Map.map.getLayers().insertAt(0, layOl3);
-
             break;
+
     }
 
+    //this is layer id, must be same as layer name from database!
+    layOl3.name = lay.name;
+
+    // add background as base layer
+    Map.map.getLayers().insertAt(0, layOl3);
+    Map.backgroundLayers[layOl3.name] = layOl3;
 };
 
-Map.toggleBackgroundLayer = function(visible) {
-  if (Map.backgroundLayer != null) {
-    Map.backgroundLayer.setVisible(visible);
-  }
-};
+//Map.toggleBackgroundLayer = function(visible) {
+//  if (Map.backgroundLayer != null) {
+//    Map.backgroundLayer.setVisible(visible);
+//  }
+//};
 
 Map.clearOverlayLayers = function() {
   for (var layer in Map.overlayLayers) {

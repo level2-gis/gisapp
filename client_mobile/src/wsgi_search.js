@@ -78,7 +78,8 @@ WsgiSearch.prototype.parseResults = function(data, status, callback) {
         name: result.displaytext,
         highlight: {
           searchtable: result.searchtable,
-          displaytext: result.displaytext
+          displaytext: result.displaytext,
+          showlayer: result.showlayer
         },
         bbox: result.bbox
       });
@@ -117,6 +118,14 @@ WsgiSearch.prototype.highlight = function(highlight, callback) {
     },
     dataType: 'text'
   });
+
+  //switch on layer if needed
+  var layer = Config.getLayerId(highlight.showlayer);
+  if(layer) {
+      if (!Map.layers[layer].visible) {
+          Map.setLayerVisible(layer, true, true);
+      }
+  }
 
   var showHighlightLabel = this.showHighlightLabel;
   request.done(function(data, status) {

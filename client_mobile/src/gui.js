@@ -122,159 +122,171 @@ Gui.selectTopic = function(topic) {
 };
 
 // update layers list
-Gui.loadLayers = function(data) {
-  var html = "";
-  var layers = [];
+Gui.loadLayers = function (data) {
+    var html = "";
+    var layers = [];
 
-  function fillLayertree(node, parent, depth, type) {
-    if (node.layers.length > 0) {
-      // add group
-      html += '<div data-role="collapsible" data-theme="c"';
-      if (Config.gui.useLayertreeGroupCheckboxes) {
-        html += ' data-groupcheckbox="true"';
-      }
-      html += '>';
-      html +=   '<h3>' + node.name + '</h3>';
+    function fillLayertree(node, parent, depth, type) {
+        if (node.layers.length > 0) {
+            // add group
+            html += '<div data-role="collapsible" data-theme="c"';
+            if (Config.gui.useLayertreeGroupCheckboxes) {
+                html += ' data-groupcheckbox="true"';
+            }
+            html += '>';
+            html += '<h3>' + node.name + '</h3>';
+        }
+        else {
+            // find layer parent group
+            var groupTitle = parent || Layers.markerPrefix + node.name;
+            var group = $.grep(data.groups, function (el) {
+                return el.title === groupTitle;
+            })[0];
+            if (group != undefined) {
+                // find layer in group
+                var layer = $.grep(group.layers, function (el) {
+                    return el.layername === node.name;
+                })[0];
+
+                //skip if it is print view, not needed here
+                if (layer.layername == Eqwc.settings.QgisUsersPrintName) {
+                    return;
+                }
+
+                //skip if layer with same name exists in backgroundLayers
+                if (Config.baseLayerExists(layer.layername)) {
+                    return;
+                }
+
+                // add layer
+                html += '<label>';
+                html += '<input type="' + type + '" ';
+                if (parent != null) {
+                    // prevent auto-enhancement by jQuery Mobile if layer belongs to a group
+                    html += 'data-role="none" ';
+                }
+                html += 'name="' + layer.layername + '" ';
+                html += 'data-layer="' + layer.id + '" ';
+                if (layer.visini) {
+                    html += 'checked ';
+                }
+                html += '>' + layer.toclayertitle;
+                html += '</label>';
+
+                layers.push({
+                    id: layer.id,
+                    layername: layer.layername,
+                    title: layer.toclayertitle,
+                    wms_sort: layer.wms_sort,
+                    visible: layer.visini,
+                    minscale: layer.minscale,
+                    maxscale: layer.maxscale,
+                    hidden_attributes: layer.hidden_attributes,
+                    hidden_values: layer.hidden_values
+                });
+            }
+        }
+
+        // traverse children
+        for (var i = 0; i < node.layers.length; i++) {
+            fillLayertree(node.layers[i], node.name, depth + 1, "checkbox");
+        }
+
+        if (node.layers.length > 0) {
+            html += '</div>';
+        }
     }
-    else {
-      // find layer parent group
-      var groupTitle = parent || Layers.markerPrefix + node.name;
-      var group = $.grep(data.groups, function(el) {
-        return el.title === groupTitle;
-      })[0];
-      if (group != undefined) {
-        // find layer in group
-        var layer = $.grep(group.layers, function(el) {
-          return el.layername === node.name;
-        })[0];
 
-        // add layer
-        html += '<label>';
-        html +=   '<input type="'+type+'" ';
-        if (parent != null) {
-          // prevent auto-enhancement by jQuery Mobile if layer belongs to a group
-          html +=   'data-role="none" ';
-        }
-        html +=     'name="' + layer.layername + '" ';
-        html +=     'data-layer="' + layer.id + '" ' ;
-        if (layer.visini) {
-          html +=   'checked ';
-        }
-        html +=   '>' + layer.toclayertitle;
-        html += '</label>';
+    // fill layer tree
+    for (var i = 0; i < data.layertree.length; i++) {
+        fillLayertree(data.layertree[i], null, 0, "checkbox");
+    }
 
-        layers.push({
-          id: layer.id,
-          layername: layer.layername,
-          title: layer.toclayertitle,
-          wms_sort: layer.wms_sort,
-          visible: layer.visini,
-          minscale: layer.minscale,
-          maxscale: layer.maxscale,
-          hidden_attributes: layer.hidden_attributes,
-          hidden_values: layer.hidden_values
+    $('#panelLayerAll').html(html);
+    $('#panelLayerAll').trigger('create');
+
+    // enhance checkboxes of group children when expanding for the first time
+    function enhanceCheckbox() {
+        var labels = $(this).children('.ui-collapsible-content').children('label');
+        labels.find(':checkbox[data-role="none"]').attr('data-role', null);
+        labels.trigger('create');
+        $(this).unbind('expand', enhanceCheckbox);
+    }
+    var groups = $('#panelLayerAll').find('.ui-collapsible');
+    groups.bind('expand', enhanceCheckbox);
+
+    // root group change (NOTE: add binding after building the layer tree, to skip events during creation)
+    $('#panelLayerAll').children('.ui-collapsible[data-groupcheckbox=true]').bind('groupchange', function (e) {
+        var visibleLayers = Map.visibleLayers();
+        $(this).find(':checkbox').each(function (index) {
+            var layerVisible = (visibleLayers.indexOf($(this).data('layer')) != -1);
+            if (layerVisible != $(this).is(':checked')) {
+                // layer visibility changed
+                Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
+                Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
+            }
         });
-      }
-    }
-
-    // traverse children
-    for (var i=0; i<node.layers.length; i++) {
-      fillLayertree(node.layers[i], node.name, depth + 1, "checkbox");
-    }
-
-    if (node.layers.length > 0) {
-      html += '</div>';
-    }
-  }
-
-  // fill layer tree
-  for (var i=0; i<data.layertree.length; i++) {
-    fillLayertree(data.layertree[i], null, 0, "checkbox");
-  }
-
-  $('#panelLayerAll').html(html);
-  $('#panelLayerAll').trigger('create');
-
-  // enhance checkboxes of group children when expanding for the first time
-  function enhanceCheckbox() {
-    var labels = $(this).children('.ui-collapsible-content').children('label');
-    labels.find(':checkbox[data-role="none"]').attr('data-role', null);
-    labels.trigger('create');
-    $(this).unbind('expand', enhanceCheckbox);
-  }
-  var groups = $('#panelLayerAll').find('.ui-collapsible');
-  groups.bind('expand', enhanceCheckbox);
-
-  // root group change (NOTE: add binding after building the layer tree, to skip events during creation)
-  $('#panelLayerAll').children('.ui-collapsible[data-groupcheckbox=true]').bind('groupchange', function(e) {
-    var visibleLayers = Map.visibleLayers();
-    $(this).find(':checkbox').each(function(index) {
-      var layerVisible = (visibleLayers.indexOf($(this).data('layer')) != -1);
-      if (layerVisible != $(this).is(':checked')) {
-        // layer visibility changed
-        Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
-        Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
-      }
     });
-  });
 
-  // store layers sorted by wms_sort
-  layers = layers.sort(function(a, b) {
-    return a.wms_sort - b.wms_sort;
-  });
-  Map.layers = {};
-  for (var i=0; i<layers.length; i++) {
-    var layer = layers[i];
-    Map.layers[layer.id] = {
-      id: layer.id,
-      title: layer.title,
-      visible: layer.visible,
-      wms_sort: layer.wms_sort,
-      minscale: layer.minscale,
-      maxscale: layer.maxscale,
-      hidden_attributes: layer.hidden_attributes,
-      hidden_values: layer.hidden_values,
-      transparency: 0
-    };
-  }
-
-  Gui.layerOrderChanged = false;
-  if (Gui.initialLoad) {
-    Gui.applyPermalink();
-  }
-  Map.setTopicLayer();
-  Gui.resetLayerOrder();
-
-  // add any overlay topics
-  var overlayTopics = Map.topics[Map.topic].overlay_topics || [];
-  if (Gui.initialLoad && Config.permalink.initialOverlayTopics != null) {
-    // add any additional overlay topics from permalink
-    for (var i=0; i<Config.permalink.initialOverlayTopics.length; i++) {
-      var overlayTopic = Config.permalink.initialOverlayTopics[i];
-      if (overlayTopics.indexOf(overlayTopic) == -1) {
-        overlayTopics.push(overlayTopic);
-      }
+    // store layers sorted by wms_sort
+    layers = layers.sort(function (a, b) {
+        return a.wms_sort - b.wms_sort;
+    });
+    Map.layers = {};
+    for (var i = 0; i < layers.length; i++) {
+        var layer = layers[i];
+        Map.layers[layer.id] = {
+            id: layer.id,
+            title: layer.title,
+            visible: layer.visible,
+            wms_sort: layer.wms_sort,
+            minscale: layer.minscale,
+            maxscale: layer.maxscale,
+            hidden_attributes: layer.hidden_attributes,
+            hidden_values: layer.hidden_values,
+            transparency: 0
+        };
     }
-  }
-  Gui.setupOverlayTopics(overlayTopics);
 
-  // add any overlays from permalink
-  Config.permalink.addOverlays(Gui.setSelectionLayer, Gui.setRedliningLayer);
+    Gui.layerOrderChanged = false;
+    if (Gui.initialLoad) {
+        Gui.applyPermalink();
+    }
+    Map.setTopicLayer();
+    Gui.resetLayerOrder();
 
-  if (Gui.initialLoad) {
-    Gui.initialLoad = false;
-  }
+    // add any overlay topics
+    var overlayTopics = Map.topics[Map.topic].overlay_topics || [];
+    if (Gui.initialLoad && Config.permalink.initialOverlayTopics != null) {
+        // add any additional overlay topics from permalink
+        for (var i = 0; i < Config.permalink.initialOverlayTopics.length; i++) {
+            var overlayTopic = Config.permalink.initialOverlayTopics[i];
+            if (overlayTopics.indexOf(overlayTopic) == -1) {
+                overlayTopics.push(overlayTopic);
+            }
+        }
+    }
+    Gui.setupOverlayTopics(overlayTopics);
 
-  $.event.trigger({type: 'topiclayersloaded', topic: Map.topic});
+    // add any overlays from permalink
+    Config.permalink.addOverlays(Gui.setSelectionLayer, Gui.setRedliningLayer);
+
+    if (Gui.initialLoad) {
+        Gui.initialLoad = false;
+    }
+
+    $.event.trigger({type: 'topiclayersloaded', topic: Map.topic});
 };
 
 // add background layer
 Gui.loadBackgroundLayers = function(data) {
 
+    if (Config.data.baselayers.length == 0) {
+        return;
+    }
+
     var html = '<div data-role="collapsible" data-theme="c"';
-    //if (Config.gui.useLayertreeGroupCheckboxes) {
-    //    html += ' data-groupcheckbox="true"';
-    //}
+
     html += '>';
     html +=   '<h3>' + I18n.layers.background + '</h3>';
 
@@ -283,11 +295,11 @@ Gui.loadBackgroundLayers = function(data) {
         var selected ='';
 
         // add background layer button
-        //select first in array
-        if(i==0) {
+        //select first in array in case of setting
+        if(i==0 && Eqwc.settings.visibleFirstBaseLayer) {
             selected = ' checked="checked"';
         }
-        html += '<label><input type="radio" name="_background_" id="' + el.name + '" data-background="true"' +selected+ '>' + el.title + '</label>'
+        html += '<label><input type="checkbox" name="_background_" id="' + el.name + '" data-background="true"' +selected+ '>' + el.title + '</label>'
         //create ol3 layer object, first time only, visibility false
         Map.setBackgroundLayer(el.name,i, true);
 
@@ -298,76 +310,25 @@ Gui.loadBackgroundLayers = function(data) {
     html += '</div>';
 
     $('#panelLayerAll').append(html);
-
-    //$(".base").click(function() {
-    //    alert($(this).attr("name"));
-    //    $(".back_class").attr("checked", false); //uncheck all checkboxes
-    //    $(this).attr("checked", true);  //check the clicked one
-    //});
-
-    //$('.base').change(function() {
-    //    alert($(this).attr("name"));
-    //    $('.base').not(this).prop('checked', false);
-    //});
-
-
     $('#panelLayerAll').trigger('create');
 
     // background toggle
-    $('#panelLayerAll :radio[data-background=true]').bind('change', function(e) {
-        //alert($(this).attr("name"));
+    $('#panelLayerAll :checkbox[data-background=true]').on('change', function(e) {
+
         var selected = $(this).attr("id");
-        var all = Map.map.getLayers();
+        var layer = Map.backgroundLayers[selected];
         var isChecked = $(this).is(':checked');
 
-        all.forEach(function(layer) {
-            //Assuming all baselayers are layer.Tile ?
-            if(layer instanceof ol.layer.Tile) {
-                if (layer.name == selected) {
-                    // Do with layer
-                    layer.setVisible(isChecked);
-                } else {
-                    layer.setVisible(!isChecked);
-                }
+        layer.setVisible(isChecked);
+        //uncheck others
+        $('#panelLayerAll :checkbox[data-background=true]').not($(this)).prop("checked",false).checkboxradio("refresh");
+
+        for (bl in Map.backgroundLayers) {
+            if (bl !== selected) {
+                Map.backgroundLayers[bl].setVisible(false);
             }
-        });
-
-
-
-        //var test1 = test.item(0);
-        //alert(test.getLength());
-        //test1.setVisible($(this).is(':checked'));
-        //Map.layers[selected].visible = $(this).is(':checked');
-        //Map.toggleBackgroundLayer($(this).is(':checked'));
-
+        }
     });
-    //}
-
-  //// collect visible layers
-  //var groups = data.groups;
-  //var layers = [];
-  //for (var i=0; i<groups.length; i++) {
-  //  var group = groups[i];
-  //  for (var j=0;j<group.layers.length; j++) {
-  //    var layer = group.layers[j];
-  //    if (layer.visini) {
-  //      layers.push({
-  //        layername: layer.layername,
-  //        wms_sort: layer.wms_sort
-  //      });
-  //    }
-  //  }
-  //}
-  //// sort by wms_sort
-  //layers = layers.sort(function(a, b) {
-  //  return a.wms_sort - b.wms_sort;
-  //});
-  //var sortedLayers = [];
-  //for (var i=0; i<layers.length; i++) {
-  //  sortedLayers.push(layers[i].layername);
-  //}
-  //Map.backgroundLayers = sortedLayers.join(',');
-
 };
 
 Gui.loadExtraLayers = function(data) {
@@ -387,115 +348,25 @@ Gui.loadExtraLayers = function(data) {
         var el = Config.data.extralayers[i];
         var selected ='';
 
-        // add background layer button
-        //select first in array
-        //if(i==0) {
-        //    selected = ' checked="checked"';
-        //}
         html += '<label><input type="checkbox" name="_extra_" id="' + el.name + '" data-extra="true">' + el.title + '</label>'
         //create ol3 layer object, first time only, visibility false
         Map.setBackgroundLayer(el.name,i, false);
 
     }
 
-    //if (Map.backgroundTopic) {
-
     html += '</div>';
 
     $('#panelLayerAll').append(html);
-
-    //$(".base").click(function() {
-    //    alert($(this).attr("name"));
-    //    $(".back_class").attr("checked", false); //uncheck all checkboxes
-    //    $(this).attr("checked", true);  //check the clicked one
-    //});
-
-    //$('.base').change(function() {
-    //    alert($(this).attr("name"));
-    //    $('.base').not(this).prop('checked', false);
-    //});
-
-
     $('#panelLayerAll').trigger('create');
-
 
     // selection toggle
     $('#panelLayerAll :checkbox[data-extra=true]').bind('change', function(e) {
         var selected = $(this).attr("id");
-        var all = Map.map.getLayers();
+        var layer = Map.backgroundLayers[selected];
         var isChecked = $(this).is(':checked');
 
-        all.forEach(function (layer) {
-            //Assuming all baselayers are layer.Tile ?
-            if (layer instanceof ol.layer.Tile) {
-                if (layer.name == selected) {
-
-                    layer.setVisible(isChecked);
-                }
-            }
-        });
-
-
-
-        //layer.setVisible(isChecked);
+        layer.setVisible(isChecked);
     });
-
-
-    // background toggle
-    //$('#panelLayerAll :radio[data-background=true]').bind('change', function(e) {
-    //    //alert($(this).attr("name"));
-    //    var selected = $(this).attr("id");
-    //    var all = Map.map.getLayers();
-    //    var isChecked = $(this).is(':checked');
-    //
-    //    all.forEach(function(layer) {
-    //        //Assuming all baselayers are layer.Tile ?
-    //        if(layer instanceof ol.layer.Tile) {
-    //            if (layer.name == selected) {
-    //                // Do with layer
-    //                layer.setVisible(isChecked);
-    //            } else {
-    //                layer.setVisible(!isChecked);
-    //            }
-    //        }
-    //    });
-    //
-    //
-    //
-    //    //var test1 = test.item(0);
-    //    //alert(test.getLength());
-    //    //test1.setVisible($(this).is(':checked'));
-    //    //Map.layers[selected].visible = $(this).is(':checked');
-    //    //Map.toggleBackgroundLayer($(this).is(':checked'));
-    //
-    //});
-    //}
-
-    //// collect visible layers
-    //var groups = data.groups;
-    //var layers = [];
-    //for (var i=0; i<groups.length; i++) {
-    //  var group = groups[i];
-    //  for (var j=0;j<group.layers.length; j++) {
-    //    var layer = group.layers[j];
-    //    if (layer.visini) {
-    //      layers.push({
-    //        layername: layer.layername,
-    //        wms_sort: layer.wms_sort
-    //      });
-    //    }
-    //  }
-    //}
-    //// sort by wms_sort
-    //layers = layers.sort(function(a, b) {
-    //  return a.wms_sort - b.wms_sort;
-    //});
-    //var sortedLayers = [];
-    //for (var i=0; i<layers.length; i++) {
-    //  sortedLayers.push(layers[i].layername);
-    //}
-    //Map.backgroundLayers = sortedLayers.join(',');
-
 };
 
 

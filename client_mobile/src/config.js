@@ -33,6 +33,24 @@ Config.getLayerName = function (lid) {
     return projectData.use_ids ? projectData.layers[lid].layername : lid;
 };
 
+Config.getLayerId = function (name) {
+    for (var lay in projectData.layers) {
+        if (projectData.layers[lay].layername === name)
+            return projectData.layers[lay].id; // Return as soon as the object is found
+    }
+    return false; // The object was not found
+};
+
+Config.baseLayerExists = function (name) {
+    var bl = projectData.baseLayers();
+    for (var i in bl) {
+        if (bl[i].title == name) {
+            return true;
+        }
+    }
+    return false;
+};
+
 // flag to activate debug code
 Config.debug = false;
 
