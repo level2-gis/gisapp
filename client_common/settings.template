@@ -1,8 +1,7 @@
 /**
- * Eqwc client settings
+ * Eqwc client settings template
  *
- * This is proper location for settings, since this file is used by both clients
- * and is always loaded regardless debug variable.
+ * You have to copy this to settings.js and then adjust values to your needs!
  *
  */
 
@@ -17,6 +16,10 @@ Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 
 //limit number of features to request from server for displaying layer attribute table
 Eqwc.settings.limitAttributeFeatures = 2000;
+
+//config for QGIS.SearchPanel and Identify result window
+//Number of results: FEATURE_COUNT in WMS request
+Eqwc.settings.limitSearchMaxResults = 10;
 
 //enable tooltip hoover on features
 //many server requests, default disabled

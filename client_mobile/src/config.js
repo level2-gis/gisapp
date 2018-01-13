@@ -124,7 +124,7 @@ Config.featureInfo.format = 'text/xml';
 Config.featureInfo.useWMSGetFeatureInfo = true;
 
 // max number of features per layer for WMS GetFeatureInfo requests (null to use WMS default)
-Config.featureInfo.wmsMaxFeatures = null;
+Config.featureInfo.wmsMaxFeatures = Eqwc.settings.limitSearchMaxResults ? Eqwc.settings.limitSearchMaxResults : null;
 
 /**
  * Tolerances for WMS GetFeatureInfo requests on QGIS Server

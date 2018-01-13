@@ -199,10 +199,6 @@ var suppressInfoGeometry = true;
 var showFieldNamesInClickPopup = true;
 var showFeatureInfoLayerTitle = true;
 
-//config for QGIS.SearchPanel
-//Number of results: FEATURE_COUNT in WMS request
-var simpleWmsSearchMaxResults = 10;
-
 //templates to define tooltips for a layer, to be shown on hover identify. The layer fields must be wrapped inside <%%> special tags.
 //if a layers field is found with the name "tooltip" its content will have precedence over this configuration
 var tooltipTemplates = {

@@ -634,6 +634,7 @@ function postLoading() {
         layers: [thematicLayer],
         infoFormat: "text/xml",
         queryVisible: true,
+        maxFeatures: Eqwc.settings.limitSearchMaxResults,
         vendorParams: {
             QUERY_LAYERS: selectedQueryableLayers.join(",")
         }
@@ -934,7 +935,7 @@ function postLoading() {
                 var panel = new QGIS.SearchPanel(searchPanelConfigs[i]);
                 panel.gridLocation = 'default';
                 panel.gridTitle = searchResultString[lang];
-                panel.gridResults = simpleWmsSearchMaxResults;
+                panel.gridResults = Eqwc.settings.limitSearchMaxResults ? Eqwc.settings.limitSearchMaxResults: 10;
                 panel.on("featureselected", showRecordSelected);
                 panel.on("featureselectioncleared", clearFeatureSelected);
                 panel.on("beforesearchdataloaded", showSearchPanelResults);
@@ -1190,7 +1191,7 @@ function postLoading() {
             //create new window to hold printing toolbar
             printWindow = new Ext.Window({
                     title: printSettingsToolbarTitleString[lang],
-                    height: projectData.user=='guest' ? 80: 160,
+                    height: projectData.user=='guest' ? 100: 160,
                     width: 390,
                     layout: "fit",
                     renderTo: "geoExtMapPanel",
