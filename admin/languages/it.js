@@ -50,7 +50,9 @@ var TR = {
     properties: 'Proprietà',
     description: 'Description',
     emptyPrintTitleText: 'Add Title ...',
-    emptyPrintDescriptionText: 'Add Description ...'
+    emptyPrintDescriptionText: 'Add Description ...',
+    loadMore: 'Load more...',
+    loadMoreToolTip: 'Table is not complete.Click to load more data from server!'
 };
 
 /**

@@ -50,7 +50,9 @@ var TR = {
     properties: 'Właściwości',
     description: 'Opis',
     emptyPrintTitleText: 'Wpisz własny tytuł...',
-    emptyPrintDescriptionText: 'Wpisz własny opis...'
+    emptyPrintDescriptionText: 'Wpisz własny opis...',
+    loadMore: 'Load more...',
+    loadMoreToolTip: 'Table is not complete.Click to load more data from server!'
 };
 
 /**

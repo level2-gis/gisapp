@@ -50,7 +50,9 @@ var TR = {
     properties: 'Lastnosti',
     description: 'Opis',
     emptyPrintTitleText: 'Dodaj naslov ...',
-    emptyPrintDescriptionText: 'Dodaj opis ...'
+    emptyPrintDescriptionText: 'Dodaj opis ...',
+    loadMore: 'Več...',
+    loadMoreToolTip: 'Tabela ni popolna. Klikni za več podatkov iz strežnika!'
 };
 
 /**
