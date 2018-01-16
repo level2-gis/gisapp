@@ -888,16 +888,17 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             }
         }
 
-        if (this.store !== null) {
-            this.store.removeAll();
-        }
+        //test
+        //if (this.store !== null) {
+        //    this.store.removeAll();
+        //}
         // Moved to try/catch because of wierd error in popup implementation
         // when submitting from different search panel.
-        try {
-            this.resultsGrid.hide();
-        } catch (e) {
-            // Logging?
-        }
+        //try {
+        //    this.resultsGrid.hide();
+        //} catch (e) {
+        //    // Logging?
+        //}
         this.fireEvent("featureselectioncleared");
         this.fireEvent("searchformsubmitted");
 
@@ -914,19 +915,27 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
 
             //alert(maskElement.id);
             //check if we already have table for layer in case of open table call
-            if(maskElement.id=='BottomPanel') {
-                if(Ext.getCmp('table_'+this.queryLayer)==undefined) {
-                    this.submitGetFeatureInfo();
-                    maskElement.el.mask(pleaseWaitString[lang], 'x-mask-loading');
+            if(maskElement.id=='BottomPanel' && (this.resultsGrid != null)) {
+            //    if(Ext.getCmp('table_'+this.queryLayer)==undefined) {
+            //        //this.submitGetFeatureInfo();
+            //        maskElement.el.mask(pleaseWaitString[lang], 'x-mask-loading');
+            //    }
+            //    else {
+                if (this.gridResults === this.resultsGrid.store.maxResults) {
+                    maskElement.activate(Ext.getCmp('table_' + this.queryLayer));
                 }
                 else {
-                    maskElement.activate(Ext.getCmp('table_'+this.queryLayer));
+                    this.resultsGrid.store.maxResults = this.gridResults;
+                    this.submitGetFeatureInfo();
                 }
+            //    }
             }
             else {
-                this.submitGetFeatureInfo();
+
                 maskElement.el.mask(pleaseWaitString[lang], 'x-mask-loading');
+                this.submitGetFeatureInfo();
             }
+
 
         } else {
             this.submitForm();
@@ -1020,7 +1029,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
 
             // workaround for missing subsequent grid panel updates if first search result was empty:
             // recreate store and grid panel until a search result contains features
-            var destroyStore = (this.store == null && features.length == 0);
+            //var destroyStore = (this.store == null && features.length == 0);
 
             if (this.store == null) {
                 // create store
@@ -1072,10 +1081,13 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     totalBbox: totalBbox,
                     queryLayer: this.queryLayer,
                     gridLocation: this.gridLocation,
+                    maxResults: this.gridResults,
                     listeners: {
                         datachanged: function() {
                             //console.log(this.totalCount);
                             //console.log(this.getTotalCount());
+
+                            var complete = (this.totalCount == this.maxResults) ? false : true;
 
                             //only in this case we update title
                             if (this.gridLocation =='bottom') {
@@ -1085,14 +1097,28 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
 
                                 var tableId = 'table_' + this.queryLayer;
                                 var table = Ext.getCmp(tableId);
+                                var loadmore = table.getBottomToolbar().getComponent('loadmore');
 
                                 if(table != undefined) {
+                                    if (loadmore != undefined)
+                                    {
+                                        if (complete) {
+                                            loadmore.setVisible(false);
+                                        } else {
+                                            loadmore.setVisible(true);
+                                        }
+                                    }
+
                                     if (cnt_filt < cnt_all) {
                                         table.setTitle(this.queryLayer + "* (" + cnt_filt + ")");
                                     } else {
                                         table.setTitle(this.queryLayer + " (" + cnt_all + ")");
                                     }
                                 }
+                            } else if (this.gridLocation =='default') {
+                                var grid = Ext.getCmp('SearchPanelResultsGrid');
+                                var tt = searchResultString[lang] + " ("+grid.store.totalCount+")";
+                                grid.setTitle(tt);
                             }
                         }
                     }
@@ -1115,9 +1141,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             }
             maskElement.unmask();
 
-            if (destroyStore) {
-                this.store = null;
-            }
+            //if (destroyStore) {
+            //    this.store = null;
+            //}
             this.fireEvent('aftersearchdataloaded', this);
         }
         else {

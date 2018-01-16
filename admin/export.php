@@ -112,6 +112,17 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
         $options .= '-spat '. $xmin . ' ' . $ymin . ' ' . $xmax . ' ' . $ymax . ' ';
     }
 
+    //field set
+    if ($query_arr['fields']!='') {
+        //primary key if exists must be removed form fields, otherwise we get ogr2ogr error
+        $key = null;
+        if ($sourceProvider=='postgres') {
+            $key = str_replace("'",'',$lay_info["message"]['key']);
+        }
+        $fields = array_diff(explode(',',$query_arr['fields']),[$key]);
+        $options .= '-select "' . implode(',',$fields) . '" ';
+    }
+
     switch ($destinationFormat) {
         case 'SHP':
             $format_name = 'ESRI Shapefile';
@@ -119,7 +130,6 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             break;
         case 'DXF':
             $format_name = $destinationFormat;
-            //$options .= '-select field_list="" ';
             break;
         case 'CSV':
             $format_name = $destinationFormat;

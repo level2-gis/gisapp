@@ -269,8 +269,19 @@ function showRecordSelected(args) {
 }
 
 function exportData(layername,format, useBbox) {
+
+    function joinObj(obj, attr) {
+        var out = [];
+        for (var i=0; i<obj.length; i++) {
+            out.push(obj[i][attr]);
+        }
+        return out.join(",");
+    }
+
+
     var layerId = wmsLoader.layerTitleNameMapping[layername];
     var layerCrs = projectData.layers[layerId].crs;
+    var layerFields = joinObj(wmsLoader.layerProperties[layerId].attributes,'name');
     var mapCrsBbox = null;
     var layCrsBbox = null;
     //current view is used as bounding box for exporting data
@@ -286,6 +297,7 @@ function exportData(layername,format, useBbox) {
             map0_extent:mapCrsBbox,
             layer_extent:layCrsBbox,
             layer:layername,
+            fields: layerFields,
             format:format
         });
 
@@ -331,39 +343,48 @@ function openAttTable() {
     var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
     var editable = projectData.use_ids ? projectData.layers[layerId].wfs : false;
     var filter = null;
-    var name = myLayerName;
+    var layer = null;
 
     var m = this.parentMenu.getComponent('mapFilter');
     if (m) {
         filter = m.getFilter();
     }
 
-    name = myLayerName;// + filter;¸
+    var name = myLayerName;// + filter;¸
+    var btm = Ext.getCmp('BottomPanel');
+    var table = Ext.getCmp('table_' + name);
+    if (table == undefined) {
 
-    var layer = new QGIS.SearchPanel({
-        useWmsRequest: true,
-        wmsFilter: filter,
-        queryLayer: myLayerName,
-        gridColumns: getLayerAttributes(myLayerName).columns,
-        gridLocation: 'bottom',
-        gridEditable: editable,
-        gridTitle: name,
-        gridResults: Eqwc.settings.limitAttributeFeatures,
-        gridResultsPageSize: 20,
-        selectionLayer: myLayerName,
-        formItems: [],
-        doZoomToExtent: true
-    });
+        layer = new QGIS.SearchPanel({
+            useWmsRequest: true,
+            wmsFilter: filter,
+            queryLayer: myLayerName,
+            gridColumns: getLayerAttributes(myLayerName).columns,
+            gridLocation: 'bottom',
+            gridEditable: editable,
+            gridTitle: name,
+            gridResults: Eqwc.settings.limitAttributeFeatures,
+            gridResultsPageSize: 20,
+            selectionLayer: myLayerName,
+            formItems: [],
+            doZoomToExtent: true
+        });
 
-    //Ext.getCmp('BottomPanel').setTitle(layer.gridTitle,'x-cols-icon');
-    //Ext.get('BottomPanel').setStyle('padding-top', '2px');
+        //Ext.getCmp('BottomPanel').setTitle(layer.gridTitle,'x-cols-icon');
+        //Ext.get('BottomPanel').setStyle('padding-top', '2px');
 
-    layer.onSubmit();
+        layer.onSubmit();
 
-    //layer.on("featureselected", showFeatureSelected);
-    layer.on("featureselectioncleared", clearFeatureSelected);
-    layer.on("beforesearchdataloaded", showSearchPanelResults);
-
+        //layer.on("featureselected", showFeatureSelected);
+        layer.on("featureselectioncleared", clearFeatureSelected);
+        layer.on("beforesearchdataloaded", showSearchPanelResults);
+    }
+    else {
+        btm.activate(table);
+        // Make sure it's shown and expanded
+        btm.show();
+        btm.collapsible && btm.expand();
+    }
 }
 
 function clearTableSelection() {
@@ -372,6 +393,12 @@ function clearTableSelection() {
 
     //clears selection in map
     clearFeatureSelected();
+}
+
+function loadMore() {
+    var grid = this;
+    grid.gridResults = grid.gridResults*2;
+    grid.onSubmit();
 }
 
 function applyWMSFilter(item) {

@@ -1496,9 +1496,9 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 collapsible = false; // No collapsible in popup
                 targetComponent = Ext.getCmp('SearchResultsPopUp');
                 break;
-            case 'default':
             default:
                 collapsible = false;
+                searchPanelId = 'SearchPanelResultsGrid';
                 targetComponent = searchPanelInstance;
                 break;
         }
@@ -1506,18 +1506,37 @@ function showSearchPanelResults(searchPanelInstance, features) {
         //targetComponent.show();
         //targetComponent.collapsible && targetComponent.expand();
         // Delete and re-create
-        try {
-            Ext.getCmp('SearchPanelResultsGrid').destroy();
-        } catch (e) {
-            // Eventually log...
+        //try {
+        //    Ext.getCmp('SearchPanelResultsGrid').destroy();
+        //} catch (e) {
+        //    // Eventually log...
+        //}
+
+        //test if we need paging (not actual size of results, just initial settings
+        var pagingConfig = {};
+        if (searchPanelInstance.gridResults>searchPanelInstance.gridResultsPageSize) {
+            pagingConfig = new Ext.ux.PagingToolbar({
+                pageSize: searchPanelInstance.gridResultsPageSize,
+                store: searchPanelInstance.store,
+                displayInfo: false
+            });
+
         }
 
-        //filter config
-        var filters = new Ext.ux.grid.GridFilters({
-            // encode and local configuration options
-            encode: false, // json encode the filter query
-            local: true,   // defaults to false (remote filtering)
-            menuFilterText: TR.menuFilterText
+        //assumption that if we have less than 5 columns in grid we want forceFit (no horizontal scroller)
+        var horFit = false;
+        if (searchPanelInstance.gridColumns.length<5){
+            horFit = true;
+        }
+
+        if (!searchPanelInstance.resultsGrid) {
+
+            //filter config
+            var filters = new Ext.ux.grid.GridFilters({
+                // encode and local configuration options
+                encode: false, // json encode the filter query
+                local: true,   // defaults to false (remote filtering)
+                menuFilterText: TR.menuFilterText
 
 //            filters: [{
 //                type: 'numeric',
@@ -1541,132 +1560,114 @@ function showSearchPanelResults(searchPanelInstance, features) {
 //                type: 'boolean',
 //                dataIndex: 'visible'
 //            }]
-        });
-
-        //test if we need paging (not actual size of results, just initial settings
-        var pagingConfig = {};
-        if (searchPanelInstance.gridResults>searchPanelInstance.gridResultsPageSize) {
-            pagingConfig = new Ext.ux.PagingToolbar({
-                pageSize: searchPanelInstance.gridResultsPageSize,
-                store: searchPanelInstance.store,
-                displayInfo: false
             });
 
-        }
 
-        var tt = searchPanelInstance.gridTitle + " ("+searchPanelInstance.store.totalCount+")";
-        if (searchPanelInstance.wmsFilter>"") {
-            tt+=" ["+searchPanelInstance.wmsFilter+"]";
-        }
-
-        //assumption that if we have less than 5 columns in grid we want forceFit (no horizontal scroller)
-        var horFit = false;
-        if (searchPanelInstance.gridColumns.length<5){
-            horFit = true;
-        }
-
-        searchPanelInstance.resultsGrid = new Ext.grid.GridPanel({
-            id:  searchPanelId,
-            title: tt,
-            itemId: searchPanelInstance.gridTitle,
-            closable: searchPanelInstance.tabClosable,
-            collapsible: collapsible,
-            collapsed: false,
-            store: searchPanelInstance.store,
-            columns: searchPanelInstance.gridColumns,
-            plugins: [filters],
-            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
-            autoHeight: autoHeight, // No vert. scrollbars in popup if true!!
-            viewConfig: {
-                forceFit: horFit,
-                templates: {cell: new Ext.Template(
-                    '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
-                    '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
-                    '</td>'
-                )}
-            },
-            // paging bar on the bottom
-            bbar: pagingConfig,
-            //select record if we have one result
-            listeners: {
-                render : function(grid){
-                    grid.store.on('load', function(store, records, options){
-                        if(features.length==1) {
-                            grid.getSelectionModel().selectFirstRow();
-                            grid.fireEvent('rowClick', grid, 0);
-                        }
-                    });
+            searchPanelInstance.resultsGrid = new Ext.grid.GridPanel({
+                id: searchPanelId,
+                title: searchPanelInstance.gridTitle,
+                itemId: searchPanelInstance.gridTitle,
+                closable: searchPanelInstance.tabClosable,
+                collapsible: collapsible,
+                collapsed: false,
+                store: searchPanelInstance.store,
+                columns: searchPanelInstance.gridColumns,
+                plugins: [filters],
+                sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+                autoHeight: autoHeight, // No vert. scrollbars in popup if true!!
+                viewConfig: {
+                    forceFit: horFit,
+                    templates: {
+                        cell: new Ext.Template(
+                            '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
+                            '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
+                            '</td>'
+                        )
+                    }
                 },
-                filterupdate : function() {
-
-                    if (typeof searchPanelInstance.resultsGrid === 'object') {
-                        var wmsFilter = [];
-                        var layer = searchPanelInstance.queryLayer;
-                        var layerId = wmsLoader.layerTitleNameMapping[layer];
-                        var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
-                        Ext.each(filt, function (f) {
-                            if (f.data.type == 'string') {
-                                wmsFilter.push("\"" + f.field + "\" LIKE \'%" + f.data.value + "%\'");
-                            } else if (f.data.type == 'numeric') {
-                                var sep = '';
-                                switch (f.data.comparison) {
-                                    case 'gt':
-                                        sep = '>';
-                                        break;
-                                    case 'lt':
-                                        sep = '<';
-                                        break;
-                                    case 'eq':
-                                        sep = '=';
-                                        break;
-                                }
-                                wmsFilter.push("\"" + f.field + "\" "+ sep + " " + f.data.value );
+                // paging bar on the bottom
+                bbar: pagingConfig,
+                //select record if we have one result
+                listeners: {
+                    render: function (grid) {
+                        grid.store.on('load', function (store, records, options) {
+                            if (features.length == 1) {
+                                grid.getSelectionModel().selectFirstRow();
+                                grid.fireEvent('rowClick', grid, 0);
                             }
                         });
+                    },
+                    filterupdate: function () {
+
+                        if (searchPanelInstance.resultsGrid !== null) {
+                            var wmsFilter = [];
+                            var layer = searchPanelInstance.queryLayer;
+                            var layerId = wmsLoader.layerTitleNameMapping[layer];
+                            var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
+                            Ext.each(filt, function (f) {
+                                if (f.data.type == 'string') {
+                                    wmsFilter.push("\"" + f.field + "\" LIKE \'%" + f.data.value + "%\'");
+                                } else if (f.data.type == 'numeric') {
+                                    var sep = '';
+                                    switch (f.data.comparison) {
+                                        case 'gt':
+                                            sep = '>';
+                                            break;
+                                        case 'lt':
+                                            sep = '<';
+                                            break;
+                                        case 'eq':
+                                            sep = '=';
+                                            break;
+                                    }
+                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + f.data.value);
+                                }
+                            });
 
 
-                        thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
+                            thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
+                        }
                     }
                 }
-            }
 
-        });
+            });
 
-        //additional buttons in bottom toolbar
-        //if paging config is defined, otherwise we don't need this
-        if(pagingConfig.displayInfo==false) {
-
-            searchPanelInstance.resultsGrid.getBottomToolbar().add([
-                //{
-                //text: 'All Filter Data',
-                //tooltip: 'Get Filter Data for Grid',
-                //handler: function () {
-                //    var data = Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData());
-                //    Ext.Msg.alert('All Filter Data',data);
-                //}
-                //},
+            //additional buttons in bottom toolbar
+            var toolBar = [{
+                iconCls: 'x-clearfilter-icon',
+                tooltip: TR.clearFilter,
+                //scale: 'medium',
+                //disabled: true,
+                handler: function () {
+                    searchPanelInstance.resultsGrid.filters.clearFilters();
+                }
+            },
                 {
-
-
-                    iconCls: 'x-clearfilter-icon',
-                    tooltip: TR.clearFilter,
-                    //scale: 'medium',
-                    //disabled: true,
-                    handler: function () {
-                        searchPanelInstance.resultsGrid.filters.clearFilters();
-                    }
-                },
-                {
-
-
                     iconCls: 'x-clear-icon',
                     tooltip: TR.clearSelection,
                     //scale: 'medium',
                     //disabled: true,
                     handler: clearTableSelection
-                }
-            ]);
+                },
+                {
+                    itemId: 'loadmore',
+                    iconCls: 'x-exclamation-icon',
+                    text: TR.loadMore,
+                    hidden: true,
+                    tooltip: TR.loadMoreToolTip,
+                    scope: searchPanelInstance,
+                    handler: loadMore
+                }];
+
+            //if paging config is defined, otherwise we don't need this
+            if(pagingConfig.displayInfo==false) {
+                searchPanelInstance.resultsGrid.getBottomToolbar().add(toolBar);
+            }
+
+            targetComponent.add(searchPanelInstance.resultsGrid);
         }
+
+
 
         searchPanelInstance.resultsGrid.on('rowclick', searchPanelInstance.onRowClick, searchPanelInstance);
         searchPanelInstance.resultsGrid.on('keypress', function(e){
@@ -1677,7 +1678,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
             }
         });
 
-        targetComponent.add(searchPanelInstance.resultsGrid);
+
         targetComponent.doLayout();
         // Always make sure it's shown and expanded
         searchPanelInstance.resultsGrid.show();
@@ -1700,12 +1701,12 @@ function showSearchPanelResults(searchPanelInstance, features) {
         maskElement.unmask();
 
         Ext.MessageBox.alert(searchPanelTitleString[lang], searchNoRecordsFoundString[lang]);
-        try {
-            Ext.getCmp('SearchPanelResultsGrid').destroy();
-        } catch (e) {
-            // Eventually log...
-        }
-        searchPanelInstance.resultsGrid = null;
+        //try {
+        //    Ext.getCmp('SearchPanelResultsGrid').destroy();
+        //} catch (e) {
+        //    // Eventually log...
+        //}
+        //searchPanelInstance.resultsGrid = null;
     }
     return true;
 }
