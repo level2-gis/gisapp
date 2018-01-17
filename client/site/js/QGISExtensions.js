@@ -1097,9 +1097,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
 
                                 var tableId = 'table_' + this.queryLayer;
                                 var table = Ext.getCmp(tableId);
-                                var loadmore = table.getBottomToolbar().getComponent('loadmore');
 
                                 if(table != undefined) {
+                                    var loadmore = table.getBottomToolbar().getComponent('loadmore');
                                     if (loadmore != undefined)
                                     {
                                         if (complete) {

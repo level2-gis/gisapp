@@ -116,74 +116,75 @@ function buildLayerContextMenu(node) {
     var filter=[];
 
     // add same specific menus if exists
-    if(projectData.layerSpecifics != null) {
-        var layerSpecifics = projectData.layerSpecifics;
-        var j = 0;
-        for (var i = 0; i < layerSpecifics.storedFilters.length; i++) {
-            if (layerSpecifics.storedFilters[i].layer == node.text) {
-                j++;
-                if (j == 1) {
-                    menuCfg.items.push({
-                        itemId: "mapFilter",
-                        text: layerSpecifics.storedFilters[i].menuTitle,
-                        checked: false,
-                        hideOnClick: true,
-                        menu: [],
-                        getFilter: function(){
-                            var value=null;
-                            this.menu.cascade(function(i){ if(i.checked){
-                                value=i.value;
-                            } });
-                            return value;
-                        },
-                        listeners: {
-                            checkchange: function() {
-                                if(!this.checked) {
-                                    thematicLayer.params["FILTER"] = "";
-                                    thematicLayer.redraw();
-                                    this.menu.cascade(function(item) {
-                                        if (item.checked) {
-                                            item.setChecked(false);
-                                        }
-                                    })
-                                }
-                                var t = Ext.getCmp('table_'+node.text);
-                                if(typeof t == 'object') {
-                                    t.destroy();
-                                }
-                            }
-                        }
-
-                    });
-                }
-                menuCfg.items[menuCfg.items.length - 1].menu.push({
-                    itemId: 'storedFilter_' + j,
-                    text: layerSpecifics.storedFilters[i].title,
-                    value: layerSpecifics.storedFilters[i].filterValue,
-                    checked: false,
-                    group: "storedFilters",
-                    handler: applyWMSFilter,
-                    listeners: {
-                        checkchange: function() {
-                            if(this.checked) {
-                                var m = this.parentMenu.parentMenu.getComponent('mapFilter');
-                                m.setChecked(true);
-                            }
-                            var t = Ext.getCmp('table_'+node.text);
-                            if(typeof t == 'object') {
-                                t.destroy();
-                            }
-                        }
-                    }
-                });
-
-                filter.push({
-                    text: layerSpecifics.storedFilters[i].title,
-                    value: layerSpecifics.storedFilters[i].filterValue
-                });
-            }
-        }
-    }
+    //TODO needs refactoring, different structure in json
+    //if(projectData.layerSpecifics != null) {
+    //    var layerSpecifics = projectData.layerSpecifics;
+    //    var j = 0;
+    //    for (var i = 0; i < layerSpecifics.storedFilters.length; i++) {
+    //        if (layerSpecifics.storedFilters[i].layer == node.text) {
+    //            j++;
+    //            if (j == 1) {
+    //                menuCfg.items.push({
+    //                    itemId: "mapFilter",
+    //                    text: layerSpecifics.storedFilters[i].menuTitle,
+    //                    checked: false,
+    //                    hideOnClick: true,
+    //                    menu: [],
+    //                    getFilter: function(){
+    //                        var value=null;
+    //                        this.menu.cascade(function(i){ if(i.checked){
+    //                            value=i.value;
+    //                        } });
+    //                        return value;
+    //                    },
+    //                    listeners: {
+    //                        checkchange: function() {
+    //                            if(!this.checked) {
+    //                                thematicLayer.params["FILTER"] = "";
+    //                                thematicLayer.redraw();
+    //                                this.menu.cascade(function(item) {
+    //                                    if (item.checked) {
+    //                                        item.setChecked(false);
+    //                                    }
+    //                                })
+    //                            }
+    //                            var t = Ext.getCmp('table_'+node.text);
+    //                            if(typeof t == 'object') {
+    //                                t.destroy();
+    //                            }
+    //                        }
+    //                    }
+    //
+    //                });
+    //            }
+    //            menuCfg.items[menuCfg.items.length - 1].menu.push({
+    //                itemId: 'storedFilter_' + j,
+    //                text: layerSpecifics.storedFilters[i].title,
+    //                value: layerSpecifics.storedFilters[i].filterValue,
+    //                checked: false,
+    //                group: "storedFilters",
+    //                handler: applyWMSFilter,
+    //                listeners: {
+    //                    checkchange: function() {
+    //                        if(this.checked) {
+    //                            var m = this.parentMenu.parentMenu.getComponent('mapFilter');
+    //                            m.setChecked(true);
+    //                        }
+    //                        var t = Ext.getCmp('table_'+node.text);
+    //                        if(typeof t == 'object') {
+    //                            t.destroy();
+    //                        }
+    //                    }
+    //                }
+    //            });
+    //
+    //            filter.push({
+    //                text: layerSpecifics.storedFilters[i].title,
+    //                value: layerSpecifics.storedFilters[i].filterValue
+    //            });
+    //        }
+    //    }
+    //}
     node.menu = new Ext.menu.Menu(menuCfg);
     node.filter = filter;
 }
