@@ -40,9 +40,9 @@ $def_lang = $_SESSION['lang'];
 $debug = defined('DEBUG') ? DEBUG : false;
 
 //eqwc language files
-array_push($lang, "admin/languages/locale/ext-lang-". $def_lang .".js");
-array_push($lang, "admin/languages/". $def_lang .".js");
-array_push($lang, "client/site/js/lang/Translations_". $def_lang .".js");
+array_push($lang, "admin/languages/locale/ext-lang-". $def_lang .".js?v=".$version);
+array_push($lang, "admin/languages/". $def_lang .".js?v=".$version);
+array_push($lang, "client/site/js/lang/Translations_". $def_lang .".js?v=".$version);
 
 //add into array all js files in plugins/xxx/js subfolder
 foreach ($scan as $item) {
@@ -50,7 +50,7 @@ foreach ($scan as $item) {
         $plugin_path = $dir . $item;
 
         //plugin language file
-        $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js";
+        $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js?v=".$version;
         if (!file_exists($lang_fn)) {
            $def_lang = 'en';
         }
