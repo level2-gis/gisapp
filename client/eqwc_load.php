@@ -50,7 +50,7 @@ foreach ($scan as $item) {
         $plugin_path = $dir . $item;
 
         //plugin language file
-        $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js?v=".$version;
+        $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js";
         if (!file_exists($lang_fn)) {
            $def_lang = 'en';
         }
