@@ -51,8 +51,8 @@ var TR = {
     description: 'Opis',
     emptyPrintTitleText: 'Wpisz własny tytuł...',
     emptyPrintDescriptionText: 'Wpisz własny opis...',
-    loadMore: 'Load more...',
-    loadMoreToolTip: 'Table is not complete.Click to load more data from server!'
+    loadMore: 'Wczytaj więcej...',
+    loadMoreToolTip: 'Tabela jest niekompletna. Kliknij by załadować więcej danych z serwera!'
 };
 
 /**
