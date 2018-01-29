@@ -42,7 +42,7 @@ function showFeatureInfo(evt) {
         var text = "</br>";
         var locationText = "<h2>" + TR.fiLocation + "</h2>";
         var locationUnits = map.getLonLatFromPixel(evt.xy);
-        var locationObj = new QGIS.LocationService({location: locationUnits});
+        var locationObj = new QGIS.LocationService({location: locationUnits, language: projectData.lang});
         var popupItems = [];
 
         popupItems.push(

@@ -1658,6 +1658,7 @@ Ext.reg('qgis_layerorderpanel', QGIS.LayerOrderPanel);
 QGIS.LocationService = Ext.extend(Ext.util.Observable, {
     constructor: function(config){
         this.location = config.location; //units
+        this.language = config.language;
 
         this.addEvents(['elevation', 'address']);
 
@@ -1695,6 +1696,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                             access_token: config.key
                         };
                         break;
+                    //MApZen service shutdown on 2018/02/01
                     case "mapzen" :
                         serviceData.url = "https://elevation.mapzen.com/height";
                         serviceData.resultNode = "";
@@ -1717,6 +1719,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
             case "address" :
                 switch
                     (config.provider.toLowerCase()) {
+                    //MApZen service shutdown on 2018/02/01
                     case "mapzen" :
                         serviceData.url = "https://search.mapzen.com/v1/reverse";
                         serviceData.resultNode = "features";
@@ -1741,7 +1744,8 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                         serviceData.factor = 1;  //factor to multiply returned distance to get meters
                         serviceData.params = {
                             access_token: config.key,
-                            types: "address,neighborhood,place"
+                            types: "address,neighborhood,place",
+                            language: this.language
                         };
                         break;
                 }
