@@ -32,7 +32,7 @@ function makeLayer(layDef, visible) {
             break;
 
         case 'OSM' :
-            layer = new OpenLayers.Layer.OSM(title);
+            layer = new OpenLayers.Layer.OSM(title, null, options);
             break;
 
         case 'XYZ' :
