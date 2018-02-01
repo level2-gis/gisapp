@@ -49,9 +49,14 @@ function makeLayer(layDef, visible) {
             break;
 
         case 'WMTS' :
+            var visibility = visible;
+            //if extra layer take visibility from options if exists
+            if (!visible && options.visibility != undefined) {
+                visibility = options.visibility;
+            }
             var layer = new OpenLayers.Layer.WMTS({
                 name: title,
-                visibility: visible,
+                visibility: visibility,
                 url: options.url,
                 layer: options.layer,
                 requestEncoding: options.requestEncoding,

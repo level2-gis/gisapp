@@ -130,6 +130,8 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             break;
         case 'DXF':
             $format_name = $destinationFormat;
+            //this should remove hatch, but there is no change
+            //$options .= "-lco DXF_WRITE_HATCH=FALSE ";
             break;
         case 'CSV':
             $format_name = $destinationFormat;

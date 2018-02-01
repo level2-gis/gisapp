@@ -348,7 +348,12 @@ Gui.loadExtraLayers = function(data) {
         var el = Config.data.extralayers[i];
         var selected ='';
 
-        html += '<label><input type="checkbox" name="_extra_" id="' + el.name + '" data-extra="true">' + el.title + '</label>'
+        var definition = $.parseJSON(el.definition);
+
+        if(definition.visibility) {
+            selected = ' checked="checked"';
+        }
+        html += '<label><input type="checkbox" name="_extra_" id="' + el.name + '" data-extra="true"' +selected+ '>' + el.title + '</label>'
         //create ol3 layer object, first time only, visibility false
         Map.setBackgroundLayer(el.name,i, false);
 
