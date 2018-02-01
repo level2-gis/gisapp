@@ -1140,7 +1140,7 @@ function postLoading() {
             var extraNode = new GeoExt.tree.LayerNode({
                 layer: extraLayers[k],
                 leaf: true,
-                checked: false,
+                checked: extraLayers[k].visibility,
                 uiProvider: Ext.tree.TriStateNodeUI
             });
             extraLayGroup.appendChild(extraNode);
