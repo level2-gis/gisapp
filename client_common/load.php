@@ -29,6 +29,10 @@ if (!property_exists($settings, "locationServices")) {
     $settings->locationServices = null;
 }
 
+if (!property_exists($data, "project_id")) {
+    $data->project_id = 0;
+}
+
 if (!property_exists($data, "client_url")) {
     $data->client_url = "";
 }
@@ -71,6 +75,7 @@ projectData.permalink = <?php echo json_encode($data->permalink) ?>;
 
 projectData.gis_projects = eval(<?php echo json_encode($gis_projects) ?>);
 projectData.project = '<?php echo $project ?>';
+projectData.id = <?php echo $data->project_id ?>;
 projectData.description = <?php echo json_encode($description) ?>;
 projectData.crs = '<?php echo $qgs->crs ?>';
 projectData.proj4 = '<?php echo $qgs->proj4 ?>';

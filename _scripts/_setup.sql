@@ -96,8 +96,9 @@ COMMENT ON FUNCTION check_user_project(uname text, project text) IS 'IN uname, p
 -- Name: get_project_data(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
+DROP FUNCTION IF EXISTS public.get_project_data(text);
 CREATE OR REPLACE FUNCTION public.get_project_data(project text)
-  RETURNS TABLE(client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[], is_public boolean, project_display_name text, crs text, description text, contact text, restrict_to_start_extent boolean, geolocation boolean, feedback boolean, measurements boolean, print boolean, zoom_back_forward boolean, identify_mode boolean, permalink boolean, feedback_email text, project_path text)
+  RETURNS TABLE(client_id integer, client_name text, client_display_name text, client_url text, theme_name text, overview_layer json, base_layers json, extra_layers json, tables_onstart text[], is_public boolean, project_id integer, project_name text, project_display_name text, crs text, description text, contact text, restrict_to_start_extent boolean, geolocation boolean, feedback boolean, measurements boolean, print boolean, zoom_back_forward boolean, identify_mode boolean, permalink boolean, feedback_email text, project_path text)
 LANGUAGE 'plpgsql'
 
 COST 1
@@ -106,49 +107,52 @@ ROWS 1000
 AS $BODY$
 
 declare base json;
-declare overview json;
-declare extra json;
+        declare overview json;
+        declare extra json;
 begin
-base:=null;
-overview:=null;
+  base:=null;
+  overview:=null;
 
   SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
-    FROM
+  FROM
     (SELECT layers.* FROM projects,layers where layers.id = ANY(projects.base_layers_ids) AND projects.name=$1 ORDER BY idx(projects.base_layers_ids, layers.id)) AS layers INTO base;
 
   SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
   FROM
-  (SELECT layers.* FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND projects.name=$1 ORDER BY idx(projects.extra_layers_ids, layers.id)) AS layers INTO extra;
+    (SELECT layers.* FROM projects,layers where layers.id = ANY(projects.extra_layers_ids) AND projects.name=$1 ORDER BY idx(projects.extra_layers_ids, layers.id)) AS layers INTO extra;
 
   SELECT json_agg(json_build_object('type',layers.type,'definition',layers.definition,'name',layers.name,'title',layers.display_name))
   FROM projects,layers where layers.id = projects.overview_layer_id and projects.name=$1 INTO overview;
 
-RETURN QUERY SELECT
-               clients.name,
-               clients.display_name,
-               clients.url,
-               themes.name,
-               overview,
-               base,
-               extra,
-               projects.tables_onstart,
-               projects.public,
-               projects.display_name,
-               projects.crs,
-               projects.description,
-               projects.contact,
-               projects.restrict_to_start_extent,
-               projects.geolocation,
-               projects.feedback,
-               projects.measurements,
-               projects.print,
-               projects.zoom_back_forward,
-               projects.identify_mode,
-               projects.permalink,
-               projects.feedback_email,
-			         projects.project_path
+  RETURN QUERY SELECT
+                 clients.id,
+                 clients.name,
+                 clients.display_name,
+                 clients.url,
+                 themes.name,
+                 overview,
+                 base,
+                 extra,
+                 projects.tables_onstart,
+                 projects.public,
+                 projects.id,
+                 projects.name,
+                 projects.display_name,
+                 projects.crs,
+                 projects.description,
+                 projects.contact,
+                 projects.restrict_to_start_extent,
+                 projects.geolocation,
+                 projects.feedback,
+                 projects.measurements,
+                 projects.print,
+                 projects.zoom_back_forward,
+                 projects.identify_mode,
+                 projects.permalink,
+                 projects.feedback_email,
+                 projects.project_path
 
-             FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
+               FROM projects,clients,themes WHERE clients.theme_id=themes.id AND projects.client_id = clients.id AND projects.name=$1;
 end;
 
 $BODY$;
@@ -169,7 +173,8 @@ CREATE TABLE clients (
     display_name text,
     theme_id integer NOT NULL DEFAULT 1,
     url text,
-    description text
+    description text,
+    ordr integer NOT NULL DEFAULT 0
 );
 
 
@@ -258,7 +263,8 @@ CREATE TABLE projects (
     identify_mode boolean NOT NULL DEFAULT false,
     permalink boolean NOT NULL DEFAULT true,
     feedback_email text,
-    project_path text
+    project_path text,
+    ordr integer NOT NULL DEFAULT 0
 );
 
 
@@ -474,7 +480,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (15, '2017-12-18');
+INSERT INTO settings VALUES (16, '2018-02-16');
 
 
 --
@@ -646,12 +652,14 @@ ALTER TABLE ONLY projects
 -- PostgreSQL database dump complete
 --
 
+DROP VIEW IF EXISTS public.clients_view;
 CREATE OR REPLACE VIEW public.clients_view AS
   SELECT clients.id,
     clients.name,
     clients.display_name,
     clients.url,
     clients.description,
+    clients.ordr,
     count(projects.id) AS count,
     sort(array_agg(projects.id)) AS project_ids
   FROM clients,
@@ -661,8 +669,7 @@ CREATE OR REPLACE VIEW public.clients_view AS
 
 -- View: public.projects_view
 
--- DROP VIEW public.projects_view;
-
+DROP VIEW IF EXISTS public.projects_view;
 CREATE OR REPLACE VIEW public.projects_view AS
   SELECT projects.id,
     projects.name,
@@ -674,8 +681,10 @@ CREATE OR REPLACE VIEW public.projects_view AS
     END AS display_name,
     projects.crs,
     projects.description,
+    projects.ordr,
     projects.contact,
-    clients.display_name AS client
+    clients.display_name AS client,
+    clients.name AS client_name
   FROM projects,
     clients
   WHERE projects.client_id = clients.id;
