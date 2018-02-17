@@ -247,7 +247,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
                 <script type="text/javascript" src="client/site/libs/ext/adapter/ext/ext-base.js"></script>
                 <script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
-                <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js"></script>
+                <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js?v=20180215"></script>
 
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
                 <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20171213"></script>
