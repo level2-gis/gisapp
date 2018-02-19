@@ -227,7 +227,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <title></title>
                 <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css"/>
+                <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20171108"/>
