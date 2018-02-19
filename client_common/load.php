@@ -5,6 +5,7 @@ session_start();
 //Setting some global variables
 $user = "" . $_SESSION['user_name'];
 $project = "" . $_SESSION['project'];
+$upload = "" . $_SESSION['upload_dir'];
 
 $data = json_decode($_SESSION['data']);
 $settings = json_decode($_SESSION['settings']);
@@ -84,6 +85,8 @@ projectData.extent = '<?php echo implode(',',$qgs->extent) ?>';
 projectData.layers = eval(<?php echo json_encode($qgs->layers) ?>);
 projectData.use_ids = <?php echo json_encode($qgs->use_ids) ?>;
 projectData.add_geom = <?php echo json_encode($qgs->add_geom_to_fi) ?>;
+
+projectData.uploadDir = '<?php echo $upload ?>'+projectData.client_name+'/'+projectData.project+'/';
 
 projectData.baseLayers = function () {
     var bl = eval(<?php echo json_encode($data->base_layers) ?>);
