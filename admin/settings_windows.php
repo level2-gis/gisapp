@@ -34,6 +34,9 @@ define('QGISSERVERURL', 'http://localhost:8080/cgi-bin/qgis_mapserv.fcgi.exe');
 //Only set this if you intent to use Google Maps layers or Google StreetView
 define('GOOGLE_MAPS_KEY','your_key');
 
+//Main upload directory, copy value from gisportal config.php main_upload_dir
+define('MAIN_UPLOAD_DIR', './uploads/');
+
 //other settings
 define('OGR2OGR', 'C:/OSGeo4W64/bin/ogr2ogr');
 define('TEMP_PATH', 'C:/Windows/Temp/');

@@ -374,6 +374,7 @@ class Login
             $_SESSION['description'] = $project_description['message'];
             $_SESSION['gis_projects'] = $gis_projects;
             $_SESSION['qgs'] = json_encode($project_qgs);
+            $_SESSION['upload_dir'] = defined(MAIN_UPLOAD_DIR) ? MAIN_UPLOAD_DIR : './uploads/';
 
             return true;
         } else {
