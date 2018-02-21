@@ -469,7 +469,7 @@ function getLayerAttributes(layer) {
                 }
                 return value;
             } else {
-                return Eqwc.common.createHyperlink(value, null);
+                return Eqwc.common.createHyperlink(value, null, mediaurl);
             }
         };
 

@@ -5,7 +5,7 @@
 
 Eqwc.common = {};
 
-Eqwc.common.createHyperlink = function(att, val) {
+Eqwc.common.createHyperlink = function(att, val, pattern) {
     if (val == null) {
         val = att;
     }
@@ -14,12 +14,12 @@ Eqwc.common.createHyperlink = function(att, val) {
     if (att != '' && /^((http|https|ftp):\/\/).+\..+/i.test(att)) {
         if (!/\<a./i.test(att)) {
             //do not reformat already formated tags
-            att = "<a class=\"popupLink\" href=\"" + att + "\" target=\"_blank\">" + val + "</a>";
+            att = "<a class=\"link\" href=\"" + att + "\" target=\"_blank\">" + val + "</a>";
         }
     }
     // add hyperlinks for URLs containing mediaurl pattern
-    if (mediaurl != '') {
-        var mediapattern = new RegExp(mediaurl, 'i');
+    if (pattern > '') {
+        var mediapattern = new RegExp(pattern, 'i');
         if (mediapattern.test(att)) {
             att = "<a href=\"/" + attValue + "\" target=\"_blank\">" + att + "</a>";
         }

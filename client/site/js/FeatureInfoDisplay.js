@@ -474,7 +474,7 @@ function parseFIResult(node) {
                                             attValue = newArr.join('</br>');
                                         }
                                     } else {
-                                        attValue = Eqwc.common.createHyperlink(attValue, null);
+                                        attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
                                     }
 
                                     if (attName == 'maptip' || attName == 'files') {

@@ -652,35 +652,42 @@ Gui.showXMLFeatureInfoResults = function(results) {
       html +=   '<h3>' + title + '</h3>';
       html +=   '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
 
-      for (var k=0; k<feature.attributes.length; k++) {
-        var attribute = feature.attributes[k];
+        for (var k = 0; k < feature.attributes.length; k++) {
+            var attribute = feature.attributes[k];
 
-        // skip hidden attributes and hidden values
-        if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
-          html += '<li>';
-          if (attribute.value.match(/^https?:\/\/.+\..+/i)) {
-            // add link to URL from value
-            html += '<a href="' + attribute.value + '" target="_blank" class="link">';
-            html +=   '<span class="name">' + attribute.name + '</span>';
-            html += '</a>';
-          }
-          else {
-            // add attribute name and value
-            //hide field name in this cases, hardcoded
-            if (attribute.name !== 'maptip' && attribute.name !== 'files') {
-                html += '<span class="name">' + attribute.name + ': </span>';
+            // skip hidden attributes and hidden values
+            if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
+                html += '<li>';
+
+                if (attribute.name == 'files') {
+                    if (attribute.value > '') {
+                        var attArr = $.parseJSON(attribute.value);
+                        var newArr = [];
+                        for (var i=0; i < attArr.length; i++) {
+                            newArr.push(Eqwc.common.manageFile(attArr[i], true));
+                        }
+                        attribute.value = newArr.join('</br>');
+                    }
+                } else {
+                    attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
+                }
+
+                // add attribute name and value
+                //hide field name in this cases, hardcoded
+                if (attribute.name !== 'maptip' && attribute.name !== 'files') {
+                    html += '<span class="name">' + attribute.name + ': </span>';
+                }
+                html += '<span class="value">' + attribute.value + '</span>';
             }
-            html += '<span class="value">' + attribute.value + '</span>';
-          }
-          html += '</li>';
-        }
-      }
+            html += '</li>';
 
-      html +=   '</ul>';
-      html += '</div>';
+        }
+
+        html += '</ul>';
+        html += '</div>';
     }
 
-    html += '</div>';
+      html += '</div>';
   }
   if (results.length == 0) {
     html = I18n.featureInfo.noFeatureFound;
