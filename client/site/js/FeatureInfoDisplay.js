@@ -129,7 +129,7 @@ function showFeatureInfo(evt) {
                 beforeshow: function () {
 
                     var maxHeight = geoExtMap.getHeight() * 0.8;
-                    var minWidth = 200;
+                    var minWidth = 280;
 
                     if ((geoExtMap.getWidth() * 0.25) > minWidth) {
                         this.setWidth(geoExtMap.getWidth() * 0.25);
@@ -389,25 +389,6 @@ function clearFeatureSelected() {
     featureInfoHighlightLayer.removeAllFeatures();
 }
 
-function createHyperlink(att) {
-    // add hyperlinks for URLs in attribute values
-    if (att != '' && /^((http|https|ftp):\/\/).+\..+/i.test(att)) {
-        if (!/\<a./i.test(att)) {
-            //do not reformat already formated tags
-            att = "<a class=\"popupLink\" href=\"" + att + "\" target=\"_blank\">" + att + "</a>";
-        }
-    }
-    // add hyperlinks for URLs containing mediaurl pattern
-    if (mediaurl != '') {
-        var mediapattern = new RegExp(mediaurl, 'i');
-        if (mediapattern.test(att)) {
-            att = "<a href=\"/" + attValue + "\" target=\"_blank\">" + att + "</a>";
-        }
-    }
-
-    return att;
-}
-
 function parseFIResult(node) {
     if (node.hasChildNodes()) {
         //test if we need to show the feature info layer title
@@ -478,13 +459,25 @@ function parseFIResult(node) {
                                 } else {
                                     //if (attName !== "maptip") {
                                     htmlText += "\n   <tr>";
-                                    if (showFieldNamesInClickPopup && attName !== "maptip") {
+                                    if (showFieldNamesInClickPopup && attName !== "maptip" && attName!== 'files') {
                                         htmlText += "<td>" + attName + ":</td>";
                                     }
 
-                                    attValue = createHyperlink(attValue);
+                                    if (attName == 'files'){
+                                        if (attValue>'') {
+                                            var attArr = Ext.util.JSON.decode(attValue);
+                                            var newArr = [];
+                                            Ext.each(attArr, function (item, index, array) {
+                                                var value = this;
+                                                value.push(Eqwc.common.manageFile(item, true));
+                                            }, newArr);
+                                            attValue = newArr.join('</br>');
+                                        }
+                                    } else {
+                                        attValue = Eqwc.common.createHyperlink(attValue, null);
+                                    }
 
-                                    if (attName == 'maptip') {
+                                    if (attName == 'maptip' || attName == 'files') {
                                         htmlText += "<td colspan='2'>" + attValue + "</td></tr>";
                                     } else {
                                         htmlText += "<td>" + attValue + "</td></tr>";
@@ -503,7 +496,7 @@ function parseFIResult(node) {
                     if (rasterData == false) {
                         htmlText += "\n <p></p>\n <table>\n  <tbody>";
                     }
-                    htmlText += '\n<tr><td>' + getRasterFieldName(layerTitle, layerChildNode.getAttribute("name")) + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
+                    htmlText += '\n<tr><td>' + Eqwc.common.getRasterFieldName(layerTitle, layerChildNode.getAttribute("name")) + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
                     hasAttributes = true;
                     rasterData = true;
                 }

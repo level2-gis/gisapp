@@ -120,16 +120,5 @@ projectData.overViewLayer = function () {
     }
 };
 
-function getRasterFieldName(layer, name) {
-    if (!(Eqwc.settings.overWriteRasterFieldName && Eqwc.settings.overWriteRasterFieldName[layer])) {
-        return name;
-    }
-    if (Eqwc.settings.overWriteRasterFieldName[layer][0] == name) {
-        return Eqwc.settings.overWriteRasterFieldName[layer][1];
-    } else {
-        return name;
-    }
-}
-
 //TODO use in css!
 var userLogoImg = projectData.gis_projects.path + 'admin/resources/images/user_gray.png';

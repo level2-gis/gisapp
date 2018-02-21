@@ -20,6 +20,7 @@ foreach ($crs_list as $crs) {
 }
 
 $eqwc_debug = [
+    "client_common/common.js?v=".$version,
     "client/site/js/PagingStore.js?v=".$version,
     "client/site/js/LoadAppProjectData.js?v=".$version,
     "client/site/js/Customizations.js?v=".$version,

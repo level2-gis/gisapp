@@ -104,7 +104,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
         var attributes = [];
         $(this).find('Attribute').each(function() {
           attributes.push({
-            name: getRasterFieldName(Config.getLayerName(lay), $(this).attr('name')),
+            name: Eqwc.common.getRasterFieldName(Config.getLayerName(lay), $(this).attr('name')),
             value: $(this).attr('value').replace("NULL", Eqwc.settings.noDataValue)
           });
         });

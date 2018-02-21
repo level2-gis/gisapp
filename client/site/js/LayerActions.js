@@ -457,7 +457,20 @@ function getLayerAttributes(layer) {
         ret.columns[i].sortable = true;
         ret.columns[i].filterable = true;
         ret.columns[i].renderer = function(value) {
-            return createHyperlink(value);
+            if (this.dataIndex == 'files') {
+                if (value>'') {
+                    var attArr = Ext.util.JSON.decode(value);
+                    var newArr = [];
+                    Ext.each(attArr, function (item, index, array) {
+                        var val = this;
+                        val.push(Eqwc.common.manageFile(item, false));
+                    }, newArr);
+                    value = newArr.join(', ');
+                }
+                return value;
+            } else {
+                return Eqwc.common.createHyperlink(value, null);
+            }
         };
 
         if(fieldType=='double') {

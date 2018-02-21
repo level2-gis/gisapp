@@ -666,7 +666,10 @@ Gui.showXMLFeatureInfoResults = function(results) {
           }
           else {
             // add attribute name and value
-            html += '<span class="name">' + attribute.name + ': </span>';
+            //hide field name in this cases, hardcoded
+            if (attribute.name !== 'maptip' && attribute.name !== 'files') {
+                html += '<span class="name">' + attribute.name + ': </span>';
+            }
             html += '<span class="value">' + attribute.value + '</span>';
           }
           html += '</li>';

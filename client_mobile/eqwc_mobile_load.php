@@ -8,6 +8,7 @@ session_start();
 $version = \GisApp\Helpers::getEqwcVersion();
 $lang = [];
 $eqwc_debug = [
+    "client_common/common.js?v=".$version,
     "client_mobile/src/url_params.js?v=".$version,
     "client_mobile/src/permalink.js?v=".$version,
     "client_mobile/src/login.js?v=".$version,
