@@ -323,9 +323,10 @@ Gui.loadBackgroundLayers = function(data) {
         //uncheck others
         $('#panelLayerAll :checkbox[data-background=true]').not($(this)).prop("checked",false).checkboxradio("refresh");
 
-        for (bl in Map.backgroundLayers) {
-            if (bl !== selected) {
-                Map.backgroundLayers[bl].setVisible(false);
+        for (var i=0; i<Config.data.baselayers.length; i++) {
+            var lay = Config.data.baselayers[i].name;
+            if (lay !== selected) {
+                Map.backgroundLayers[lay].setVisible(false);
             }
         }
     });

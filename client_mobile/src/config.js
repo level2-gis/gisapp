@@ -93,19 +93,6 @@ return "/layers.json?topic=" + topicName;
 
 Config.data.initialTopic = projectData.project;
 
-Config.data.baselayers = [];
-//remove google from array
-if (projectData.baseLayers() !== null) {
-    for (var i = 0; i < projectData.baseLayers().length; i++) {
-        var bl = projectData.baseLayers()[i];
-        if (bl.type != 'Google') {
-            Config.data.baselayers.push(bl);
-        }
-    }
-}
-
-Config.data.extralayers = projectData.extraLayers();
-
 // default properties
 Config.defaultProperties = {
   following: true,
@@ -223,6 +210,23 @@ Config.map.viewOptions = {
   extent: projectData.restrictToStartExtent ? Config.map.extent : undefined
   //zoom: Config.map.init.zoom,
 };
+
+Config.data.baselayers = [];
+//remove google from array
+//get resolutions from WMTS layer. If more last will be used
+if (projectData.baseLayers() !== null) {
+    for (var i = 0; i < projectData.baseLayers().length; i++) {
+        var bl = projectData.baseLayers()[i];
+        if (bl.type != 'Google') {
+            Config.data.baselayers.push(bl);
+        }
+        if (bl.type == 'WMTS') {
+            Config.map.viewOptions.resolutions = $.parseJSON(bl.definition).resolutions;
+        }
+    }
+}
+
+Config.data.extralayers = projectData.extraLayers();
 
 // WMS server type ('geoserver', 'mapserver', 'qgis'), used for adding WMS dpi parameters
 Config.map.wmsServerType = 'qgis';

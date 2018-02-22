@@ -250,8 +250,14 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
                 resolutions = serverResolutions;
             }
 
+            //if extra layer take visibility from options if exists
+            var visibility = visible;
+            if (!visible && definition.visibility != undefined) {
+                visibility = definition.visibility;
+            }
+
             layOl3 = new ol.layer.Tile({
-                visible: definition.visibility == undefined ? visible : definition.visibility,
+                visible: visibility,
                 extent: projectData.restrictToStartExtent ? projectData.extent.split(',') : undefined,
                 source: new ol.source.WMTS({
                     url: definition.url,
