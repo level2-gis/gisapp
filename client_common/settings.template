@@ -31,6 +31,9 @@ Eqwc.settings.enableHoverPopup = false;
 //Note that you control visibility of this combo per specific project in database
 Eqwc.settings.defaultIdentificationMode = "allLayers";
 
+//display X and Y of clicked location on top of identify window results
+Eqwc.settings.showCoordinatesIdentify = true;
+
 //To enable adding own titles and description text to printing you have to add
 //users_print_view into QGIS project from gisapp database
 //you must add table to print layout, table will always have max 1 row for current user

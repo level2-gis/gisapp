@@ -39,28 +39,28 @@ function showFeatureInfo(evt) {
         }
 
         //start locationservices
-        var text = "</br>";
+        var text = "";
         var locationText = "<h2>" + TR.fiLocation + "</h2>";
         var locationUnits = map.getLonLatFromPixel(evt.xy);
         var locationObj = new QGIS.LocationService({location: locationUnits, language: projectData.lang});
         var popupItems = [];
 
-        popupItems.push(
-            {
-                xtype: 'box',
-                html: locationText
-            }, {
-                id: "fi_location",
-                //margins: '5 5 5 5',
-                xtype: 'box',
-                html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
-            });
-
+        if (Eqwc.settings.showCoordinatesIdentify) {
+            text = "</br>";
+            popupItems.push(
+                {
+                    xtype: 'box',
+                    html: locationText
+                }, {
+                    id: "fi_location",
+                    //margins: '5 5 5 5',
+                    xtype: 'box',
+                    html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
+                });
+        }
 
         if (projectData.locationServices != null) {
-
-
-
+            text = "</br>";
             for (var l = 0; l < projectData.locationServices.length; l++) {
                 locationObj.getService({
                     name: projectData.locationServices[l].name,
@@ -95,6 +95,7 @@ function showFeatureInfo(evt) {
         //    }
         //
         if (featureInfoResultLayers.length > 0) {
+
             if (identificationMode == 'topMostHit') {
                 text += featureInfoResultLayers[0];
                 //        featureInfoHighlightLayer.addFeatures(highLightGeometry[0]);
@@ -105,13 +106,14 @@ function showFeatureInfo(evt) {
                     //featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
                 }
             }
+
+            popupItems.push({
+                id: "fi_qgis",
+                xtype: 'box',
+                //margins: '3 0 3 3',
+                html: text
+            });
         }
-        popupItems.push({
-            id: "fi_qgis",
-            xtype: 'box',
-            //margins: '3 0 3 3',
-            html: text
-        });
 
         //new way GeoExt Popup
         clickPopup = new GeoExt.Popup({
@@ -143,7 +145,9 @@ function showFeatureInfo(evt) {
                 }
             }
         });
-        clickPopup.show();
+        if (popupItems.length>0) {
+            clickPopup.show();
+        }
 
         //old way with OpenLayers.Popup
         // clickPopup = new OpenLayers.Popup.FramedCloud(
