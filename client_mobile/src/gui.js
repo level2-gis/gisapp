@@ -64,12 +64,13 @@ Gui.showLocationPanel = function (show) {
             //'Delta: ' + Math.round(deltaMean) + 'ms'
         ];
 
-        //if (altitude>0) {
-            html.push(
-                'Altitude' + altitude.toFixed(2),
-                'V Accuracy' + altAcc.toPrecision(2) +' m'
-            );
-        //}
+        if (altitude) {
+            html.push('Altitude' + altitude.toFixed(2));
+        }
+        if (altAcc) {
+            html.push('V Accuracy' + altAcc.toPrecision(2) + ' m');
+        }
+
 
         $('#locationPanel').html(html.join('<br />'));
         $('#locationPanel').show();
