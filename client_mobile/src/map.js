@@ -599,7 +599,7 @@ Map.toggleTracking = function(enabled) {
         Gui.showLocationPanel(false);
     });
 
-    Map.geolocation.on('change:position', function() {
+    Map.geolocation.on('change', function() {
         var coordinates = Map.geolocation.getPosition();
         marker.setPosition(coordinates);
         Gui.showLocationPanel(true);
