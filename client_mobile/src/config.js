@@ -228,6 +228,8 @@ if (projectData.baseLayers() !== null) {
 
 Config.data.extralayers = projectData.extraLayers();
 
+Config.data.wfslayers = {};
+
 // WMS server type ('geoserver', 'mapserver', 'qgis'), used for adding WMS dpi parameters
 Config.map.wmsServerType = 'qgis';
 

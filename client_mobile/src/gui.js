@@ -49,6 +49,35 @@ Gui.panelSelect = function(panel) {
   $('#buttonLayerOrder').toggleClass('selected', panel === 'panelLayerOrder');
 };
 
+//location panel
+Gui.showLocationPanel = function (show) {
+    if (show) {
+        var coordinates = Map.geolocation.getPosition();
+        var accuracy = Map.geolocation.getAccuracy();
+        var altitude = Map.geolocation.getAltitude();
+        var altAcc = Map.geolocation.getAltitudeAccuracy();
+        var html = [
+            'Position: ' + coordinates[0].toFixed(2) + ', ' + coordinates[1].toFixed(2),    //todo translate
+            'H Accuracy: ' + accuracy.toPrecision(2) +' m'        //todo translate
+            //'Heading: ' + Math.round(radToDeg(heading)) + '&deg;',
+            //'Speed: ' + (speed * 3.6).toFixed(1) + ' km/h',
+            //'Delta: ' + Math.round(deltaMean) + 'ms'
+        ];
+
+        if (altitude>0) {
+            html.push(
+                'Altitude' + altitude.toFixed(2),
+                'V Accuracy' + altAcc.toPrecision(2) +' m'
+            );
+        }
+
+        $('#locationPanel').html(html.join('<br />'));
+        $('#locationPanel').show();
+    } else {
+        $('#locationPanel').hide();
+    }
+};
+
 // fill topics list
 Gui.loadTopics = function(categories) {
   var html = "";
@@ -1041,6 +1070,10 @@ Gui.initViewer = function() {
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !Gui.tracking);
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
     Map.toggleTracking(Gui.tracking);
+      if (Gui.tracking) {
+          $('#locationPanel').show();
+          $('#locationPanel').html('Obtaining location...');  //TODO translate
+      }
     Map.toggleFollowing(Gui.tracking && Gui.following);
   });
 

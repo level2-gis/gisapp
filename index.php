@@ -46,7 +46,7 @@ function goMobile($lang) {
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180105" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180225" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20171212" />
     </head>
     <body>
@@ -61,6 +61,8 @@ function goMobile($lang) {
                 <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
             </div>
         </div>
+
+        <div id="locationPanel" style="display:none"></div>
 
         <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
             <div class="panel-content">
@@ -88,6 +90,14 @@ function goMobile($lang) {
                         </select>
                     </div>
 <!--                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>-->
+
+<!--                    TODO EDITOR WORK IN PROGRESS...-->
+                    <div data-role="fieldcontain" style="display:none">
+                        <label for="editableLayer">Editor</label>
+                        <select name="editableLayer" id="editableLayer" data-mini="true">
+                            <option>Select layer...</option>
+                        </select>
+                    </div>
 
                     <div data-role="popup" id="dlgAbout" class="ui-corner-all" data-theme="c" data-overlay-theme="a">
                         <div data-role="header" data-theme="c" class="ui-corner-top">
@@ -265,7 +275,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
 
 <!--                DEBUG remove editor.js before-->
-<!--                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>-->
+                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>
 
                 <script type="text/javascript">
                     OpenLayers.Lang.setCode('<?php echo $def_lang ?>');

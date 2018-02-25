@@ -41,6 +41,10 @@ Layers.loadLayers = function(url, callback) {
         for (var id in wmslayers) {
             var layer = wmslayers[id];
 
+            if (layer.wfs) {
+                Config.data.wfslayers[id] = layer.layername;
+            }
+
             if (layer.groupname === null) {
                 // mark layers without group
                 layer.groupname = Layers.markerPrefix + layer.layername;

@@ -70,6 +70,16 @@
   height: 20px;
 }
 
+#locationPanel {
+    border-radius: 8px;
+    position: absolute;
+    font-size: 0.8em;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255,  0.5);
+    padding: 4px;
+}
+
 /* search */
 #searchMarker {
     background-image: url("../img/location.svg");

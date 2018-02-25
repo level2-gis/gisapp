@@ -593,11 +593,16 @@ Map.toggleTracking = function(enabled) {
       if (error.code == error.PERMISSION_DENIED) {
         alert(I18n.geolocation.permissionDeniedMessage);
       }
+        $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
+        $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
+        Gui.tracking = false;
+        Gui.showLocationPanel(false);
     });
 
     Map.geolocation.on('change:position', function() {
         var coordinates = Map.geolocation.getPosition();
-            marker.setPosition(coordinates);
+        marker.setPosition(coordinates);
+        Gui.showLocationPanel(true);
       });
 
     // add geolocation marker
@@ -615,6 +620,8 @@ Map.toggleTracking = function(enabled) {
   if (enabled) {
     // always jump to first geolocation
     Map.geolocation.on('change:position', Map.initialCenterOnLocation);
+  } else {
+      Gui.showLocationPanel(false);
   }
 };
 
