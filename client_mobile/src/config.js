@@ -337,10 +337,5 @@ Config.print = {
  * e.g. setup custom click handlers here
  */
 Config.customInitViewer = function() {
-    //this is marker to display location of search result (geocoding)
-    Map.searchMarker = new ol.Overlay({
-        element: ($('<div id="searchMarker"></div>'))[0],
-        positioning: 'center-center'
-    });
-    Map.map.addOverlay(Map.searchMarker);
+
 };

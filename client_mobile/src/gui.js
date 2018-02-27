@@ -57,18 +57,18 @@ Gui.showLocationPanel = function (show) {
         var altitude = Map.geolocation.getAltitude();
         var altAcc = Map.geolocation.getAltitudeAccuracy();
         var html = [
-            'Position: ' + coordinates[0].toFixed(2) + ', ' + coordinates[1].toFixed(2),    //todo translate
-            'H Accuracy: ' + accuracy.toPrecision(2) +' m'        //todo translate
+            coordinates[0].toFixed(2) + ', ' + coordinates[1].toFixed(2),
+            'Accuracy: ' + accuracy.toPrecision(2) +' m'        //todo translate
             //'Heading: ' + Math.round(radToDeg(heading)) + '&deg;',
             //'Speed: ' + (speed * 3.6).toFixed(1) + ' km/h',
             //'Delta: ' + Math.round(deltaMean) + 'ms'
         ];
 
         if (altitude) {
-            html.push('Altitude' + altitude.toFixed(2));
+            html.push('Altitude: ' + altitude.toFixed(2));
         }
         if (altAcc) {
-            html.push('V Accuracy' + altAcc.toPrecision(2) + ' m');
+            html.push('V Accuracy: ' + altAcc.toPrecision(2) + ' m');
         }
 
 
@@ -1202,6 +1202,13 @@ Gui.initViewer = function() {
   $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function() {
     Map.toggleClickHandling(true);
   });
+
+    //this is marker to display location of search result (geocoding)
+    Map.searchMarker = new ol.Overlay({
+        element: ($('<div id="searchMarker"></div>'))[0],
+        positioning: 'center-center'
+    });
+    Map.map.addOverlay(Map.searchMarker);
 
   // invoke custom post viewer init
   Config.customInitViewer();
