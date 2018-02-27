@@ -92,7 +92,7 @@ function goMobile($lang) {
 <!--                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>-->
 
 <!--                    TODO EDITOR WORK IN PROGRESS...-->
-                    <div data-role="fieldcontain" style="display:none">
+                    <div data-role="fieldcontain" id="editorProps">
                         <label for="editableLayer">Editor</label>
                         <select name="editableLayer" id="editableLayer" data-mini="true">
                             <option>Select layer...</option>
@@ -275,7 +275,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
 
 <!--                DEBUG remove editor.js before-->
-                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>
+<!--                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>-->
 
                 <script type="text/javascript">
                     OpenLayers.Lang.setCode('<?php echo $def_lang ?>');
