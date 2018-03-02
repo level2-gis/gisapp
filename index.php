@@ -277,10 +277,6 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 <!--                DEBUG remove editor.js before-->
 <!--                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>-->
 
-                <script type="text/javascript">
-                    OpenLayers.Lang.setCode('<?php echo $def_lang ?>');
-                </script>
-
                 <style type="text/css">
                     #dpiDetection {
                         height: 1in;

@@ -56,6 +56,8 @@ var measurePopup;
 var currentlyVisibleBaseLayer = null;
 var layerImageFormats = layerImageFormats || []; // use config from GlobalOptions if any
 
+OpenLayers.Lang.setCode(projectData.lang);
+
 // Call custom Init in Customizations.js
 customInit();
 
@@ -63,6 +65,7 @@ Ext.onReady(function () {
     //dpi detection
     screenDpi = document.getElementById("dpiDetection").offsetHeight;
     OpenLayers.DOTS_PER_INCH = screenDpi;
+
     //test
     //OpenLayers.DOTS_PER_INCH = 90.71428571428572;
 

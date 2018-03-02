@@ -46,7 +46,7 @@ Map.ignoreClick = false;
 // map click handlers (key = handler name)
 Map.singleClickHandlers = {};
 
-Map.useTiledWMS = false;
+Map.useTiledWMS = Eqwc.settings.mobileUseTiledWMS;
 
 Map.createMap = function() {
   // override from URL params
