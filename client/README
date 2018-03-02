@@ -739,6 +739,9 @@ If you get error module not exist, installation is missing (Ubuntu: apt-get inst
 Install also this:
 (Ubuntu: apt-get install python-webob)
 
+If you get HTTP:500 Server error on WSGI request, check PHP error.log. If it contains Import Error: No module named psycopg2, install package with
+Ubuntu: apt-get install python-psycopg2
+
 You need to configure apache with the following lines (e.g. in file
 ``/etc/apache2/sites-available/default``):
 
