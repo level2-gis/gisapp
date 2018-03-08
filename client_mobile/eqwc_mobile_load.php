@@ -43,11 +43,13 @@ foreach ($scan as $item) {
     if (is_dir($dir . $item)) {
         $plugin_path = $dir . $item;
 
-        $js_arr = array_slice(scandir($plugin_path . '/src_mobile/'), 2);
-        foreach ($js_arr  as $script) {
-            //only js files
-            if (substr($script,-2) == 'js') {
-                array_push($plugins, "plugins/" . basename($plugin_path) . "/src_mobile/" . $script . "?v=".$version);
+        if (is_dir($plugin_path . '/src_mobile/')) {
+            $js_arr = array_slice(scandir($plugin_path . '/src_mobile/'), 2);
+            foreach ($js_arr as $script) {
+                //only js files
+                if (substr($script, -2) == 'js') {
+                    array_push($plugins, "plugins/" . basename($plugin_path) . "/src_mobile/" . $script . "?v=" . $version);
+                }
             }
         }
     }
