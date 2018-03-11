@@ -372,6 +372,19 @@ class Helpers
                 $datasource = str_replace($matches[0], '', $datasource);
                 $ds_parms['sql'] = $matches[1];
             }
+            //extract table name same way
+            if (preg_match('/table=(.*)/', $datasource, $matches)) {
+                $datasource = str_replace($matches[0], '', $datasource);
+
+                // parse (geom)
+                if (preg_match('/\(([^\)]+)\)/', $matches[0], $match)) {
+                    $ds_parms['geom_column'] = $match[1];
+                }
+                $ds_parms['table'] = $matches[1];
+                $ds_parms['table'] = trim(str_replace($match[0], '', $ds_parms['table']));
+            }
+
+
             foreach (explode(' ', $datasource) as $token) {
                 $kvn = explode('=', $token);
                 if (count($kvn) == 2) {
