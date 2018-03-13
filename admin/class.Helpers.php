@@ -380,8 +380,10 @@ class Helpers
                 if (preg_match('/\(([^\)]+)\)/', $matches[0], $match)) {
                     $ds_parms['geom_column'] = $match[1];
                 }
-                $ds_parms['table'] = $matches[1];
-                $ds_parms['table'] = trim(str_replace($match[0], '', $ds_parms['table']));
+                $ds_parms['table'] = trim($matches[1]);
+                if (array_key_exists(0,$match)) {
+                    $ds_parms['table'] = trim(str_replace($match[0], '', $ds_parms['table']));
+                }
             }
 
 

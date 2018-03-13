@@ -136,7 +136,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
         case 'CSV':
             $format_name = $destinationFormat;
             $options .= "-lco SEPARATOR=SEMICOLON ";
-            //$options .= "-lco GEOMETRY=AS_WKT ";    //GEOMETRY_AS_XYZ for single point types valid only
+            $options .= "-lco GEOMETRY=AS_XYZ ";    //this will return results only for single point geometries (other option is WKT for all types)
             $makeZip = false;
             $fileExt = 'csv';
             break;
