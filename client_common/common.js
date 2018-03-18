@@ -39,7 +39,14 @@ Eqwc.common.manageFile = function(fn, handleImages) {
         }
     }
 
-    var url = new URL(projectData.uploadDir, window.location.origin).href;
+    //does not work on IE
+    //var url = new URL(projectData.uploadDir, window.location.origin).href;
+    var url = window.location.origin;
+    if (projectData.uploadDir.split('.').length==1) {
+        url += projectData.uploadDir;
+    } else {
+        url += projectData.uploadDir.split('.')[1];
+    }
 
     if (img) {
         return "<a target='_blank' href='"+url+fn+"'><img src='"+url+"/thumb/"+fn+"'></a>";

@@ -414,7 +414,7 @@ function parseFIResult(node) {
                 htmlText += "<h2>" + layerTitle + "</h2>";
             }
 
-            var fid = layerTitle+"."+node.firstElementChild.id;
+            var fid = layerTitle+"."+node.firstElementChild.getAttribute("id");
             while (layerChildNode) {
 
 
@@ -614,6 +614,9 @@ function updateAddress(data, location, field, template, templateMin, factor) {
 function identifyAction(type,id) {
 
     var layer = id.split('.')[0];
+    if (id.split('.')[1] == 'undefined') {
+        return;
+    }
     var layerId = wmsLoader.layerTitleNameMapping[layer];
 
     switch (type) {
