@@ -66,3 +66,13 @@ Eqwc.common.getRasterFieldName = function(layer, name) {
     }
 };
 
+Eqwc.common.layerFieldNameExists = function (layerId, field) {
+    var layer = wmsLoader.layerProperties[layerId];
+    for (var i = 0; i < layer.attributes.length; i++) {
+        if (layer.attributes[i].name == field) {
+            return true;
+        }
+    }
+    return false;
+};
+
