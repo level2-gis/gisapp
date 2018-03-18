@@ -251,7 +251,7 @@ CREATE TABLE projects (
     overview_layer_id integer,
     base_layers_ids integer[],
     extra_layers_ids integer[],
-    client_id integer,
+    client_id integer NOT NULL,
     tables_onstart text[],
     public boolean DEFAULT false NOT NULL,
     restrict_to_start_extent boolean NOT NULL default FALSE,
@@ -480,7 +480,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (16, '2018-02-16');
+INSERT INTO settings VALUES (17, '2018-03-16');
 
 
 --
@@ -652,7 +652,6 @@ ALTER TABLE ONLY projects
 -- PostgreSQL database dump complete
 --
 
-DROP VIEW IF EXISTS public.clients_view;
 CREATE OR REPLACE VIEW public.clients_view AS
   SELECT clients.id,
     clients.name,
@@ -660,12 +659,12 @@ CREATE OR REPLACE VIEW public.clients_view AS
     clients.url,
     clients.description,
     clients.ordr,
-    count(projects.id) AS count,
-    sort(array_agg(projects.id)) AS project_ids
-  FROM clients,
-    projects
-  WHERE clients.id = projects.client_id
-  GROUP BY projects.client_id, clients.id, clients.name, clients.display_name, clients.url;
+    CASE WHEN sum.count IS null THEN 0 ELSE sum.count END,
+    sum.project_ids
+  FROM clients
+    LEFT JOIN
+    (SELECT count(projects.id) AS count, sort(array_agg(projects.id)) AS project_ids, client_id FROM projects GROUP BY projects.client_id) AS sum
+      ON clients.id = sum.client_id;
 
 -- View: public.projects_view
 
