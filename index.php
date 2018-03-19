@@ -91,14 +91,6 @@ function goMobile($lang) {
                     </div>
 <!--                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>-->
 
-<!--                    TODO EDITOR WORK IN PROGRESS...-->
-                    <div data-role="fieldcontain" id="editorProps">
-                        <label for="editableLayer">Editor</label>
-                        <select name="editableLayer" id="editableLayer" data-mini="true">
-                            <option>Select layer...</option>
-                        </select>
-                    </div>
-
                     <div data-role="popup" id="dlgAbout" class="ui-corner-all" data-theme="c" data-overlay-theme="a">
                         <div data-role="header" data-theme="c" class="ui-corner-top">
                             <h1>Impressum</h1>

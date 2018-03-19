@@ -41,9 +41,9 @@ $def_lang = $_SESSION['lang'];
 $debug = defined('DEBUG') ? DEBUG : false;
 
 //eqwc language files
-array_push($lang, "admin/languages/locale/ext-lang-". $def_lang .".js?v=".$version);
-array_push($lang, "admin/languages/". $def_lang .".js?v=".$version);
-array_push($lang, "client/site/js/lang/Translations_". $def_lang .".js?v=".$version);
+array_push($lang, "admin/languages/locale/ext-lang-". $def_lang .".js?v=".rand());
+array_push($lang, "admin/languages/". $def_lang .".js?v=".rand());
+array_push($lang, "client/site/js/lang/Translations_". $def_lang .".js?v=".rand());
 
 //add into array all js files in plugins/xxx/js subfolder
 foreach ($scan as $item) {
@@ -56,12 +56,15 @@ foreach ($scan as $item) {
            $def_lang = 'en';
         }
         if (file_exists($lang_fn)) {
-            array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/" . $def_lang . ".js");
+            array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/" . $def_lang . ".js?v=".rand());
         }
         $js_arr = array_slice(scandir($plugin_path . '/js/'), 2);
         foreach ($js_arr  as $script) {
             //only js files
             if (substr($script,-2) == 'js') {
+                if ($script == 'config.js') {
+                    $script .= '?v='.rand();
+                }
                 array_push($plugins, "plugins/" . basename($plugin_path) . "/js/" . $script);
             }
         }

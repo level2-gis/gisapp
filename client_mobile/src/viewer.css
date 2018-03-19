@@ -43,6 +43,10 @@
   border: none;
 }
 
+#btnAdd {
+    right: 155px;
+}
+
 #btnLocation {
   right: 105px;
 }
