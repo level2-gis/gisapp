@@ -409,7 +409,9 @@ function parseFIResult(node) {
             var htmlText = "";
 
             var layerChildNode = node.firstChild;
-            var layerTitle = wmsLoader.layerProperties[node.getAttribute("name")].title;
+            var layerId = node.getAttribute("name");
+            var layer = wmsLoader.layerProperties[layerId];
+            var layerTitle = layer.title;
             if (showFILayerTitle) {
                 htmlText += "<h2>" + layerTitle + "</h2>";
             }
@@ -461,13 +463,16 @@ function parseFIResult(node) {
                                         hasAttributes = true;
                                     }
                                 } else {
+                                    //specific check if attribute name is "files" and we have an alias
+                                    var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
+
                                     //if (attName !== "maptip") {
                                     htmlText += "\n   <tr>";
-                                    if (showFieldNamesInClickPopup && attName !== "maptip" && attName!== 'files') {
+                                    if (showFieldNamesInClickPopup && attName !== "maptip" && attName!== filesAlias) {
                                         htmlText += "<td>" + attName + ":</td>";
                                     }
 
-                                    if (attName == 'files'){
+                                    if (attName == filesAlias){
                                         if (attValue>'') {
                                             var attArr = Ext.util.JSON.decode(attValue);
                                             var newArr = [];
@@ -481,7 +486,7 @@ function parseFIResult(node) {
                                         attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
                                     }
 
-                                    if (attName == 'maptip' || attName == 'files') {
+                                    if (attName == 'maptip' || attName == filesAlias) {
                                         htmlText += "<td colspan='2'>" + attValue + "</td></tr>";
                                     } else {
                                         htmlText += "<td>" + attValue + "</td></tr>";

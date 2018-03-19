@@ -663,6 +663,8 @@ Gui.showXMLFeatureInfoResults = function(results) {
       layerTitle = layer.title;
     }
 
+    var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
+
     html += '<div data-role="collapsible" data-collapsed="false" data-theme="c">';
     html +=   '<h3>' + layerTitle + '</h3>';
 
@@ -690,7 +692,7 @@ Gui.showXMLFeatureInfoResults = function(results) {
             if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
                 html += '<li>';
 
-                if (attribute.name == 'files') {
+                if (attribute.name == filesAlias) {
                     if (attribute.value > '') {
                         var attArr = $.parseJSON(attribute.value);
                         var newArr = [];
@@ -705,7 +707,7 @@ Gui.showXMLFeatureInfoResults = function(results) {
 
                 // add attribute name and value
                 //hide field name in this cases, hardcoded
-                if (attribute.name !== 'maptip' && attribute.name !== 'files') {
+                if (attribute.name !== 'maptip' && attribute.name !== filesAlias) {
                     html += '<span class="name">' + attribute.name + ': </span>';
                 }
                 html += '<span class="value">' + attribute.value + '</span>';
