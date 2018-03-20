@@ -1,7 +1,9 @@
 Extended QGIS Web Client (EQWC)
 ===============================
 
-This is modified and extended version of original QGIS Web Client I. It turns your QGIS project into Web GIS application with tools to view, navigate, search and print your data. On top of that, there is a PostgreSQL management database for storing projects, layers, users and some specific settings not in QGIS project. Database administration and project browsing is done with - **[gisportal](https://github.com/uprel/gisportal)**.
+This is modified and extended version of original QGIS Web Client I. It turns your QGIS project into Web GIS application with tools to view, navigate, search and print your data. On top of that, there is a PostgreSQL management database for storing projects, layers, users and some specific settings not in QGIS project. 
+
+Database administration and project browsing is done with - **[gisportal](https://github.com/uprel/gisportal)**.
 
 * Desktop client is based on original [QGIS Web client I (QWC I)](https://github.com/qgis/QGIS-Web-Client).
 * Mobile client is based on [OL3 Mobile Viewer](https://github.com/sourcepole/ol3-mobile-viewer).
@@ -10,11 +12,11 @@ This is modified and extended version of original QGIS Web Client I. It turns yo
 * user authorization with optional guest access
 * database for storing info about clients, projects, external layers (WMS, WMTS, XYZ) and users; user authentication, specific project settings
 * QGIS server proxy (caching and validating requests)
-* [GIS portal](https://github.com/uprel/gisportal) for browsing projects and complete database administration
+* [**GIS portal**](https://github.com/uprel/gisportal) for browsing projects and complete database administration
 * loading Web or Mobile client based on screen size
 * PDF printing improved with user title, description and inclusion of base layers 
 * using external API services for geocoding and elevation data
-* plugins support, currently available: Google StreetView and [Editor](http://level2.si/product/editor-for-extended-qgis-web-client/)
+* plugins support, currently available: Google StreetView and [**Editor**](http://level2.si/product/editor-for-extended-qgis-web-client/)
 * layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
 * geolocation button (for Chrome you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/))
 * legend in layer tree
@@ -61,7 +63,7 @@ New language:
 
 ## Contact
 **Uroš Preložnik**<br>
-info@level2.si
+http://level2.si
 
 ## License
 This software is released under a GPL-v3.0 license.
