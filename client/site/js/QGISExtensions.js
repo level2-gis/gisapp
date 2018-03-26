@@ -236,7 +236,7 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
         this.processLayer(this.projectSettings.capability, this.projectSettings.capability.request.getmap.href, node);
 
         //fill the list of layer properties
-        //TODO UROS this part should done in Layer functions, duplication totally
+        //TODO UROS loop is duplication here, but needed for initialVisibleLayers, nrChildLayers
         for (var i=0; i<this.projectSettings.capability.layers.length; i++) {
             var layer = this.projectSettings.capability.layers[i];
             this.layerProperties[layer.name] = {
