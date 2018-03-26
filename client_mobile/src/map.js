@@ -603,6 +603,8 @@ Map.toggleTracking = function(enabled) {
         var coordinates = Map.geolocation.getPosition();
         marker.setPosition(coordinates);
         Gui.showLocationPanel(true);
+
+        $('#btnAdd').removeClass('ui-disabled');
       });
 
     // add geolocation marker
@@ -622,6 +624,7 @@ Map.toggleTracking = function(enabled) {
     Map.geolocation.on('change:position', Map.initialCenterOnLocation);
   } else {
       Gui.showLocationPanel(false);
+      $('#btnAdd').addClass('ui-disabled');
   }
 };
 

@@ -41,7 +41,8 @@ Layers.loadLayers = function(url, callback) {
         for (var id in wmslayers) {
             var layer = wmslayers[id];
 
-            if (layer.wfs) {
+            //only point layers
+            if (layer.wfs && layer.geom_type.indexOf('Point')>-1) {
                 Config.data.wfslayers[id] = layer.layername;
             }
 

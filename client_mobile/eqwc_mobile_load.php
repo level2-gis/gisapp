@@ -43,6 +43,11 @@ foreach ($scan as $item) {
     if (is_dir($dir . $item)) {
         $plugin_path = $dir . $item;
 
+        //add plugin config.js if exists
+        if (file_exists($plugin_path . "/js/config.js")) {
+            array_push($plugins, "plugins/" . basename($plugin_path) . "/js/config.js?v=" . rand());
+        }
+
         if (is_dir($plugin_path . '/src_mobile/')) {
             $js_arr = array_slice(scandir($plugin_path . '/src_mobile/'), 2);
             foreach ($js_arr as $script) {

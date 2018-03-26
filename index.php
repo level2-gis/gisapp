@@ -46,7 +46,7 @@ function goMobile($lang) {
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180225" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180326" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20171212" />
     </head>
     <body>
@@ -59,6 +59,7 @@ function goMobile($lang) {
                 <a href="#panelSearch" id="btnSearching" data-role="button" data-inline="true" data-icon="searching" data-iconpos="notext"></a>
                 <a href="#panelLayer" id="btnLayers" data-role="button" data-inline="true" data-icon="layers" data-iconpos="notext"></a>
                 <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
+                <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
             </div>
         </div>
 
@@ -105,20 +106,6 @@ function goMobile($lang) {
                         <a href="#dlgLogin" id="buttonLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">Login</a>
                         <a href="#" target="_self" id="buttonLoginSSL" data-rel="external" data-role="button" data-inline="true">Login</a>
                         <a href="#" id="buttonSignOut"  data-role="button" data-inline="true">Logout</a>
-                    </div>
-
-                    <div data-role="popup" id="dlgLogin" class="ui-corner-all" data-theme="c" data-overlay-theme="a">
-                        <div data-role="header" data-theme="c" class="ui-corner-top">
-                            <h1>Login</h1>
-                        </div>
-                        <div id="loginContent" data-role="content" data-theme="c" class="ui-corner-bottom ui-content">
-                            <label for="user">Benutzer:</label>
-                            <input type="text" name="user" id="user" value="">
-                            <label for="password">Passwort:</label>
-                            <input type="password" name="password" id="password" value="">
-                            <a href="#" id="buttonSignIn" data-role="button" data-theme="b" data-inline="true">Anmelden</a>
-                            <a href="#" id="buttonLoginCancel" data-role="button" data-inline="true">Abbrechen</a>
-                        </div>
                     </div>
 
                 </div>
@@ -234,7 +221,7 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20171108"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20180117"/>
+                <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20180320"/>
 
                 <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v=20171209"/>';

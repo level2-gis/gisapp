@@ -28,6 +28,10 @@
   background-image: url("../img/properties.png");
 }
 
+.ui-icon-add {
+    background-image: url("../img/add.png");
+}
+
 /* button positions */
 
 #btnCompass {
@@ -44,7 +48,8 @@
 }
 
 #btnAdd {
-    right: 155px;
+  left: 10px;
+  bottom: 55px;
 }
 
 #btnLocation {
