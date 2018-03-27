@@ -53,7 +53,7 @@ foreach ($scan as $item) {
             foreach ($js_arr as $script) {
                 //only js files
                 if (substr($script, -2) == 'js') {
-                    array_push($plugins, "plugins/" . basename($plugin_path) . "/src_mobile/" . $script . "?v=" . $version);
+                    array_push($plugins, "plugins/" . basename($plugin_path) . "/src_mobile/" . $script . "?v=" . rand());
                 }
             }
         }
