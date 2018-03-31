@@ -51,24 +51,32 @@ Gui.panelSelect = function(panel) {
 
 //location panel
 Gui.showLocationPanel = function (show) {
+
+    // convert radians to degrees
+    function radToDeg(rad) {
+        return rad * 360 / (Math.PI * 2);
+    }
+
     if (show) {
         var coordinates = Map.geolocation.getPosition();
         var accuracy = Map.geolocation.getAccuracy();
         var altitude = Map.geolocation.getAltitude();
-        var altAcc = Map.geolocation.getAltitudeAccuracy();
+        var heading = Map.geolocation.getHeading();
+        var speed = Map.geolocation.getSpeed();
+
         var html = [
             coordinates[0].toFixed(2) + ', ' + coordinates[1].toFixed(2),
-            'Accuracy: ' + accuracy.toPrecision(2) +' m'        //todo translate
-            //'Heading: ' + Math.round(radToDeg(heading)) + '&deg;',
-            //'Speed: ' + (speed * 3.6).toFixed(1) + ' km/h',
+            'Accuracy: ' + accuracy.toPrecision(3) +' m'        //todo translate
             //'Delta: ' + Math.round(deltaMean) + 'ms'
         ];
 
         if (altitude) {
             html.push('Altitude: ' + altitude.toFixed(2));
         }
-        if (altAcc) {
-            html.push('V Accuracy: ' + altAcc.toPrecision(2) + ' m');
+
+        if (heading && speed) {
+            'Heading: ' + Math.round(radToDeg(heading)) + '&deg;',
+            'Speed: ' + (speed * 3.6).toFixed(1) + ' km/h'
         }
 
 
@@ -1068,14 +1076,17 @@ Gui.initViewer = function() {
     $("#btnLocation").hide();
   }
 
+  //hide location panel until activated
+  $('#locationPanel').hide();
+
   $('#btnLocation').on('tap', function() {
     Gui.tracking = !Gui.tracking;
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !Gui.tracking);
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
     Map.toggleTracking(Gui.tracking);
       if (Gui.tracking) {
-          $('#locationPanel').show();
           $('#locationPanel').html('Obtaining location...');  //TODO translate
+          $('#locationPanel').show();
       }
     Map.toggleFollowing(Gui.tracking && Gui.following);
   });

@@ -577,55 +577,89 @@ Map.setZoom = function(zoom) {
   Map.map.getView().setZoom(zoom);
 };
 
-Map.toggleTracking = function(enabled) {
-  if (Map.geolocation == null) {
-    // create geolocation
-    Map.geolocation = new ol.Geolocation({
-      projection: Map.map.getView().getProjection(),
-      trackingOptions: {
-        enableHighAccuracy: true
-      }
-    });
+Map.toggleTracking = function (enabled) {
+    if (Map.geolocation == null) {
+        // create geolocation
+        Map.geolocation = new ol.Geolocation({
+            projection: Map.map.getView().getProjection(),
+            trackingOptions: {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 20000
+            }
+        });
 
-    //  Map.geolocation.bindTo('projection', Map.map.getView());
+        //  Map.geolocation.bindTo('projection', Map.map.getView());
 
-    Map.geolocation.on('error', function(error) {
-      if (error.code == error.PERMISSION_DENIED) {
-        alert(I18n.geolocation.permissionDeniedMessage);
-      }
-        $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
-        $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
-        Gui.tracking = false;
+        Map.geolocation.on('error', function (error) {
+
+            alert(error.message);
+
+            //if (error.code == error.PERMISSION_DENIED) {
+            //  alert(I18n.geolocation.permissionDeniedMessage);
+            //}
+            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
+            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
+            Gui.tracking = false;
+            Gui.showLocationPanel(false);
+            $('#locationMarker').toggle(false);
+
+            //switch off geolocation layer
+            Map.geolocationLayer.setVisible(false);
+        });
+
+        Map.geolocation.on('change', function () {
+            var coordinates = Map.geolocation.getPosition();
+            marker.setPosition(coordinates);
+            Gui.showLocationPanel(true);
+
+            $('#btnAdd').removeClass('ui-disabled');
+
+            //switch on geolocation layer
+            Map.geolocationLayer.setVisible(true);
+        });
+
+        //location accuracy geometry
+        var accuracyFeature = new ol.Feature();
+        accuracyFeature.setStyle(new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 0, 0, 0.05)'
+            })
+        }));
+
+        Map.geolocation.on('change:accuracyGeometry', function () {
+            accuracyFeature.setGeometry(Map.geolocation.getAccuracyGeometry());
+        });
+
+        Map.geolocationLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [accuracyFeature]
+            })
+            //style: style
+        });
+        Map.geolocationLayer.name = 'geolocation';
+        Map.map.addLayer(Map.geolocationLayer);
+
+        // add geolocation marker
+        var marker = new ol.Overlay({
+            element: ($('<div id="locationMarker"></div>'))[0],
+            positioning: 'center-center'
+        });
+        Map.map.addOverlay(marker);
+        //marker.bindTo('position', Map.geolocation);
+    }
+
+    Map.geolocation.setTracking(enabled);
+    $('#locationMarker').toggle(enabled);
+
+    if (enabled) {
+        // always jump to first geolocation
+        Map.geolocation.once('change:position', Map.initialCenterOnLocation);
+    } else {
         Gui.showLocationPanel(false);
-    });
-
-    Map.geolocation.on('change', function() {
-        var coordinates = Map.geolocation.getPosition();
-        marker.setPosition(coordinates);
-        Gui.showLocationPanel(true);
-
-        $('#btnAdd').removeClass('ui-disabled');
-      });
-
-    // add geolocation marker
-    var marker = new ol.Overlay({
-      element: ($('<div id="locationMarker"></div>'))[0],
-      positioning: 'center-center'
-    });
-    Map.map.addOverlay(marker);
-    //marker.bindTo('position', Map.geolocation);
-  }
-
-  Map.geolocation.setTracking(enabled);
-  $('#locationMarker').toggle(enabled);
-
-  if (enabled) {
-    // always jump to first geolocation
-    Map.geolocation.on('change:position', Map.initialCenterOnLocation);
-  } else {
-      Gui.showLocationPanel(false);
-      $('#btnAdd').addClass('ui-disabled');
-  }
+        $('#btnAdd').addClass('ui-disabled');
+        Map.geolocationLayer.setVisible(false);
+    }
 };
 
 Map.toggleFollowing = function(enabled) {
@@ -648,7 +682,7 @@ Map.initialCenterOnLocation = function() {
     }
   }
   // disable after first update
-  Map.geolocation.un('change:position', Map.initialCenterOnLocation);
+  //Map.geolocation.un('change:position', Map.initialCenterOnLocation);
 };
 
 Map.centerOnLocation = function() {
