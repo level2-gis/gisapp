@@ -32,22 +32,22 @@ function goMobile($lang) {
         <script src="client_mobile/lib/jquery/jquery.ui.touch-punch.min.js"></script>
 
         <!-- jQuery Mobile -->
-        <script src="client_mobile/lib/jquery/jquery.mobile-1.3.1.min.js"></script>
+        <script src="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.js"></script>
         <script src="client_mobile/src/jquery.mobile.collapsible.groupcheckbox.js"></script>
-        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery.mobile-1.3.1.min.css" />
+        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.css" />
 
         <!-- Proj4js -->
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
 
         <!-- OpenLayers 3 -->
-        <script src="client_mobile/lib/ol3/ol.js?v=3.19.1"></script>
-        <!--        <script src="client_mobile/lib/ol3/ol-debug.js"></script>-->
-        <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css" />
+        <script src="client_mobile/lib/ol3/ol.js?v=4.1.1"></script>
+<!--    <script src="client_mobile/lib/ol3/ol-debug.js?v=4.1.1"></script>-->
+        <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css?v=4.1.1" />
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
         <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180326" />
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20171212" />
+<!--        <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20171212" />-->
     </head>
     <body>
     <div data-role="page" id="mappage" data-theme="c">
@@ -61,9 +61,8 @@ function goMobile($lang) {
                 <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
             </div>
+            <div id="locationPanel" class="ui-popup-container">Test</div>
         </div>
-
-        <div id="locationPanel" style="display:none"></div>
 
         <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
             <div class="panel-content">
