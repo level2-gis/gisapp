@@ -14,6 +14,51 @@ function FeatureInfo(resultsCallback) {
 FeatureInfo.prototype = new MapClickHandler();
 
 /**
+ * make getfeature info request on provided location without user interaction
+ *
+ * location: array
+ */
+FeatureInfo.prototype.callOnLocation = function(location) {
+    var url = null;
+    if (Config.featureInfo.useWMSGetFeatureInfo) {
+        var params = {
+            'INFO_FORMAT': Config.featureInfo.format,
+            'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
+        };
+        if (Config.map.wmsServerType === 'qgis') {
+            // add tolerances
+            $.extend(params, {
+                FI_POINT_TOLERANCE: Config.featureInfo.tolerances.point,
+                FI_LINE_TOLERANCE: Config.featureInfo.tolerances.line,
+                FI_POLYGON_TOLERANCE: Config.featureInfo.tolerances.polygon
+            });
+        }
+
+        url = Map.getGetFeatureInfoUrl(location, params);
+    }
+    else {
+        url = Config.featureInfo.url(Map.topic, location, Map.featureInfoLayers());
+    }
+    $.ajax({
+        url: url,
+        dataType: 'text',
+        context: this
+    }).done(function(data, status) {
+        var results = null;
+        if (Config.featureInfo.format === 'text/xml') {
+            results = this.parseResults([data]);
+        }
+        else {
+            results = [data];
+        }
+
+        this.resultsCallback(results);
+    });
+};
+
+
+
+/**
  * send feature info request on map click
  *
  * e: <ol.MapBrowserEvent>
@@ -116,7 +161,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
 
       if (features.length > 0) {
         results.push({
-          layer: Config.getLayerName(lay),
+          layer: lay,
           features: features
         });
       }

@@ -660,118 +660,125 @@ Gui.showFeatureInfoResults = function(data) {
 };
 
 // convert XML feature info results to HTML
-Gui.showXMLFeatureInfoResults = function(results) {
-  var html = "";
-  for (var i=0; i<results.length; i++) {
-    var result = results[i];
-    var layer = Map.layers[result.layer];
-
-    var layerTitle = result.layer;
-    if (layer != undefined) {
-      layerTitle = layer.title;
-    }
-
+Gui.showXMLFeatureInfoResults = function (results) {
+    var html = "";
     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
 
-    html += '<div data-role="collapsible" data-collapsed="false" data-theme="c">';
-    html +=   '<h3>' + layerTitle + '</h3>';
+    for (var i = 0; i < results.length; i++) {
+        var result = results[i];
+        var layer = Map.layers[result.layer];
 
-    var hiddenAttributes = [];
-    if (layer != undefined && layer.hidden_attributes != undefined) {
-      hiddenAttributes = layer.hidden_attributes;
-    }
-    var hiddenValues = [];
-    if (layer != undefined && layer.hidden_values != undefined) {
-      hiddenValues = layer.hidden_values;
-    }
-
-    for (var j=0; j<result.features.length; j++) {
-      var feature = result.features[j];
-      var title = feature.id === null ? I18n.featureInfo.raster : I18n.featureInfo.feature + feature.id;
-
-      html += '<div class="feature" data-role="collapsible" data-collapsed="false" data-theme="c">';
-      html +=   '<h3>' + title + '</h3>';
-      html +=   '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
-
-        for (var k = 0; k < feature.attributes.length; k++) {
-            var attribute = feature.attributes[k];
-
-            // skip hidden attributes and hidden values
-            if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
-                html += '<li>';
-
-                if (attribute.name == filesAlias) {
-                    if (attribute.value > '') {
-                        var attArr = $.parseJSON(attribute.value);
-                        var newArr = [];
-                        for (var i=0; i < attArr.length; i++) {
-                            newArr.push(Eqwc.common.manageFile(attArr[i], true));
-                        }
-                        attribute.value = newArr.join('</br>');
-                    }
-                } else {
-                    attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
-                }
-
-                // add attribute name and value
-                //hide field name in this cases, hardcoded
-                if (attribute.name !== 'maptip' && attribute.name !== filesAlias) {
-                    html += '<span class="name">' + attribute.name + ': </span>';
-                }
-                html += '<span class="value">' + attribute.value + '</span>';
-            }
-            html += '</li>';
-
+        var layerTitle = result.layer;
+        if (layer != undefined) {
+            layerTitle = layer.title;
         }
 
-        html += '</ul>';
+        html += '<div data-role="collapsible" data-collapsed="false" data-theme="c">';
+        html += '<h3>' + layerTitle + ' ('+result.features.length+')</h3>';
+
+        var hiddenAttributes = [];
+        if (layer != undefined && layer.hidden_attributes != undefined) {
+            hiddenAttributes = layer.hidden_attributes;
+        }
+        var hiddenValues = [];
+        if (layer != undefined && layer.hidden_values != undefined) {
+            hiddenValues = layer.hidden_values;
+        }
+
+        for (var j = 0; j < result.features.length; j++) {
+            var feature = result.features[j];
+            var title = feature.id === null ? I18n.featureInfo.raster : I18n.featureInfo.feature + feature.id;
+
+            html += '<div class="feature" data-role="collapsible" data-collapsed="false" data-theme="c">';
+            html += '<h3>' + title + '</h3>';
+
+            //add edit button in case of editor plugin and layer is available for editing
+            if(typeof(Editor) == 'function' && Config.data.wfslayers[layer.id]) {
+                //html += "<input type='button' data-theme='b' data-inline='true' id='edit' data-mini='true' value='Edit'>";
+                //TODO icon edit
+                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+');" data-theme="b" data-inline="true" data-mini="true" data-role="button">Edit</a>';
+            }
+
+            html += '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
+
+            for (var k = 0; k < feature.attributes.length; k++) {
+                var attribute = feature.attributes[k];
+
+                // skip hidden attributes and hidden values
+                //if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
+                    html += '<li>';
+
+                    if (attribute.name == filesAlias) {
+                        if (attribute.value > '') {
+                            var attArr = $.parseJSON(attribute.value);
+                            var newArr = [];
+                            for (var l = 0; l < attArr.length; l++) {
+                                newArr.push(Eqwc.common.manageFile(attArr[l], true));
+                            }
+                            attribute.value = newArr.join('</br>');
+                        }
+                    } else {
+                        attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
+                    }
+
+                    // add attribute name and value
+                    //hide field name in this cases, hardcoded
+                    if (attribute.name !== 'maptip' && attribute.name !== filesAlias) {
+                        html += '<span class="name">' + attribute.name + ': </span>';
+                    }
+                    html += '<span class="value">' + attribute.value + '</span>';
+                //}
+                html += '</li>';
+
+            }
+
+            html += '</ul>';
+            html += '</div>';
+        }
+
         html += '</div>';
     }
+    if (results.length == 0) {
+        html = I18n.featureInfo.noFeatureFound;
+    }
 
-      html += '</div>';
-  }
-  if (results.length == 0) {
-    html = I18n.featureInfo.noFeatureFound;
-  }
-
-  $('#featureInfoResults').html(html);
-  $('#featureInfoResults').trigger('create');
+    $('#featureInfoResults').html(html);
+    $('#featureInfoResults').trigger('create');
 };
 
 // show search results list
-Gui.showSearchResults = function(results) {
-  $('#searchResultsList').empty();
+Gui.showSearchResults = function (results) {
+    $('#searchResultsList').empty();
 
-  for (var i=0; i<results.length; i++) {
-    var categoryResults = results[i];
+    for (var i = 0; i < results.length; i++) {
+        var categoryResults = results[i];
 
-    // category title
-    if (categoryResults.category != null) {
-      $('#searchResultsList').append($('<li class="category-title">' + categoryResults.category + '</li>'));
+        // category title
+        if (categoryResults.category != null) {
+            $('#searchResultsList').append($('<li class="category-title">' + categoryResults.category + '</li>'));
+        }
+
+        // results
+        for (var j = 0; j < categoryResults.results.length; j++) {
+            var result = categoryResults.results[j];
+            var li = $('<li><a href="#">' + result.name + '</a></li>');
+            li.data('bbox', result.bbox);
+            li.data('highlight', result.highlight);
+            li.data('point', result.point);
+            $('#searchResultsList').append(li);
+        }
     }
 
-    // results
-    for (var j=0;j<categoryResults.results.length; j++) {
-      var result = categoryResults.results[j];
-      var li = $('<li><a href="#">' + result.name + '</a></li>');
-      li.data('bbox', result.bbox);
-      li.data('highlight', result.highlight);
-      li.data('point', result.point);
-      $('#searchResultsList').append(li);
+    $('#searchResultsList').listview('refresh');
+    $('#searchResults').show();
+
+    // automatically jump to single result
+    if (results.length === 1 && result.point != null) {
+        Gui.jumpToSearchResult(result.point);
+        if (results[0].highlight != undefined) {
+            Config.search.highlight(results[0].highlight, Map.setHighlightLayer);
+        }
     }
-  }
-
-  $('#searchResultsList').listview('refresh');
-
-  $('#searchResults').show();
-
-  // automatically jump to single result
-  if (results.length === 1 && result.point != null) {
-    Gui.jumpToSearchResult(result.point);
-    if (results[0].highlight != undefined) {
-      Config.search.highlight(results[0].highlight, Map.setHighlightLayer);
-    }
-  }
 };
 
 // bbox as [<minx>, <miny>, <maxx>, <maxy>]
@@ -1076,8 +1083,9 @@ Gui.initViewer = function() {
     $("#btnLocation").hide();
   }
 
-  //hide location panel until activated
+  //hide location panel and info button until location activated
   $('#locationPanel').hide();
+  $("#btnInfo").hide();
 
   $('#btnLocation').on('tap', function() {
     Gui.tracking = !Gui.tracking;
@@ -1090,6 +1098,9 @@ Gui.initViewer = function() {
       }
     Map.toggleFollowing(Gui.tracking && Gui.following);
   });
+
+  //call getfeatureinfo in location provided by geolocation
+  $("#btnInfo").click(Map.featureInfoOnLocation);
 
   // feature info
   var featureInfo = new FeatureInfo(Gui.showFeatureInfoResults);

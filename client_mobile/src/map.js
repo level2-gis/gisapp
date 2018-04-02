@@ -613,7 +613,10 @@ Map.toggleTracking = function (enabled) {
             marker.setPosition(coordinates);
             Gui.showLocationPanel(true);
 
-            $('#btnAdd').removeClass('ui-disabled');
+            if (typeof(Editor)=='function') {
+                $('#btnAdd').show();
+            }
+            $('#btnInfo').show();
 
             //switch on geolocation layer
             Map.geolocationLayer.setVisible(true);
@@ -657,7 +660,10 @@ Map.toggleTracking = function (enabled) {
         Map.geolocation.once('change:position', Map.initialCenterOnLocation);
     } else {
         Gui.showLocationPanel(false);
-        $('#btnAdd').addClass('ui-disabled');
+        if (typeof(Editor)=='function') {
+            $('#btnAdd').hide();
+        }
+        $('#btnInfo').hide();
         Map.geolocationLayer.setVisible(false);
     }
 };
@@ -775,4 +781,11 @@ Map.activateClickHandler = function(name) {
   if (name != null && Map.singleClickHandlers[name]) {
     Map.singleClickHandlers[name].toggle(true);
   }
+};
+
+Map.featureInfoOnLocation = function() {
+    var location = Map.geolocation.getPosition();
+    var fi = new FeatureInfo(Gui.showFeatureInfoResults);
+    fi.callOnLocation(location);
+
 };
