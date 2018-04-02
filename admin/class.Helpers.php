@@ -276,6 +276,7 @@ class Helpers
                             $lay->geom_column = (string)$lay_info["message"]["geom_column"];
                             $lay->crs = (string)$lay_info["message"]["crs"];
                             $lay->sql = (string)$lay_info["message"]["sql"];
+                            $lay->key = (string)$lay_info["message"]["key"];
                         }
                     }
 
@@ -360,7 +361,8 @@ class Helpers
             'type' => '',
             'geom_column' => '',
             'crs' => (string)$layer->srs->spatialrefsys->authid,
-            'sql' => ''
+            'sql' => '',
+            'key' => ''
         );
 
         //only for postgres and spatialite layers
@@ -390,7 +392,7 @@ class Helpers
             foreach (explode(' ', $datasource) as $token) {
                 $kvn = explode('=', $token);
                 if (count($kvn) == 2) {
-                    $ds_parms[$kvn[0]] = $kvn[1];
+                    $ds_parms[$kvn[0]] = trim($kvn[1],"'");
                 } else { // Parse (geom)
                     if (preg_match('/\(([^\)]+)\)/', $kvn[0], $matches)) {
                         $ds_parms['geom_column'] = $matches[1];

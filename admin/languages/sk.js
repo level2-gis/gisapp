@@ -99,7 +99,7 @@ I18n.layers = {
 
 I18n.featureInfo = {
     header: "Information",
-    feature: "Feature with ID:",
+    feature: "Feature ID:",
     raster: "Raster",
     noFeatureFound: "No objects found"
 };

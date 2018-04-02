@@ -97,7 +97,7 @@ I18n.layers = {
 
 I18n.featureInfo = {
     header: "Informasjon",
-    feature: "Funksjon med ID:",
+    feature: "Funksjon ID:",
     raster: "Raster",
     noFeatureFound: "Ingen objekter funnet"
 };
