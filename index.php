@@ -40,13 +40,13 @@ function goMobile($lang) {
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
 
         <!-- OpenLayers 3 -->
-        <script src="client_mobile/lib/ol3/ol.js?v=4.1.1"></script>
-<!--    <script src="client_mobile/lib/ol3/ol-debug.js?v=4.1.1"></script>-->
-        <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css?v=4.1.1" />
+        <script src="client_mobile/lib/ol3/ol.js?v=4.6.5"></script>
+<!--        <script src="client_mobile/lib/ol3/ol-debug.js?v=4.6.5"></script>-->
+        <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css?v=4.6.5" />
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180326" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180401" />
 <!--        <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20171212" />-->
     </head>
     <body>
@@ -59,6 +59,7 @@ function goMobile($lang) {
                 <a href="#panelSearch" id="btnSearching" data-role="button" data-inline="true" data-icon="searching" data-iconpos="notext"></a>
                 <a href="#panelLayer" id="btnLayers" data-role="button" data-inline="true" data-icon="layers" data-iconpos="notext"></a>
                 <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
+                <a href="#" id="btnInfo" data-role="button" data-icon="loc_info" data-iconpos="notext"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
             </div>
             <div id="locationPanel" class="ui-popup-container">Test</div>
