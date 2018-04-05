@@ -488,4 +488,12 @@ class Helpers
         }
         return $version;
     }
+
+    public static function getClientPath() {
+        $root = filter_input(INPUT_SERVER,'DOCUMENT_ROOT',FILTER_SANITIZE_STRING);
+        if (basename($root)=='gisportal') {
+            $root = dirname($root);
+        }
+        return $root . GISAPPURL;
+    }
 }

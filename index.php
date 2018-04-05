@@ -171,11 +171,12 @@ $def_lang = strtolower(filter_input(INPUT_GET,'lang',FILTER_SANITIZE_STRING));
 $mobile = strtolower(filter_input(INPUT_GET,'mobile',FILTER_SANITIZE_STRING));
 
 $edit = Helpers::checkModulexist("editing");
+$client_path = Helpers::getClientPath();
 
 session_start();
 
 if($def_lang>'') {
-    $lang_fn = filter_input(INPUT_SERVER,'DOCUMENT_ROOT',FILTER_SANITIZE_STRING) . GISAPPURL . 'admin/languages/' . $def_lang . '.js';
+    $lang_fn = $client_path . 'admin/languages/' . $def_lang . '.js';
     if(!(file_exists($lang_fn))) {
         $def_lang = defined('DEFAULT_LANG') ? DEFAULT_LANG : 'en';
     }
@@ -190,6 +191,7 @@ else {
 }
 
 $_SESSION['lang'] = $def_lang;
+$_SESSION['client_path'] = $client_path;
 
 $detect = new Mobile_Detect;
 // Exclude tablets.

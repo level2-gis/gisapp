@@ -13,6 +13,7 @@ $description = $_SESSION['description'];
 $gis_projects = json_decode($_SESSION['gis_projects']);
 $qgs = json_decode($_SESSION['qgs']);
 $lang = $_SESSION['lang'];
+$client_path = $_SESSION['client_path'];
 
 if (!property_exists($settings, "search")) {
     $settings->search = null;
@@ -37,7 +38,7 @@ if (!property_exists($data, "project_id")) {
 if (!property_exists($data, "client_url")) {
     $data->client_url = "";
 }
-if (file_exists($_SERVER["DOCUMENT_ROOT"] . $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png')) {
+if (file_exists($client_path . 'admin/resources/images/' . $data->client_name . '.png')) {
     $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png';
 } else {
     $data->client_logo = $gis_projects->path . 'admin/resources/images/_temp.png';
