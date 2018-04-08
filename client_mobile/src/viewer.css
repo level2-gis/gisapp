@@ -82,10 +82,16 @@
 
 /* geolocation */
 
-#locationMarker {
+.locationMarkerNormal {
   background-image: url("../img/location-cross.svg");
   width: 20px;
   height: 20px;
+}
+
+.locationMarkerGood {
+    background-image: url("../img/location-cross-good.svg");
+    width: 20px;
+    height: 20px;
 }
 
 #locationPanel {
@@ -432,12 +438,19 @@ input[data-type='search']::-ms-clear { display: none; }
   }
 
   /* workaround for location marker image */
-  #locationMarker {
+  #locationMarkerNormal {
     background-image: none;
     display: list-item !important;
     list-style-image: url("../img/location-cross.svg");
     list-style-position: inside;
   }
+
+    #locationMarkerGood {
+        background-image: none;
+        display: list-item !important;
+        list-style-image: url("../img/location-cross-good.svg");
+        list-style-position: inside;
+    }
 
   /* workaround for click marker image */
   #clickMarker {

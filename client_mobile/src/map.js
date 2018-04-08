@@ -630,6 +630,35 @@ Map.toggleTracking = function (enabled) {
             })
         }));
 
+        // add geolocation marker
+        var marker = new ol.Overlay({
+            element: ($('<div id="locationMarker" class="locationMarkerNormal"></div>'))[0],
+            positioning: 'center-center'
+        });
+
+        Map.geolocation.on('change:accuracy', function () {
+            var acc = Map.geolocation.getAccuracy();
+            var el = $('#locationMarker');
+            if(typeof(Editor) == 'function') {
+                if (acc < EditorConfig.accuracyLimit) {
+                    el.addClass('locationMarkerGood').removeClass('locationMarkerNormal');
+                    accuracyFeature.setStyle(new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(0, 255, 0, 0.05)'
+                        })
+                    }));
+                } else {
+                    el.addClass('locationMarkerNormal').removeClass('locationMarkerGood');
+                    accuracyFeature.setStyle(new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(255, 0, 0, 0.05)'
+                        })
+                    }));
+                }
+            }
+
+        });
+
         Map.geolocation.on('change:accuracyGeometry', function () {
             accuracyFeature.setGeometry(Map.geolocation.getAccuracyGeometry());
         });
@@ -643,11 +672,6 @@ Map.toggleTracking = function (enabled) {
         Map.geolocationLayer.name = 'geolocation';
         Map.map.addLayer(Map.geolocationLayer);
 
-        // add geolocation marker
-        var marker = new ol.Overlay({
-            element: ($('<div id="locationMarker"></div>'))[0],
-            positioning: 'center-center'
-        });
         Map.map.addOverlay(marker);
         //marker.bindTo('position', Map.geolocation);
     }
