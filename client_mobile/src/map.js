@@ -27,6 +27,7 @@ Map.backgroundLayer = null;
 Map.selectionLayer = null;
 Map.redliningLayer = null;
 Map.highlightLayer = null;
+Map.geolocationLayer = null;
 // overlay layers (key = topic name)
 Map.overlayLayers = {};
 // OpenLayers 3 geolocation object
@@ -589,7 +590,11 @@ Map.toggleTracking = function (enabled) {
             }
         });
 
-        //  Map.geolocation.bindTo('projection', Map.map.getView());
+        Map.geolocation.setProperties({
+            ondulation: 0,
+            ondulationSource: '',
+            antenna: 0
+        });
 
         Map.geolocation.on('error', function (error) {
 
@@ -810,6 +815,6 @@ Map.activateClickHandler = function(name) {
 Map.featureInfoOnLocation = function() {
     var location = Map.geolocation.getPosition();
     var fi = new FeatureInfo(Gui.showFeatureInfoResults);
-    fi.callOnLocation(location);
+    fi.callOnLocation(location, Config.featureInfo.useWMSGetFeatureInfo, null);
 
 };

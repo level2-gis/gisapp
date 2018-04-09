@@ -18,9 +18,9 @@ FeatureInfo.prototype = new MapClickHandler();
  *
  * location: array
  */
-FeatureInfo.prototype.callOnLocation = function(location) {
+FeatureInfo.prototype.callOnLocation = function(location, useWMS, layers) {
     var url = null;
-    if (Config.featureInfo.useWMSGetFeatureInfo) {
+    if (useWMS) {
         var params = {
             'INFO_FORMAT': Config.featureInfo.format,
             'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
@@ -37,7 +37,7 @@ FeatureInfo.prototype.callOnLocation = function(location) {
         url = Map.getGetFeatureInfoUrl(location, params);
     }
     else {
-        url = Config.featureInfo.url(Map.topic, location, Map.featureInfoLayers());
+        url = Config.featureInfo.url('common', location, layers);
     }
     $.ajax({
         url: url,
