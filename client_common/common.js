@@ -33,7 +33,7 @@ Eqwc.common.manageFile = function(fn, handleImages) {
     //check if image
     var img = false;
     if (handleImages) {
-        ext = fn.split('.')[1];
+        var ext = (fn.split('.')[1]).toLowerCase();
         if (ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png') {
             img = true;
         }
