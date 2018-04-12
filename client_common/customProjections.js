@@ -16,6 +16,7 @@ CustomProj['EPSG:2180'] = {extent: [116649.52,118322.29,806302.07,845151.24], un
 CustomProj['EPSG:3006'] = {extent: [-1200000,4305696,2994304,8500000], units: 'm', yx: true};                   //Sweden
 CustomProj['EPSG:31254']= {extent: [-61758.89,140394.51,499917.82,453931.14], units: 'm', yx: true};            //Austria GK
 CustomProj['EPSG:31259']= {extent: [226942.84, 162621.12, 811288.27, 431698.18], units: 'm', yx: true};            //Austria GK
+CustomProj['EPSG:32633']= {extent: [166021.44, 0.00, 534994.66, 9329005.18], units: 'm', yx: false};
 CustomProj['EPSG:32635']= {extent: [-760000, 6580000, 657000, 8990000], units: 'm', yx: false};                 //Norway
 CustomProj['EPSG:3794'] = {extent: [373217.65,32395.09,622710.74,194645.86], units: 'm', yx: false};            //Slovenia new
 CustomProj['EPSG:3857'] = {extent: [-20026376.39,-20048966.10,20026376.39,20048966.10], units: 'm', yx: false};
