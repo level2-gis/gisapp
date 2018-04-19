@@ -510,11 +510,6 @@ class Login
         echo 'Hello ' . $_SESSION['user_name'] . ', you are logged in.<br/><br/>';
         echo '<a href="' . $scr . '?action=logout">Log out</a>';
 
-        //TODO cleanup this. Superuser not needed to register anymmore
-        //if ($_SESSION['user_name'] == SUPERUSER)
-        //    echo '</br><a href="' . $_SERVER['SCRIPT_NAME'] . '?action=register">SUPERUSER: Register new account</a>';
-
-
         echo "<h3>PHP List All Session Variables</h3>";
         echo "<b>sess_id</b>: " . session_id() . "<br/><br/>";
         foreach ($_SESSION as $key => $val)

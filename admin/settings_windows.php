@@ -24,9 +24,6 @@ define('DB_PWD', 'password');
 //project location
 define('PROJECT_PATH', 'C:/Apache24/apache/www/gisapp/_demo/');
 
-//superuser, currently irrelevant
-define('SUPERUSER', 'gisadmin');
-
 //qgis server, check your port, if you are using default port 80, then simply go: /localhost/cgi-bin...
 define('QGISSERVERURL', 'http://localhost:8080/cgi-bin/qgis_mapserv.fcgi.exe');
 

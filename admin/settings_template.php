@@ -24,9 +24,6 @@ define('DB_PWD', 'password');
 //project location
 define('PROJECT_PATH', '/var/www/html/gisapp/_demo/');
 
-//superuser, currently irrelevant
-define('SUPERUSER', 'gisadmin');
-
 //qgis server
 define('QGISSERVERURL', 'http://localhost/cgi-bin/qgis_mapserv.fcgi');
 
