@@ -29,8 +29,12 @@ Config.extractStringFromObject = function (objName, string) {
 };
 
 Config.getLayerName = function (lid) {
-
-    return projectData.use_ids ? projectData.layers[lid].layername : lid;
+    if (projectData.layers[lid]) {
+        return projectData.use_ids ? projectData.layers[lid].layername : lid;
+    }
+    else {
+        return lid;
+    }
 };
 
 Config.getLayerId = function (name) {
@@ -131,7 +135,7 @@ Config.featureInfo.tolerances = {
  * topicName: current topic
  * coordinate: clicked position as [x, y]
  * layers: array of visible WMS layer names
- */
+ *//*
 Config.featureInfo.url = function(topicName, coordinate, layers) {
   // DEBUG: sample static files for demonstration purposes
   if (Config.featureInfo.format === 'text/xml') {
@@ -142,7 +146,7 @@ Config.featureInfo.url = function(topicName, coordinate, layers) {
     // sample HTML results
     return "data/get_feature_info_response.html";
   }
-};
+};*/
 
 /* Configuration for Mapfish Appserver:
 Config.featureInfo.format = 'text/html';

@@ -27,7 +27,7 @@ Topics.loadTopics = function(url, callback) {
         "categories_topics_sort": 0,
         "wms_url": "/proxy/"+projectData.project,
         "background_layer": false,
-        "minscale": 100
+        "minscale": Eqwc.settings.mobileMinScale ? Eqwc.settings.mobileMinScale : 100
     }];
 
         // group by category

@@ -147,6 +147,7 @@ Eqwc.settings.gisPortalProfile = Eqwc.settings.gisPortalRoot + 'profile';
 //settings mobile only
 Eqwc.settings.mobileUseTiledWMS = true;
 Eqwc.settings.mobileEnableTracking = false;
+Eqwc.settings.mobileMinScale = 50;
 
 //files field in case of editing plugin
 //only change that if you set alias for files field in QGIS, then enter same alias here.

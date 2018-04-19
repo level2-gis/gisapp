@@ -61,6 +61,14 @@ Gui.showLocationPanel = function (show) {
         var coordinates = Map.geolocation.getPosition();
         var accuracy = Map.geolocation.getAccuracy();
         var altitude = Map.geolocation.getAltitude();
+
+        if (typeof Map.geolocation.getAltitudeCorrected == 'function') {
+            altitude = Map.geolocation.getAltitudeCorrected();
+        }
+
+        var extra = Map.geolocation.getProperties();
+
+
         var heading = Map.geolocation.getHeading();
         var speed = Map.geolocation.getSpeed();
 
@@ -71,12 +79,15 @@ Gui.showLocationPanel = function (show) {
         ];
 
         if (altitude) {
-            html.push('Altitude: ' + altitude.toFixed(2));
+            html.push('Altitude: ' + altitude.toFixed(2)+ ' m');
+            if(extra.altCorrection>0) {
+                html.push(extra.altCorrectionSource);
+            }
         }
 
-        if (heading && speed) {
-            'Heading: ' + Math.round(radToDeg(heading)) + '&deg;',
-            'Speed: ' + (speed * 3.6).toFixed(1) + ' km/h'
+        if (heading && speed>1) {
+            html.push('Heading: ' + Math.round(radToDeg(heading)) + '&deg;');
+            html.push('Speed: ' + (speed * 3.6).toFixed(1) + ' km/h');
         }
 
 

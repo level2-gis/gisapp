@@ -37,7 +37,18 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layers) {
         url = Map.getGetFeatureInfoUrl(location, params);
     }
     else {
-        url = Config.featureInfo.url('common', location, layers);
+        //GetFeatureInfo for common layer (common QGIS project)
+        var view = Map.map.getView();
+        url = commonLayer.getSource().getGetFeatureInfoUrl(
+            location,
+            view.getResolution(),
+            view.getProjection(),
+            {
+                'INFO_FORMAT': Config.featureInfo.format,
+                'QUERY_LAYERS': layers
+            }
+        );
+
     }
     $.ajax({
         url: url,

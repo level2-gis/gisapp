@@ -115,20 +115,21 @@ Map.setTopicLayer = function() {
   var wmsOptions = {
     url: Map.topics[Map.topic].wms_url,
     params: wmsParams,
-    extent: Config.map.extent,
     serverType: Config.map.wmsServerType,
-    dpi: Config.map.dpi
+    dpi: Config.map.dpi     //TODO check this
   };
   Map.topicLayer = null;
   if (Map.useTiledWMS) {
     Map.topicLayer = new ol.layer.Tile({
-      source: new ol.source.TileWMS(wmsOptions)
+        //extent: Config.map.extent,
+        source: new ol.source.TileWMS(wmsOptions)
     });
   }
   else {
     wmsOptions['ratio'] = 1;
     Map.topicLayer = new ol.layer.Image({
-      source: new ol.source.ImageWMS(wmsOptions)
+        //extent: Config.map.extent,
+        source: new ol.source.ImageWMS(wmsOptions)
     });
   }
   Map.topicLayer.name = 'topic';
@@ -585,15 +586,20 @@ Map.toggleTracking = function (enabled) {
             projection: Map.map.getView().getProjection(),
             trackingOptions: {
                 enableHighAccuracy: true,
-                maximumAge: 0,
-                timeout: 20000
+                maximumAge: 20000,
+                timeout: 21000
             }
         });
 
+        var antenna = $('#antennaHeight').length > 0 ? $('#antennaHeight')[0].value : 0;
+        if (isNaN(antenna)) {
+            antenna = 0;
+        }
+
         Map.geolocation.setProperties({
-            ondulation: 0,
-            ondulationSource: '',
-            antenna: 0
+            altCorrection: 0,
+            altCorrectionSource: '',
+            antenna: parseFloat(antenna)
         });
 
         Map.geolocation.on('error', function (error) {
@@ -708,16 +714,20 @@ Map.toggleFollowing = function(enabled) {
   }
 };
 
-Map.initialCenterOnLocation = function() {
-  Map.centerOnLocation();
-  if (Config.map.initialGeolocationMaxScale != null) {
-    var maxRes = Map.scaleDenomToResolution(Config.map.initialGeolocationMaxScale, true);
-    if (Map.map.getView().getResolution() > maxRes) {
-      Map.map.getView().setResolution(maxRes);
+Map.initialCenterOnLocation = function () {
+    Map.centerOnLocation();
+    if (Config.map.initialGeolocationMaxScale != null) {
+        var maxRes = Map.scaleDenomToResolution(Config.map.initialGeolocationMaxScale, true);
+        if (Map.map.getView().getResolution() > maxRes) {
+            Map.map.getView().setResolution(maxRes);
+        }
     }
-  }
-  // disable after first update
-  //Map.geolocation.un('change:position', Map.initialCenterOnLocation);
+
+    if (typeof(Editor) == 'function') {
+        mobEditor.getHeightCorrection();
+    }
+    // disable after first update
+    //Map.geolocation.un('change:position', Map.initialCenterOnLocation);
 };
 
 Map.centerOnLocation = function() {
