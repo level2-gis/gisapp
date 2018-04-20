@@ -73,10 +73,12 @@ Gui.showLocationPanel = function (show) {
         var speed = Map.geolocation.getSpeed();
 
         var html = [
-            coordinates[0].toFixed(2) + ', ' + coordinates[1].toFixed(2),
-            'Accuracy: ' + accuracy.toPrecision(3) +' m'        //todo translate
-            //'Delta: ' + Math.round(deltaMean) + 'ms'
+            coordinates[0].toFixed(2) + ', ' + coordinates[1].toFixed(2)
         ];
+
+        if (Eqwc.settings.mobileShowAccuracy) {
+            html.push('Accuracy: ' + accuracy.toPrecision(3) +' m');    //todo translate
+        }
 
         if (altitude) {
             html.push('Altitude: ' + altitude.toFixed(2)+ ' m');
