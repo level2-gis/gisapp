@@ -724,7 +724,9 @@ Map.initialCenterOnLocation = function () {
     }
 
     if (typeof(Editor) == 'function') {
-        mobEditor.getHeightCorrection();
+        if (EditorConfig.altCorrectionLayer) {
+            mobEditor.getHeightCorrection();
+        }
     }
     // disable after first update
     //Map.geolocation.un('change:position', Map.initialCenterOnLocation);
