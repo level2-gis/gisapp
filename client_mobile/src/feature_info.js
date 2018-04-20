@@ -37,9 +37,9 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layers) {
         url = Map.getGetFeatureInfoUrl(location, params);
     }
     else {
-        //GetFeatureInfo for common layer (common QGIS project)
+        //GetFeatureInfo for hidden QGIS project, currently needed in Editor plugin
         var view = Map.map.getView();
-        url = commonLayer.getSource().getGetFeatureInfoUrl(
+        url = hiddenProject.getSource().getGetFeatureInfoUrl(
             location,
             view.getResolution(),
             view.getProjection(),
