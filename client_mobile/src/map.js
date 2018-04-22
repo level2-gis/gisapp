@@ -245,7 +245,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
             }
 
             if (definition.matrixIds !== undefined) {
-                matrixIds = definition.matrixIds;
+                matrixIds = eval(definition.matrixIds);
             }
 
             if (serverResolutions !== undefined) {

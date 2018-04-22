@@ -61,7 +61,7 @@ function makeLayer(layDef, visible) {
                 layer: options.layer,
                 requestEncoding: options.requestEncoding,
                 matrixSet: options.matrixSet,
-                matrixIds: options.matrixIds,
+                matrixIds: eval(options.matrixIds),
                 format: options.format,
                 style: options.style,
                 displayOutsideMaxExtent: false,
