@@ -80,6 +80,10 @@ function makeLayer(layDef, visible) {
         case 'WMS' :
 
             options.options.visibility = visible;
+            //if extra layer take visibility from options if exists
+            if (!visible && options.visibility != undefined) {
+                options.options.visibility = options.visibility;
+            }
 
             //extralayer on same host (like different qgis project) add for identify (another GetFeatureInfo control)
             //we use layer metadata property for this
