@@ -912,15 +912,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         maskElement.collapsible && maskElement.expand();
 
         if (this.useWmsRequest) {
-
             //alert(maskElement.id);
             //check if we already have table for layer in case of open table call
-            if(maskElement.id=='BottomPanel' && (this.resultsGrid != null)) {
-            //    if(Ext.getCmp('table_'+this.queryLayer)==undefined) {
-            //        //this.submitGetFeatureInfo();
-            //        maskElement.el.mask(pleaseWaitString[lang], 'x-mask-loading');
-            //    }
-            //    else {
+            if (maskElement.id=='BottomPanel' && this.resultsGrid !== null && this.resultsGrid.store !== null) {
                 if (this.gridResults === this.resultsGrid.store.maxResults) {
                     maskElement.activate(Ext.getCmp('table_' + this.queryLayer));
                 }
@@ -928,15 +922,11 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     this.resultsGrid.store.maxResults = this.gridResults;
                     this.submitGetFeatureInfo();
                 }
-            //    }
             }
             else {
-
                 maskElement.el.mask(pleaseWaitString[lang], 'x-mask-loading');
                 this.submitGetFeatureInfo();
             }
-
-
         } else {
             this.submitForm();
         }
