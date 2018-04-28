@@ -21,7 +21,7 @@ Eqwc.common.createHyperlink = function(att, val, pattern) {
     if (pattern > '') {
         var mediapattern = new RegExp(pattern, 'i');
         if (mediapattern.test(att)) {
-            att = "<a href=\"/" + attValue + "\" target=\"_blank\">" + att + "</a>";
+            att = "<a href=\"/" + att + "\" target=\"_blank\">" + val + "</a>";
         }
     }
 

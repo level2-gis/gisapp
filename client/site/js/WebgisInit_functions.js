@@ -2466,7 +2466,7 @@ function imageFormatForLayers(layers) {
 
 //this function checks if layers and layer-groups are outside scale-limits.
 //if a layer is outside scale-limits, its label in the TOC is being displayed in a light gray
-//TODO UROS Tale funkcija ni optimalna, preurediti da bo lahko upoštevala tudi zunanje sloje
+//TODO Fix this, duplicate declarations, global vars..., have to simplify this and also use it on base and extra layers
 function setGrayNameWhenOutsideScale() {
     if ( grayLayerNameWhenOutsideScale ) { //only if global boolean is set
 
@@ -2518,7 +2518,7 @@ function setGrayNameWhenOutsideScale() {
                 for (var j=0;j<allLayersWithIDs.length;j++){
                     if (allLayersWithIDs[j][0] == wmsLoader.projectSettings.capability.layers[i].title) {
                         layerTree.root.findChild('id', allLayersWithIDs[j][1], true).setTooltip(''); //empty tooltip
-                        node = layerTree.root.findChild('id', allLayersWithIDs[j][1], true); //remove css class
+                        var node = layerTree.root.findChild('id', allLayersWithIDs[j][1], true); //remove css class
                         node.ui.removeClass('outsidescale'); //remove css class
                         layerTree.root.findChild('id', allLayersWithIDs[j][1], true).isOutsideScale = false;
                         layerTree.root.findChild('id', allLayersWithIDs[j][1], true).MinScale = MinScale;
@@ -2559,7 +2559,7 @@ function setGrayNameWhenOutsideScale() {
 
         //iterate all leaf layers within a group
         for (var i=0;i<arrLayerGroups.length;i++){
-            bolGroupOutsideScale = true;
+            var bolGroupOutsideScale = true;
             MinScale = 0; //set an extreme minscale
             MaxScale = 150000000; //set an extreme maxscale
 
