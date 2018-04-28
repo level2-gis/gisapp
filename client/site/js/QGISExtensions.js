@@ -914,8 +914,8 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         if (this.useWmsRequest) {
             //alert(maskElement.id);
             //check if we already have table for layer in case of open table call
-            if (maskElement.id=='BottomPanel' && this.resultsGrid !== null && this.resultsGrid.store !== null) {
-                if (this.gridResults === this.resultsGrid.store.maxResults) {
+            if (this.resultsGrid !== null && this.resultsGrid.store !== null) {
+                if (maskElement.id=='BottomPanel' && this.gridResults === this.resultsGrid.store.maxResults) {
                     maskElement.activate(Ext.getCmp('table_' + this.queryLayer));
                 }
                 else {

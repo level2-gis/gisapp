@@ -1008,22 +1008,31 @@ function postLoading() {
         }
     }
 
-    leafsChangeFunction = function () {
-        //now collect all selected queryable layers for WMS request
-        selectedLayers = [];
-        selectedQueryableLayers = [];
-        layerTree.root.firstChild.cascade(
+    leafsChangeFunction = function (node, checked) {
 
-            function (n) {
-                if (n.isLeaf() && n.attributes.checked) {
-                    selectedLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
-                    if (wmsLoader.layerProperties[wmsLoader.layerTitleNameMapping[n.text]].queryable) {
-                        selectedQueryableLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
-                    }
+        var lay = wmsLoader.layerTitleNameMapping[node.text];
+
+        if (node.isLeaf() && lay) {
+            if (checked) {
+                selectedLayers.push(lay);
+                if (wmsLoader.layerProperties[lay].queryable) {
+                    selectedQueryableLayers.push(lay);
                 }
-                // Call custom action in Customizations.js
-                customActionLayerTreeCheck(n);
-            });
+            }
+            else {
+                var i = selectedLayers.indexOf(lay);
+                if (i>-1) {
+                    selectedLayers.splice(i,1);
+                }
+                var j = selectedQueryableLayers.indexOf(lay);
+                if (j>-1) {
+                    selectedQueryableLayers.splice(j,1);
+                }
+            }
+        }
+        // Call custom action in Customizations.js
+        customActionLayerTreeCheck(node);
+
         format = imageFormatForLayers(selectedLayers);
         //updateLayerOrderPanel();
 
@@ -1037,7 +1046,7 @@ function postLoading() {
             var selectedActiveLayers = [];
             var selectedActiveQueryableLayers = [];
             //need to find active layer
-            var activeNode = layerTree.getSelectionModel().getSelectedNode();
+            var activeNode = node; //layerTree.getSelectionModel().getSelectedNode();
             activeNode.cascade(
                 function (n) {
                     if (n.isLeaf() && n.attributes.checked) {
@@ -1101,7 +1110,7 @@ function postLoading() {
             if (checkedBackgroundNodes.length == 1) {
                 newVisibleBaseLayer = checkedBackgroundNodes[0].layer.name;
             } else if (checkedBackgroundNodes.length == 2) {
-                layerTree.removeListener("leafschange",leafsChangeFunction);
+                layerTree.removeListener("checkchange",leafsChangeFunction);
                 layerTree.root.lastChild.cascade(
                     function (n) {
                         if (n.isLeaf() && n.attributes.checked) {
@@ -1113,17 +1122,17 @@ function postLoading() {
                             }
                         }
                     });
-                layerTree.addListener('leafschange',leafsChangeFunction);
+                layerTree.addListener('checkchange',leafsChangeFunction);
             }
             currentlyVisibleBaseLayer = newVisibleBaseLayer;
         }
     };
 
     if (initialLoadDone) {
-        layerTree.removeListener("leafschange",leafsChangeFunction);
+        layerTree.removeListener("checkchange",leafsChangeFunction);
     }
     //add listeners for layertree
-    layerTree.addListener('leafschange',leafsChangeFunction);
+    layerTree.addListener('checkchange',leafsChangeFunction);
 
     //externalWMSlayers
     if(enableExtraLayers && extraLayers.length>0) {

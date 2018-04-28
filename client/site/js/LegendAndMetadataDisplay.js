@@ -119,36 +119,33 @@ function showLegendAndMetadata(layertitle) {
 	if (legendMetadataWindow_active == false) {
 		legendMetadataWindow.show();
 	}
-	//create legend URI
+
     var projDataLayer = projectData.layers[layername];
-	var legendUrl = wmsURI + Ext.urlEncode({
-            SERVICE: "WMS",
-            VERSION: "1.3.0",
-            REQUEST: "GetLegendGraphics",
-            FORMAT: "image/png",
-            EXCEPTIONS: "application/vnd.ogc.se_inimage",
-            BOXSPACE: 1,
-            LAYERSPACE: 2,
-            SYMBOLSPACE: 1,
-            SYMBOLHEIGHT: 2,
-            LAYERFONTSIZE: 8,
-            ITEMFONTSIZE: 8,
-            LAYERS: layername,
-            DPI: screenDpi
-        });
-	legendMetaTabPanel = Ext.getCmp('legendMetaTabPanel');
-    //create legend image
-    legendMetaTabPanel.activate(legendTab);
-    var legendImage = '<img src="'+legendUrl+'" />';
-    legendTab.update(legendImage);
-
     var properties = {};
-    if (projDataLayer == undefined) {
-        //properties = {
-        //    'TYPE': 'group'
-        //};
 
-    } else {
+    if (projDataLayer) {
+        //create legend URI
+        var legendUrl = wmsURI + Ext.urlEncode({
+                SERVICE: "WMS",
+                VERSION: "1.3.0",
+                REQUEST: "GetLegendGraphics",
+                FORMAT: "image/png",
+                EXCEPTIONS: "application/vnd.ogc.se_inimage",
+                BOXSPACE: 1,
+                LAYERSPACE: 2,
+                SYMBOLSPACE: 1,
+                SYMBOLHEIGHT: 2,
+                LAYERFONTSIZE: 8,
+                ITEMFONTSIZE: 8,
+                LAYERS: layername,
+                DPI: screenDpi
+            });
+        legendMetaTabPanel = Ext.getCmp('legendMetaTabPanel');
+        //create legend image
+        legendMetaTabPanel.activate(legendTab);
+        var legendImage = '<img src="' + legendUrl + '" />';
+        legendTab.update(legendImage);
+
         var type = projDataLayer.geom_type;
         if (type == '' && (projDataLayer.provider == 'ogr' || projDataLayer.provider == 'spatialite')) {
             type = 'vector';

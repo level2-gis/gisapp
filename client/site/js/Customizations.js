@@ -51,13 +51,17 @@ function customAfterMapInit() {
             if (n.isLeaf()) {
                 if (n.attributes.checked) {
                     var layerId = wmsLoader.layerTitleNameMapping[n.text];
-                    var layer = projectData.layers[layerId] == undefined ? {provider: '', layername: layerId} : projectData.layers[layerId];
-                    var legendUrl = projectData.getLegendUrl(layer);
-                    Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
-                        "<div id='legend_"+n.text.replace(" ", "-")+"'><img style='vertical-align: middle; margin-left: 50px' src=\""+legendUrl+"\"/></div>"
-                    );
+                    if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId)>=0) {
+                        var layer = projectData.layers[layerId] == undefined ? {
+                            provider: '',
+                            layername: layerId
+                        } : projectData.layers[layerId];
+                        var legendUrl = projectData.getLegendUrl(layer);
+                        Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
+                            "<div id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px' src=\"" + legendUrl + "\"/></div>"
+                        );
+                    }
                 }
-
             }
         }
     );
@@ -137,10 +141,17 @@ function customActionLayerTreeCheck(n) {
     if (n.isLeaf()) {
 
         var layerId = wmsLoader.layerTitleNameMapping[n.text];
+
+        if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId)==-1) {
+            return;
+        }
+
         //check if we have to enable/disable layer vector data
         if (typeof activatedEditors == 'object') {
             var layerEditor = activatedEditors[layerId];
         }
+
+        //TODO move legend trigger to something else then checkbox
 
         if (n.attributes.checked) {
             if (layerEditor != undefined) {
@@ -150,14 +161,15 @@ function customActionLayerTreeCheck(n) {
                 //layerEditor.attributesForm.drawControl.setVisibleLabelLayers(n.attributes.checked && projectData.visibleEditLabels);
             }
 
-            var toAdd = Ext.get ( "legend_"+n.text.replace(" ", "-") );
+            var toAdd = Ext.get("legend_"+layerId);
             if (toAdd) {
+                //toAdd.show();
             } else {
                 var layer = projectData.layers[layerId] == undefined ? {provider: '', layername: layerId} : projectData.layers[layerId];
                 var legendUrl = projectData.getLegendUrl(layer);
 
                 Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
-                    "<div id='legend_"+n.text.replace(" ", "-")+"'><img style='vertical-align: middle; margin-left: 50px' src=\""+legendUrl+"\"/></div>"
+                    "<div id='legend_"+layerId+"'><img style='vertical-align: middle; margin-left: 50px' src=\""+legendUrl+"\"/></div>"
                 );
             }
         } else {
@@ -165,8 +177,9 @@ function customActionLayerTreeCheck(n) {
                     layerEditor.editLayer.setVisibility(n.attributes.checked);
             }
 
-            var toRemove = Ext.get ( "legend_"+n.text.replace(" ", "-") );
+            var toRemove = Ext.get("legend_"+layerId);
             if (toRemove) {
+                //toRemove.hide();
                 toRemove.remove();
             }
 
