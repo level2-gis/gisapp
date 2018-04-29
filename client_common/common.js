@@ -78,3 +78,7 @@ Eqwc.common.layerFieldNameExists = function (layerId, field) {
     return false;
 };
 
+Eqwc.common.lookup = function(array, prop, value) {
+    for (var i = 0, len = array.length; i < len; i++)
+        if (array[i] && array[i][prop] === value) return array[i];
+};

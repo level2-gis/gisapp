@@ -84,10 +84,118 @@ function postLoading() {
         descPanel.setVisible(true);
     }
 
-    layerTreeSelectionChangeHandlerFunction = function (selectionModel, treeNode) {
+    var layerTreeSelectionChangeHandlerFunction = function (selectionModel, treeNode) {
         if (!themeChangeActive) {
             //change selected activated layers for GetFeatureInfo requests
             layerTree.fireEvent("leafschange");
+        }
+    };
+
+    var leafsChangeFunction = function(node, checked) {
+
+        var lay = wmsLoader.layerTitleNameMapping[node.text];
+
+        if (node.isLeaf() && lay) {
+            if (checked) {
+                selectedLayers.push(lay);
+                if (wmsLoader.layerProperties[lay].queryable) {
+                    selectedQueryableLayers.push(lay);
+                }
+            }
+            else {
+                var i = selectedLayers.indexOf(lay);
+                if (i>-1) {
+                    selectedLayers.splice(i,1);
+                }
+                var j = selectedQueryableLayers.indexOf(lay);
+                if (j>-1) {
+                    selectedQueryableLayers.splice(j,1);
+                }
+            }
+        }
+        // Call custom action in Customizations.js
+        customActionLayerTreeCheck(node);
+
+        format = imageFormatForLayers(selectedLayers);
+        //updateLayerOrderPanel();
+
+        //change array order
+        //selectedLayers = layersInDrawingOrder(selectedLayers);
+        //selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
+
+        //special case if only active layers are queried for feature infos
+        if (identificationMode == 'activeLayers') {
+            //only collect selected layers that are active
+            var selectedActiveLayers = [];
+            var selectedActiveQueryableLayers = [];
+            //need to find active layer
+            var activeNode = node; //layerTree.getSelectionModel().getSelectedNode();
+            activeNode.cascade(
+                function (n) {
+                    if (n.isLeaf() && n.attributes.checked) {
+                        var layerId = wmsLoader.layerTitleNameMapping[n.text];
+                        if (layerId != undefined) {
+                            selectedActiveLayers.push(layerId);
+                            if (wmsLoader.layerProperties[layerId].queryable) {
+                                selectedActiveQueryableLayers.push(layerId);
+                            }
+                        }
+                    }
+                }
+            );
+            //selectedActiveLayers = layersInDrawingOrder(selectedActiveLayers);
+            //selectedActiveQueryableLayers = layersInDrawingOrder(selectedActiveQueryableLayers);
+        }
+
+        if (selectedQueryableLayers.length == 0) {
+            thematicLayer.setVisibility(false);
+        } else {
+            thematicLayer.setVisibility(true);
+        }
+
+        thematicLayer.mergeNewParams({
+            LAYERS: selectedLayers.join(","),
+            OPACITIES: layerOpacities(selectedLayers),
+            FORMAT: format
+        });
+        if (identificationMode != 'activeLayers') {
+            WMSGetFInfo.vendorParams = {
+                'QUERY_LAYERS': selectedQueryableLayers.join(',')
+            };
+            if (Eqwc.settings.enableHoverPopup) {
+                WMSGetFInfoHover.vendorParams = {
+                    'QUERY_LAYERS': selectedQueryableLayers.join(',')
+                };
+            }
+        } else {
+            WMSGetFInfo.vendorParams = {
+                'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
+            };
+            if (Eqwc.settings.enableHoverPopup) {
+                WMSGetFInfoHover.vendorParams = {
+                    'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
+                };
+            }
+        }
+    };
+
+    var baseChangeFunction = function (node, checked) {
+        // switch backgroundLayers
+        if (enableBGMaps && baseLayers.length > 0) {
+            var newVisibleBaseLayer = checked ? node.layer.name : null;
+
+            layerTree.root.lastChild.cascade(
+                function (n) {
+                    if (n.isLeaf() && n.attributes.checked && n.layer.name != node.layer.name) {
+                        var silent = true;
+                        n.unselect(silent);
+                        n.removeListener("checkchange", baseChangeFunction);
+                        n.layer.setVisibility(false);
+                        n.addListener("checkchange", baseChangeFunction);
+                    }
+                });
+
+            currentlyVisibleBaseLayer = newVisibleBaseLayer;
         }
     };
 
@@ -276,7 +384,8 @@ function postLoading() {
                 //create menu and filter properties from json configuration
                 buildLayerContextMenu(n);
 
-                n.on ('contextMenu', contextMenuHandler);
+                n.on('contextMenu', contextMenuHandler);
+                n.on('checkchange', leafsChangeFunction);
             }
             else {
                 //disable contextmenu on groups
@@ -286,7 +395,7 @@ function postLoading() {
                 buildGroupContextMenu(n);
 
                 n.on ('contextMenu', contextMenuHandler);
-
+                n.on('checkchange', leafsChangeFunction);
             }
         }
     );
@@ -1008,131 +1117,11 @@ function postLoading() {
         }
     }
 
-    leafsChangeFunction = function (node, checked) {
-
-        var lay = wmsLoader.layerTitleNameMapping[node.text];
-
-        if (node.isLeaf() && lay) {
-            if (checked) {
-                selectedLayers.push(lay);
-                if (wmsLoader.layerProperties[lay].queryable) {
-                    selectedQueryableLayers.push(lay);
-                }
-            }
-            else {
-                var i = selectedLayers.indexOf(lay);
-                if (i>-1) {
-                    selectedLayers.splice(i,1);
-                }
-                var j = selectedQueryableLayers.indexOf(lay);
-                if (j>-1) {
-                    selectedQueryableLayers.splice(j,1);
-                }
-            }
-        }
-        // Call custom action in Customizations.js
-        customActionLayerTreeCheck(node);
-
-        format = imageFormatForLayers(selectedLayers);
-        //updateLayerOrderPanel();
-
-        //change array order
-        selectedLayers = layersInDrawingOrder(selectedLayers);
-        selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
-
-        //special case if only active layers are queried for feature infos
-        if (identificationMode == 'activeLayers') {
-            //only collect selected layers that are active
-            var selectedActiveLayers = [];
-            var selectedActiveQueryableLayers = [];
-            //need to find active layer
-            var activeNode = node; //layerTree.getSelectionModel().getSelectedNode();
-            activeNode.cascade(
-                function (n) {
-                    if (n.isLeaf() && n.attributes.checked) {
-                        var layerId = wmsLoader.layerTitleNameMapping[n.text];
-                        if (layerId != undefined) {
-                            selectedActiveLayers.push(layerId);
-                            if (wmsLoader.layerProperties[layerId].queryable) {
-                                selectedActiveQueryableLayers.push(layerId);
-                            }
-                        }
-                    }
-                }
-            );
-            selectedActiveLayers = layersInDrawingOrder(selectedActiveLayers);
-            selectedActiveQueryableLayers = layersInDrawingOrder(selectedActiveQueryableLayers);
-        }
-
-        if (selectedQueryableLayers.length == 0) {
-            thematicLayer.setVisibility(false);
-        } else {
-            thematicLayer.setVisibility(true);
-        }
-
-        thematicLayer.mergeNewParams({
-            LAYERS: selectedLayers.join(","),
-            OPACITIES: layerOpacities(selectedLayers),
-            FORMAT: format
-        });
-        if (identificationMode != 'activeLayers') {
-            WMSGetFInfo.vendorParams = {
-                'QUERY_LAYERS': selectedQueryableLayers.join(',')
-            };
-            if (Eqwc.settings.enableHoverPopup) {
-                WMSGetFInfoHover.vendorParams = {
-                    'QUERY_LAYERS': selectedQueryableLayers.join(',')
-                };
-            }
-        } else {
-            WMSGetFInfo.vendorParams = {
-                'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
-            };
-            if (Eqwc.settings.enableHoverPopup) {
-                WMSGetFInfoHover.vendorParams = {
-                    'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
-                };
-            }
-        }
-
-        // switch backgroundLayers
-        //TODO UROS This is not OK, we need radio buttons
-        if (enableBGMaps && baseLayers.length>0) {
-            var checkedBackgroundNodes = [];
-            var newVisibleBaseLayer = null;
-            layerTree.root.lastChild.cascade(
-                function (n) {
-                    if (n.isLeaf() && n.attributes.checked) {
-                        checkedBackgroundNodes.push(n);
-                    }
-                });
-
-            if (checkedBackgroundNodes.length == 1) {
-                newVisibleBaseLayer = checkedBackgroundNodes[0].layer.name;
-            } else if (checkedBackgroundNodes.length == 2) {
-                layerTree.removeListener("checkchange",leafsChangeFunction);
-                layerTree.root.lastChild.cascade(
-                    function (n) {
-                        if (n.isLeaf() && n.attributes.checked) {
-                            if (n.layer.name == currentlyVisibleBaseLayer) {
-                                n.unselect();
-                                n.layer.setVisibility(false);
-                            } else {
-                                newVisibleBaseLayer = n.layer.name;
-                            }
-                        }
-                    });
-                layerTree.addListener('checkchange',leafsChangeFunction);
-            }
-            currentlyVisibleBaseLayer = newVisibleBaseLayer;
-        }
-    };
-
-    if (initialLoadDone) {
-        layerTree.removeListener("checkchange",leafsChangeFunction);
-    }
-    //add listeners for layertree
-    layerTree.addListener('checkchange',leafsChangeFunction);
+    //if (initialLoadDone) {
+    //    layerTree.removeListener("checkchange",leafsChangeFunction);
+    //}
+    ////add listeners for layertree
+    //layerTree.addListener('checkchange',leafsChangeFunction);
 
     //externalWMSlayers
     if(enableExtraLayers && extraLayers.length>0) {
@@ -1192,6 +1181,7 @@ function postLoading() {
             }
             BgLayerList.appendChild(bgnode);
             bgnode.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+            bgnode.on('checkchange', baseChangeFunction);
         }
     }
 

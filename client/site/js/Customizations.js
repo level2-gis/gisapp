@@ -44,28 +44,29 @@ function customBeforeMapInit() {
 // called after map initialization
 function customAfterMapInit() {
 
-    // Add legend symbols to the toc
+    // Add legend symbols to the toc for initially visible layers
+    // synchronous calls, bad, todo fix this
     var treeRoot = layerTree.getNodeById("wmsNode");
     treeRoot.firstChild.cascade(
         function (n) {
             if (n.isLeaf()) {
                 if (n.attributes.checked) {
                     var layerId = wmsLoader.layerTitleNameMapping[n.text];
-                    if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId)>=0) {
+                    if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId) >= 0) {
                         var layer = projectData.layers[layerId] == undefined ? {
                             provider: '',
                             layername: layerId
                         } : projectData.layers[layerId];
                         var legendUrl = projectData.getLegendUrl(layer);
-                        Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
+                                Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
                             "<div id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px' src=\"" + legendUrl + "\"/></div>"
-                        );
+                                );
                     }
                 }
             }
         }
     );
- }
+}
 
 // called at the end of GetMapUrls
 function customAfterGetMapUrls() {

@@ -705,11 +705,12 @@ Gui.showXMLFeatureInfoResults = function (results) {
             html += '<div class="feature" data-role="collapsible" data-collapsed="false" data-theme="c">';
             html += '<h3>' + title + '</h3>';
 
-            //add edit button in case of editor plugin and layer is available for editing
+            //add edit and goto button in case of editor plugin and layer is available for editing
             if(typeof(Editor) == 'function' && Config.data.wfslayers[layer.id]) {
                 //html += "<input type='button' data-theme='b' data-inline='true' id='edit' data-mini='true' value='Edit'>";
                 //TODO icon edit
-                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+');" data-theme="b" data-inline="true" data-mini="true" data-role="button">Edit</a>';
+                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'edit\');" data-theme="b" data-inline="true" data-mini="true" data-role="button">Edit</a>';
+                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="a" data-inline="true" data-mini="true" data-role="button">GOTO</a>';
             }
 
             html += '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
