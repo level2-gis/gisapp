@@ -51,7 +51,7 @@ Eqwc.common.manageFile = function(fn, handleImages) {
     if (img) {
         return "<a target='_blank' href='"+url+fn+"'><img src='"+url+"thumb/"+fn+"'></a>";
     } else {
-        return Eqwc.common.createHyperlink(url+fn, fn);
+        return Eqwc.common.createHyperlink(url+fn, fn, null);
     }
 };
 
