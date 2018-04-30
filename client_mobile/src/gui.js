@@ -710,7 +710,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
                 //html += "<input type='button' data-theme='b' data-inline='true' id='edit' data-mini='true' value='Edit'>";
                 //TODO icon edit
                 html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'edit\');" data-theme="b" data-inline="true" data-mini="true" data-role="button">Edit</a>';
-                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="a" data-inline="true" data-mini="true" data-role="button">GOTO</a>';
+                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="c" data-inline="true" data-mini="true" data-role="button">GOTO</a>';
             }
 
             html += '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
