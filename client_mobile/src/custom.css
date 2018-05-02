@@ -1,8 +1,41 @@
 /* custom CSS */
 
-.ui-icon-logo {
-  background-image: url("../img/glarus_logo.png");
+.danger {
+    background-color: #ffdddd;
+    border-left: 6px solid #f44336;
+    margin-bottom: 15px;
+    padding: 4px 12px;
 }
+
+.success {
+    background-color: #ddffdd;
+    border-left: 6px solid #4CAF50;
+    margin-bottom: 15px;
+    padding: 4px 12px;
+    text-align: center;
+    color: #11662a;
+}
+
+.info {
+    background-color: #e7f3fe;
+    border-left: 6px solid #2196F3;
+    margin-bottom: 15px;
+    padding: 4px 12px;
+}
+
+
+.warning {
+    background-color: #ffffcc;
+    border-left: 6px solid #ffeb3b;
+    margin-bottom: 15px;
+    padding: 4px 12px;
+}
+
+
+
+/*.ui-icon-logo {
+  background-image: url("../img/glarus_logo.png");
+}*/
 
 /* topics list from Mapfish Appserver */
 /*
