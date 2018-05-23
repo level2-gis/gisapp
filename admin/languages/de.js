@@ -32,6 +32,8 @@ var TR = {
     editData: 'Daten bearbeiten',
     editMode: 'Edit mode',
     editDisabled: 'Bearbeiten ist deaktiviert',
+    editAdd: 'Add',
+    editEdit: 'Edit',
     editDelete: 'Löschen',
     editSave: 'Speichern',
     mapBasic: 'Karte',
@@ -87,6 +89,7 @@ I18n.about = {
 };
 
 I18n.layers = {
+    project: "Project",
     topics: "Themen",
     layers: "Ebenen",
     layerOrder: "Reihenfolge",
@@ -105,7 +108,12 @@ I18n.featureInfo = {
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Die Geolokalisierung ist für diese Seite deaktiviert.\n\nBitte überprüfen Sie Ihre Browser-Einstellungen, um die Berechtigung zurückzusetzen."
+    permissionDeniedMessage: "Die Geolokalisierung ist für diese Seite deaktiviert.\n\nBitte überprüfen Sie Ihre Browser-Einstellungen, um die Berechtigung zurückzusetzen.",
+    accuracy: "Accuracy",
+    altitude: "Altitude",
+    heading: "Heading",
+    speed: "Speed",
+    obtaining: "Obtaining location..."
 };
 
 I18n.login = {

@@ -32,6 +32,8 @@ var TR = {
     editData: 'Rediger data',
     editMode: 'Redigeringsmodus',
     editDisabled: 'Redigering deaktivert',
+    editAdd: 'Add',
+    editEdit: 'Edit',
     editDelete: 'Slett',
     editSave: 'Lagre',
     mapBasic: 'Kart',
@@ -85,6 +87,7 @@ I18n.about = {
 };
 
 I18n.layers = {
+    project: "Project",
     topics: "Tema",
     layers: "Lag",
     layerOrder: "Lagrekkefølge",
@@ -103,7 +106,12 @@ I18n.featureInfo = {
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Plassering er ikke tilgjengelig. \n\nKontrollér nettleser eller enhetsinnstillinger."
+    permissionDeniedMessage: "Plassering er ikke tilgjengelig. \n\nKontrollér nettleser eller enhetsinnstillinger.",
+    accuracy: "Accuracy",
+    altitude: "Altitude",
+    heading: "Heading",
+    speed: "Speed",
+    obtaining: "Obtaining location..."
 };
 
 I18n.login = {

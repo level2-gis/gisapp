@@ -32,6 +32,8 @@ var TR = {
     editData: 'Uredi podatke',
     editMode: 'Edit mode',
     editDisabled: 'Urejanje onemogočeno',
+    editAdd: 'Dodaj',
+    editEdit: 'Uredi',
     editDelete: 'Briši',
     editSave: 'Shrani',
     mapBasic: 'Osnovna karta',
@@ -87,9 +89,10 @@ I18n.about = {
 };
 
 I18n.layers = {
+    project: "Projekt",
     topics: "Themes",
-    layers: "Layers",
-    layerOrder: "Layer order",
+    layers: "Sloji",
+    layerOrder: "Možnosti",
     background: "Background",
     overlays: "Overlays",
     selection: "Selection",
@@ -105,7 +108,12 @@ I18n.featureInfo = {
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Location is not available.\n\nPlease check your browser or device settings."
+    permissionDeniedMessage: "Location is not available.\n\nPlease check your browser or device settings.",
+    accuracy: "Natančnost",
+    altitude: "Višina",
+    heading: "Smer",
+    speed: "Hitrost",
+    obtaining: "Pridobivanje lokacije..."
 };
 
 I18n.login = {

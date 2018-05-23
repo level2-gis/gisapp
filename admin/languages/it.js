@@ -32,6 +32,8 @@ var TR = {
     editData: 'Modifica',
     editMode: 'Modalità modifica',
     editDisabled: 'Modifica disabilitata',
+    editAdd: 'Add',
+    editEdit: 'Edit',
     editDelete: 'Cancella',
     editSave: 'Salva',
     mapBasic: 'Mappa',
@@ -87,6 +89,7 @@ I18n.about = {
 };
 
 I18n.layers = {
+    project: "Project",
     topics: "Temi",
     layers: "Layer",
     layerOrder: "Ordine layer",
@@ -105,7 +108,12 @@ I18n.featureInfo = {
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Location non disponibile.\n\nControlla il tuo browser o le impostazioni del device."
+    permissionDeniedMessage: "Location non disponibile.\n\nControlla il tuo browser o le impostazioni del device.",
+    accuracy: "Accuracy",
+    altitude: "Altitude",
+    heading: "Heading",
+    speed: "Speed",
+    obtaining: "Obtaining location..."
 };
 
 I18n.login = {

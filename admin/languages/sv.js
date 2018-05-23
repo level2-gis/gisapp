@@ -32,6 +32,8 @@ var TR = {
     editData: 'Editera data',
     editMode: 'Editeringsläge',
     editDisabled: 'Editering inaktiverad',
+    editAdd: 'Add',
+    editEdit: 'Edit',
     editDelete: 'Ta bort',
     editSave: 'Spara',
     mapBasic: 'Karta',
@@ -87,6 +89,7 @@ I18n.about = {
 };
 
 I18n.layers = {
+    project: "Project",
     topics: "Teman",
     layers: "Lager",
     layerOrder: "Lagerordning",
@@ -105,7 +108,12 @@ I18n.featureInfo = {
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Plats är ej tillgänglig.\n\nVänligen kontrollera inställningarna i din webbläsare eller på din enhet."
+    permissionDeniedMessage: "Plats är ej tillgänglig.\n\nVänligen kontrollera inställningarna i din webbläsare eller på din enhet.",
+    accuracy: "Accuracy",
+    altitude: "Altitude",
+    heading: "Heading",
+    speed: "Speed",
+    obtaining: "Obtaining location..."
 };
 
 I18n.login = {
