@@ -46,7 +46,7 @@ function goMobile($lang) {
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180408" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180523" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20180502" />
     </head>
     <body>
@@ -67,48 +67,50 @@ function goMobile($lang) {
 
         <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
             <div class="panel-content">
-                <b>Einstellungen</b>
-                <div id="properties" class="scrollable">
-                    <div data-role="fieldcontain">
-                        <label for="switchFollow">Kartennachf&uuml;hrung</label>
-                        <select id="switchFollow" name="switchFollow" data-role="slider">
-                            <option value="off">Aus</option>
-                            <option value="on">Ein</option>
-                        </select>
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="switchOrientation">Kartenausrichtung</label>
-                        <select id="switchOrientation" name="switchOrientation" data-role="slider">
-                            <option value="off">Aus</option>
-                            <option value="on">Ein</option>
-                        </select>
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="switchScale">Massstabsbalken</label>
-                        <select id="switchScale" name="switchScale" data-role="slider">
-                            <option value="off">Aus</option>
-                            <option value="on">Ein</option>
-                        </select>
-                    </div>
-<!--                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>-->
-
-                    <div data-role="popup" id="dlgAbout" class="ui-corner-all" data-theme="c" data-overlay-theme="a">
-                        <div data-role="header" data-theme="c" class="ui-corner-top">
-                            <h1>Impressum</h1>
-                        </div>
-                        <div id="aboutContent" data-role="content" data-theme="c" class="ui-corner-bottom ui-content"></div>
-                    </div>
-
-                    <div>
-                        <a href="#" id="buttonShare" data-role="button" data-inline="true">Share</a>
-                    </div>
-                    <div>
-                        <a href="#dlgLogin" id="buttonLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">Login</a>
-                        <a href="#" target="_self" id="buttonLoginSSL" data-rel="external" data-role="button" data-inline="true">Login</a>
-                        <a href="#" id="buttonSignOut"  data-role="button" data-inline="true">Logout</a>
-                    </div>
-
+                <div data-role="navbar">
+                    <ul>
+                        <li><a id="buttonPropertiesMap" href="#panelPropertiesMap">Map</a></li>
+                        <li><a id="buttonPropertiesEditor" style="display:none" href="#panelPropertiesEditor">Editor</a></li>
+                    </ul>
                 </div>
+                <div id="panelPropertiesMap">
+                    <div id="properties" class="scrollable">
+                        <div data-role="fieldcontain">
+                            <label for="switchFollow">Kartennachf&uuml;hrung</label>
+                            <select id="switchFollow" name="switchFollow" data-role="slider">
+                                <option value="off">Aus</option>
+                                <option value="on">Ein</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="switchOrientation">Kartenausrichtung</label>
+                            <select id="switchOrientation" name="switchOrientation" data-role="slider">
+                                <option value="off">Aus</option>
+                                <option value="on">Ein</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="switchScale">Massstabsbalken</label>
+                            <select id="switchScale" name="switchScale" data-role="slider">
+                                <option value="off">Aus</option>
+                                <option value="on">Ein</option>
+                            </select>
+                        </div>
+                        <!--                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>-->
+
+                        <!--                    <div data-role="popup" id="dlgAbout" class="ui-corner-all" data-theme="c" data-overlay-theme="a">-->
+                        <!--                        <div data-role="header" data-theme="c" class="ui-corner-top">-->
+                        <!--                            <h1>Impressum</h1>-->
+                        <!--                        </div>-->
+                        <!--                        <div id="aboutContent" data-role="content" data-theme="c" class="ui-corner-bottom ui-content"></div>-->
+                        <!--                    </div>-->
+                        <!---->
+                        <!--                    <div>-->
+                        <!--                        <a href="#" id="buttonShare" data-role="button" data-inline="true">Share</a>-->
+                        <!--                    </div>-->
+                    </div>
+                </div>
+                <div id="panelPropertiesEditor"></div>
             </div>
         </div>
 
@@ -116,23 +118,25 @@ function goMobile($lang) {
             <div class="panel-content">
                 <div data-role="navbar">
                     <ul>
-                        <li><a id="buttonTopics" href="#panelTopics">Themen1</a></li>
                         <li><a id="buttonLayerAll" href="#panelLayerAll">Ebenen1</a></li>
                         <li><a id="buttonLayerOrder" href="#panelLayerOrder">Reihenfolge1</a></li>
+                        <li><a id="buttonTopics" href="#panelTopics">Project</a></li>
                     </ul>
                 </div>
-                <div id="layerPanelContent">
-                    <div id="panelTopics">
-                        <ul id="topicList" data-role="listview" class="scrollable"></ul>
+                <div id="panelTopics" class="scrollable">
+                    <div id="topicMain"></div>
+                    <div>
+                        <a href="#" id="buttonSignOut" data-role="button" data-inline="true">Logout</a>
                     </div>
-                    <div id="panelLayerAll" class="scrollable"></div>
-                    <div id="panelLayerOrder">
-                        <div data-role="controlgroup" class="scrollable">
-                            <ul id="listOrder" data-role="listview" data-inset="true"></ul>
-                        </div>
-                        <label for="sliderTransparency">Transparenz</label>
-                        <input type="range" name="sliderTransparency" id="sliderTransparency" value="0" min="0" max="100" data-highlight="true">
+                </div>
+                <div id="panelLayerAll" class="scrollable"></div>
+                <div id="panelLayerOrder">
+                    <div data-role="controlgroup">
+                        <ul id="listOrder" data-role="listview" data-inset="true"></ul>
                     </div>
+                    <label for="sliderTransparency">Transparenz</label>
+                    <input type="range" name="sliderTransparency" id="sliderTransparency" value="0" min="0" max="100"
+                           data-highlight="true">
                 </div>
             </div>
         </div>

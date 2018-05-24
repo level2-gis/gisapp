@@ -1,3 +1,14 @@
+/*
+ *
+ * eqwc.js -- build of Extended QGIS Web Client
+ *
+ * version: 1.7.1
+ * buildDate: 2018-05-24
+ *
+ * Copyright (2010-2018), The QGIS Project and Level2 team All rights reserved.
+ * More information at https://github.com/uprel/gisapp
+ *
+ */
 Array.prototype.forEach||(Array.prototype.forEach=function(a,b){var c,d;if(null==this)throw new TypeError("this is null or not defined");var e=Object(this),f=e.length>>>0;if("[object Function]"!=={}.toString.call(a))throw new TypeError(a+" is not a function");b&&(c=b);for(d=0;d<f;){var h;Object.prototype.hasOwnProperty.call(e,d)&&(h=e[d],a.call(c,h,d,e));d++}});Eqwc.common={};Eqwc.common.createHyperlink=function(a,b,c){null==b&&(b=a);""!=a&&/^((http|https|ftp):\/\/).+\..+/i.test(a)&&(/\<a./i.test(a)||(a='<a class="link" href="'+a+'" target="_blank">'+b+"</a>"));""<c&&RegExp(c,"i").test(a)&&(a='<a href="/'+a+'" target="_blank">'+b+"</a>");return a};
 Eqwc.common.manageFile=function(a,b){var c=!1;if(b){var d=a.split(".")[1].toLowerCase();if("jpg"==d||"jpeg"==d||"gif"==d||"png"==d)c=!0}d=window.location.origin;d=1==projectData.uploadDir.split(".").length?d+projectData.uploadDir:d+projectData.uploadDir.split(".")[1];return c?"<a target='_blank' href='"+d+a+"'><img src='"+d+"thumb/"+a+"'></a>":Eqwc.common.createHyperlink(d+a,a,null)};
 Eqwc.common.getRasterFieldName=function(a,b){return Eqwc.settings.overWriteRasterFieldName&&Eqwc.settings.overWriteRasterFieldName[a]?Eqwc.settings.overWriteRasterFieldName[a][0]==b?Eqwc.settings.overWriteRasterFieldName[a][1]:b:b};Eqwc.common.layerFieldNameExists=function(a,b){for(var c=wmsLoader.layerProperties[a],d=0;d<c.attributes.length;d++)if(c.attributes[d].name==b)return!0;return!1};Eqwc.common.lookup=function(a,b,c){for(var d=0,e=a.length;d<e;d++)if(a[d]&&a[d][b]===c)return a[d]};Ext.ns("Ext.ux.data");
