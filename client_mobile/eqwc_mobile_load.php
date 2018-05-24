@@ -31,9 +31,12 @@ $eqwc_debug = [
     "client_mobile/src/gui.js?v=".$version
     //"client_mobile/src/high_resolution_printing.js"
     ];
+$eqwc_mini = "client_mobile/eqwc_mobile.js?v=".$version;
 $dir = dirname(dirname(__FILE__)) . "/plugins/";
 $scan = array_slice(scandir($dir), 2);
 $def_lang = $_SESSION['lang'];
+
+$debug = defined('DEBUG') ? DEBUG : false;
 
 //eqwc language files
 array_push($lang, "admin/languages/". $def_lang .".js");
@@ -42,6 +45,15 @@ array_push($lang, "admin/languages/". $def_lang .".js");
 foreach ($scan as $item) {
     if (is_dir($dir . $item)) {
         $plugin_path = $dir . $item;
+
+        //plugin language file
+        $lang_fn = $dir . basename($plugin_path) . "/lang_mobile/" . $def_lang . ".js";
+        if (!file_exists($lang_fn)) {
+            $def_lang = 'en';
+        }
+        if (file_exists($lang_fn)) {
+            array_push($plugins, "plugins/" . basename($plugin_path) . "/lang_mobile/" . $def_lang . ".js?v=".rand());
+        }
 
         //add plugin config.js if exists
         if (file_exists($plugin_path . "/js/config.js")) {
@@ -74,7 +86,7 @@ function getRandomNum() {
         "client_common/customProjections.js?n="+getRandomNum(),
         "client_common/settings.js?n="+getRandomNum(),
         "<?php echo implode('","',$lang) ?>",
-        "<?php echo implode('","',$eqwc_debug) ?>",
+        "<?php echo $debug ? implode('","',$eqwc_debug) : $eqwc_mini ?>",
         "<?php echo implode('","',$plugins) ?>"
     ];
 

@@ -122,6 +122,14 @@
   padding: 0.7em 0 0.8em 0;
 }
 
+#panelProperties .ui-navbar .ui-btn.selected .ui-btn-inner {
+    background-color: lightgray;
+}
+
+#panelProperties .ui-navbar .ui-btn-inner {
+    padding: 0.7em 0 0.8em 0;
+}
+
 /* topics */
 
 #topicList li.selected {

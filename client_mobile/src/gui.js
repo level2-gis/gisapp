@@ -49,6 +49,14 @@ Gui.panelSelect = function(panel) {
   $('#buttonLayerOrder').toggleClass('selected', panel === 'panelLayerOrder');
 };
 
+Gui.propertiesSelect = function(panel) {
+    $('#panelPropertiesMap').toggle(panel === 'panelPropertiesMap');
+    $('#panelPropertiesEditor').toggle(panel === 'panelPropertiesEditor');
+    // mark panel button
+    $('#buttonPropertiesMap').toggleClass('selected', panel === 'panelPropertiesMap');
+    $('#buttonPropertiesEditor').toggleClass('selected', panel === 'panelPropertiesEditor');
+};
+
 //location panel
 Gui.showLocationPanel = function (show) {
 
@@ -77,19 +85,19 @@ Gui.showLocationPanel = function (show) {
         ];
 
         if (Eqwc.settings.mobileShowAccuracy) {
-            html.push('Accuracy: ' + accuracy.toPrecision(3) +' m');    //todo translate
+            html.push(I18n.geolocation.accuracy+': ' + accuracy.toPrecision(3) +' m');
         }
 
         if (altitude) {
-            html.push('Altitude: ' + altitude.toFixed(2)+ ' m');
+            html.push(I18n.geolocation.altitude+': ' + altitude.toFixed(2)+ ' m');
             if(extra.altCorrection>0) {
                 html.push(extra.altCorrectionSource);
             }
         }
 
         if (heading && speed>1) {
-            html.push('Heading: ' + Math.round(radToDeg(heading)) + '&deg;');
-            html.push('Speed: ' + (speed * 3.6).toFixed(1) + ' km/h');
+            html.push(I18n.geolocation.heading+': ' + Math.round(radToDeg(heading)) + '&deg;');
+            html.push(I18n.geolocation.speed+': ' + (speed * 3.6).toFixed(1) + ' km/h');
         }
 
 
@@ -103,20 +111,22 @@ Gui.showLocationPanel = function (show) {
 // fill topics list
 Gui.loadTopics = function(categories) {
   var html = "";
+  var coll = "";
   Map.topics = {};
   for (var i=0; i<categories.length; i++) {
     var category = categories[i];
 
-    html += '<li data-role="list-provider">' + category.title + '</li>';
+    //html += '<li data-role="list-provider">' + category.title + '</li>';
 
     for (var j=0;j<category.topics.length; j++) {
       var topic = category.topics[j];
 
       if (topic.main_layer != false) {
-        html += '<li class="topic" data-topic="' + topic.name + '">';
-        html +=   '<img src="' + topic.icon + '"/>';
-        html +=   '<p style="white-space:pre-wrap">' + topic.title + '</p>';
-        html += '</li>';
+        //html += '<li class="topic" data-topic="' + topic.name + '">';
+        html +=   '<a href="'+Eqwc.settings.gisPortalRoot+'" target="_self"><img style="padding:5px" src="' + topic.icon + '"/></a>';
+        //html +=   '<p style="white-space:pre-wrap">' + category.title + '</p>';
+        //html +=   '<a href="#" data-role="button" data-inline="true">'+category.title+'</a>';
+        //html += '</li>';
       }
 
       Map.topics[topic.name] = {
@@ -129,13 +139,27 @@ Gui.loadTopics = function(categories) {
         overlay_topics: topic.overlay_topics
       };
     }
+
+      coll += '<div id="topicList" data-role="collapsible">';
+      coll += '<h4>' + topic.title + '</h4>';
+      coll += '<p>'+projectData.project+'</p>';
+      coll += '<p>'+projectData.crs+'</p>';
+      if(projectData.description!='{}') {
+          coll += '<p>' + projectData.description + '</p>';
+      }
+
+      coll += '</div>';
   }
 
-  $('#topicList').html(html);
-  $('#topicList').listview('refresh');
+    var panel = $('#topicMain');
 
-  // select initial topic
-  Gui.selectTopic(Config.permalink.initialTopic || Config.data.initialTopic);
+    //var collaps =  $('#topicList');
+    panel.prepend(coll);
+    panel.prepend(html);
+    panel.find('div[data-role=collapsible]').collapsible({theme:'c',refresh:true});
+
+    // select initial topic
+    Gui.selectTopic(Config.permalink.initialTopic || Config.data.initialTopic);
 };
 
 Gui.selectTopic = function(topic) {
@@ -168,8 +192,8 @@ Gui.selectTopic = function(topic) {
   //}
 
   // mark topic button
-  $('#topicList li.topic').removeClass('selected');
-  $('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
+  //$('#topicList li.topic').removeClass('selected');
+  //$('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
 };
 
 // update layers list
@@ -709,8 +733,8 @@ Gui.showXMLFeatureInfoResults = function (results) {
             if(typeof(Editor) == 'function' && Config.data.wfslayers[layer.id]) {
                 //html += "<input type='button' data-theme='b' data-inline='true' id='edit' data-mini='true' value='Edit'>";
                 //TODO icon edit
-                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'edit\');" data-theme="b" data-inline="true" data-mini="true" data-role="button">Edit</a>';
-                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="c" data-inline="true" data-mini="true" data-role="button">GOTO</a>';
+                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'edit\');" data-theme="b" data-inline="true" data-mini="true" data-role="button">'+TR.editEdit+'</a>';
+                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="c" data-inline="true" data-mini="true" data-role="button">'+I18n.editor.goto+'</a>';
             }
 
             html += '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
@@ -823,7 +847,8 @@ Gui.updateTranslations = function() {
   $('#panelSearch b').html(I18n.search.header);
   $('#panelSearch #searchResults b').html(I18n.search.results);
 
-  $('#panelProperties b').html(I18n.properties.header);
+  $('#panelProperties #buttonPropertiesMap .ui-btn-text').html(I18n.properties.header);
+
   $('#panelProperties label[for=switchFollow]').html(I18n.properties.mapFollowing);
   $('#panelProperties label[for=switchOrientation]').html(I18n.properties.mapRotation);
   $('#panelProperties label[for=switchScale]').html(I18n.properties.scaleBar);
@@ -841,7 +866,7 @@ Gui.updateTranslations = function() {
   $('#dlgLogin #buttonLoginCancel .ui-btn-text').html(I18n.login.cancel);
   $('#panelProperties #buttonSignOut .ui-btn-text').html(I18n.login.signOut);
 
-  $('#panelLayer #buttonTopics .ui-btn-text').html(I18n.layers.topics);
+  $('#panelLayer #buttonTopics .ui-btn-text').html(I18n.layers.project);
   $('#panelLayer #buttonLayerAll .ui-btn-text').html(I18n.layers.layers);
   $('#panelLayer #buttonLayerOrder .ui-btn-text').html(I18n.layers.layerOrder);
   $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
@@ -1042,6 +1067,16 @@ Gui.initViewer = function() {
     Gui.panelSelect('panelLayerOrder');
   });
 
+  //tab properties
+  $('#buttonPropertiesMap').on('tap', function() {
+    Gui.propertiesSelect('panelPropertiesMap');
+  });
+
+  $('#buttonPropertiesEditor').on('tap', function() {
+    Gui.propertiesSelect('panelPropertiesEditor');
+  });
+
+
   // default properties
   $('#switchFollow').val(Config.defaultProperties.following ? 'on' : 'off');
   $('#switchFollow').slider('refresh');
@@ -1070,7 +1105,8 @@ Gui.initViewer = function() {
       Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
     }
   });
-  Gui.panelSelect('panelTopics');
+  Gui.panelSelect('panelLayerAll');
+  Gui.propertiesSelect('panelPropertiesMap');
 
   // selection in layer order
   $('#listOrder').delegate('li', 'vclick', function() {
@@ -1107,7 +1143,7 @@ Gui.initViewer = function() {
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
     Map.toggleTracking(Gui.tracking);
       if (Gui.tracking) {
-          $('#locationPanel').html('Obtaining location...');  //TODO translate
+          $('#locationPanel').html(I18n.geolocation.obtaining);
           $('#locationPanel').show();
       }
     Map.toggleFollowing(Gui.tracking && Gui.following);
