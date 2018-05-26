@@ -1,0 +1,4 @@
+This is modified version of Openlayers 4.6.5
+Source here https://github.com/uprel/openlayers/tree/custom-4-6-5
+
+New methods and properties are added to geolocation object for surveying needs.
