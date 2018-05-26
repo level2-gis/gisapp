@@ -156,9 +156,6 @@ projectData.getLegendUrl = function (layer) {
     return legend;
 };
 
-//plugins
-Eqwc.plugins = {};
-
 var lang = projectData.lang;
 //var helpfile = "help_en.html";
 

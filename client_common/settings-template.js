@@ -1,67 +1,27 @@
 /**
- * Eqwc client settings template
+ * Client configuration template file. You have to copy this to settings.js and then adjust values to your needs!
  *
- * You have to copy this to settings.js and then adjust values to your needs!
- *
+ * See documentation at gisapp/docs/Eqwc.settings.html
  */
 
-var Eqwc = {};
+var Eqwc = {
+    settings:   {},
+    common:     {},
+    plugins:    {}
+};
 
-Eqwc.settings = {};
-
-//template string for client title, will be evaluated later
-//example with Application name from translation string
-//Eqwc.settings.title = "TR.appName+projectData.title+' '+projectData.client_display_name";
 Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
-
-//limit number of features to request from server for displaying layer attribute table
 Eqwc.settings.limitAttributeFeatures = 2000;
-
-//config for QGIS.SearchPanel and Identify result window
-//Number of results: FEATURE_COUNT in WMS request
 Eqwc.settings.limitSearchMaxResults = 10;
-
-//enable tooltip hoover on features
-//many server requests, default disabled
-//only regular client
 Eqwc.settings.enableHoverPopup = false;
-
-//Set default mode for identify option, possible values are:
-// "allLayers", "topMostHit", "activeLayers"
-//Note that you control visibility of this combo per specific project in database
 Eqwc.settings.defaultIdentificationMode = "allLayers";
-
-//display X and Y of clicked location on top of identify window results
 Eqwc.settings.showCoordinatesIdentify = true;
-
-//To enable adding own titles and description text to printing you have to add
-//users_print_view into QGIS project from gisapp database
-//you must add table to print layout, table will always have max 1 row for current user
-//If you want you can rename it in QGIS but must provide that name here
-//This table is removed from EQWC legend tree
 Eqwc.settings.QgisUsersPrintName = "users_print_view";
-
-//If true first baselayer is visible on startup
 Eqwc.settings.visibleFirstBaseLayer = true;
-
-//what do you want to display instead of NULL values
-//Relevant for 2.14, since 2.18 already returns blank string
-Eqwc.settings.noDataValue = '';
-
-//overwrite identify return of raster files
-//instead of Band 1 write desired value
+Eqwc.settings.noDataValue = "";
 Eqwc.settings.overWriteRasterFieldName = {};
-//Eqwc.settings.overWriteRasterFieldName["layername"] = ["Band 1", "Your value"];
-
-//this is relevant only in cases where Map does not contain base layers!
 Eqwc.settings.numZoomLevels = 22;
-
-//PRINT
-// prevent the user from choosing a print resolution
-// if fixedPrintResolution = null, the user is allowed to choose the print resolution.
-Eqwc.settings.fixedPrintResolution = null; // for a fixed resolution of 200dpi fill 200
-
-//print options - scales and dpi
+Eqwc.settings.fixedPrintResolution = null;
 Eqwc.settings.printCapabilities={
     "scales":[
         {"name":"1:100","value":"100"},
@@ -110,10 +70,6 @@ Eqwc.settings.printCapabilities={
     ],
     "layouts":[]
 };
-
-//styling definitions for highlightLayer
-//is used for hightlighting features (GetFeatureInfo and search result visualization)
-//see http://dev.openlayers.org/releases/OpenLayers-2.10/doc/apidocs/files/OpenLayers/Style-js.html
 Eqwc.settings.symbolizersHighLightLayer = {
     "Point": {
         pointRadius: 4,
@@ -134,25 +90,12 @@ Eqwc.settings.symbolizersHighLightLayer = {
         fillColor: "none"
     }
 };
-
-//use separate gisportal code to browse projects, register users and login
-//code available here - https://github.com/uprel/gisportal
 Eqwc.settings.useGisPortal = false;
-
-//setup gisportal first
 Eqwc.settings.gisPortalRoot = '/gisportal/index.php/';
 Eqwc.settings.mailServiceUrl = Eqwc.settings.gisPortalRoot + 'mail/send';
 Eqwc.settings.gisPortalProfile = Eqwc.settings.gisPortalRoot + 'profile';
-
-//settings mobile only
 Eqwc.settings.mobileUseTiledWMS = true;
 Eqwc.settings.mobileEnableTracking = false;
 Eqwc.settings.mobileMinScale = 50;
 Eqwc.settings.mobileShowAccuracy = true;
-
-//files field in case of editing plugin
-//only change that if you set alias for files field in QGIS, then enter same alias here.
 Eqwc.settings.qgisFilesFieldAlias = 'files';
-
-
-
