@@ -701,6 +701,11 @@ Gui.showXMLFeatureInfoResults = function (results) {
     var html = "";
     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
 
+    //add button
+    if (typeof(Editor) == 'function' && mobEditor.layer) {
+        html += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">'+TR.editAdd+'</a>';
+    }
+
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var layer = Map.layers[result.layer];
@@ -734,7 +739,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
                 //html += "<input type='button' data-theme='b' data-inline='true' id='edit' data-mini='true' value='Edit'>";
                 //TODO icon edit
                 html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'edit\');" data-theme="b" data-inline="true" data-mini="true" data-role="button">'+TR.editEdit+'</a>';
-                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="c" data-inline="true" data-mini="true" data-role="button">'+I18n.editor.goto+'</a>';
+                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="e" data-inline="true" data-mini="true" data-role="button">'+I18n.editor.goto+'</a>';
             }
 
             html += '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';

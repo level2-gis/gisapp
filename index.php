@@ -35,6 +35,7 @@ function goMobile($lang) {
         <script src="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.js"></script>
         <script src="client_mobile/src/jquery.mobile.collapsible.groupcheckbox.js"></script>
         <link rel="stylesheet" href="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.css" />
+        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery-mobile-red-buttons.css" />
 
         <!-- Proj4js -->
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
