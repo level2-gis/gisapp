@@ -74,41 +74,59 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layers) {
  *
  * e: <ol.MapBrowserEvent>
  */
-FeatureInfo.prototype.handleEvent = function(e) {
-  var url = null;
-  if (Config.featureInfo.useWMSGetFeatureInfo) {
-    var params = {
-      'INFO_FORMAT': Config.featureInfo.format,
-      'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
-    };
-    if (Config.map.wmsServerType === 'qgis') {
-      // add tolerances
-      $.extend(params, {
-        FI_POINT_TOLERANCE: Math.round(Config.featureInfo.tolerances.point * e.frameState.pixelRatio),
-        FI_LINE_TOLERANCE: Math.round(Config.featureInfo.tolerances.line * e.frameState.pixelRatio),
-        FI_POLYGON_TOLERANCE: Math.round(Config.featureInfo.tolerances.polygon * e.frameState.pixelRatio)
-      });
-    }
-    url = Map.getGetFeatureInfoUrl(e.coordinate, params);
-  }
-  else {
-    url = Config.featureInfo.url(Map.topic, e.coordinate, Map.featureInfoLayers());
-  }
-  $.ajax({
-    url: url,
-    dataType: 'text',
-    context: this
-  }).done(function(data, status) {
-    var results = null;
-    if (Config.featureInfo.format === 'text/xml') {
-      results = this.parseResults([data]);
-    }
-    else {
-      results = [data];
+FeatureInfo.prototype.handleEvent = function (e) {
+    var url = null;
+    var layers = Map.featureInfoLayers();
+
+    //check if have to replace layers for identify
+    var checkArr = Eqwc.settings.replaceIdentifyLayerWithView;
+    if (checkArr) {
+        for (var i = 0; i < checkArr.length; i++) {
+            var sourceLay = checkArr[i];
+            var sourceLayId = Config.getLayerId(sourceLay);
+            var replaceLay = Eqwc.common.getIdentifyLayerName(sourceLay);
+            var replaceLayId = Config.getLayerId(replaceLay);
+            var j = layers.indexOf(sourceLayId);
+            if (j > -1) {
+                layers[j] = replaceLayId;
+            }
+        }
     }
 
-    this.resultsCallback(results);
-  });
+    if (Config.featureInfo.useWMSGetFeatureInfo) {
+        var params = {
+            'INFO_FORMAT': Config.featureInfo.format,
+            'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
+        };
+        if (Config.map.wmsServerType === 'qgis') {
+            // add tolerances
+            $.extend(params, {
+                FI_POINT_TOLERANCE: Math.round(Config.featureInfo.tolerances.point * e.frameState.pixelRatio),
+                FI_LINE_TOLERANCE: Math.round(Config.featureInfo.tolerances.line * e.frameState.pixelRatio),
+                FI_POLYGON_TOLERANCE: Math.round(Config.featureInfo.tolerances.polygon * e.frameState.pixelRatio),
+                QUERY_LAYERS: layers.join(',')
+            });
+        }
+        url = Map.getGetFeatureInfoUrl(e.coordinate, params);
+    }
+    else {
+        url = Config.featureInfo.url(Map.topic, e.coordinate, Map.featureInfoLayers());
+    }
+    $.ajax({
+        url: url,
+        dataType: 'text',
+        context: this
+    }).done(function (data, status) {
+        var results = null;
+        if (Config.featureInfo.format === 'text/xml') {
+            results = this.parseResults([data]);
+        }
+        else {
+            results = [data];
+        }
+
+        this.resultsCallback(results);
+    });
 };
 
 /**

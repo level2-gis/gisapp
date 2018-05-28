@@ -82,3 +82,41 @@ Eqwc.common.lookup = function(array, prop, value) {
     for (var i = 0, len = array.length; i < len; i++)
         if (array[i] && array[i][prop] === value) return array[i];
 };
+
+Eqwc.common.getIdentifyLayerName = function(name) {
+
+    if (Eqwc.settings.replaceIdentifyLayerWithView) {
+        if (Eqwc.settings.replaceIdentifyLayerWithView.indexOf(name) > -1) {
+            return name + "_view";
+        }
+    }
+
+    return name;
+};
+
+Eqwc.common.getIdentifyLayerNameRevert = function(name) {
+
+    var newName = name;
+    if (newName.indexOf("_view")>-1) {
+        newName = name.split("_view")[0];
+        if (Eqwc.settings.replaceIdentifyLayerWithView) {
+            if (Eqwc.settings.replaceIdentifyLayerWithView.indexOf(newName) > -1) {
+                return newName;
+            }
+        }
+    }
+    return name;
+};
+
+Eqwc.common.getHiddenLayersFromSettings = function() {
+
+    var ret = [Eqwc.settings.QgisUsersPrintName];
+    var arr = Eqwc.settings.replaceIdentifyLayerWithView;
+    if(arr) {
+        for (var i = 0; i < arr.length; i++) {
+            var n = Eqwc.common.getIdentifyLayerName(arr[i]);
+            ret.push(n);
+        }
+    }
+    return ret;
+};

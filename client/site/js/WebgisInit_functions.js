@@ -26,7 +26,11 @@ function loadWMSConfig(topicName) {
             attr.checked = false;
 
             //check if we need to hide it
-            attr.hidden = attr.text == Eqwc.settings.QgisUsersPrintName;
+            var hiddenLayers = Eqwc.common.getHiddenLayersFromSettings();
+            if (hiddenLayers.indexOf(attr.text) > -1) {
+                attr.hidden = true;
+                attr.layer.metadata.visible = false;
+            }
 
             //hide layer if we have same baselayer name
             var baseArr = projectData.baseLayers();
@@ -94,12 +98,15 @@ function postLoading() {
     var leafsChangeFunction = function(node, checked) {
 
         var lay = wmsLoader.layerTitleNameMapping[node.text];
+        //check if have to replace for identify
+        var queryLay = Eqwc.common.getIdentifyLayerName(node.text);
+        var queryLayId = wmsLoader.layerTitleNameMapping[queryLay];
 
         if (node.isLeaf() && lay) {
             if (checked) {
                 selectedLayers.push(lay);
                 if (wmsLoader.layerProperties[lay].queryable) {
-                    selectedQueryableLayers.push(lay);
+                    selectedQueryableLayers.push(queryLayId);
                 }
             }
             else {
@@ -107,7 +114,7 @@ function postLoading() {
                 if (i>-1) {
                     selectedLayers.splice(i,1);
                 }
-                var j = selectedQueryableLayers.indexOf(lay);
+                var j = selectedQueryableLayers.indexOf(queryLayId);
                 if (j>-1) {
                     selectedQueryableLayers.splice(j,1);
                 }
@@ -376,7 +383,10 @@ function postLoading() {
                     selectedLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
 
                     if (wmsLoader.layerProperties[wmsLoader.layerTitleNameMapping[n.text]].queryable) {
-                        selectedQueryableLayers.push(wmsLoader.layerTitleNameMapping[n.text]);
+                        //check if have to replace for identify
+                        var node2 = Eqwc.common.getIdentifyLayerName(n.text);
+                        var lay =  wmsLoader.layerTitleNameMapping[node2];
+                        selectedQueryableLayers.push(lay);
                     }
                 }
                 allLayers.push(wmsLoader.layerTitleNameMapping[n.text]);

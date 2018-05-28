@@ -16,6 +16,7 @@ Eqwc.settings.limitSearchMaxResults = 10;
 Eqwc.settings.enableHoverPopup = false;
 Eqwc.settings.defaultIdentificationMode = "allLayers";
 Eqwc.settings.showCoordinatesIdentify = true;
+Eqwc.settings.replaceIdentifyLayerWithView = [];
 Eqwc.settings.QgisUsersPrintName = "users_print_view";
 Eqwc.settings.visibleFirstBaseLayer = true;
 Eqwc.settings.noDataValue = "";

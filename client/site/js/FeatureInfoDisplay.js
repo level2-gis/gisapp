@@ -409,7 +409,10 @@ function parseFIResult(node) {
             var htmlText = "";
 
             var layerChildNode = node.firstChild;
-            var layerId = node.getAttribute("name");
+            var sourceLayerId = node.getAttribute("name");
+            var sourceLayerName = wmsLoader.layerProperties[sourceLayerId].title;
+            var layerName = Eqwc.common.getIdentifyLayerNameRevert(sourceLayerName);
+            var layerId = wmsLoader.layerTitleNameMapping[layerName];
             var layer = wmsLoader.layerProperties[layerId];
             var layerTitle = layer.title;
             if (showFILayerTitle) {
@@ -428,7 +431,7 @@ function parseFIResult(node) {
                     //case vector data
 
                     //add geometry actions if layer is WFS published or geometry is added to response
-                    var addActions = projectData.use_ids ? (projectData.layers[node.getAttribute("name")].wfs || projectData.add_geom)  : false;
+                    var addActions = projectData.use_ids ? (projectData.layers[layerId].wfs || projectData.add_geom)  : false;
 
                     if (projectData.user == 'guest') {
                         addActions = false;

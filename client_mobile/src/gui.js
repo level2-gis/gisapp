@@ -223,8 +223,8 @@ Gui.loadLayers = function (data) {
                     return el.layername === node.name;
                 })[0];
 
-                //skip if it is print view, not needed here
-                if (layer.layername == Eqwc.settings.QgisUsersPrintName) {
+                //skip if it is hidden layer
+                if (Eqwc.common.getHiddenLayersFromSettings().indexOf(layer.layername) > -1) {
                     return;
                 }
 
@@ -709,6 +709,14 @@ Gui.showXMLFeatureInfoResults = function (results) {
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var layer = Map.layers[result.layer];
+
+        //replace back layer
+        if (layer == undefined) {
+            var source = Config.getLayerName(result.layer);
+            var layerName = Eqwc.common.getIdentifyLayerNameRevert(source);
+            var layerId = Config.getLayerId(layerName);
+            layer = Map.layers[layerId];
+        }
 
         var layerTitle = result.layer;
         if (layer != undefined) {
