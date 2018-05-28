@@ -2,14 +2,14 @@
  *
  * eqwc.js -- build of Extended QGIS Web Client
  *
- * version: 1.7.2
+ * version: 1.7.3
  * buildDate: 2018-05-28
  *
  * Copyright (2010-2018), The QGIS Project and Level2 team All rights reserved.
  * More information at https://github.com/uprel/gisapp
  *
  */
-Array.prototype.forEach||(Array.prototype.forEach=function(a,b){var d,c;if(null==this)throw new TypeError("this is null or not defined");var e=Object(this),f=e.length>>>0;if("[object Function]"!=={}.toString.call(a))throw new TypeError(a+" is not a function");b&&(d=b);for(c=0;c<f;){var g;Object.prototype.hasOwnProperty.call(e,c)&&(g=e[c],a.call(d,g,c,e));c++}});Eqwc.common.createHyperlink=function(a,b,d){null==b&&(b=a);""!=a&&/^((http|https|ftp):\/\/).+\..+/i.test(a)&&(/\<a./i.test(a)||(a='<a class="link" href="'+a+'" target="_blank">'+b+"</a>"));""<d&&RegExp(d,"i").test(a)&&(a='<a href="/'+a+'" target="_blank">'+b+"</a>");return a};
+Array.prototype.forEach||(Array.prototype.forEach=function(a,b){var d,c;if(null==this)throw new TypeError("this is null or not defined");var e=Object(this),f=e.length>>>0;if("[object Function]"!=={}.toString.call(a))throw new TypeError(a+" is not a function");b&&(d=b);for(c=0;c<f;){var g;Object.prototype.hasOwnProperty.call(e,c)&&(g=e[c],a.call(d,g,c,e));c++}});Eqwc.common={};Eqwc.common.createHyperlink=function(a,b,d){null==b&&(b=a);""!=a&&/^((http|https|ftp):\/\/).+\..+/i.test(a)&&(/\<a./i.test(a)||(a='<a class="link" href="'+a+'" target="_blank">'+b+"</a>"));""<d&&RegExp(d,"i").test(a)&&(a='<a href="/'+a+'" target="_blank">'+b+"</a>");return a};
 Eqwc.common.manageFile=function(a,b){var d=!1;if(b){var c=a.split(".")[1].toLowerCase();if("jpg"==c||"jpeg"==c||"gif"==c||"png"==c)d=!0}c=window.location.origin;c=1==projectData.uploadDir.split(".").length?c+projectData.uploadDir:c+projectData.uploadDir.split(".")[1];return d?"<a target='_blank' href='"+c+a+"'><img src='"+c+"thumb/"+a+"'></a>":Eqwc.common.createHyperlink(c+a,a,null)};
 Eqwc.common.getRasterFieldName=function(a,b){return Eqwc.settings.overWriteRasterFieldName&&Eqwc.settings.overWriteRasterFieldName[a]?Eqwc.settings.overWriteRasterFieldName[a][0]==b?Eqwc.settings.overWriteRasterFieldName[a][1]:b:b};Eqwc.common.layerFieldNameExists=function(a,b){for(var d=wmsLoader.layerProperties[a],c=0;c<d.attributes.length;c++)if(d.attributes[c].name==b)return!0;return!1};Eqwc.common.lookup=function(a,b,d){for(var c=0,e=a.length;c<e;c++)if(a[c]&&a[c][b]===d)return a[c]};
 Eqwc.common.getIdentifyLayerName=function(a){return Eqwc.settings.replaceIdentifyLayerWithView&&-1<Eqwc.settings.replaceIdentifyLayerWithView.indexOf(a)?a+"_view":a};Eqwc.common.getIdentifyLayerNameRevert=function(a){var b;return-1<a.indexOf("_view")&&(b=a.split("_view")[0],Eqwc.settings.replaceIdentifyLayerWithView&&-1<Eqwc.settings.replaceIdentifyLayerWithView.indexOf(b))?b:a};
