@@ -3,7 +3,7 @@
  *
  */
 
-
+Eqwc.common = {};
 
 Eqwc.common.createHyperlink = function(att, val, pattern) {
     if (val == null) {
