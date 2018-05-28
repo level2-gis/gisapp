@@ -341,6 +341,7 @@ function exportData(layername,format, useBbox) {
 function openAttTable() {
     var node = layerTree.getSelectionModel().getSelectedNode();
     var myLayerName = node.text;
+    var myQueryLayerName = Eqwc.common.getIdentifyLayerName(myLayerName);
     var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
     var editable = projectData.use_ids ? projectData.layers[layerId].wfs : false;
     var filter = null;
@@ -359,8 +360,8 @@ function openAttTable() {
         layer = new QGIS.SearchPanel({
             useWmsRequest: true,
             wmsFilter: filter,
-            queryLayer: myLayerName,
-            gridColumns: getLayerAttributes(myLayerName).columns,
+            queryLayer: myQueryLayerName,
+            gridColumns: getLayerAttributes(myQueryLayerName).columns,
             gridLocation: 'bottom',
             gridEditable: editable,
             gridTitle: name,
@@ -420,6 +421,7 @@ function applyWMSFilter(item) {
 function getLayerAttributes(layer) {
 
     var layerId = wmsLoader.layerTitleNameMapping[layer];
+    var sourceLayerId = wmsLoader.layerTitleNameMapping[Eqwc.common.getIdentifyLayerNameRevert(layer)];
     var ret = {};
     ret.columns = [];
     //ret.fields = [];
@@ -499,7 +501,7 @@ function getLayerAttributes(layer) {
         //}
     }
 
-    var actionColumn = getActionColumns(layerId);
+    var actionColumn = getActionColumns(sourceLayerId);
     if(actionColumn!=null) {
         ret.columns.unshift(actionColumn);
     }

@@ -1611,7 +1611,8 @@ function showSearchPanelResults(searchPanelInstance, features) {
                         if (searchPanelInstance.resultsGrid !== null) {
                             var wmsFilter = [];
                             var layer = searchPanelInstance.queryLayer;
-                            var layerId = wmsLoader.layerTitleNameMapping[layer];
+                            var sourceLayer = Eqwc.common.getIdentifyLayerNameRevert(layer);
+                            var layerId = wmsLoader.layerTitleNameMapping[sourceLayer];
                             var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
                             Ext.each(filt, function (f) {
                                 if (f.data.type == 'string') {
