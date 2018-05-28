@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Eqwc.html">Eqwc</a></li><li><a href="Eqwc.settings.html">settings</a><ul class='members'><li data-type='member'><a href="Eqwc.settings.html#.title">title</a></li><li data-type='member'><a href="Eqwc.settings.html#.limitAttributeFeatures">limitAttributeFeatures</a></li><li data-type='member'><a href="Eqwc.settings.html#.limitSearchMaxResults">limitSearchMaxResults</a></li><li data-type='member'><a href="Eqwc.settings.html#.enableHoverPopup">enableHoverPopup</a></li><li data-type='member'><a href="Eqwc.settings.html#.defaultIdentificationMode">defaultIdentificationMode</a></li><li data-type='member'><a href="Eqwc.settings.html#.showCoordinatesIdentify">showCoordinatesIdentify</a></li><li data-type='member'><a href="Eqwc.settings.html#.QgisUsersPrintName">QgisUsersPrintName</a></li><li data-type='member'><a href="Eqwc.settings.html#.visibleFirstBaseLayer">visibleFirstBaseLayer</a></li><li data-type='member'><a href="Eqwc.settings.html#.noDataValue">noDataValue</a></li><li data-type='member'><a href="Eqwc.settings.html#.overWriteRasterFieldName">overWriteRasterFieldName</a></li><li data-type='member'><a href="Eqwc.settings.html#.numZoomLevels">numZoomLevels</a></li><li data-type='member'><a href="Eqwc.settings.html#.fixedPrintResolution">fixedPrintResolution</a></li><li data-type='member'><a href="Eqwc.settings.html#.printCapabilities">printCapabilities</a></li><li data-type='member'><a href="Eqwc.settings.html#.symbolizersHighLightLayer">symbolizersHighLightLayer</a></li><li data-type='member'><a href="Eqwc.settings.html#.useGisPortal">useGisPortal</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileUseTiledWMS">mobileUseTiledWMS</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileEnableTracking">mobileEnableTracking</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileMinScale">mobileMinScale</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileShowAccuracy">mobileShowAccuracy</a></li><li data-type='member'><a href="Eqwc.settings.html#.qgisFilesFieldAlias">qgisFilesFieldAlias</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Eqwc.html">Eqwc</a></li><li><a href="Eqwc.settings.html">settings</a><ul class='members'><li data-type='member'><a href="Eqwc.settings.html#.title">title</a></li><li data-type='member'><a href="Eqwc.settings.html#.limitAttributeFeatures">limitAttributeFeatures</a></li><li data-type='member'><a href="Eqwc.settings.html#.limitSearchMaxResults">limitSearchMaxResults</a></li><li data-type='member'><a href="Eqwc.settings.html#.enableHoverPopup">enableHoverPopup</a></li><li data-type='member'><a href="Eqwc.settings.html#.defaultIdentificationMode">defaultIdentificationMode</a></li><li data-type='member'><a href="Eqwc.settings.html#.showCoordinatesIdentify">showCoordinatesIdentify</a></li><li data-type='member'><a href="Eqwc.settings.html#.replaceIdentifyLayerWithView">replaceIdentifyLayerWithView</a></li><li data-type='member'><a href="Eqwc.settings.html#.QgisUsersPrintName">QgisUsersPrintName</a></li><li data-type='member'><a href="Eqwc.settings.html#.visibleFirstBaseLayer">visibleFirstBaseLayer</a></li><li data-type='member'><a href="Eqwc.settings.html#.noDataValue">noDataValue</a></li><li data-type='member'><a href="Eqwc.settings.html#.overWriteRasterFieldName">overWriteRasterFieldName</a></li><li data-type='member'><a href="Eqwc.settings.html#.numZoomLevels">numZoomLevels</a></li><li data-type='member'><a href="Eqwc.settings.html#.fixedPrintResolution">fixedPrintResolution</a></li><li data-type='member'><a href="Eqwc.settings.html#.printCapabilities">printCapabilities</a></li><li data-type='member'><a href="Eqwc.settings.html#.symbolizersHighLightLayer">symbolizersHighLightLayer</a></li><li data-type='member'><a href="Eqwc.settings.html#.useGisPortal">useGisPortal</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileUseTiledWMS">mobileUseTiledWMS</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileEnableTracking">mobileEnableTracking</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileMinScale">mobileMinScale</a></li><li data-type='member'><a href="Eqwc.settings.html#.mobileShowAccuracy">mobileShowAccuracy</a></li><li data-type='member'><a href="Eqwc.settings.html#.qgisFilesFieldAlias">qgisFilesFieldAlias</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -58,7 +58,7 @@ var Eqwc = {
 };
 
 /**
- * Template string for client window title
+ * Template string for browser window title
  * @type {string}
  * @default "projectData.title+' '+projectData.client_display_name";
  * @example "TR.appName+projectData.title+' '+projectData.client_display_name";
@@ -66,21 +66,21 @@ var Eqwc = {
 Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 
 /**
- * Limit number of features to request from server for displaying layer attribute table
+ * Limit number of features to request from server for displaying layer attribute table. If number of returned features is equal to limit then load more button is displayed in table toolbar.
  * @type {number}
  * @default 2000
  */
 Eqwc.settings.limitAttributeFeatures = 2000;
 
 /**
- * Number of results in SearchPanel and Identify result window. **FEATURE_COUNT** value in WMS request
+ * Number of results in SearchPanel and Identify result window. _FEATURE_COUNT_ value in WMS request
  * @type {number}
  * @default 10
  */
 Eqwc.settings.limitSearchMaxResults = 10;
 
 /**
- * Enable tooltip hoover on mouseover features
+ * Enable tooltip text when mouse cursor is over features
  * @type {boolean}
  * @default false
  */
@@ -88,7 +88,7 @@ Eqwc.settings.enableHoverPopup = false;
 
 /**
  * Set default mode for identify option
- * > Possible values are: **"allLayers"**, **"topMostHit"**, **"activeLayer"**
+ * > Possible values are: **"allLayers"**, **"topMostHit"**, **"activeLayers"**
  *
  * > Note that you control visibility of this combo per specific project in database.
  * @type {string}
@@ -102,6 +102,17 @@ Eqwc.settings.defaultIdentificationMode = "allLayers";
  * @default true
  */
 Eqwc.settings.showCoordinatesIdentify = true;
+
+/**
+ * Replace layer name in GetFeatureInfo request (identify). Useful to create database view for layer, where you can reorder fields or create new read only fields from geometry, like: area, length, X, Y. This data will be displayed in identify window and attributes table instead of data from original layer.
+ * > Prepare:
+ * 1. Write in this array layer name as it is in QGIS project,
+ * 2. Create corresponding view named as *your_layer_name_view* and add it to the QGIS project. View will be hidden from legend and map.
+ *
+ * > Example: layer name is **"points"**, view name must be **"points_view"**, add in array only **"points"**
+ * @type {Array}
+ */
+Eqwc.settings.replaceIdentifyLayerWithView = [];
 
 /**
  * Set print table name from QGIS project needed to store information about title and description for each user last print.
@@ -293,7 +304,7 @@ Eqwc.settings.qgisFilesFieldAlias = 'files';
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat May 26 2018 07:54:09 GMT+0200 (CEST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon May 28 2018 12:29:24 GMT+0200 (CEST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
