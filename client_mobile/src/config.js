@@ -124,9 +124,9 @@ Config.featureInfo.wmsMaxFeatures = Eqwc.settings.limitSearchMaxResults ? Eqwc.s
  * the actual pixel ratio value for high resolution rendering
  */
 Config.featureInfo.tolerances = {
-  point: 16,
-  line: 8,
-  polygon: 4
+  point: 4,
+  line: 4,
+  polygon: 2
 };
 
 /**
