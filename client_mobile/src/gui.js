@@ -790,7 +790,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
         html += '</div>';
     }
     if (results.length == 0) {
-        html = I18n.featureInfo.noFeatureFound;
+        html += I18n.featureInfo.noFeatureFound;
     }
 
     $('#featureInfoResults').html(html);

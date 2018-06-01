@@ -281,7 +281,7 @@ var MapOptions = {
   units: "m",
   numZoomLevels: Eqwc.settings.numZoomLevels == undefined ? 22 : Eqwc.settings.numZoomLevels,
   fractionalZoom: !enableBGMaps,
-  zoomDuration: 5,
+  zoomDuration: 10,
   restrictedExtent: projectData.restrictToStartExtent ? projectData.extent.split(',') : null,
   controls: []
 };
