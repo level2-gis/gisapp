@@ -1,15 +1,12 @@
 /**
  * German translation for Extended Qgis Web Client
  *
- * Translators: Dreanor
- *
- * Date: 09.10.15
  */
 var TR = {
     appName: 'Räumliches Informationssystem - ',
     loginTitle: 'Login',
     loginMessage: 'Der Zugriff zu diesem Bereich ist auf authentifizierte Benutzer beschränkt.' +
-    '<br />Bitte gebe deinen Benutzernamen und dein Passwort ein.',
+    '<br />Bitte geben Sie Benutzernamen und Passwort ein.',
     loginFailMessage: 'Einloggen fehlgeschlagen',
     loginWaitMessage: 'Bitte warten...',
     loginButton: 'Einloggen',
@@ -17,23 +14,23 @@ var TR = {
     loginUsernameLabel: 'Benutzername',
     loginPasswordLabel: 'Passwort',
     loginLanguageLabel: 'Sprache',
-    loginRememberMeLabel: 'Angemeldet bleiben',
+    loginRememberMeLabel: 'Anmeldung merken',
     loginForgotPasswordLabel: '',
     logoutLabel: 'Ausloggen',
     noProject: 'Das Projekt existiert nicht.',
-    noProjectText: 'Füge den richtigen Projektnamen hinzu und lade die Seite erneut.',
+    noProjectText: 'Füge Sie den richtigen Projektnamen hinzu und laden Sie die Seite erneut.',
     wrongPassword: 'Falsches Passwort.',
     noUser: 'Der Benutzer existiert nicht.',
-    noPermission: 'Du hast keine Berechtigung um dieses Projekt zu benutzen.',
+    noPermission: 'Sie haben keine Berechtigung, um dieses Projekt zu benutzen.',
     noPublicAccess: 'Öffentlicher Zugriff ist für dieses Projekt nicht erlaubt.',
     clearFilter: 'Alle Filter zurücksetzen',
-    clearSelection: 'Clear selection',
+    clearSelection: 'Auswahl aufheben',
     menuFilterText: 'Filter',
     editData: 'Daten bearbeiten',
-    editMode: 'Edit mode',
+    editMode: 'Bearbeitungsmodus',
     editDisabled: 'Bearbeiten ist deaktiviert',
-    editAdd: 'Add',
-    editEdit: 'Edit',
+    editAdd: 'Hinzufügen',
+    editEdit: 'Bearbeiten',
     editDelete: 'Löschen',
     editSave: 'Speichern',
     mapBasic: 'Karte',
@@ -43,18 +40,18 @@ var TR = {
     fiLocation: 'Position',
     fiElevation: 'über dem Meeresspiegel',
     cancel: 'Abbrechen',
-    send: 'Send',
+    send: 'Senden',
     feedback: 'Feedback',
-    feedbackTitle: 'Send your feedback',
-    feedbackDescription: 'Your name, project and current map link will be added to the message!',
-    transactionFail: 'Transaction failed',
-    show: 'Show',
-    properties: 'Properties',
-    description: 'Description',
-    emptyPrintTitleText: 'Add Title ...',
-    emptyPrintDescriptionText: 'Add Description ...',
-    loadMore: 'Load more...',
-    loadMoreToolTip: 'Table is not complete.Click to load more data from server!'
+    feedbackTitle: 'Feedback senden',
+    feedbackDescription: 'Name, Project und aktueller Kartenlink werden der Nachricht hinzugefügt!',
+    transactionFail: 'Übertragung fehlgeschlagen',
+    show: 'Zeige',
+    properties: 'Einstellungen',
+    description: 'Beschreibung',
+    emptyPrintTitleText: 'Titel hinzufügen ...',
+    emptyPrintDescriptionText: 'Beschreibung hinzufügen ...',
+    loadMore: 'Lade weiteres ...',
+    loadMoreToolTip: 'Tabelle ist nicht vollständig. Klicken, um weitere Daten vom Server zu laden!'
 };
 
 /**
@@ -63,19 +60,19 @@ var TR = {
 
 var I18n = {};
 
-I18n.title = "Mobile Viewer";
+I18n.title = "Mobilversion";
 
 I18n.search = {
     header: "Adresssuche",
-    results: "Suchresultat",
+    results: "Suchergebnis",
     failed: "Suche fehlgeschlagen:"
 };
 
 I18n.properties = {
-    header: "Einstellungen",
-    mapFollowing: "Kartennachf&uuml;hrung",
+    header: "Karteneinstellungen",
+    mapFollowing: "Verfolgung",
     mapRotation: "Kartenausrichtung",
-    scaleBar: "Massstabsbalken",
+    scaleBar: "Massstab",
     about: "Impressum",
     share: "Share",
     login: "Login",
@@ -85,35 +82,35 @@ I18n.properties = {
 
 I18n.about = {
     header: "Impressum",
-    content: "Development version"
+    content: "Versionsnummer"
 };
 
 I18n.layers = {
-    project: "Project",
+    project: "Projekt",
     topics: "Themen",
     layers: "Ebenen",
-    layerOrder: "Reihenfolge",
+    layerOrder: "Layerreihenfolge",
     background: "Hintergrund",
-    overlays: "Überlagerung",
-    selection: "Selektion",
-    redlining: "Redlining",
+    overlays: "Zusätzliche Themen",
+    selection: "Auswahl",
+    redlining: "Ausgrenzen",
     transparency: "Transparenz"
 };
 
 I18n.featureInfo = {
     header: "Informationen",
     feature: "Feature ID:",
-    raster: "Rasterzelle",
+    raster: "Raster",
     noFeatureFound: "Kein Objekt gefunden"
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Die Geolokalisierung ist für diese Seite deaktiviert.\n\nBitte überprüfen Sie Ihre Browser-Einstellungen, um die Berechtigung zurückzusetzen.",
-    accuracy: "Accuracy",
-    altitude: "Altitude",
-    heading: "Heading",
-    speed: "Speed",
-    obtaining: "Obtaining location..."
+    permissionDeniedMessage: "Standortabfrage ist deaktiviert.\n\nBitte überprüfen Sie Ihre Browser-Einstellungen, um die Berechtigung zu erhalten.",
+    accuracy: "Genauigkeit",
+    altitude: "Höhenniveau",
+    heading: "Richtung",
+    speed: "Geschwindigkeit",
+    obtaining: "Standort wird gesucht ..."
 };
 
 I18n.login = {
