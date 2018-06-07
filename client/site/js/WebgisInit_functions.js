@@ -29,7 +29,9 @@ function loadWMSConfig(topicName) {
             var hiddenLayers = Eqwc.common.getHiddenLayersFromSettings();
             if (hiddenLayers.indexOf(attr.text) > -1) {
                 attr.hidden = true;
-                attr.layer.metadata.visible = false;
+                if (attr.text != Eqwc.settings.QgisUsersPrintName) {
+                    attr.layer.metadata.visible = false;
+                }
             }
 
             //hide layer if we have same baselayer name
