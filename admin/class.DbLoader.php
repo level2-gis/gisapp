@@ -68,19 +68,31 @@ class DbLoader
     }
 
     public function writeProjectData($newData) {
-        $sql = 'UPDATE projects SET display_name = :title, crs = :crs WHERE name = :project';
-
+        //query 1: always overwrite CRS field with QGIS project value
+        $sql = 'UPDATE projects SET crs = :crs WHERE name = :project';
         $query = $this->db_connection->prepare($sql);
-        $query->bindValue(':title', $newData->title);
         $query->bindValue(':crs', $newData->crs);
-        //$query->bindValue(':description', $newData->description);
         $query->bindValue(':project', $this->project);
-        $query->execute();
-        $result_row = $query->fetchObject();
-        if (!($result_row)) {
+        $success = $query->execute();
+        if (!($success)) {
             $this->feedback = $query->errorInfo()[2];
             return false;
         }
+
+        //query 2: write title from qgis only if it is empty in database. Can be edited with gisportal
+        if (!empty($newData->title)) {
+            $sql2 = "UPDATE projects SET display_name = :title WHERE name = :project AND (display_name = NULL OR display_name = '')";
+            $query2 = $this->db_connection->prepare($sql2);
+            $query2->bindValue(':title', $newData->title);
+            $query2->bindValue(':project', $this->project);
+            $success = $query2->execute();
+
+            if (!($success)) {
+                $this->feedback = $query2->errorInfo()[2];
+                return false;
+            }
+        }
+
         return true;
     }
 
