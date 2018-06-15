@@ -129,8 +129,8 @@ function postLoading() {
         //updateLayerOrderPanel();
 
         //change array order
-        //selectedLayers = layersInDrawingOrder(selectedLayers);
-        //selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
+        selectedLayers = layersInDrawingOrder(selectedLayers);
+        selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
 
         //special case if only active layers are queried for feature infos
         if (identificationMode == 'activeLayers') {
@@ -152,8 +152,8 @@ function postLoading() {
                     }
                 }
             );
-            //selectedActiveLayers = layersInDrawingOrder(selectedActiveLayers);
-            //selectedActiveQueryableLayers = layersInDrawingOrder(selectedActiveQueryableLayers);
+            selectedActiveLayers = layersInDrawingOrder(selectedActiveLayers);
+            selectedActiveQueryableLayers = layersInDrawingOrder(selectedActiveQueryableLayers);
         }
 
         if (selectedQueryableLayers.length == 0) {
@@ -238,7 +238,7 @@ function postLoading() {
             Ext.select('#panel_header_link a').replaceWith({
                 tag: 'a',
                 href: headerLogoLink,
-                target: '_blank',
+                //target: '_blank',
                 children: [{
                     tag: 'img',
                     src: headerLogoImg,
