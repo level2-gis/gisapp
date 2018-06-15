@@ -11,6 +11,7 @@ $plugins = [];
 
 $crs_list =  \GisApp\Helpers::getCrsListFromSession();
 $crs_project = \GisApp\Helpers::getProjectCrsFromSession();
+$plugin_list = \GisApp\Helpers::getPluginsFromSession();
 $crs_files = [];
 
 foreach ($crs_list as $crs) {
@@ -46,26 +47,28 @@ array_push($lang, "admin/languages/". $def_lang .".js?v=".rand());
 array_push($lang, "client/site/js/lang/Translations_". $def_lang .".js?v=".rand());
 
 //add into array all js files in plugins/xxx/js subfolder
-foreach ($scan as $item) {
-    if (is_dir($dir . $item)) {
-        $plugin_path = $dir . $item;
+if (!(empty($plugin_list))) {
+    foreach ($plugin_list as $item) {
+        if (is_dir($dir . $item)) {
+            $plugin_path = $dir . $item;
 
-        //plugin language file
-        $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js";
-        if (!file_exists($lang_fn)) {
-           $def_lang = 'en';
-        }
-        if (file_exists($lang_fn)) {
-            array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/" . $def_lang . ".js?v=".rand());
-        }
-        $js_arr = array_slice(scandir($plugin_path . '/js/'), 2);
-        foreach ($js_arr  as $script) {
-            //only js files
-            if (substr($script,-2) == 'js') {
-                if ($script == 'config.js') {
-                    $script .= '?v='.rand();
+            //plugin language file
+            $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js";
+            if (!file_exists($lang_fn)) {
+                $def_lang = 'en';
+            }
+            if (file_exists($lang_fn)) {
+                array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/" . $def_lang . ".js?v=" . rand());
+            }
+            $js_arr = array_slice(scandir($plugin_path . '/js/'), 2);
+            foreach ($js_arr as $script) {
+                //only js files
+                if (substr($script, -2) == 'js') {
+                    if ($script == 'config.js') {
+                        $script .= '?v=' . rand();
+                    }
+                    array_push($plugins, "plugins/" . basename($plugin_path) . "/js/" . $script);
                 }
-                array_push($plugins, "plugins/" . basename($plugin_path) . "/js/" . $script);
             }
         }
     }

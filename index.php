@@ -175,10 +175,9 @@ $server_os = php_uname('s');
 $def_lang = strtolower(filter_input(INPUT_GET,'lang',FILTER_SANITIZE_STRING));
 $mobile = strtolower(filter_input(INPUT_GET,'mobile',FILTER_SANITIZE_STRING));
 
-$edit = Helpers::checkModulexist("editing");
-$client_path = Helpers::getClientPath();
-
 session_start();
+
+$client_path = Helpers::getClientPath();
 
 if($def_lang>'') {
     $lang_fn = $client_path . 'admin/languages/' . $def_lang . '.js';
@@ -206,6 +205,7 @@ if( $detect->isMobile() && !$detect->isTablet() ){
 
 if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 
+    $edit = Helpers::checkModulexist("editing");
     $google = Helpers::loadGoogle();
 
 	//OK open application

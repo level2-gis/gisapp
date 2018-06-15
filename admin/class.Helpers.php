@@ -78,6 +78,18 @@ class Helpers
         }
     }
 
+    public static function getPluginsFromSession() {
+        try {
+            if (isset($_SESSION['data'])) {
+                $data = json_decode($_SESSION['data']);
+                return $data->plugins;
+            }
+            return [];
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
     public static function validateExportParams($params)
     {
         if (isset($params['map0_extent']) && $params['map0_extent']!='') {
@@ -452,18 +464,25 @@ class Helpers
         }
     }
 
-    public static function checkModulexist($name) {
-        $dir = dirname(dirname(__FILE__)) . "/plugins/";
-        if (file_exists($dir)) {
-            $scan = array_slice(scandir($dir), 2);
-
-            foreach ($scan as $item) {
-                if ($item == $name) {
-                    return true;
+    public static function checkModulexist($name)
+    {
+        try {
+            $dir = dirname(dirname(__FILE__)) . "/plugins/";
+            if (isset($_SESSION['data'])) {
+                $data = json_decode($_SESSION['data']);
+                $plugins = $data->plugins;
+                if (is_array($plugins) && !(empty($plugins))) {
+                    foreach ($plugins as $item) {
+                        if (($item == $name) && is_dir($dir . $name)) {
+                            return true;
+                        }
+                    }
                 }
             }
+            return false;
+        } catch (Exception $e) {
+            return false;
         }
-        return false;
     }
 
 

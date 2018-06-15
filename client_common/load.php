@@ -53,6 +53,7 @@ var projectData = {};
 
 //bind PHP --> JS
 projectData.user = '<?php echo $user ?>';
+projectData.client_id = '<?php echo $data->client_id ?>';
 projectData.client_name = '<?php echo $data->client_name ?>';
 projectData.client_display_name = '<?php echo $data->client_display_name ?>';
 projectData.client_url = '<?php echo $data->client_url ?>';
