@@ -47,6 +47,19 @@ function loadWMSConfig(topicName) {
                 }, attr);
             }
 
+            //hide layer if we have same extralayer name
+            var extraArr = projectData.extraLayers();
+            if (extraArr !== null) {
+                Ext.each(extraArr, function (currentValue, index, array) {
+                    var attr = this;
+                    if (currentValue.title == attr.text) {
+                        attr.hidden = true;
+                        attr.layer.metadata.visible = false;
+                        return false;   //exit from looping array
+                    }
+                }, attr);
+            }
+
             if (!attr.layer.metadata.showCheckbox) {
                 // hide checkbox
                 attr.cls = 'layer-checkbox-hidden';
@@ -2613,4 +2626,17 @@ function exceptionLoading(res) {
 
 function logout() {
     window.location.href = "./admin/login.php?action=logout";
+}
+
+function getVisibleExtraLayersForPrint() {
+    var ret = [];
+    var extraLayers = projectData.extraLayers();
+    for (var i=0; i<extraLayers.length; i++) {
+        var extra = extraLayers[i].title;
+        var lay = geoExtMap.map.getLayersByName(extra)[0];
+        if (lay && lay.visibility && wmsLoader.layerTitleNameMapping[extra]) {
+            ret.push(wmsLoader.layerTitleNameMapping[extra]);
+        }
+    }
+    return ret;
 }

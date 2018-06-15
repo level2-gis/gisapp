@@ -232,6 +232,10 @@ Gui.loadLayers = function (data) {
                 if (Config.baseLayerExists(layer.layername)) {
                     return;
                 }
+                if (Config.extraLayerExists(layer.layername)) {
+                    return;
+                }
+
 
                 // add layer
                 html += '<label>';

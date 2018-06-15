@@ -416,6 +416,7 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             }
 
             var layers = thematicLayer.params.LAYERS;
+            var extra = getVisibleExtraLayersForPrint().join(',');
 
             //add currently visible base layer for printing if exists in projects
             var printBaseLayer = wmsLoader.layerTitleNameMapping[currentlyVisibleBaseLayer];
@@ -424,6 +425,9 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 layers = printBaseLayer + ',' + layers;
             }
 
+            if(extra>'') {
+                layers += ',' + extra;
+            }
             var printUrl = this.url + '&' + Ext.urlEncode({
                     'SRS': authid,
                     'DPI': printResolution,

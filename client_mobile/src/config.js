@@ -55,6 +55,17 @@ Config.baseLayerExists = function (name) {
     return false;
 };
 
+Config.extraLayerExists = function (name) {
+    var bl = projectData.extraLayers();
+    for (var i in bl) {
+        if (bl[i].title == name) {
+            return true;
+        }
+    }
+    return false;
+};
+
+
 // flag to activate debug code
 Config.debug = false;
 
