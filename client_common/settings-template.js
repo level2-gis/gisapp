@@ -100,3 +100,4 @@ Eqwc.settings.mobileEnableTracking = false;
 Eqwc.settings.mobileMinScale = 50;
 Eqwc.settings.mobileShowAccuracy = true;
 Eqwc.settings.qgisFilesFieldAlias = 'files';
+Eqwc.settings.measurementsUnitSystem = 'metric';

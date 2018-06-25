@@ -1125,6 +1125,32 @@ function postLoading() {
                         layerOptions: {
                             styleMap: styleMapMeasureControls
                         }
+                    },
+                    getBestArea: function (geometry) {
+                        var units = this.displaySystemUnits[this.displaySystem];
+                        var unit, area;
+                        for (var i = 0, len = units.length; i < len; ++i) {
+                            unit = units[i];
+                            area = this.getArea(geometry, unit);
+                            if (area > 1) {
+                                break;
+                            }
+                        }
+
+                        //modification for acres
+                        if (this.displaySystem === 'english') {
+                            if (unit === 'mi') {
+                                area = area * 640;
+                                unit = 'ac';
+                            } else if (unit === 'ft' && area > 43559) {
+                                area = area * .000022957;
+                                unit = 'ac';
+                            }
+                        } else {
+                            unit += "<sup>2</sup>";
+                        }
+
+                        return [area, unit];
                     }
                 })
         };
@@ -1138,6 +1164,7 @@ function postLoading() {
             });
             control.setImmediate(true);
             control.geodesic = useGeodesicMeasurement;
+            control.displaySystem = Eqwc.settings.measurementsUnitSystem ? Eqwc.settings.measurementsUnitSystem : 'metric';
             geoExtMap.map.addControl(control);
         }
     }
@@ -1992,11 +2019,12 @@ function handleMeasurements(event) {
     var units = event.units;
     var order = event.order;
     var measure = event.measure;
+    var measureFormat = OpenLayers.Number.format(Number(measure.toFixed(2)), null);
     var out = "";
     if (order == 1) {
-        out += measureDistanceResultPrefixString[lang] + ": " + measure.toFixed(2) + units;
+        out += measureDistanceResultPrefixString[lang] + ": " + measureFormat + units;
     } else {
-        out += measureAreaResultPrefixString[lang] + ": " + measure.toFixed(2) + units + "<sup>2</sup>";
+        out += measureAreaResultPrefixString[lang] + ": " + measureFormat + units;
     }
     var map = geoExtMap.map; // gets OL map object
     removeMeasurePopup();
