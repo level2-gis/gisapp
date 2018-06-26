@@ -783,8 +783,16 @@ Map.toggleClickMarker = function(enabled) {
 
 Map.toggleScalebar = function(enabled) {
   if (Map.scaleLine == null) {
-    Map.scaleLine = new ol.control.ScaleLine({
-      units: 'metric'
+
+      var units = Eqwc.settings.measurementsUnitSystem ? Eqwc.settings.measurementsUnitSystem : 'metric';
+      if(units.toLowerCase()=='english') {
+          units='us';
+      } else if (units.toLowerCase()=='geographic') {
+          units='degrees';
+      }
+
+      Map.scaleLine = new ol.control.ScaleLine({
+      units: units
     });
   }
   if (enabled && Map.scaleLine.getMap() == null) {

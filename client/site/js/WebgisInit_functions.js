@@ -685,11 +685,23 @@ function postLoading() {
             }
         });
 
+        var scaleInUnits = 'm';
+        var scaleOutUnits = 'km';
+
+        if (Eqwc.settings.measurementsUnitSystem.toLowerCase() == 'english') {
+            scaleInUnits = 'ft';
+            scaleOutUnits = 'mi';
+        }
+
         //add OpenLayers map controls
         geoExtMap.map.addControl(new OpenLayers.Control.KeyboardDefaults());
         geoExtMap.map.addControl(new OpenLayers.Control.Navigation());
         geoExtMap.map.addControl(new OpenLayers.Control.Attribution());
-        geoExtMap.map.addControl(new OpenLayers.Control.ScaleLine());
+        geoExtMap.map.addControl(new OpenLayers.Control.ScaleLine({
+            geodesic: true,
+            topInUnits: scaleInUnits,
+            topOutUnits: scaleOutUnits
+        }));
 
         //geoExtMap.map.addControl(new OpenLayers.Control.PanZoomBar({zoomWorldIcon:true,forceFixedZoomLevel:false}));
         geoExtMap.map.addControl(new OpenLayers.Control.Zoom());
