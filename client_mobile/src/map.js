@@ -579,17 +579,27 @@ Map.setZoom = function(zoom) {
   Map.map.getView().setZoom(zoom);
 };
 
+//This part is called from native Android app
+Map.updateAndroidLocation = function(data) {
+    //assuming Map.geolocation instanceof AndroidLocation
+    Map.geolocation.setLocation(data);
+};
+
 Map.toggleTracking = function (enabled) {
     if (Map.geolocation == null) {
         // create geolocation
-        Map.geolocation = new ol.Geolocation({
-            projection: Map.map.getView().getProjection(),
-            trackingOptions: {
-                enableHighAccuracy: true,
-                maximumAge: 20000,
-                timeout: 21000
-            }
-        });
+        if(typeof Android == 'undefined') {
+            Map.geolocation = new ol.Geolocation({
+                projection: Map.map.getView().getProjection(),
+                trackingOptions: {
+                    enableHighAccuracy: true,
+                    maximumAge: 20000,
+                    timeout: 21000
+                }
+            });
+        } else {
+            Map.geolocation = new ol.AndroidLocation({projection: Map.map.getView().getProjection()});
+        }
 
         var antenna = $('#antennaHeight').length > 0 ? $('#antennaHeight')[0].value : 0;
         if (isNaN(antenna)) {
