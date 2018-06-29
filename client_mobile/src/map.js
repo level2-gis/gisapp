@@ -582,7 +582,7 @@ Map.setZoom = function(zoom) {
 //This part is called from native Android app
 Map.updateAndroidLocation = function(data) {
     //assuming Map.geolocation instanceof AndroidLocation
-    Map.geolocation.setLocation(data);
+    Map.geolocation.setLocation(data, Gui.tracking);
 };
 
 Map.toggleTracking = function (enabled) {
