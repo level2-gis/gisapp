@@ -2671,6 +2671,9 @@ function logout() {
 function getVisibleExtraLayersForPrint() {
     var ret = [];
     var extraLayers = projectData.extraLayers();
+    if(extraLayers==null) {
+        return '';
+    }
     for (var i=0; i<extraLayers.length; i++) {
         var extra = extraLayers[i].title;
         var lay = geoExtMap.map.getLayersByName(extra)[0];
@@ -2678,5 +2681,5 @@ function getVisibleExtraLayersForPrint() {
             ret.push(wmsLoader.layerTitleNameMapping[extra]);
         }
     }
-    return ret;
+    return ret.join(',');
 }
