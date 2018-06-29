@@ -597,8 +597,10 @@ Map.toggleTracking = function (enabled) {
                     timeout: 21000
                 }
             });
+            Map.geolocation.set('source', 'Geolocation API');
         } else {
             Map.geolocation = new ol.AndroidLocation({projection: Map.map.getView().getProjection()});
+            Map.geolocation.set('source', 'Android API');
         }
 
         var antenna = $('#antennaHeight').length > 0 ? $('#antennaHeight')[0].value : 0;

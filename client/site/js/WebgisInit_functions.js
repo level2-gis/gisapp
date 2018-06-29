@@ -688,7 +688,7 @@ function postLoading() {
         var scaleInUnits = 'm';
         var scaleOutUnits = 'km';
 
-        if (Eqwc.settings.measurementsUnitSystem.toLowerCase() == 'english') {
+        if (Eqwc.settings.measurementsUnitSystem == 'english') {
             scaleInUnits = 'ft';
             scaleOutUnits = 'mi';
         }
