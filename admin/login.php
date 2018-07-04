@@ -9,6 +9,7 @@
 
 use GisApp\Login;
 
+require '../vendor/autoload.php';
 require_once("class.Login.php");
 
 $server_os = php_uname('s');

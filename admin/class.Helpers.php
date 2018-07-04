@@ -15,10 +15,16 @@ namespace GisApp;
 use Exception;
 use SimpleXMLElement;
 
-require_once("class.Login.php");
-
 class Helpers
 {
+    function __construct()
+    {
+        $this->cache = \phpFastCache("files", array(
+            "path" => TEMP_PATH
+        ));
+    }
+
+    private $cache = null;
 
     public $qgs_layers = [];
 
@@ -34,19 +40,20 @@ class Helpers
         return self::msg(true,null);
     }
 
-    public static function isValidUserProj($project)
-    {
-        $valid = isset($_SESSION['user_is_logged_in']);
-        $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;
-
-        if (($valid === true) && ($project !== $sess)) {
-            //change projects
-            $user = $_SESSION['user_name'];
-            $change = new Login();
-            $valid = $change->changeProject($user, $project);
-        }
-        return $valid;
-    }
+//    //todo move to login and remove reference to login
+//    public static function isValidUserProj($project)
+//    {
+//        $valid = isset($_SESSION['user_is_logged_in']);
+//        $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;
+//
+//        if (($valid === true) && ($project !== $sess)) {
+//            //change projects
+//            $user = $_SESSION['user_name'];
+//            $change = new Login();
+//            $valid = $change->changeProject($user, $project);
+//        }
+//        return $valid;
+//    }
 
     /**
      * return crs list of all layers as published in project properties OWS Server
@@ -312,6 +319,18 @@ class Helpers
         return $prop;
     }
 
+    public function writeToCache($key, $value) {
+        $content = $this->cache->get($key);
+        if($content != null) {
+            $this->cache->delete($key);
+        }
+        $this->cache->set($key, $value);
+    }
+
+    public function readFromCache($key) {
+        return $this->cache->get($key);
+    }
+
     /**
      *
      * Load a layer instance from the project
@@ -514,5 +533,29 @@ class Helpers
             $root = dirname($root);
         }
         return $root . GISAPPURL;
+    }
+
+    public static function hasPortal() {
+        $ret = false;
+        $root = filter_input(INPUT_SERVER,'DOCUMENT_ROOT',FILTER_SANITIZE_STRING);
+        if (basename($root)=='gisportal') {
+            $ret = true;
+        }
+        return $ret;
+    }
+
+    public function checkReferer($project) {
+        if(!isset($_SERVER["HTTP_REFERER"])) {
+            return false;
+        }
+        $ref = $_SERVER["HTTP_REFERER"];
+        $server = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["SERVER_NAME"] . $_SERVER["CONTEXT_PREFIX"] . $project;
+
+        $match = strpos($ref,$server);
+        if ($match === FALSE) {
+            return FALSE;
+        }
+
+        return TRUE;
     }
 }

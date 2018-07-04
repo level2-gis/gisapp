@@ -184,7 +184,7 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
     }
 
     if ($cacheKey != null) {
-        $qgsTime = json_decode($_SESSION['qgs'])->time;
+        $qgsTime = $cache->get($map . $sep . "QGS_TIME"); //json_decode($_SESSION['qgs'])->time;
 
         $content = $cache->get($cacheKey);
 
@@ -270,12 +270,12 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
 
 try {
 
-//parameters, always (post also contains at lest map parameter
+    //parameters, always (post also contains at lest map parameter
     $query_arr = filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW);
     $request_method = $_SERVER['REQUEST_METHOD'];
     $http_ver = $_SERVER["SERVER_PROTOCOL"];
 
-//we have to extend map parameter with path to projects, but first store it into own variable and remove .qgs
+    //we have to extend map parameter with path to projects, but first store it into own variable and remove .qgs
     $map = "";
     if (strpos($query_arr["map"], ".") === false) {
         $map = $query_arr["map"];
@@ -283,17 +283,22 @@ try {
         $map = explode(".", $query_arr["map"])[0];
     }
 
+    //if (!(Helpers::isValidUserProj($map))) {
+    //    throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
+    //}
 
-//session check
-    session_start();
+    $helpers = new Helpers();
 
-    if (!(Helpers::isValidUserProj($map))) {
-        throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
+    if(!($helpers->checkReferer($map))) {
+        throw new Exception\ClientException("Invalid referer!", new Request('GET', QGISSERVERURL));
     }
 
-    //get project path from session
-    $projectPath = $_SESSION["project_path"];
+    //get project path from cache
+    $sep = "_x_";
+    $projectPath = $helpers->readFromCache($map . $sep . "PROJECT_PATH");
 
+    //session check
+    session_start();
     $user = null;
     if (isset($_SESSION["user_name"])) {
         $user = $_SESSION["user_name"];

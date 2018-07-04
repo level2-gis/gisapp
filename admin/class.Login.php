@@ -19,6 +19,7 @@ namespace GisApp;
 use Exception;
 use \PDO;
 use PDOException;
+use GisApp\Helpers;
 
 require_once("settings.php");
 require_once("class.DbLoader.php");
@@ -176,6 +177,19 @@ class Login
         }
 
         return true;
+    }
+
+    public function isValidUserProj($project)
+    {
+        $valid = isset($_SESSION['user_is_logged_in']);
+        $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;
+
+        if (($valid === true) && ($project !== $sess)) {
+            //change projects
+            $user = $_SESSION['user_name'];
+            $valid = $this->changeProject($user, $project);
+        }
+        return $valid;
     }
 
     /**
@@ -375,6 +389,11 @@ class Login
             $_SESSION['gis_projects'] = $gis_projects;
             $_SESSION['qgs'] = json_encode($project_qgs);
             $_SESSION['upload_dir'] = defined(MAIN_UPLOAD_DIR) ? MAIN_UPLOAD_DIR : './uploads/';
+
+            //saving project_path and qgs time to cache for qgisproxy
+            $sep = "_x_";
+            $helpers->writeToCache($project . $sep . "PROJECT_PATH", $projectPath['message']);
+            $helpers->writeToCache($project . $sep . "QGS_TIME", $project_qgs->time);
 
             return true;
         } else {

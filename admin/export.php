@@ -13,6 +13,7 @@
 use GisApp\Helpers;
 
 require_once("class.Helpers.php");
+require_once("class.Login.php");
 require_once("settings.php");
 
 /**
@@ -289,7 +290,8 @@ try {
     }
 
     //check user session and permissions
-    if (!(Helpers::isValidUserProj($map))) {
+    $login_check =new GisApp\Login();
+    if (!($login_check->isValidUserProj($map))) {
         throw new Exception("Session time out or unathorized access!");
     }
 
