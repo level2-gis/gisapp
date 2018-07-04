@@ -120,3 +120,7 @@ Eqwc.common.getHiddenLayersFromSettings = function() {
     }
     return ret;
 };
+
+Eqwc.common.getProjectUrl = function() {
+  return projectData.gis_projects.path + projectData.project;
+};

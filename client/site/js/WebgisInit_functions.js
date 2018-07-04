@@ -553,7 +553,8 @@ function postLoading() {
                                 format: format,
                                 transparent: qgisLayerTransparency,
                                 dpi: screenDpi,
-                                VERSION: "1.3.0"
+                                VERSION: "1.3.0",
+                                EXCEPTIONS: "XML"
                             },
                             LayerOptions
                         ),
@@ -598,6 +599,17 @@ function postLoading() {
         //thematicLayer.events.register('loadend', this, function () {
         //    console.log('loadend '+selectedQueryableLayers.length);
         //});
+        thematicLayer.events.register('tileerror', this, function () {
+            //loadMask.hide();
+            Ext.Msg.show({
+                title: 'Error loading map ',
+                msg: "Redirect to start page",
+                //width: 300,
+                buttons: Ext.MessageBox.OK,
+                //multiline: true,
+                fn: home
+            });
+        });
 
         //set EPSG text from OpenLayers
         var proj = geoExtMap.map.getProjectionObject();
@@ -2666,6 +2678,10 @@ function exceptionLoading(res) {
 
 function logout() {
     window.location.href = "./admin/login.php?action=logout";
+}
+
+function home() {
+    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
 }
 
 function getVisibleExtraLayersForPrint() {
