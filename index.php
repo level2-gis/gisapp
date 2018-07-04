@@ -1,10 +1,12 @@
 <?php
 
 use GisApp\Helpers;
+use GisApp\Login;
 
-require_once("admin/class.Helpers.php");
-require_once("admin/settings.php");
 require 'vendor/autoload.php';
+require_once("admin/class.Helpers.php");
+require_once("admin/class.Login.php");
+require_once("admin/settings.php");
 
 function goMobile($lang) {
  ?><!DOCTYPE html>
@@ -175,9 +177,12 @@ $server_os = php_uname('s');
 $def_lang = strtolower(filter_input(INPUT_GET,'lang',FILTER_SANITIZE_STRING));
 $mobile = strtolower(filter_input(INPUT_GET,'mobile',FILTER_SANITIZE_STRING));
 
+$helpers = new Helpers();
+
 session_start();
 
-$client_path = Helpers::getClientPath();
+$client_path = $helpers->getClientPath();
+$has_portal = $helpers->hasPortal();
 
 if($def_lang>'') {
     $lang_fn = $client_path . 'admin/languages/' . $def_lang . '.js';
@@ -203,10 +208,12 @@ if( $detect->isMobile() && !$detect->isTablet() ){
     $mobile='on';
 }
 
-if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
+$login_check = new Login();
 
-    $edit = Helpers::checkModulexist("editing");
-    $google = Helpers::loadGoogle();
+if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
+
+    $edit = $helpers->checkModulexist("editing");
+    $google = $helpers->loadGoogle();
 
 	//OK open application
     if($mobile=='on') {
@@ -316,8 +323,13 @@ if (Helpers::isValidUserProj(Helpers::getMapFromUrl())) {
 }
 
 else {
-	//no session, open login panel
-	?>
+	//no session, open login panel or go to portal login page
+    if($has_portal && empty($login_check->feedback)) {
+        $ref = filter_input(INPUT_SERVER,'REQUEST_URI',FILTER_SANITIZE_STRING);
+        header("Location: /login?ru=" . $ref);
+    } else
+    {
+        ?>
 	<!DOCTYPE html>
 	<html>
 		<head>
@@ -334,10 +346,10 @@ else {
         
 		<script type="text/javascript">
 			//bind PHP --> JS
-			GLOBAL_LANG = '<?php echo $def_lang?>';
+			GLOBAL_LANG = '<?php echo $def_lang ?>';
 		</script>
 		
-        <script type="text/javascript" src="admin/languages/<?php echo $def_lang?>.js?v=1.1.3"></script>
+        <script type="text/javascript" src="admin/languages/<?php echo $def_lang ?>.js?v=1.1.3"></script>
         <script type="text/javascript" src="admin/languages/_lang.js?v=20150819"></script>
 		<script type="text/javascript" src="admin/logindialog/js/overrides.js"></script>
 
@@ -353,6 +365,7 @@ else {
 		<body></body>
 	</html>
 	<?php
+    }
 }
 ?>
 

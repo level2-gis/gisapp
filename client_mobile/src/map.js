@@ -112,6 +112,7 @@ Map.setTopicLayer = function() {
     // use transparent layer with background
     wmsParams['TRANSPARENT'] = true;
   }
+  var source = null;
   var wmsOptions = {
     url: Map.topics[Map.topic].wms_url,
     params: wmsParams,
@@ -120,16 +121,24 @@ Map.setTopicLayer = function() {
   };
   Map.topicLayer = null;
   if (Map.useTiledWMS) {
+    source = new ol.source.TileWMS(wmsOptions);
+    source.on('tileloaderror', function(evt) {
+        Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
+    });
     Map.topicLayer = new ol.layer.Tile({
         //extent: Config.map.extent,
-        source: new ol.source.TileWMS(wmsOptions)
+        source: source
     });
   }
   else {
     wmsOptions['ratio'] = 1;
+    source = new ol.source.ImageWMS(wmsOptions);
+    source.on('imageloaderror', function(evt) {
+        Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
+    });
     Map.topicLayer = new ol.layer.Image({
         //extent: Config.map.extent,
-        source: new ol.source.ImageWMS(wmsOptions)
+        source: source
     });
   }
   Map.topicLayer.name = 'topic';
