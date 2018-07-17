@@ -1,2 +1,2 @@
-1.7.4  - Application
+1.7.5  - Application
 18     - Database
