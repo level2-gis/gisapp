@@ -549,10 +549,12 @@ class Helpers
             return false;
         }
         $ref = $_SERVER["HTTP_REFERER"];
-        $server = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["SERVER_NAME"] . $_SERVER["CONTEXT_PREFIX"] . $project;
+        //$server = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["SERVER_NAME"] . $_SERVER["CONTEXT_PREFIX"] . $project;   //windows problem
+        $server = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["SERVER_NAME"] . GISAPPURL . $project;
 
         $match = strpos($ref,$server);
         if ($match === FALSE) {
+            error_log("EQWC Referer error : ".$ref . ': '.$server);
             return FALSE;
         }
 
