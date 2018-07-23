@@ -718,7 +718,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
         if (layer == undefined) {
             var source = Config.getLayerName(result.layer);
             var layerName = Eqwc.common.getIdentifyLayerNameRevert(source);
-            var layerId = Config.getLayerId(layerName);
+            var layerId = Eqwc.common.getLayerId(layerName);
             layer = Map.layers[layerId];
         }
 

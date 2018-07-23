@@ -120,7 +120,7 @@ WsgiSearch.prototype.highlight = function(highlight, callback) {
   });
 
   //switch on layer if needed
-  var layer = Config.getLayerId(highlight.showlayer);
+  var layer = Eqwc.common.getLayerId(highlight.showlayer);
   if(layer) {
       if (!Map.layers[layer].visible) {
           Map.setLayerVisible(layer, true, true);

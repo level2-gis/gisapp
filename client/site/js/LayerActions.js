@@ -198,7 +198,8 @@ function zoomToLayerExtent(item) {
 
 function exportHandler(item) {
     var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
-    var exportLayer = Eqwc.common.getIdentifyLayerName(myLayerName);
+    var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
+    var exportLayer = Eqwc.common.getIdentifyLayerName(layerId);
     var myFormat = item.container.menuItemId;
 
     var exportExtent = item.ownerCt.getComponent('currentExtent');
@@ -342,8 +343,8 @@ function exportData(layername,format, useBbox) {
 function openAttTable() {
     var node = layerTree.getSelectionModel().getSelectedNode();
     var myLayerName = node.text;
-    var myQueryLayerName = Eqwc.common.getIdentifyLayerName(myLayerName);
     var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
+    var myQueryLayerName = Eqwc.common.getIdentifyLayerName(layerId);
     var editable = projectData.use_ids ? projectData.layers[layerId].wfs : false;
     var filter = null;
     var layer = null;

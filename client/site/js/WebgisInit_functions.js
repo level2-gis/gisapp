@@ -113,8 +113,9 @@ function postLoading() {
     var leafsChangeFunction = function(node, checked) {
 
         var lay = wmsLoader.layerTitleNameMapping[node.text];
+        var layerId = wmsLoader.layerTitleNameMapping[lay];
         //check if have to replace for identify
-        var queryLay = Eqwc.common.getIdentifyLayerName(node.text);
+        var queryLay = Eqwc.common.getIdentifyLayerName(layerId);
         var queryLayId = wmsLoader.layerTitleNameMapping[queryLay];
 
         if (node.isLeaf() && lay) {
@@ -399,7 +400,8 @@ function postLoading() {
 
                     if (wmsLoader.layerProperties[wmsLoader.layerTitleNameMapping[n.text]].queryable) {
                         //check if have to replace for identify
-                        var node2 = Eqwc.common.getIdentifyLayerName(n.text);
+                        var layerId = wmsLoader.layerTitleNameMapping[n.text];
+                        var node2 = Eqwc.common.getIdentifyLayerName(layerId);
                         var lay =  wmsLoader.layerTitleNameMapping[node2];
                         selectedQueryableLayers.push(lay);
                     }

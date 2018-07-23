@@ -83,15 +83,26 @@ Eqwc.common.lookup = function(array, prop, value) {
         if (array[i] && array[i][prop] === value) return array[i];
 };
 
-Eqwc.common.getIdentifyLayerName = function(name) {
+Eqwc.common.getIdentifyLayerName = function(layerId) {
+
+    var layer = projectData.layers[layerId];
+
+    if(layer.identifyname) {
+        return layer.identifyname;
+    }
+
+    var ret = layer.layername;
 
     if (Eqwc.settings.replaceIdentifyLayerWithView) {
-        if (Eqwc.settings.replaceIdentifyLayerWithView.indexOf(name) > -1) {
-            return name + "_view";
+        if (Eqwc.settings.replaceIdentifyLayerWithView.indexOf(ret) > -1) {
+            if(Eqwc.common.getLayerId(ret + "_view")) {
+                ret += "_view";
+            }
         }
     }
 
-    return name;
+    projectData.layers[layerId].identifyname = ret;
+    return ret;
 };
 
 Eqwc.common.getIdentifyLayerNameRevert = function(name) {
@@ -114,8 +125,13 @@ Eqwc.common.getHiddenLayersFromSettings = function() {
     var arr = Eqwc.settings.replaceIdentifyLayerWithView;
     if(arr) {
         for (var i = 0; i < arr.length; i++) {
-            var n = Eqwc.common.getIdentifyLayerName(arr[i]);
-            ret.push(n);
+            var id = Eqwc.common.getLayerId(arr[i]);
+            if(id) {
+                var n = Eqwc.common.getIdentifyLayerName(id);
+                if(arr[i] != n) {
+                    ret.push(n);
+                }
+            }
         }
     }
     return ret;
@@ -123,4 +139,12 @@ Eqwc.common.getHiddenLayersFromSettings = function() {
 
 Eqwc.common.getProjectUrl = function() {
   return projectData.gis_projects.path + projectData.project;
+};
+
+Eqwc.common.getLayerId = function (name) {
+    for (var lay in projectData.layers) {
+        if (projectData.layers[lay].layername === name)
+            return projectData.layers[lay].id; // Return as soon as the object is found
+    }
+    return false; // The object was not found
 };

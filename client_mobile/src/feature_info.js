@@ -79,13 +79,17 @@ FeatureInfo.prototype.handleEvent = function (e) {
     var layers = Map.featureInfoLayers();
 
     //check if have to replace layers for identify
+    //TODO move this to Map.featureInfoLayers and save it to projectData[].identifyname
     var checkArr = Eqwc.settings.replaceIdentifyLayerWithView;
     if (checkArr) {
         for (var i = 0; i < checkArr.length; i++) {
             var sourceLay = checkArr[i];
-            var sourceLayId = Config.getLayerId(sourceLay);
-            var replaceLay = Eqwc.common.getIdentifyLayerName(sourceLay);
-            var replaceLayId = Config.getLayerId(replaceLay);
+            var sourceLayId = Eqwc.common.getLayerId(sourceLay);
+            var replaceLayId = sourceLayId;
+            if(sourceLayId) {
+                var replaceLay = Eqwc.common.getIdentifyLayerName(sourceLayId);
+                replaceLayId = Eqwc.common.getLayerId(replaceLay);
+            }
             var j = layers.indexOf(sourceLayId);
             if (j > -1) {
                 layers[j] = replaceLayId;
