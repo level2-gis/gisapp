@@ -40,21 +40,6 @@ class Helpers
         return self::msg(true,null);
     }
 
-//    //todo move to login and remove reference to login
-//    public static function isValidUserProj($project)
-//    {
-//        $valid = isset($_SESSION['user_is_logged_in']);
-//        $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;
-//
-//        if (($valid === true) && ($project !== $sess)) {
-//            //change projects
-//            $user = $_SESSION['user_name'];
-//            $change = new Login();
-//            $valid = $change->changeProject($user, $project);
-//        }
-//        return $valid;
-//    }
-
     /**
      * return crs list of all layers as published in project properties OWS Server
      */
@@ -167,6 +152,19 @@ class Helpers
         return ["status" => $status, "message" => $data];
     }
 
+    private function getQgsProjectExtent($xml) {
+        $ret = (array)($xml->properties->WMSExtent->value);
+        if (empty($ret)) {
+            $ret = [
+                floatval($xml->mapcanvas->extent->xmin),
+                floatval($xml->mapcanvas->extent->ymin),
+                floatval($xml->mapcanvas->extent->xmax),
+                floatval($xml->mapcanvas->extent->ymax)
+            ];
+        }
+        return $ret;
+    }
+
     /**
      *
      * Load .qgs file
@@ -269,7 +267,7 @@ class Helpers
             $prop->crs = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->authid;
             $prop->proj4 = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->proj4;
             $prop->title = (string)$qgs["message"]->title == "" ? basename($map, ".qgs") : (string)$qgs["message"]->title;
-            $prop->extent = (array)($qgs["message"]->properties->WMSExtent->value);
+            $prop->extent = self::getQgsProjectExtent($qgs["message"]);
             $prop->layers = [];
             //parsing boolean values, be careful (bool)"false" = true!!!
             $prop->use_ids = filter_var($qgs["message"]->properties->WMSUseLayerIDs,FILTER_VALIDATE_BOOLEAN);
