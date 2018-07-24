@@ -176,6 +176,7 @@ function goMobile($lang) {
 $server_os = php_uname('s');
 $def_lang = strtolower(filter_input(INPUT_GET,'lang',FILTER_SANITIZE_STRING));
 $mobile = strtolower(filter_input(INPUT_GET,'mobile',FILTER_SANITIZE_STRING));
+$public = strtolower(filter_input(INPUT_GET,'public',FILTER_SANITIZE_STRING));
 
 $helpers = new Helpers();
 
@@ -324,7 +325,8 @@ if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
 
 else {
 	//no session, open login panel or go to portal login page
-    if($has_portal && empty($login_check->feedback)) {
+    //for public=on continue with old way
+    if($has_portal && empty($login_check->feedback) && $public != 'on') {
         $ref = filter_input(INPUT_SERVER,'REQUEST_URI',FILTER_SANITIZE_STRING);
         header("Location: /login?ru=" . $ref);
     } else
