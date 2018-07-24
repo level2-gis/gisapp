@@ -55,8 +55,8 @@ SET search_path = public, pg_catalog;
 --
 
 CREATE FUNCTION check_user_project(uname text, project text) RETURNS text
-    LANGUAGE plpgsql COST 1
-    AS $_$
+LANGUAGE plpgsql COST 1
+AS $_$
 declare proj_id integer;
 declare is_public boolean;
 begin
@@ -66,6 +66,7 @@ select id,public from projects where name=$2 into proj_id,is_public;
 if proj_id=0 OR proj_id IS NULL then
 	return 'TR.noProject';
 else
+	if is_public = true then return 'OK'; end if;
 	if lower($1) = 'guest' then
 		if is_public = true then return 'OK';
 		else return 'TR.noPublicAccess'; end if;
@@ -495,7 +496,7 @@ SELECT pg_catalog.setval('projects_id_seq', 1, false);
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO settings VALUES (18, '2018-06-15');
+INSERT INTO settings VALUES (19, '2018-07-24');
 
 
 --
