@@ -87,6 +87,10 @@ Eqwc.common.getIdentifyLayerName = function(layerId) {
 
     var layer = projectData.layers[layerId];
 
+    if(typeof(layer) == "undefined") {
+        return layerId;
+    }
+
     if(layer.identifyname) {
         return layer.identifyname;
     }

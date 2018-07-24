@@ -113,12 +113,12 @@ function postLoading() {
     var leafsChangeFunction = function(node, checked) {
 
         var lay = wmsLoader.layerTitleNameMapping[node.text];
-        var layerId = wmsLoader.layerTitleNameMapping[lay];
-        //check if have to replace for identify
-        var queryLay = Eqwc.common.getIdentifyLayerName(layerId);
-        var queryLayId = wmsLoader.layerTitleNameMapping[queryLay];
 
         if (node.isLeaf() && lay) {
+            //check if have to replace for identify
+            var queryLay = Eqwc.common.getIdentifyLayerName(lay);
+            var queryLayId = wmsLoader.layerTitleNameMapping[queryLay];
+
             if (checked) {
                 selectedLayers.push(lay);
                 if (wmsLoader.layerProperties[lay].queryable) {
