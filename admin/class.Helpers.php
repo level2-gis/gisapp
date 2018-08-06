@@ -543,6 +543,10 @@ class Helpers
     }
 
     public function checkReferer($project) {
+        //disabling referer check due to some issues
+        //should take also port number
+        return true;
+
         if(!isset($_SERVER["HTTP_REFERER"])) {
             return false;
         }
