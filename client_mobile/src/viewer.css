@@ -339,10 +339,10 @@
   margin: 1em 0;
 }
 .ui-field-contain label.ui-slider {
-  vertical-align: top;
+  /*vertical-align: top;*/
   display: inline-block;
-  width: 20%;
-  margin: 0 2% 0 0;
+  width: 50%;
+  margin: 6px 2px 2px 2px;
 }
 
 /* fix closing panels with outside click on IE10 */
