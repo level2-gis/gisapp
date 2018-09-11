@@ -114,6 +114,7 @@ WsgiSearch.prototype.highlight = function(highlight, callback) {
     data: {
       searchtable: highlight.searchtable,
       displaytext: highlight.displaytext,
+      showlayer: highlight.showlayer,
       srs: projectData.crs.split(':')[1]
     },
     dataType: 'text'

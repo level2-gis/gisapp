@@ -22,6 +22,7 @@ def application(environ, start_response):
   request = Request(environ)
   searchtable = request.params["searchtable"]
   displaytext = request.params["displaytext"]
+  showlayer = request.params["showlayer"]
   srs = request.params["srs"]
 
   #sanitize
@@ -29,7 +30,7 @@ def application(environ, start_response):
     print >> environ['wsgi.errors'], "offending input: %s" % searchtable
     sql = ""
   else:
-    sql = "SELECT COALESCE(ST_AsText(ST_Transform(the_geom,"+srs+")), \'nogeom\') AS geom FROM "+searchtable+" WHERE displaytext = %(displaytext)s;"
+    sql = "SELECT COALESCE(ST_AsText(ST_Transform(the_geom,"+srs+")), \'nogeom\') AS geom FROM "+searchtable+" WHERE showlayer = '"+showlayer+"' AND displaytext = %(displaytext)s;"
   
   result = "nogeom"
   
