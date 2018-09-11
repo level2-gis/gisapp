@@ -300,7 +300,7 @@ function exportData(layername,format, useBbox) {
             map0_extent:mapCrsBbox,
             layer_extent:layCrsBbox,
             layer:layername,
-            fields: layerFields,
+            fields: layerId.indexOf("_view")>-1 ? "" : layerFields,     //workaround for ogr issue when selecting field names with specific language characters. In case of view export all fields
             format:format
         });
 

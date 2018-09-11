@@ -165,18 +165,19 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     $mycmd = OGR2OGR . ' -skipfailures -s_srs EPSG:' . $source_srid . ' -t_srs EPSG:' . $srid . $options . '-f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '"' .$source . ' -progress';
 
     chdir(dirname($map));
-    $output = shell_exec($mycmd);
+    $output = exec($mycmd);
 
-    //if ($output==null) {
-    //    error_log("EQWC Data Export Failed: ".$mycmd);
-    //    throw new Exception("Export failed. Details in Apache error log!");
-    //}
+    //output receives 0...10...20...30...40...50...60...70...80...90...100 - done.
+    if (strpos($output,"done") === FALSE) {
+        error_log("EQWC Data Export Failed: ".$mycmd);
+        throw new Exception("Export failed: ".$output."</br>Details in Apache error log!");
+    }
 
     $fullFileNameZip = $fileName . "." . $fileExt;
 
     if(!file_exists($fileName . '.' . strtolower($destinationFormat))) {
-        error_log("EQWC Data Export Failed with command: ".$mycmd);
-        throw new Exception("Export failed".$output."</br>Details in Apache error log!");
+        error_log("EQWC Data Export Failed: ".$mycmd);
+        throw new Exception("Export failed: ".$output."</br>Details in Apache error log!");
     }
 
     if ($makeZip) {
