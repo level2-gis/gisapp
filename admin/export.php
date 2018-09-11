@@ -168,10 +168,11 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     $output = exec($mycmd);
 
     //output receives 0...10...20...30...40...50...60...70...80...90...100 - done.
-    if (strpos($output,"done") === FALSE) {
-        error_log("EQWC Data Export Failed: ".$mycmd);
-        throw new Exception("Export failed: ".$output."</br>Details in Apache error log!");
-    }
+    //looks like not in all cases so this must be turned off
+    //if (strpos($output,"done") === FALSE) {
+    //    error_log("EQWC Data Export Failed: ".$mycmd);
+    //    throw new Exception("Export failed: ".$output."</br>Details in Apache error log!");
+    //}
 
     $fullFileNameZip = $fileName . "." . $fileExt;
 
