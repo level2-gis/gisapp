@@ -51,7 +51,7 @@ def application(environ, start_response):
       errorText += 'error: could not execute query'
       # write the error message to the error.log
       print >> environ['wsgi.errors'], "%s" % errorText+": "+str(exceptionValue)
-      response_headers = [('Content-type', 'text/plain'),
+      response_headers = [('Content-type', 'text/plain; charset=utf-8'),
                           ('Content-Length', str(len(errorText)))]
       start_response('500 INTERNAL SERVER ERROR', response_headers)
 
@@ -63,6 +63,6 @@ def application(environ, start_response):
     result = row['geom']
     conn.close()
 
-  response = Response(result,"200 OK",[("Content-type","text/plain"),("Content-length", str(len(result)) )])
+  response = Response(result,"200 OK",[("Content-type","text/plain; charset=utf-8"),("Content-length", str(len(result)) )])
 
   return response(environ, start_response)

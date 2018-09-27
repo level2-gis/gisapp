@@ -112,7 +112,7 @@ def application(environ, start_response):
     errorText += 'error: could not execute query'
     # write the error message to the error.log
     print >> environ['wsgi.errors'], "%s" % errorText+": "+str(exceptionValue)
-    response_headers = [('Content-type', 'text/plain'),
+    response_headers = [('Content-type', 'text/plain; charset=utf-8'),
                         ('Content-Length', str(len(errorText)))]
     start_response('500 INTERNAL SERVER ERROR', response_headers)
 
@@ -142,7 +142,7 @@ def application(environ, start_response):
   if "cb" in request.params:
     resultString = request.params["cb"] + '(' + resultString + ')'
 
-  response = Response(resultString,"200 OK",[("Content-type","application/javascript"),("Content-length", str(len(resultString)) )])
+  response = Response(resultString,"200 OK",[("Content-type","text/plain; charset=utf-8"),("Content-length", str(len(resultString)) )])
 
   conn.close()
 
