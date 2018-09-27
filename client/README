@@ -3,8 +3,8 @@ Installation  and Configuration Guide
 Thursday May 22, 2014
 
 
-Last Updated: Thursday May 22, 2014
-Last Change : Thursday May 22, 2014
+Last Updated: Monday September 25, 2018
+Last Change : Monday September 25, 2018
 
 
   1. For the terminally lazy
@@ -737,10 +737,7 @@ You need to enable mod_wsgi as root. (Ubuntu: a2enmod wsgi).
 If you get error module not exist, installation is missing (Ubuntu: apt-get install libapache2-mod-wsgi)
 
 Install also this:
-(Ubuntu: apt-get install python-webob)
-
-If you get HTTP:500 Server error on WSGI request, check PHP error.log. If it contains Import Error: No module named psycopg2, install package with
-Ubuntu: apt-get install python-psycopg2
+(Ubuntu: apt-get install python-webob python-psycopg2)
 
 You need to configure apache with the following lines (e.g. in file
 ``/etc/apache2/sites-available/default``):
