@@ -124,7 +124,7 @@ Map.setTopicLayer = function() {
     source = new ol.source.TileWMS(wmsOptions);
     source.on('tileloaderror', function(evt) {
         alert('Error loading image from QGIS!');
-        Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
+        //Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
     });
     Map.topicLayer = new ol.layer.Tile({
         //extent: Config.map.extent,
@@ -136,7 +136,7 @@ Map.setTopicLayer = function() {
     source = new ol.source.ImageWMS(wmsOptions);
     source.on('imageloaderror', function(evt) {
         alert('Error loading image from QGIS!');
-        Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
+        //Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
     });
     Map.topicLayer = new ol.layer.Image({
         //extent: Config.map.extent,

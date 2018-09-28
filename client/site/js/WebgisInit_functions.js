@@ -604,8 +604,8 @@ function postLoading() {
         thematicLayer.events.register('tileerror', this, function () {
             //loadMask.hide();
             Ext.Msg.show({
-                title: 'Error loading map ',
-                msg: "Redirect to start page",
+                title: 'Error!',
+                msg: "Map loading error",
                 //width: 300,
                 buttons: Ext.MessageBox.OK,
                 //multiline: true,
@@ -1450,6 +1450,12 @@ function postLoading() {
                                     };
 
                                     if (usersPrint !== undefined) {
+                                        //check if it is in thematiclayer (QGIS3 not, why?)
+                                        var lays = thematicLayer.params.LAYERS.split(',');
+                                        if(lays.indexOf(usersPrint)==-1) {
+                                            thematicLayer.mergeNewParams({'LAYERS': thematicLayer.params.LAYERS+','+usersPrint});
+                                        }
+
                                         printProvider.customParams.filter = usersPrint+':"user_name" = \''+projectData.user+'\'';
                                     }
 
@@ -2683,7 +2689,8 @@ function logout() {
 }
 
 function home() {
-    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
+    //don't redirect, do what?
+    //Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
 }
 
 function getVisibleExtraLayersForPrint() {
