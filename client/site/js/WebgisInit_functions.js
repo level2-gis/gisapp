@@ -29,9 +29,9 @@ function loadWMSConfig(topicName) {
             var hiddenLayers = Eqwc.common.getHiddenLayersFromSettings();
             if (hiddenLayers.indexOf(attr.text) > -1) {
                 attr.hidden = true;
-                if (attr.text != Eqwc.settings.QgisUsersPrintName) {
+                //if (attr.text != Eqwc.settings.QgisUsersPrintName) {
                     attr.layer.metadata.visible = false;
-                }
+                //}
             }
 
             //hide layer if we have same baselayer name
@@ -1443,6 +1443,14 @@ function postLoading() {
 
                                     var usersPrint = wmsLoader.layerTitleNameMapping[Eqwc.settings.QgisUsersPrintName];
 
+                                    //additional hidden layers from map need to add to print layers
+                                    var addLayers = [];
+                                    var hdnLayers = Eqwc.common.getHiddenLayersFromSettings();
+                                    for (var x=0; x<hdnLayers.length;x++) {
+                                        addLayers.push(wmsLoader.layerTitleNameMapping[hdnLayers[x]]);
+                                    }
+                                    printProvider.additionalLayers = addLayers;
+
                                     //adding title,decription and user for filter to PrintProvider
                                     printProvider.customParams = {
                                         description: Ext.getCmp('printDescription').getValue(),
@@ -1450,12 +1458,6 @@ function postLoading() {
                                     };
 
                                     if (usersPrint !== undefined) {
-                                        //check if it is in thematiclayer (QGIS3 not, why?)
-                                        var lays = thematicLayer.params.LAYERS.split(',');
-                                        if(lays.indexOf(usersPrint)==-1) {
-                                            thematicLayer.mergeNewParams({'LAYERS': thematicLayer.params.LAYERS+','+usersPrint});
-                                        }
-
                                         printProvider.customParams.filter = usersPrint+':"user_name" = \''+projectData.user+'\'';
                                     }
 

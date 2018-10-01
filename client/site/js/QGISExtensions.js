@@ -428,6 +428,11 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             if(extra>'') {
                 layers += ',' + extra;
             }
+
+            if(this.additionalLayers.length>0) {
+                layers += ',' + this.additionalLayers.join(',');
+            }
+
             var printUrl = this.url + '&' + Ext.urlEncode({
                     'SRS': authid,
                     'DPI': printResolution,
