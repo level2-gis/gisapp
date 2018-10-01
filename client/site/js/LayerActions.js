@@ -79,7 +79,11 @@ function buildLayerContextMenu(node) {
                 handler: exportHandler
             }, {
                 itemId: 'CSV',
-                text: 'Text CSV',
+                text: 'Text CSV (semicolon)',
+                handler: exportHandler
+            }, {
+                itemId: 'TSV',
+                text: 'Text TSV (tab)',
                 handler: exportHandler
             },{
                 itemId: 'KML',
@@ -247,7 +251,34 @@ function zoomHandler(grid, rowIndex, colIndex, item, e) {
     //fix bbox
     var bbox = record.data.bbox;
     if(!(record.data.bbox instanceof OpenLayers.Bounds)) {
-        record.data.bbox = OpenLayers.Bounds.fromArray([bbox.minx, bbox.miny, bbox.maxx, bbox.maxy]);
+
+        var extent = OpenLayers.Bounds.fromArray([bbox.minx, bbox.miny, bbox.maxx, bbox.maxy]);
+
+        //duplicate code from QGISExtensions (QGIS.SearchComboBox)
+        //make sure that map extent is not too small for point data
+        //need to improve this for units other than "m", e.g. degrees
+
+        var extWidth = extent.getWidth();
+        var extHeight = extent.getHeight();
+        if (extWidth < 50) {
+            var centerX = extent.left + extWidth * 0.5;
+            extent.left = centerX - 25;
+            extent.right = centerX + 25;
+        }
+        else {
+            extent.left -= extWidth * 0.05;
+            extent.right += extWidth * 0.05;
+        }
+        if (extHeight < 50) {
+            var centerY = extent.bottom + extHeight * 0.5;
+            extent.bottom = centerY - 25;
+            extent.top = centerY + 25;
+        }
+        else {
+            extent.bottom -= extHeight = 0.05;
+            extent.top += extHeight = 0.05;
+        }
+        record.data.bbox = extent;
     }
 
     showRecordSelected(record.data);
