@@ -133,10 +133,20 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             $format_name = $destinationFormat;
             //this should remove hatch, but there is no change
             //$options .= "-lco DXF_WRITE_HATCH=FALSE ";
+            $makeZip = false;
+            $fileExt = 'dxf';
             break;
         case 'CSV':
             $format_name = $destinationFormat;
-            $options .= "-lco SEPARATOR=SEMICOLON ";
+            $options .= "-lco SEPARATOR=SEMICOLON -lco LINEFORMAT=CRLF ";
+            //$options .= "-lco GEOMETRY=AS_XYZ ";    //this will return results only for single point geometries (other option is WKT for all types)
+            $makeZip = false;
+            $fileExt = 'csv';
+            break;
+        case 'TSV':
+            $format_name = "CSV";
+            $destinationFormat = "CSV";
+            $options .= "-lco SEPARATOR=TAB -lco LINEFORMAT=CRLF ";
             //$options .= "-lco GEOMETRY=AS_XYZ ";    //this will return results only for single point geometries (other option is WKT for all types)
             $makeZip = false;
             $fileExt = 'csv';
@@ -275,6 +285,10 @@ try {
     //TODO FIX this
     if ($format == 'CSV') {
         $ctype = "text/csv";
+    }
+
+    if ($format == 'TSV') {
+        $ctype = "text/tab-separated-values";
     }
 
     if ($format == 'XLSX') {
