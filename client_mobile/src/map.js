@@ -670,7 +670,8 @@ Map.toggleTracking = function (enabled) {
         // add geolocation marker
         var marker = new ol.Overlay({
             element: ($('<div id="locationMarker" class="locationMarkerNormal"></div>'))[0],
-            positioning: 'center-center'
+            positioning: 'center-center',
+            stopEvent: false
         });
 
         Map.geolocation.on('change:accuracy', function () {
@@ -797,7 +798,8 @@ Map.toggleClickMarker = function(enabled) {
   if (Map.clickMarker == null) {
     Map.clickMarker = new ol.Overlay({
       element: ($('<div id="clickMarker"></div>'))[0],
-      positioning: 'center-center'
+      positioning: 'center-center',
+      stopEvent: false
     });
     Map.map.addOverlay(Map.clickMarker);
   }
@@ -862,5 +864,5 @@ Map.featureInfoOnLocation = function() {
     var location = Map.geolocation.getPosition();
     var fi = new FeatureInfo(Gui.showFeatureInfoResults);
     fi.callOnLocation(location, Config.featureInfo.useWMSGetFeatureInfo, null);
-
+    Map.lastClickPos = location;
 };
