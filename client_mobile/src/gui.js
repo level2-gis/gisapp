@@ -105,6 +105,9 @@ Gui.showLocationPanel = function (show) {
         $('#locationPanel').show();
     } else {
         $('#locationPanel').hide();
+        if (typeof(Editor) == 'function' && mobEditor) {
+            mobEditor.showGotoPanel(false);
+        }
     }
 };
 
@@ -1153,6 +1156,7 @@ Gui.initViewer = function() {
   //hide location panel and info button until location activated
   $('#locationPanel').hide();
   $("#btnInfo").hide();
+  $("#gotoPanel").hide();
 
   $('#btnLocation').on('tap', function() {
     Gui.tracking = !Gui.tracking;
@@ -1297,7 +1301,8 @@ Gui.initViewer = function() {
     //this is marker to display location of search result (geocoding)
     Map.searchMarker = new ol.Overlay({
         element: ($('<div id="searchMarker"></div>'))[0],
-        positioning: 'center-center'
+        positioning: 'center-center',
+        stopEvent: false
     });
     Map.map.addOverlay(Map.searchMarker);
 
