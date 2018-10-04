@@ -40,7 +40,7 @@
 
 #btnCompass {
   right: 5px;
-  bottom: 25px;
+  top: 50px;
   background: none repeat scroll 0 0 transparent;
   box-shadow: none;
   border: none;
@@ -52,12 +52,12 @@
 }
 
 #btnAdd {
-  left: 10px;
+  right: 10px;
   bottom: 105px;
 }
 
 #btnInfo {
-    left: 10px;
+    right: 10px;
     bottom: 55px;
 }
 
@@ -70,7 +70,7 @@
 }
 
 #btnLayers {
-  left: 5px;
+  right: 5px;
   bottom: 0px;
   /*-webkit-border-radius: 0 1em 1em 0;*/
   /*border-radius: 0 1em 1em 0;*/
@@ -78,6 +78,11 @@
 
 #btnProperties {
   right: 5px;
+}
+
+#btnGotoPage {
+    left: 60px;
+    bottom: 55px;
 }
 
 /* geolocation */
@@ -97,11 +102,42 @@
 #locationPanel {
     border-radius: 8px;
     position: absolute;
-    font-size: 0.8em;
+    font-size: 1.0em;
+    font-family: monospace;
     top: 9px;
     left: 10px;
     background: rgba(255, 255, 255,  0.5);
     padding: 4px;
+}
+
+#gotoPanel {
+    border-radius: 8px;
+    position: absolute;
+    font-size: 1.0em;
+    font-family: monospace;
+    bottom: 9px;
+    left: 10px;
+    background: rgba(255, 255, 93, 0.50);
+    padding: 4px;
+}
+
+#gotoMarker {
+    width: 12px;
+    height: 12px;
+    border: 1px solid goldenrod;
+    border-radius: 6px;
+    background-color: rgb(255, 255, 93);
+    opacity: 0.7;
+
+}
+
+#gotoLabel {
+    text-decoration: none;
+    color: lightyellow;
+    font-size: 10pt;
+    font-weight: bold;
+    text-shadow: black 0.1em 0.1em 0.2em;
+    font-family: monospace;
 }
 
 /* search */
@@ -195,7 +231,7 @@
 .ol-scale-line {
   background-color: transparent;
   left: inherit;
-  right: 8px;
+  right: 65px;
 }
 
 .ol-scale-line-inner {

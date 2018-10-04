@@ -49,7 +49,7 @@ function goMobile($lang) {
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20180827" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20181004" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20180502" />
     </head>
     <body>
@@ -64,8 +64,10 @@ function goMobile($lang) {
                 <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
                 <a href="#" id="btnInfo" data-role="button" data-icon="loc_info" data-iconpos="notext"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
+<!--                <a href="#" style="display:none" id="btnGotoPage" data-role="button" data-icon="goto" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled" data-theme="e"></a>-->
             </div>
-            <div id="locationPanel" class="ui-popup-container">Test</div>
+            <div id="locationPanel" class="ui-popup-container">LocationPanel</div>
+            <div id="gotoPanel" class="ui-popup-container">GotoPanel</div>
         </div>
 
         <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
@@ -117,7 +119,7 @@ function goMobile($lang) {
             </div>
         </div>
 
-        <div data-role="panel" id="panelLayer" data-position="left" data-display="overlay">
+        <div data-role="panel" id="panelLayer" data-position="right" data-display="overlay">
             <div class="panel-content">
                 <div data-role="navbar">
                     <ul>
@@ -144,7 +146,7 @@ function goMobile($lang) {
             </div>
         </div>
 
-        <div data-role="panel" id="panelFeatureInfo" data-position="left" data-display="overlay">
+        <div data-role="panel" id="panelFeatureInfo" data-position="right" data-display="overlay">
             <div class="panel-content">
                 <b>Informationen</b>
                 <div id="featureInfoResults" class="scrollable"></div>
