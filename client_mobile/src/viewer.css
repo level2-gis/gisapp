@@ -32,6 +32,14 @@
     background-image: url("../img/add.png");
 }
 
+.ui-icon-goto_more {
+    background-image: url("../img/goto_more.png");
+}
+
+.ui-icon-goto_stop {
+    background-image: url("../img/goto_stop.png");
+}
+
 .ui-icon-loc_info {
     background-image: url("../img/loc_info.png");
 }
@@ -81,8 +89,13 @@
 }
 
 #btnGotoPage {
+    left: 60px;
+    bottom: 75px;
+}
+
+#btnGotoStop {
     left: 10px;
-    bottom: 105px;
+    bottom: 75px;
 }
 
 /* geolocation */

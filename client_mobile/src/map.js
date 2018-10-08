@@ -649,7 +649,7 @@ Map.toggleTracking = function (enabled) {
 
             if (typeof(Editor)=='function') {
                 $('#btnAdd').show();
-                if (mobAttEditor && mobEditingFeature) {
+                if (mobAttEditor && mobAttEditor.feature) {
                     mobAttEditor.updateGotoContent();
                 }
             }
