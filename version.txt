@@ -1,2 +1,2 @@
-1.7.7c  - Application
+1.7.8  - Application
 19     - Database
