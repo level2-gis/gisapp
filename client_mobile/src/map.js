@@ -649,8 +649,8 @@ Map.toggleTracking = function (enabled) {
 
             if (typeof(Editor)=='function') {
                 $('#btnAdd').show();
-                if (mobAttEditor && mobAttEditor.feature) {
-                    mobAttEditor.updateGotoContent();
+                if (mobGoto && mobGoto.feature) {
+                    mobGoto.updateGotoContent();
                 }
             }
             $('#btnInfo').show();

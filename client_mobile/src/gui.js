@@ -105,8 +105,8 @@ Gui.showLocationPanel = function (show) {
         $('#locationPanel').show();
     } else {
         $('#locationPanel').hide();
-        if (typeof(Editor) == 'function' && mobAttEditor) {
-            mobAttEditor.showGotoPanel(false);
+        if (typeof(Editor) == 'function' && mobGoto) {
+            mobGoto.showGotoPanel(false);
         }
     }
 };
