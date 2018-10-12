@@ -751,9 +751,9 @@ Gui.showXMLFeatureInfoResults = function (results) {
 
             //add edit and goto button in case of editor plugin and layer is available for editing
             if(typeof(Editor) == 'function' && Config.data.wfslayers[layer.id]) {
-                //html += "<input type='button' data-theme='b' data-inline='true' id='edit' data-mini='true' value='Edit'>";
-                //TODO icon edit
                 html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'edit\');" data-theme="b" data-inline="true" data-mini="true" data-role="button">'+TR.editEdit+'</a>';
+            }
+            if(typeof(Editor) == 'function' && Config.data.gotolayers[layer.id]) {
                 html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="e" data-inline="true" data-mini="true" data-role="button">'+I18n.editor.goto+'</a>';
             }
 
