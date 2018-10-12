@@ -298,8 +298,13 @@ class Helpers
                     }
 
                     //enable wfs just for postgres and spatialite regardless project setting
-                    if (in_array($lay->id,$wfs) and ($lay->provider == 'postgres' or $lay->provider == 'spatialite')) {
-                        $lay->wfs = true;
+                    if (in_array($lay->id,$wfs) and (!empty($lay->geom_type) and $lay->geom_type != 'No geometry')) {
+                        if($lay->provider == 'postgres' or $lay->provider == 'spatialite') {
+                            $lay->wfs = true;
+                        }
+                        if(strpos(strtolower($lay->geom_type), 'polygon') === false) {
+                            $lay->goto = true;
+                        }
                     }
 
 
@@ -370,19 +375,8 @@ class Helpers
      */
     public static function getLayerInfo(SimpleXMLElement $layer)
     {
-        // Cache
-        static $pg_layer_infos = array();
-
-        //if ((string)$layer->provider != 'postgres' && (string)$layer->provider != 'spatialite') {
-        //    return self::msg(false, 'Only postgis or spatialite layers are supported!</br>' . (string)$layer->layername . ': ' . (string)$layer->provider);
-        //}
-
         // Datasource
         $datasource = (string)$layer->datasource;
-
-        if (array_key_exists($datasource, $pg_layer_infos)) {
-            return self::msg(true, $pg_layer_infos[$datasource]);
-        }
 
         // Parse datasource
         $ds_parms = array(
@@ -429,8 +423,12 @@ class Helpers
                     // ... maybe other parms ...
                 }
             }
-            $pg_layer_infos[$datasource] = $ds_parms;
         }
+
+        if(empty($ds_parms['type'])) {
+            $ds_parms['type'] = (string)$layer['geometry'];
+        }
+
         return self::msg(true, $ds_parms);
     }
 
@@ -470,6 +468,7 @@ class Helpers
                     $lay->wms_sort = (900-$cnt);
                     $lay->toc_sort = $cnt;
                     $lay->wfs = false;      //fill later
+                    $lay->goto = false;      //fill later
                     $lay->provider = '';    //fill later
                     $lay->geom_type = '';   //fill later
                     $lay->geom_column = ''; //fill later
