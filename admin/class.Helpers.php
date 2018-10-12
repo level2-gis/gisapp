@@ -301,12 +301,11 @@ class Helpers
                     if (in_array($lay->id,$wfs) and (!empty($lay->geom_type) and $lay->geom_type != 'No geometry')) {
                         if($lay->provider == 'postgres' or $lay->provider == 'spatialite') {
                             $lay->wfs = true;
-                        }
-                        if(strpos(strtolower($lay->geom_type), 'polygon') === false) {
-                            $lay->goto = true;
+                            if(strpos(strtolower($lay->geom_type), 'polygon') === false) {
+                                $lay->goto = true;
+                            }
                         }
                     }
-
 
                     $prop->layers[$lay->id] = $lay;
                 }
