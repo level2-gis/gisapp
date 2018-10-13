@@ -66,7 +66,7 @@ Eqwc.common.getRasterFieldName = function(layer, name) {
     }
 };
 
-//TODO does not work in mobile (wmlsLoader)
+//TODO does not work in mobile (wmsLoader)
 //need attributes info in mobile part
 Eqwc.common.layerFieldNameExists = function (layerId, field) {
     var layer = wmsLoader.layerProperties[layerId];
