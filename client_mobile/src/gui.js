@@ -254,28 +254,28 @@ Gui.loadLayers = function (data) {
                 }
                 html += '>' + layer.toclayertitle;
                 html += '</label>';
-				var legendUrl = Map.topics[Map.topic].wms_url +
-						"?SERVICE=WMS"+
-						"&VERSION=1.3.0"+
-						"&REQUEST=GetLegendGraphics"+
-						"&FORMAT=image/png"+
-						"&EXCEPTIONS=application/vnd.ogc.se_inimage"+
-						"&BOXSPACE=1"+
-						"&LAYERSPACE=2"+
-						"&SYMBOLSPACE=1"+
-						"&SYMBOLHEIGHT=2"+
-						"&LAYERFONTSIZE=8"+
-						"&ITEMFONTSIZE=8"+
-                        "&LAYERTITLE=FALSE"+
-                        "&LAYERTITLESPACE=0"+
-                        "&TRANSPARENT=TRUE"+
-						"&LAYERS="+encodeURIComponent(layer.id)+
-						"&DPI="+encodeURIComponent(Config.map.dpi);
-				html+='<img data-layer="'+layer.id+'" src="' + legendUrl + '"';
-                if (!layer.visini) {
-                    html += '" style="display:none;" ';
-                }
-                html+=' />';
+                //var legendUrl = Map.topics[Map.topic].wms_url +
+					//	"?SERVICE=WMS"+
+					//	"&VERSION=1.3.0"+
+					//	"&REQUEST=GetLegendGraphics"+
+					//	"&FORMAT=image/png"+
+					//	"&EXCEPTIONS=application/vnd.ogc.se_inimage"+
+					//	"&BOXSPACE=1"+
+					//	"&LAYERSPACE=2"+
+					//	"&SYMBOLSPACE=1"+
+					//	"&SYMBOLHEIGHT=2"+
+					//	"&LAYERFONTSIZE=8"+
+					//	"&ITEMFONTSIZE=8"+
+                //        "&LAYERTITLE=FALSE"+
+                //        "&LAYERTITLESPACE=0"+
+                //        "&TRANSPARENT=TRUE"+
+					//	"&LAYERS="+encodeURIComponent(layer.id)+
+					//	"&DPI="+encodeURIComponent(Config.map.dpi);
+                //html+='<img data-layer="'+layer.id+'" src="' + legendUrl + '"';
+                //if (!layer.visini) {
+                //    html += '" style="display:none;" ';
+                //}
+                //html+=' />';
                 layers.push({
                     id: layer.id,
                     layername: layer.layername,
@@ -700,7 +700,7 @@ Gui.selectLayer = function(layer) {
   if (Gui.selectedLayer != null) {
     // mark layer button
     $('#listOrder li[data-layer="' + layer + '"]').addClass('selected');
-	$('img[data-layer="'+layer+'"]').show();
+	//$('img[data-layer="'+layer+'"]').show();
     // update slider
     $('#sliderTransparency').val(Map.layers[layer].transparency).slider("refresh");
     $('#sliderTransparency').slider("enable");
@@ -1145,10 +1145,10 @@ Gui.initViewer = function() {
       Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
       Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
     }
-    if ($(this).is(':checked')) {
-		$('img[data-layer="'+$(this).data('layer')+'"]').show();
-	} else
-	$('img[data-layer="'+$(this).data('layer')+'"]').hide();
+    //if ($(this).is(':checked')) {
+	//	$('img[data-layer="'+$(this).data('layer')+'"]').show();
+	//} else
+	//$('img[data-layer="'+$(this).data('layer')+'"]').hide();
   });
   Gui.panelSelect('panelLayerAll');
   Gui.propertiesSelect('panelPropertiesMap');
