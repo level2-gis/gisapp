@@ -18,8 +18,13 @@ FeatureInfo.prototype = new MapClickHandler();
  *
  * location: array
  */
-FeatureInfo.prototype.callOnLocation = function(location, useWMS, layers) {
+FeatureInfo.prototype.callOnLocation = function(location, useWMS, layersArr) {
     var url = null;
+    var layers = (layersArr===null) ? Map.featureInfoLayers() : layersArr;
+
+    //disable further clicks, until success
+    Map.toggleClickHandling(false);
+
     if (useWMS) {
         var params = {
             'INFO_FORMAT': Config.featureInfo.format,
@@ -30,7 +35,8 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layers) {
             $.extend(params, {
                 FI_POINT_TOLERANCE: Config.featureInfo.tolerances.point,
                 FI_LINE_TOLERANCE: Config.featureInfo.tolerances.line,
-                FI_POLYGON_TOLERANCE: Config.featureInfo.tolerances.polygon
+                FI_POLYGON_TOLERANCE: Config.featureInfo.tolerances.polygon,
+                QUERY_LAYERS: layers.join(',')
             });
         }
 
@@ -64,6 +70,8 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layers) {
         }
 
         this.resultsCallback(results);
+        //allow clicking again
+        Map.toggleClickHandling(true);
     });
 };
 
@@ -78,24 +86,8 @@ FeatureInfo.prototype.handleEvent = function (e) {
     var url = null;
     var layers = Map.featureInfoLayers();
 
-    //check if have to replace layers for identify
-    //TODO move this to Map.featureInfoLayers and save it to projectData[].identifyname
-    var checkArr = Eqwc.settings.replaceIdentifyLayerWithView;
-    if (checkArr) {
-        for (var i = 0; i < checkArr.length; i++) {
-            var sourceLay = checkArr[i];
-            var sourceLayId = Eqwc.common.getLayerId(sourceLay);
-            var replaceLayId = sourceLayId;
-            if(sourceLayId) {
-                var replaceLay = Eqwc.common.getIdentifyLayerName(sourceLayId);
-                replaceLayId = Eqwc.common.getLayerId(replaceLay);
-            }
-            var j = layers.indexOf(sourceLayId);
-            if (j > -1) {
-                layers[j] = replaceLayId;
-            }
-        }
-    }
+    //disable further clicks, until success
+    Map.toggleClickHandling(false);
 
     if (Config.featureInfo.useWMSGetFeatureInfo) {
         var params = {
@@ -114,7 +106,7 @@ FeatureInfo.prototype.handleEvent = function (e) {
         url = Map.getGetFeatureInfoUrl(e.coordinate, params);
     }
     else {
-        url = Config.featureInfo.url(Map.topic, e.coordinate, Map.featureInfoLayers());
+        url = Config.featureInfo.url(Map.topic, e.coordinate, layers);
     }
     $.ajax({
         url: url,
@@ -130,6 +122,8 @@ FeatureInfo.prototype.handleEvent = function (e) {
         }
 
         this.resultsCallback(results);
+        //allow clicking again
+        Map.toggleClickHandling(true);
     });
 };
 

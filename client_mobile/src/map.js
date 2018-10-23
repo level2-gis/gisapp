@@ -443,29 +443,47 @@ Map.visibleLayers = function() {
   return visibleLayers;
 };
 
-Map.featureInfoLayers = function() {
-  // collect visible layers for current scale
-  var featureInfoLayers = [];
-  var currentRes = Map.map.getView().getResolution();
-  for (var key in Map.layers) {
-    var layer = Map.layers[key];
-    if (layer.visible) {
-      var visible = true;
+Map.featureInfoLayers = function () {
+    // collect visible layers for current scale
+    var featureInfoLayers = [];
+    var currentRes = Map.map.getView().getResolution();
+    for (var key in Map.layers) {
+        var layer = Map.layers[key];
+        if (layer.visible) {
+            var visible = true;
 
-      // check if layer is in scale range
-      if (layer.minscale != undefined) {
-        visible = (currentRes >= Map.scaleDenomToResolution(layer.minscale, false));
-      }
-      if (visible && layer.maxscale != undefined) {
-        visible = (currentRes <= Map.scaleDenomToResolution(layer.maxscale, false));
-      }
+            // check if layer is in scale range
+            if (layer.minscale != undefined) {
+                visible = (currentRes >= Map.scaleDenomToResolution(layer.minscale, false));
+            }
+            if (visible && layer.maxscale != undefined) {
+                visible = (currentRes <= Map.scaleDenomToResolution(layer.maxscale, false));
+            }
 
-      if (visible) {
-        featureInfoLayers.push(key);
-      }
+            if (visible) {
+                featureInfoLayers.push(key);
+            }
+        }
     }
-  }
-  return featureInfoLayers;
+
+    //check if have to replace layers for identify
+    var checkArr = Eqwc.settings.replaceIdentifyLayerWithView;
+    if (checkArr) {
+        for (var i = 0; i < checkArr.length; i++) {
+            var sourceLay = checkArr[i];
+            var sourceLayId = Eqwc.common.getLayerId(sourceLay);
+            var replaceLayId = sourceLayId;
+            if(sourceLayId) {
+                var replaceLay = Eqwc.common.getIdentifyLayerName(sourceLayId);
+                replaceLayId = Eqwc.common.getLayerId(replaceLay);
+            }
+            var j = featureInfoLayers.indexOf(sourceLayId);
+            if (j > -1) {
+                featureInfoLayers[j] = replaceLayId;
+            }
+        }
+    }
+    return featureInfoLayers;
 };
 
 // coordinate: [x, y]
@@ -861,8 +879,10 @@ Map.activateClickHandler = function(name) {
 };
 
 Map.featureInfoOnLocation = function() {
-    var location = Map.geolocation.getPosition();
-    var fi = new FeatureInfo(Gui.showFeatureInfoResults);
-    fi.callOnLocation(location, Config.featureInfo.useWMSGetFeatureInfo, null);
-    Map.lastClickPos = location;
+    if (!Map.ignoreClick) {
+        var location = Map.geolocation.getPosition();
+        var fi = new FeatureInfo(Gui.showFeatureInfoResults);
+        fi.callOnLocation(location, Config.featureInfo.useWMSGetFeatureInfo, null);
+        Map.lastClickPos = location;
+    }
 };
