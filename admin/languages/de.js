@@ -110,7 +110,8 @@ I18n.geolocation = {
     altitude: "Höhenniveau",
     heading: "Richtung",
     speed: "Geschwindigkeit",
-    obtaining: "Standort wird gesucht ..."
+    obtaining: "Standort wird gesucht ...",
+    lowAccuracy: "Low Accuracy!"
 };
 
 I18n.login = {

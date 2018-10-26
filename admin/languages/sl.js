@@ -113,7 +113,8 @@ I18n.geolocation = {
     altitude: "Višina",
     heading: "Smer",
     speed: "Hitrost",
-    obtaining: "Pridobivanje lokacije..."
+    obtaining: "Pridobivanje lokacije...",
+    lowAccuracy: "Slaba natančnost!"
 };
 
 I18n.login = {
