@@ -90,12 +90,12 @@
 
 #btnGotoPage {
     left: 60px;
-    bottom: 75px;
+    bottom: 90px;
 }
 
 #btnGotoStop {
     left: 10px;
-    bottom: 75px;
+    bottom: 90px;
 }
 
 /* geolocation */
@@ -128,7 +128,7 @@
     position: absolute;
     font-size: 1.0em;
     font-family: monospace;
-    bottom: 9px;
+    bottom: 7px;
     left: 10px;
     background: rgba(255, 255, 93, 0.50);
     padding: 4px;

@@ -85,7 +85,15 @@ Gui.showLocationPanel = function (show) {
         ];
 
         if (Eqwc.settings.mobileShowAccuracy) {
-            html.push(I18n.geolocation.accuracy+': ' + accuracy.toPrecision(3) +' m');
+            if (typeof(Editor) == 'function') {
+                if (accuracy < EditorConfig.accuracyLimit) {
+                    html.push(I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(3) + ' m');
+                } else {
+                    html.push('<span style="color:red;font-weight:bold;">' + I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(3) + ' m </span>');
+                }
+            } else {
+                html.push(I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(3) + ' m');
+            }
         }
 
         if (altitude) {
@@ -93,6 +101,9 @@ Gui.showLocationPanel = function (show) {
             if(extra.altCorrection>0) {
                 html.push(extra.altCorrectionSource);
             }
+            //if(extra.source == 'Android API') {
+                html.push('AH: ' + extra.antenna+ ' m');
+            //}
         }
 
         if (heading && speed>1) {
@@ -791,10 +802,14 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         if (attribute.value > '') {
                             var attArr = $.parseJSON(attribute.value);
                             var newArr = [];
-                            for (var l = 0; l < attArr.length; l++) {
-                                newArr.push(Eqwc.common.manageFile(attArr[l], true));
+                            if  (attArr === null) {
+                                attribute.value = Eqwc.settings.noDataValue;
+                            }   else {
+                                for (var l = 0; l < attArr.length; l++) {
+                                    newArr.push(Eqwc.common.manageFile(attArr[l], true));
+                                }
+                                attribute.value = newArr.join('</br>');
                             }
-                            attribute.value = newArr.join('</br>');
                         }
                     } else {
                         attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
