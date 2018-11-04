@@ -152,3 +152,34 @@ Eqwc.common.getLayerId = function (name) {
     }
     return false; // The object was not found
 };
+
+Eqwc.common.parseInputTextToCoord = function(input) {
+
+    var coord = [];
+    var arr = [];
+
+    //check for separator
+    if(input.indexOf(',')>-1) {
+        arr = input.split(',');
+    } else if (input.indexOf(';')>-1) {
+        arr = input.split(';');
+    } else if (input.indexOf(' ')>-1) {
+        arr = input.split(' ');
+    }
+
+    if(arr.length == 0) {
+        return false;
+    }
+
+    for (var el in arr) {
+        if(!isNaN(parseFloat(arr[el]))) {
+            coord.push(parseFloat(arr[el]));
+        }
+    }
+
+    if(coord.length == 0) {
+        return false;
+    }
+
+    return coord;
+};
