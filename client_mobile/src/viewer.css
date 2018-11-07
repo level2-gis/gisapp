@@ -64,6 +64,11 @@
   bottom: 105px;
 }
 
+#btnEnd {
+    right: 60px;
+    bottom: 105px;
+}
+
 #btnInfo {
     right: 10px;
     bottom: 55px;
@@ -90,12 +95,12 @@
 
 #btnGotoPage {
     left: 60px;
-    bottom: 90px;
+    bottom: 0px;
 }
 
 #btnGotoStop {
     left: 10px;
-    bottom: 90px;
+    bottom: 0px;
 }
 
 /* geolocation */
@@ -123,12 +128,23 @@
     padding: 4px;
 }
 
+#editPanel {
+    border-radius: 8px;
+    position: absolute;
+    font-size: 1.0em;
+    font-family: monospace;
+    bottom: 160px;
+    right: 10px;
+    background: rgba(255, 255, 255,  0.5);
+    padding: 4px;
+}
+
 #gotoPanel {
     border-radius: 8px;
     position: absolute;
     font-size: 1.0em;
     font-family: monospace;
-    bottom: 7px;
+    bottom: 55px;
     left: 10px;
     background: rgba(255, 255, 93, 0.50);
     padding: 4px;

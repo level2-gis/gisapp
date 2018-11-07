@@ -666,7 +666,7 @@ Map.toggleTracking = function (enabled) {
             Gui.showLocationPanel(true);
 
             if (typeof(Editor)=='function') {
-                $('#btnAdd').show();
+                mobEditor.showEditPanel(true);
                 if (mobGoto && mobGoto.feature) {
                     mobGoto.updateGotoContent();
                 }
@@ -741,7 +741,7 @@ Map.toggleTracking = function (enabled) {
     } else {
         Gui.showLocationPanel(false);
         if (typeof(Editor)=='function') {
-            $('#btnAdd').hide();
+            mobEditor.showEditPanel(false);
         }
         $('#btnInfo').hide();
         Map.geolocationLayer.setVisible(false);
