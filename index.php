@@ -244,7 +244,7 @@ if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20180320"/>
 
                 <?php if ($edit) {
-                    echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v=20180603"/>';
+                    echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v=20181107"/>';
                 }?>
 
                 <script type="text/javascript" src="client_common/load.php"></script>
