@@ -251,6 +251,7 @@ class Helpers
         if (!($qgs["status"])) {
             //error in XML, using default CRS but continue
             $prop->crs = "EPSG:3857";
+            $prop->crs_description = "";
             $prop->proj4 = "";
             $prop->title = "";
             $prop->extent = [];
@@ -265,6 +266,7 @@ class Helpers
             //return false;
         } else {
             $prop->crs = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->authid;
+            $prop->crs_description = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->description;
             $prop->proj4 = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->proj4;
             $prop->title = (string)$qgs["message"]->title == "" ? basename($map, ".qgs") : (string)$qgs["message"]->title;
             $prop->extent = self::getQgsProjectExtent($qgs["message"]);

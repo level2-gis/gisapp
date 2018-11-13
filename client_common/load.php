@@ -84,6 +84,7 @@ projectData.project = '<?php echo $project ?>';
 projectData.id = <?php echo $data->project_id ?>;
 projectData.description = <?php echo json_encode($description) ?>;
 projectData.crs = '<?php echo $qgs->crs ?>';
+projectData.crs_description = '<?php echo $qgs->crs_description ?>';
 projectData.proj4 = '<?php echo $qgs->proj4 ?>';
 projectData.title = '<?php echo $data->project_display_name ?>';
 projectData.extent = '<?php echo implode(',',$qgs->extent) ?>';
