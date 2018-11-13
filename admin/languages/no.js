@@ -54,7 +54,8 @@ var TR = {
     emptyPrintTitleText: 'Legg til tittel ...',
     emptyPrintDescriptionText: 'Legg til beskrivelse ...',
     loadMore: 'Load more...',
-    loadMoreToolTip: 'Table is not complete.Click to load more data from server!'
+    loadMoreToolTip: 'Table is not complete.Click to load more data from server!',
+    height: 'Høyde'
 };
 
 /**::

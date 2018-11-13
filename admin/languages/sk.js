@@ -54,7 +54,8 @@ var TR = {
     emptyPrintTitleText: 'Add Title ...',
     emptyPrintDescriptionText: 'Add Description ...',
     loadMore: 'Load more...',
-    loadMoreToolTip: 'Table is not complete.Click to load more data from server!'
+    loadMoreToolTip: 'Table is not complete.Click to load more data from server!',
+    height: 'Výška'
 };
 
 /**

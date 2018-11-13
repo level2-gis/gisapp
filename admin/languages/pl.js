@@ -54,7 +54,8 @@ var TR = {
     emptyPrintTitleText: 'Wpisz własny tytuł...',
     emptyPrintDescriptionText: 'Wpisz własny opis...',
     loadMore: 'Wczytaj więcej...',
-    loadMoreToolTip: 'Tabela jest niekompletna. Kliknij by załadować więcej danych z serwera!'
+    loadMoreToolTip: 'Tabela jest niekompletna. Kliknij by załadować więcej danych z serwera!',
+    height: 'Wysokość'
 };
 
 /**

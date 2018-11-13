@@ -54,7 +54,8 @@ var TR = {
     emptyPrintTitleText: 'Dodaj naslov ...',
     emptyPrintDescriptionText: 'Dodaj opis ...',
     loadMore: 'Več...',
-    loadMoreToolTip: 'Tabela ni popolna. Klikni za več podatkov iz strežnika!'
+    loadMoreToolTip: 'Tabela ni popolna. Klikni za več podatkov iz strežnika!',
+    height: 'Višina'
 };
 
 /**

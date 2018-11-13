@@ -51,7 +51,8 @@ var TR = {
     emptyPrintTitleText: 'Titel hinzufügen ...',
     emptyPrintDescriptionText: 'Beschreibung hinzufügen ...',
     loadMore: 'Lade weiteres ...',
-    loadMoreToolTip: 'Tabelle ist nicht vollständig. Klicken, um weitere Daten vom Server zu laden!'
+    loadMoreToolTip: 'Tabelle ist nicht vollständig. Klicken, um weitere Daten vom Server zu laden!',
+    height: 'Höhe'
 };
 
 /**
