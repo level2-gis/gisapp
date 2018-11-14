@@ -32,8 +32,8 @@ var TR = {
     editData: 'Edytuj dane',
     editMode: 'Tryb edycji',
     editDisabled: 'Edytowanie nieaktywne',
-    editAdd: 'Add',
-    editEdit: 'Edit',
+    editAdd: 'Dodaj',
+    editEdit: 'Edytuj',
     editDelete: 'Usuń',
     editSave: 'Zapisz',
     mapBasic: 'Map',
@@ -90,7 +90,7 @@ I18n.about = {
 };
 
 I18n.layers = {
-    project: "Project",
+    project: "Projekt",
     topics: "Tematy map",
     layers: "Warstwy",
     layerOrder: "Kolejność warstw",
@@ -110,12 +110,12 @@ I18n.featureInfo = {
 
 I18n.geolocation = {
     permissionDeniedMessage: "Lokalizacja nie jest dostępna.\n\nSprawdź ustawienia przeglądarki i urządzenia.",
-    accuracy: "Accuracy",
-    altitude: "Altitude",
-    heading: "Heading",
-    speed: "Speed",
-    obtaining: "Obtaining location...",
-    lowAccuracy: "Low Accuracy!"
+    accuracy: "Dokładność",
+    altitude: "Wysokość",
+    heading: "Kierunek",
+    speed: "Prędkość",
+    obtaining: "Wyznaczanie pozycji..."
+    lowAccuracy: "Niska dokładność!"
 };
 
 I18n.login = {
