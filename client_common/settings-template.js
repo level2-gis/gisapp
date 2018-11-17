@@ -12,6 +12,7 @@ var Eqwc = {
 
 Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 Eqwc.settings.limitAttributeFeatures = 2000;
+Eqwc.settings.syncAttributeTableWithView = false;
 Eqwc.settings.limitSearchMaxResults = 10;
 Eqwc.settings.enableHoverPopup = false;
 Eqwc.settings.defaultIdentificationMode = "allLayers";
@@ -101,3 +102,4 @@ Eqwc.settings.mobileMinScale = 50;
 Eqwc.settings.mobileShowAccuracy = true;
 Eqwc.settings.qgisFilesFieldAlias = 'files';
 Eqwc.settings.measurementsUnitSystem = 'metric';
+Eqwc.settings.layerLegendMaxHeightPx = 200;

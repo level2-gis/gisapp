@@ -44,7 +44,7 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
     getParams: function(node) {
         return {
             SERVICE: 'WMS',
-            VERSION: '1.3',
+            VERSION: '1.3.0',
             REQUEST: this.useGetProjectSettings ? 'GetProjectSettings' : 'GetCapabilities'
         };
     },
@@ -458,44 +458,44 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             //}
 
             // makes spatial query from map to use the attributes in the print template (more in README chap 4.5)
-            // TODO Explore whats the purpose of this
-            var lonlat = printExtent.page.getPrintExtent(map).getCenterLonLat();
-            var mapCenter = new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat);
-            var myfilter = new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Spatial.INTERSECTS,
-                value: mapCenter
-            });
-            Ext.getBody().mask(printLoadingString[lang], 'x-mask-loading');
-            var protocol = new OpenLayers.Protocol.WFS({
+            // UROS DISABLED,found no reason for it. Looks like to read some values from layer print in qgis project
+            //var lonlat = printExtent.page.getPrintExtent(map).getCenterLonLat();
+            //var mapCenter = new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat);
+            //var myfilter = new OpenLayers.Filter.Comparison({
+            //    type: OpenLayers.Filter.Spatial.INTERSECTS,
+            //    value: mapCenter
+            //});
+            //Ext.getBody().mask(printLoadingString[lang], 'x-mask-loading');
+            //var protocol = new OpenLayers.Protocol.WFS({
+            //
+            //    url: printURI,
+            //    featureType: 'print',
+            //    geometryName: 'geometry',
+            //    srsName: authid,
+            //    filter: myfilter,
+            //    readWithPOST: true
+            //});
 
-                url: printURI,
-                featureType: 'print',
-                geometryName: 'geometry',
-                srsName: authid,
-                filter: myfilter,
-                readWithPOST: true
-            });
+            this.fireEvent("afterprint", this, map, pages, options);
 
-    this.fireEvent("afterprint", this, map, pages, options);
-
-            protocol.read({
-                callback: function(response) {
-                try { // as some projects may have WFS disabled
-                    if(response.features != null) {
-                    if(response.features.length > 0) {
-                        attributes = response.features[0].attributes;
-                        for (key in attributes){
-                            printUrl += '&' + key + '=' + encodeURIComponent(attributes[key]);
-                        }
-                    }
-                    }
-                } catch (e) {
-                    //console.log(e)
-                }
-                    this.download(printUrl);
-                },
-                scope: this
-            });
+            //protocol.read({
+            //    callback: function(response) {
+            //    try { // as some projects may have WFS disabled
+            //        if(response.features != null) {
+            //        if(response.features.length > 0) {
+            //            attributes = response.features[0].attributes;
+            //            for (key in attributes){
+            //                printUrl += '&' + key + '=' + encodeURIComponent(attributes[key]);
+            //            }
+            //        }
+            //        }
+            //    } catch (e) {
+            //        //console.log(e)
+            //    }
+            this.download(printUrl);
+            //    },
+            //    scope: this
+            //});
 
         },
         download: function(url) {
@@ -778,6 +778,8 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
       */
     wmsFilter: '',
 
+	useBbox: false,
+
     queryLayer: '',
     /**
      * single item or array of child components to be added as form fields (see Ext.form.FormPanel.items)
@@ -810,6 +812,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
     constructor: function (config) {
         config = config || {};
         config.useWmsRequest = config.useWmsRequest || false;
+		config.useBbox = config.useBbox || false;
         if(config.tabClosable == null) {
             config.tabClosable = true;
         }
@@ -924,7 +927,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             //alert(maskElement.id);
             //check if we already have table for layer in case of open table call
             if (this.resultsGrid !== null && this.resultsGrid.store !== null) {
-                if (maskElement.id=='BottomPanel' && this.gridResults === this.resultsGrid.store.maxResults) {
+                if (maskElement.id=='BottomPanel' && this.gridResults === this.resultsGrid.store.maxResults && !this.useBbox) {
                     maskElement.activate(Ext.getCmp('table_' + this.queryLayer));
                 }
                 else {
@@ -979,20 +982,25 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         else {
             filter = layerId + ":" + storedFilter;
         }
+        var params={
+            'SERVICE': 'WMS',
+            'VERSION': '1.3.0',
+            'REQUEST': 'GetFeatureInfo',
+            'LAYERS': layerId,
+            'QUERY_LAYERS': layerId,
+            'FEATURE_COUNT': this.gridResults,
+            'INFO_FORMAT': 'text/xml',
+            'SRS': authid,
+            'FILTER': filter
+        };
+        if (this.useBbox) {
+            params.BBOX=geoExtMap.map.calculateBounds().left+","+geoExtMap.map.calculateBounds().bottom+","+geoExtMap.map.calculateBounds().right+","+geoExtMap.map.calculateBounds().top;
+        }
+
         if (fieldsValidate) {
             Ext.Ajax.request({
                 url: wmsURI,
-                params: {
-                    'SERVICE': 'WMS',
-                    'VERSION': '1.1.1',
-                    'REQUEST': 'GetFeatureInfo',
-                    'LAYERS': layerId,
-                    'QUERY_LAYERS': layerId,
-                    'FEATURE_COUNT': this.gridResults,
-                    'INFO_FORMAT': 'text/xml',
-                    'SRS': authid,
-                    'FILTER': filter
-                },
+                params: params,
                 method: 'GET',
                 scope: this,
                 success: this.onSuccess,

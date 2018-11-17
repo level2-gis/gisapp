@@ -45,7 +45,6 @@ function customBeforeMapInit() {
 function customAfterMapInit() {
 
     // Add legend symbols to the toc for initially visible layers
-    // synchronous calls, bad, todo fix this
     var treeRoot = layerTree.getNodeById("wmsNode");
     treeRoot.firstChild.cascade(
         function (n) {
@@ -57,10 +56,7 @@ function customAfterMapInit() {
                             provider: '',
                             layername: layerId
                         } : projectData.layers[layerId];
-                        var legendUrl = projectData.getLegendUrl(layer);
-                                Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
-                            "<div id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px' src=\"" + legendUrl + "\"/></div>"
-                                );
+                        projectData.setLayerLegend(layer,n);
                     }
                 }
             }
@@ -164,14 +160,10 @@ function customActionLayerTreeCheck(n) {
 
             var toAdd = Ext.get("legend_"+layerId);
             if (toAdd) {
-                //toAdd.show();
+                toAdd.show();
             } else {
                 var layer = projectData.layers[layerId] == undefined ? {provider: '', layername: layerId} : projectData.layers[layerId];
-                var legendUrl = projectData.getLegendUrl(layer);
-
-                Ext.DomHelper.insertAfter(n.getUI().getAnchor(),
-                    "<div id='legend_"+layerId+"'><img style='vertical-align: middle; margin-left: 50px' src=\""+legendUrl+"\"/></div>"
-                );
+                projectData.setLayerLegend(layer,n);
             }
         } else {
             if (layerEditor != undefined) {
@@ -180,8 +172,7 @@ function customActionLayerTreeCheck(n) {
 
             var toRemove = Ext.get("legend_"+layerId);
             if (toRemove) {
-                //toRemove.hide();
-                toRemove.remove();
+                toRemove.hide();
             }
 
         }
@@ -200,4 +191,12 @@ function customActionOnZoomEvent() {
 // called after a drag, pan, or zoom completed
 function customActionOnMoveEvent() {
 	// ... action to do on call
+    var btm = Ext.getCmp('BottomPanel');
+    var tab = btm.getActiveTab();
+    if(tab == null) {
+        return;
+    }
+    if(tab.panel.useBbox) {
+        tab.panel.onSubmit();
+    }
 }

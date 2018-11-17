@@ -103,6 +103,18 @@ function makeLayer(layDef, visible) {
     }
     return layer;
 }
+
+projectData.makeExtentFromArray = function(arr, checkAxis) {
+    var proj = OpenLayers.Projection.defaults[authid];
+    var reverseAxisOrder = proj == undefined ? false : proj.yx;
+
+    if(!checkAxis) {
+        reverseAxisOrder = false;
+    }
+
+    return OpenLayers.Bounds.fromArray(arr, reverseAxisOrder);
+};
+
 /**
  * Create OpenLayers2 layer objects from definition data readed from database
  * @returns {Array}
@@ -122,14 +134,15 @@ projectData.setBaseLayers = function (isBase) {
     return baseLayers;
 };
 
-projectData.getLegendUrl = function (layer) {
+projectData.setLayerLegend = function (layer,node) {
     var legend = '';
-
     var layername = wmsLoader.layerTitleNameMapping[layer.layername];
 
     //for raster layers show default raster legend image
     if (layer.provider == 'gdal' || layer.provider == 'wms') {
-        legend = iconDirectory+"raster.png";
+        legend = iconDirectory+"raster.png" + Ext.urlEncode({
+            LAYERS: layername,
+            NODE: node.id});
     } else {
         legend = wmsURI + Ext.urlEncode({
             SERVICE: "WMS",
@@ -149,11 +162,66 @@ projectData.getLegendUrl = function (layer) {
             LAYERTITLESPACE: 0,
             TRANSPARENT: true,
             LAYERS: layername,
-            DPI: screenDpi
+            DPI: screenDpi,
+            NODE: node.id
         });
     }
+    //
+    //Ext.Ajax.request({
+    //    // doesn't work in 3.4 binary: true,  //set binary to true
+    //    url: legend,
+    //    scope: {
+    //        layerId: layer.id,
+    //        node: node
+    //    },
+    //    success: function(response) {
+    //        var blob = new Blob([response.responseBytes], {type: 'image/png'}),
+    //        //var blob = new Blob([response.responseText], {type: 'image/png'}),
+    //            url = window.URL.createObjectURL(blob),
+    //            img = document.createElement('img');
+    //        img.src = url;
+    //        var x = response.responseText;
+    //
+    //        var el = Ext.DomHelper.insertAfter(this.node.getUI().getAnchor(),
+    //           "<div style='overflow-y:auto; max-height:50px;' id='legend_" + this.layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + x + "\"/></div>"
+    //        );
+    //    }
+    //});
 
-    return legend;
+    var xhr = new XMLHttpRequest();
+    var params = 'layer='+layer.id+'&node='+node.id;
+    xhr.open("GET", legend+"?"+params, true);
+    //Now set response type
+    xhr.responseType = 'arraybuffer';
+    xhr.addEventListener('load', function () {
+        if (xhr.status === 200) {
+            //onsole.log(xhr.response) // ArrayBuffer
+            //console.log(new Blob([xhr.response])) // Blob
+
+            var blob = new Blob([xhr.response], {type: 'image/png'}),
+                url = window.URL.createObjectURL(blob);
+                //img = document.createElement('img');
+            //img.src = url;
+
+            var nodeId = Ext.urlDecode(xhr.responseURL).node;
+            var layerId = Ext.urlDecode(xhr.responseURL).LAYERS;
+            var node = layerTree.getNodeById(nodeId);
+            var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
+
+            Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
+                "<div style='overflow-y:auto; max-height:"+height+"px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + url + "\"/></div>"
+            );
+
+            var el = Ext.get('legend_'+layerId);
+            if(el) {
+                el.setVisibilityMode(Ext.Element.DISPLAY);
+            }
+        }
+    });
+    xhr.send();
+
+
+
 };
 
 //plugins
@@ -282,7 +350,6 @@ var MapOptions = {
   numZoomLevels: Eqwc.settings.numZoomLevels == undefined ? 22 : Eqwc.settings.numZoomLevels,
   fractionalZoom: !enableBGMaps,
   zoomDuration: 10,
-  restrictedExtent: projectData.restrictToStartExtent ? projectData.extent.split(',') : null,
   controls: []
 };
 

@@ -371,9 +371,6 @@ function postLoading() {
     //if not, set map parameters from GetProjectSettings/GetCapabilities
     //get values from first layer group (root) of project settings
     if (maxExtent instanceof OpenLayers.Bounds == false) {
-        var proj = OpenLayers.Projection.defaults[authid];
-        var reverseAxisOrder = proj == undefined ? false : proj.yx;
-
         var boundingBox = wmsLoader.projectSettings.capability.nestedLayers[0].bbox;
         //get bbox for map crs
         if (boundingBox[authid] == undefined) {
@@ -382,8 +379,9 @@ function postLoading() {
         var bboxArray = boundingBox[authid].bbox;
 
         if (bboxArray != undefined) {
-            maxExtent = OpenLayers.Bounds.fromArray(bboxArray, reverseAxisOrder);
-            MapOptions.maxExtent = maxExtent;
+            maxExtent = projectData.makeExtentFromArray(bboxArray, true);
+            //MapOptions.maxExtent = maxExtent;
+            LayerOptions.maxExtent = maxExtent;
         }
     }
 
@@ -474,7 +472,23 @@ function postLoading() {
 
     if (!printExtent) {
         printExtent = new GeoExt.plugins.PrintExtent({
-            printProvider: printProvider
+            printProvider: printProvider,
+            init: function(mapPanel) {
+                this.map = mapPanel.map;
+                mapPanel.on("destroy", this.onMapPanelDestroy, this);
+
+                if (!this.layer) {
+                    this.layer = new OpenLayers.Layer.Vector(null, {
+                        displayInLayerSwitcher: false
+                    });
+                }
+                this.createControl();
+
+                //for (var i=0, len=this.pages.length; i<len; ++i) {
+                //    this.addPage(this.pages[i]);
+                //}
+                //this.show();
+            }
         });
     }
     else {
@@ -498,6 +512,16 @@ function postLoading() {
     }
 
     var MapPanelRef = Ext.getCmp('MapPanel');
+
+    //handle restricted extent
+    if(projectData.restrictToStartExtent) {
+        MapOptions.restrictedExtent = projectData.makeExtentFromArray(projectData.extent.split(','), false);
+
+        var widthUnits = MapOptions.restrictedExtent.getWidth();
+        var widthPx = MapPanelRef.getInnerWidth();
+
+        MapOptions.maxResolution = widthUnits / widthPx;
+    }
 
     // return input layers sorted by order defined in project settings
     function layersInDrawingOrder(layers) {
@@ -544,7 +568,8 @@ function postLoading() {
         geoExtMap = new GeoExt.MapPanel({
             frame: false,
             border: false,
-            zoom: 1.6,
+            //zoom: 1.6,
+            extent: projectData.makeExtentFromArray(projectData.extent.split(','), false),
             layers: baseLayers.concat(
                 extraLayers.concat(
                     [
@@ -1509,7 +1534,8 @@ function postLoading() {
         printWindow.show();
         printWindow.hide();
     }
-    printExtent.hide();
+    //move to other spot
+    //printExtent.hide();
 
     if (initialLoadDone) {
         if (identifyToolWasActive) {
@@ -1650,6 +1676,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
             searchPanelInstance.resultsGrid = new Ext.grid.GridPanel({
                 id: searchPanelId,
+                panel: searchPanelInstance,
                 title: searchPanelInstance.gridTitle,
                 itemId: searchPanelInstance.gridTitle,
                 closable: searchPanelInstance.tabClosable,
@@ -1954,7 +1981,7 @@ function mapToolbarHandler(btn, evt) {
     }
 
     if(btn.id == "navZoomFullExtent") {
-        geoExtMap.map.zoomToExtent(maxExtent,false);
+        geoExtMap.map.zoomToExtent(thematicLayer.maxExtent,false);
     }
 
     if (btn.id == "SendPermalink") {

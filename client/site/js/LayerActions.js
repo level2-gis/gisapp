@@ -392,6 +392,7 @@ function openAttTable() {
 
         layer = new QGIS.SearchPanel({
             useWmsRequest: true,
+            useBbox: Eqwc.settings.syncAttributeTableWithView ? Eqwc.settings.syncAttributeTableWithView : false,
             wmsFilter: filter,
             queryLayer: myQueryLayerName,
             gridColumns: getLayerAttributes(myQueryLayerName).columns,
