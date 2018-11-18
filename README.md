@@ -16,7 +16,7 @@ Database administration and project browsing is done with - **[gisportal](https:
 * loading Web or Mobile client based on screen size
 * PDF printing improved with user title, description and inclusion of base layers 
 * using external API services for geocoding and elevation data
-* plugins support, currently available: Google StreetView and [**Editor**](http://level2.si/product/editor-for-extended-qgis-web-client/)
+* [plugins](https://github.com/uprel/gisapp/wiki/8.-Plugins) support, currently available: Google StreetView, SimpleAction and [**Editor**](http://level2.si/product/editor-for-extended-qgis-web-client/)
 * layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
 * geolocation button (for Chrome you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/))
 * legend in layer tree
@@ -52,6 +52,7 @@ Available languages:
 * Italian
 * Norwegian
 * Polish
+* Russian
 * Slovenian
 * Slovak
 * Spanish
@@ -71,7 +72,7 @@ This software is released under a GPL-v3.0 license.
 ## Copyright 
 2010-2012, The QGIS Project and
 
-2014-2017 Level2 team, 
+2014-2018 Level2 team, 
 
 All rights reserved.
 
