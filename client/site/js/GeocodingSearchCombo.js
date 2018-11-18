@@ -75,20 +75,9 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
      *  list (see http://www.dev.sencha.com/deploy/dev/docs/output/Ext.XTemplate.html),
      *  if not set a default value is provided.
      */
-    //tpl: '<tpl for="."><div class="x-combo-list-item"><h1>{name}<br></h1>{fcodeName} - {countryName}</div></tpl>',
     tpl: '<tpl for="."><div class="x-combo-list-item">{' + this.displayField + '}</div></tpl>',
 
-    /** api: config[countryString]
-     *  ``String`` Country in which to make a GeoNames search, default is all countries.
-     *  Providing several countries can be done like: countryString: country=FR&country=GP
-     *  See: http://www.geonames.org/export/geonames-search.html
-     */
-    /** private: property[countryString]
-     *  ``String``
-     */
-    countryString: '',
-
-    sources: '',
+    country: '',
 
     layers: '',
 
@@ -120,12 +109,14 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
     /** private: property[queryParam]
      *  Query parameter.
      */
-    queryParam: 'text',
+    queryParam: 'query',
 
     /** private: property[url]
-     *  Url of the GeoNames service: http://www.GeoNames.org/export/GeoNames-search.html
+     *  Url of service
      */
-    url: 'https://search.mapzen.com/v1/search?',
+    url: 'admin/proxy.php',
+
+    provider: '',
 
     /** private: constructor
      */
@@ -145,75 +136,68 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
             this.highlightLayer = this.map.getLayersByName(this.highlightLayerName)[0];
         }
 
+
+
+        //setup for mapbox params
         var params = {
-            "size": this.maxRows,
-            "layers": this.layers,
-            "api_key": this.key
+            country: this.country,
+            limit: this.maxRows,
+            types: this.layers,
+            language: this.lang,
+            provider: this.provider
         };
 
         //optional parameters, only add if they exist in json file
         if (typeof this.countryString !== 'undefined') {
-            params["boundary.country"] = this.countryString;
+            params["country"] = this.countryString;
         }
 
-        if (typeof this.sources !== 'undefined') {
-            params["sources"] = this.sources;
-        }
+        //if (typeof this.sources !== 'undefined') {
+        //    params["sources"] = this.sources;
+        //}
 
-        this.store = new Ext.data.Store({
-            proxy: new Ext.data.ScriptTagProxy({
+        this.store = new Ext.data.JsonStore({
+
+            nocache: false,
+            autoAbort: true,
+            proxy: new Ext.data.HttpProxy({
                 url: this.url,
                 method: 'GET',
-                nocache: false,
-                autoAbort: true
+                scope: this,
+                listeners: {
+                    beforeload: function(store, options){
+                        //center map for proximity results
+                        var center = geoExtMap.map.getCenter().transform(authid, new OpenLayers.Projection("EPSG:4326"));
+                        options.proximity = center.lon+','+center.lat;
+                    }
+                }
             }),
             baseParams: params,
-            reader: new Ext.data.JsonReader({
-                idProperty: 'properties.id',
-                root: "features",
-                //totalProperty: "totalResultsCount",
-                fields: [
-                    {
-                        name: 'id', mapping: "properties.id"
-                    },
-                    {
-                        name: 'confidence', mapping: "properties.confidence"
-                    },
-                    {
-                        name: 'country', mapping: "properties.country"
-                    },
-                    {
-                        name: 'region', mapping: "properties.region"
-                    },
-                    {
-                        name: 'locality', mapping: "properties.locality"
-                    },
-                    {
-                        name: 'street', mapping: "properties.street"
-                    },
-                    {
-                        name: 'housenumber', mapping: "properties.housenumber"
-                    },
-                    {
-                        name: 'postalcode', mapping: "properties.postalcode"
-                    },
-                    {
-                        name: 'label', mapping: "properties.label"
-                    },
-                    {
-                        name: 'lng', mapping: "geometry.coordinates[0]"
-                    },
-                    {
-                        name: 'lat', mapping: "geometry.coordinates[1]"
-                    },
-                    {
-                        name: 'name', mapping: "properties.name"
-                    },
-                    {
-                        name: 'name2', convert: this.getName2
-                    }
-                ]
-            })
+            root: "features",
+            //totalProperty: "totalResultsCount",
+            fields: [
+                {
+                    name: 'id', mapping: "id"
+                },
+                {
+                    name: 'relevance', mapping: "relevance"
+                },
+                {
+                    name: 'lng', mapping: "geometry.coordinates[0]"
+                },
+                {
+                    name: 'lat', mapping: "geometry.coordinates[1]"
+                },
+                {
+                    name: 'place_name', mapping: "place_name"
+                },
+                {
+                    name: 'text', mapping: "text"
+                }
+                //{
+                //    name: 'name2', convert: this.getName2
+                //}
+            ]
         });
 
         if(this.zoom > 0) {
@@ -239,9 +223,9 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
             }, this);
         }
     },
-    getName2: function(v, record){
-        return record.properties.street + ' ' + record.properties.housenumber;
-    },
+    //getName2: function(v, record){
+    //    return record.properties.street + ' ' + record.properties.housenumber;
+    //},
 
     // private
     afterrenderHandler: function() {
@@ -291,7 +275,6 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
             this.highlightLayer.removeAllFeatures();
         }
     }
-
 });
 
 /** api: xtype = gxux_GeocodingSearchCombo */

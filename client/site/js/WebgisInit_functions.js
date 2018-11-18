@@ -1031,15 +1031,12 @@ function postLoading() {
                     loadingText: geonamesLoadingString[lang],
                     emptyText: geonamesEmptyString[lang],
                     lang: lang,
-                    zoom: projectData.geoCode.zoom,
-                    countryString: projectData.geoCode.countryString,
-                    tpl: '<tpl for="."><div class="x-combo-list-item"><h3>{name2}</h3>{postalcode} {locality}, {region}</div></tpl>',
+                    zoom: projectData.geoCode.zoom ? projectData.geoCode.zoom : 18,
+                    country: projectData.geoCode.country ? projectData.geoCode.country : '',
+                    tpl: '<tpl for="."><div class="x-combo-list-item"><h3>{text}</h3>{place_name}</div></tpl>',
                     layers: projectData.geoCode.layers,
-                    sources: projectData.geoCode.sources,
-                    //continentCode: projectData.geoCode.continentCode,
-                    maxRows: 10,
-                    displayField: "name2",
-                    key: projectData.geoCode.key
+                    provider: projectData.geoCode.provider,
+                    maxRows: 10
                 });
             } else {
                 qgisSearchCombo = new QGIS.SearchComboBox({

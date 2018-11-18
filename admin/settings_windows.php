@@ -31,6 +31,9 @@ define('QGISSERVERURL', 'http://localhost:8080/cgi-bin/qgis_mapserv.fcgi.exe');
 //Only set this if you intent to use Google Maps layers or Google StreetView
 define('GOOGLE_MAPS_KEY','your_key');
 
+//MAPBOX API ACCESS TOKEN
+define('MAPBOX_KEY','your_access_token');
+
 //Main upload directory, copy value from gisportal config.php main_upload_web
 define('MAIN_UPLOAD_DIR', './uploads/');
 
