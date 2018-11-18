@@ -867,12 +867,13 @@ Gui.showSearchResults = function (results) {
     $('#searchResults').show();
 
     // automatically jump to single result
-    if (results.length === 1 && result.point != null) {
-        Gui.jumpToSearchResult(result.point);
-        if (results[0].highlight != undefined) {
-            Config.search.highlight(results[0].highlight, Map.setHighlightLayer);
-        }
-    }
+    //TODO FIX this need total results length
+    //if (results.length === 1 && result.point != null) {
+    //    Gui.jumpToSearchResult(result.point);
+    //    if (results[0].highlight != undefined) {
+    //        Config.search.highlight(results[0].highlight, Map.setHighlightLayer);
+    //    }
+    //}
 };
 
 // bbox as [<minx>, <miny>, <maxx>, <maxy>]

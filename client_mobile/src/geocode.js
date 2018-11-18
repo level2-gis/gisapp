@@ -1,10 +1,11 @@
 
-function Geocode(key, layers, sources, countryString) {
+function Geocode(types, country, limit, provider, lang) {
 
-    this.key = key;
-    this.layers = layers;
-    this.sources = sources;
-    this.countryString = countryString;
+    this.types = types;
+    this.country = country;
+    this.limit = limit;
+    this.provider = provider;
+    this.language = lang;
 }
 
 // inherit from Search
@@ -15,7 +16,7 @@ Geocode.prototype = new Search();
  */
 Geocode.prototype.submit = function(searchParams, callback) {
   var request = $.ajax({
-    url: "https://search.mapzen.com/v1/search",
+    url: "admin/proxy.php",
     data: this.parseSearchParams(searchParams),
     //dataType: 'jsonp',
     //jsonp: 'cb',
@@ -36,12 +37,16 @@ Geocode.prototype.submit = function(searchParams, callback) {
  */
 Geocode.prototype.parseSearchParams = function(searchParams) {
   var query = $.trim(searchParams);
+  var view = Map.map.getView();
+  var center = ol.proj.toLonLat(view.getCenter(), view.getProjection().getCode());
   return {
-    "api_key": this.key,
-    "layers": this.layers,
-    "sources": this.sources,
-    "boundary.country": this.countryString,
-    "text": query
+      "limit": this.limit,
+      "types": this.types,
+      "country": this.country,
+      "language": this.lang,
+      "provider": this.provider,
+      "query": query,
+      "proximity": center[0]+','+center[1]
   };
 };
 
@@ -63,9 +68,10 @@ Geocode.prototype.parseSearchParams = function(searchParams) {
 Geocode.prototype.parseResults = function(data, status, callback) {
   var results = $.map(data.features, function(value, index) {
 
-    value.properties.locality = value.properties.locality==undefined ? '' : ' '+value.properties.locality;
+    //value.properties.locality = value.properties.locality==undefined ? '' : ' '+value.properties.locality;
 
-    var name = value.properties.street +' '+ value.properties.housenumber + '</br>' + value.properties.postalcode + value.properties.locality+', '+value.properties.region;
+    //var name = value.properties.street +' '+ value.properties.housenumber + '</br>' + value.properties.postalcode + value.properties.locality+', '+value.properties.region;
+    var name = value.place_name;
     var loc = new ol.geom.Point([value.geometry.coordinates[0],value.geometry.coordinates[1]]);
     loc.transform("EPSG:4326",Map.map.getView().getProjection());
     var box = loc.getExtent();
@@ -78,7 +84,8 @@ Geocode.prototype.parseResults = function(data, status, callback) {
   });
 
   callback([{
-    category: null,
-    results: results
+      category: null,
+      results: results,
+      total: results.length
   }]);
 };

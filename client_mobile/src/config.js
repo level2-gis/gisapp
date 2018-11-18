@@ -264,7 +264,7 @@ Config.map.initialGeolocationMaxScale = 2000;
 // search configuration
 var sCon = projectData.geoCode ? projectData.geoCode : null;
 if (sCon != null) {
-    Config.search = new Geocode(sCon.key, sCon.layers, sCon.sources, sCon.countryString);
+    Config.search = new Geocode(sCon.layers, sCon.country, 10, sCon.provider, projectData.lang);
 }
 if (sCon == null && projectData.wsgi) {
     Config.search = new WsgiSearch("/wsgi/search.wsgi", "/wsgi/getSearchGeom.wsgi", false, projectData.wsgi.searchtables);
