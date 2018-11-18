@@ -4,6 +4,7 @@ var gisAppLanguages = [
     ['es', 'Español', 'ux-flag-es'],
     ['it', 'Italiano', 'ux-flag-it'],
     ['pl', 'polski', 'ux-flag-pl'],
+    ['ru', 'русский', 'ux-flag-ru'],
     ['sk', 'slovenský', 'ux-flag-sk'],
     ['sl', 'slovenščina', 'ux-flag-si'],
     ['sv', 'svenska', 'ux-flag-sv']
