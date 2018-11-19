@@ -1469,7 +1469,9 @@ function postLoading() {
                                     var addLayers = [];
                                     var hdnLayers = Eqwc.common.getHiddenLayersFromSettings();
                                     for (var x=0; x<hdnLayers.length;x++) {
-                                        addLayers.push(wmsLoader.layerTitleNameMapping[hdnLayers[x]]);
+                                        if(wmsLoader.layerTitleNameMapping[hdnLayers[x]]) {
+                                            addLayers.push(wmsLoader.layerTitleNameMapping[hdnLayers[x]]);
+                                        }
                                     }
                                     printProvider.additionalLayers = addLayers;
 

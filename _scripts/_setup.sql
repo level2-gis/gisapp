@@ -359,6 +359,7 @@ CREATE TABLE users (
     lang text,
     organization text
 );
+INSERT INTO public.users(user_id, user_name, user_password_hash, user_email, display_name, admin) VALUES (0, 'admin', '$2y$10$.LVNQqxHzKLW9P/Pjw7LTepsLgvT1UEbJWZOaXFVDgjvrPq.a66QW', 'admin@level2.si', 'Admin', true);
 
 CREATE TABLE plugins (
   id serial,
