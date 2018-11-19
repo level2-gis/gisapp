@@ -27,6 +27,9 @@ define('PROJECT_PATH', '/var/www/html/gisapp/_demo/');
 //qgis server
 define('QGISSERVERURL', 'http://localhost/cgi-bin/qgis_mapserv.fcgi');
 
+//caching cetain qgis server requests
+define('QGISSERVERCACHE', false);
+
 //GOOGLE MAPS JAVASCRIPT API KEY
 //Only set this if you intent to use Google Maps layers or Google StreetView
 define('GOOGLE_MAPS_KEY','your_key');

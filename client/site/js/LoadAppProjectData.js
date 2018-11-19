@@ -140,7 +140,7 @@ projectData.setLayerLegend = function (layer,node) {
 
     //for raster layers show default raster legend image
     if (layer.provider == 'gdal' || layer.provider == 'wms') {
-        legend = iconDirectory+"raster.png" + Ext.urlEncode({
+        legend = iconDirectory+"raster.png?" + Ext.urlEncode({
             LAYERS: layername,
             NODE: node.id});
     } else {

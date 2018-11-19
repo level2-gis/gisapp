@@ -118,9 +118,9 @@ function doPostRequest($query_arr, $client)
     $contentLength = $response->getHeaderLine('Content-Length');
     $content = $response->getBody();
 
-    if ($response->getStatusCode() != 200) {
-        throw new Exception\ServerException($content, $new_request);
-    }
+    //if ($response->getStatusCode() != 200) {
+    //    throw new Exception\ServerException($content, $new_request);
+    //}
 
     header("Content-Length: " . $contentLength);
     header("Content-Type: " . $contentType);
@@ -139,6 +139,11 @@ function doPostRequest($query_arr, $client)
  */
 function doGetRequest($query_arr, $map, $client, $http_ver, $user)
 {
+    $useCache = false;
+    if(defined('QGISSERVERCACHE')) {
+        $useCache = QGISSERVERCACHE;
+    }
+
     $new_request = new Request('GET', QGISSERVERURL);
 
     //caching certain requests
@@ -183,7 +188,7 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
         }
     }
 
-    if ($cacheKey != null) {
+    if (!empty($cacheKey) && $useCache === TRUE) {
         $qgsTime = $cache->get($map . $sep . "QGS_TIME"); //json_decode($_SESSION['qgs'])->time;
 
         $content = $cache->get($cacheKey);

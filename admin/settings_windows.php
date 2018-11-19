@@ -27,6 +27,9 @@ define('PROJECT_PATH', 'C:/Apache24/apache/www/gisapp/_demo/');
 //qgis server, check your port, if you are using default port 80, then simply go: /localhost/cgi-bin...
 define('QGISSERVERURL', 'http://localhost:8080/cgi-bin/qgis_mapserv.fcgi.exe');
 
+//caching cetain qgis server requests
+define('QGISSERVERCACHE', false);
+
 //GOOGLE MAPS JAVASCRIPT API KEY
 //Only set this if you intent to use Google Maps layers or Google StreetView
 define('GOOGLE_MAPS_KEY','your_key');
