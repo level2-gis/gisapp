@@ -1,24 +1,25 @@
 Extended QGIS Web Client (EQWC)
 ===============================
 
-This is modified and extended version of original QGIS Web Client I. It turns your QGIS project into Web GIS application with tools to view, navigate, search and print your data. On top of that, there is a PostgreSQL management database for storing projects, layers, users and some specific settings not in QGIS project. 
+This is modified and extended version of official QGIS Web Client I. It turns your QGIS project into Web GIS application with tools to view, navigate, search and print your data. On top of that, there is a PostgreSQL management database for storing projects, layers, users and some specific settings not in QGIS project. 
 
 Database administration and project browsing is done with - **[gisportal](https://github.com/uprel/gisportal)**.
 
-* Desktop client is based on original [QGIS Web client I (QWC I)](https://github.com/qgis/QGIS-Web-Client).
+* Desktop client is based on official [QGIS Web client I (QWC I)](https://github.com/qgis/QGIS-Web-Client).
 * Mobile client is based on [OL3 Mobile Viewer](https://github.com/sourcepole/ol3-mobile-viewer).
 
 ## Modifications and new features:
-* user authorization with optional guest access
-* database for storing info about clients, projects, external layers (WMS, WMTS, XYZ) and users; user authentication, specific project settings
-* QGIS server proxy (caching and validating requests)
+* system for storing and managing clients, projects, external layers (WMS, WMTS, XYZ) and users
+* user authorization with different levels (guest, user, administrator)
+* easy project configuration
 * [**GIS portal**](https://github.com/uprel/gisportal) for browsing projects and complete database administration
 * loading Web or Mobile client based on screen size
 * PDF printing improved with user title, description and inclusion of base layers 
-* using external API services for geocoding and elevation data
+* using external API services for geocoding, reverse geocoding and getting point elevation data
 * [plugins](https://github.com/uprel/gisapp/wiki/8.-Plugins) support, currently available: Google StreetView, SimpleAction and [**Editor**](http://level2.si/product/editor-for-extended-qgis-web-client/)
 * layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
-* geolocation button (for Chrome you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/))
+* layer table synchronized with current map view (optional)
+* geolocation button (you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/))
 * legend in layer tree
 * separating project settings and code
 * user Interface changes and many minor improvements
@@ -70,9 +71,9 @@ http://level2.si
 This software is released under a GPL-v3.0 license.
 
 ## Copyright 
-2010-2012, The QGIS Project and
+2010-2014, The QGIS Project for official QGIS Web Client I and
 
-2014-2018 Level2 team, 
+2014-2018 Level2 team for Extended QGIS Web Client, 
 
 All rights reserved.
 
