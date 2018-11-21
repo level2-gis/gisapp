@@ -25,36 +25,36 @@ var TR = {
     wrongPassword: 'Feil passord.',
     noUser: 'Bruker eksisterer ikke.',
     noPermission: 'Du har ikke tillatelser til å bruke dette prosjektet.',
-    noPublicAccess: 'Offentlig tilgang er ikke tillatt med dette prosjektet.',
+    noPublicAccess: 'Offentlig tilgang er ikke tillatt på dette prosjektet.',
     clearFilter: 'Fjern alle filtre',
-    clearSelection: 'Klart valg',
-    menuFilterText: 'Filtre ',
+    clearSelection: 'Fjern filter',
+    menuFilterText: 'Filter ',
     editData: 'Rediger data',
     editMode: 'Redigeringsmodus',
     editDisabled: 'Redigering deaktivert',
-    editAdd: 'Add',
-    editEdit: 'Edit',
+    editAdd: 'Legg til',
+    editEdit: 'Endre',
     editDelete: 'Slett',
     editSave: 'Lagre',
     mapBasic: 'Kart',
-    mapSatellite: 'Satellitt',
+    mapSatellite: 'Satelitt',
     mapHybrid: 'Hybrid',
     mapTerrain: 'Terreng',
-    fiLocation: 'Plassering',
-    fiElevation: 'over havnivå',
+    fiLocation: 'Musepeker',
+    fiElevation: 'm.o.h.',
     cancel: 'Avbryt',
     send: 'Sende',
     feedback: 'Tilbakemelding',
     feedbackTitle: 'Send din tilbakemelding',
     feedbackDescription: 'Ditt navn, prosjekt og nåværende kartlink vil bli lagt til meldingen!',
     transactionFail: 'Transaksjonen feilet',
-    show: 'Forestilling',
+    show: 'Vis',
     properties: 'Egenskaper',
-    description: 'Beskrivelse',
+    description: 'Dokumenter',
     emptyPrintTitleText: 'Legg til tittel ...',
     emptyPrintDescriptionText: 'Legg til beskrivelse ...',
     loadMore: 'Load more...',
-    loadMoreToolTip: 'Table is not complete.Click to load more data from server!',
+    loadMoreToolTip: 'Tabellen er ikke lastet.Klikk for å laste nye data fra serveren!',
     height: 'Høyde'
 };
 
@@ -71,13 +71,13 @@ I18n.search = {
 };
 
 I18n.properties = {
-    header: "Map Settings",
-    mapFollowing: "Sporing",
+    header: "Oppsett",
+    mapFollowing: "Følg i kartet",
     mapRotation: "Auto-rotasjon",
-    scaleBar: "Scale",
+    scaleBar: "Skala",
     about: "Avtrykk",
     share: "Del",
-    login: "Logg Inn",
+    login: "Logg inn",
     on: "På",
     off: "Av"
 };
@@ -88,15 +88,15 @@ I18n.about = {
 };
 
 I18n.layers = {
-    project: "Project",
+    project: "Prosjekt",
     topics: "Tema",
     layers: "Lag",
     layerOrder: "Lagrekkefølge",
     background: "Bakgrunn",
     overlays: "Overlegg",
     selection: "Valg",
-    redlining: "Reødmerking",
-    transparency: "Åpenhet"
+    redlining: "Rødmerking",
+    transparency: "Gjennomsiktig"
 };
 
 I18n.featureInfo = {
@@ -107,12 +107,12 @@ I18n.featureInfo = {
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Plassering er ikke tilgjengelig. \n\nKontrollér nettleser eller enhetsinnstillinger.",
-    accuracy: "Accuracy",
-    altitude: "Altitude",
-    heading: "Heading",
-    speed: "Speed",
-    obtaining: "Obtaining location...",
+    permissionDeniedMessage: "Plassering er ikke tilgjengelig. \n\nKontrollér nettleser eller innstillinger.",
+    accuracy: "Kvalitet",
+    altitude: "Høyde",
+    heading: "Retning",
+    speed: "Fart",
+    obtaining: "Finner plassering...",
     lowAccuracy: "Low Accuracy!"
 };
 
@@ -125,5 +125,5 @@ I18n.login = {
     signOut: "Logg ut",
     signInFailed: "Brukernavn eller passord er feil",
     signOutFailed: "Innlogging feilet",
-    statusFailed: "Innloggingsstatus mislyktes"
+    statusFailed: "Innlogging mislyktes"
 };
