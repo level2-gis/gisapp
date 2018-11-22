@@ -1,7 +1,7 @@
 Extended QGIS Web Client (EQWC)
 ===============================
 
-This is modified and extended version of official QGIS Web Client I. It turns your QGIS project into Web GIS application with tools to view, navigate, search and print your data. On top of that, there is a PostgreSQL management database for storing projects, layers, users and some specific settings not in QGIS project. 
+This is modified and extended version of official QGIS Web Client I. It turns your QGIS project into Web and Mobile GIS application with tools to view, navigate, search and print your data. On top of that, there is a PostgreSQL management database for storing projects, layers, users and some specific settings not in QGIS project. 
 
 Database administration and project browsing is done with - **[gisportal](https://github.com/uprel/gisportal)**.
 
