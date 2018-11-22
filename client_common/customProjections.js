@@ -7,6 +7,8 @@
  * Extent (left, bottom, right, top) in map units must exist.
  * You can get it from https://epsg.io (copy projected bounds) or from baselayer definition.
  *
+ * yx: false means first coordinate is EAST:left/right, second NORTH: bottom/top
+ *
  */
 
 var CustomProj = [];
@@ -20,6 +22,6 @@ CustomProj['EPSG:31259']= {extent: [226942.84, 162621.12, 811288.27, 431698.18],
 CustomProj['EPSG:32633']= {extent: [166021.44, 0.00, 534994.66, 9329005.18], units: 'm', yx: false, northAxis: 'Nord', eastAxis: 'Øst'};
 CustomProj['EPSG:32635']= {extent: [-760000, 6580000, 657000, 8990000], units: 'm', yx: false, northAxis: 'Nord', eastAxis: 'Øst'};                 //Norway
 CustomProj['EPSG:3794'] = {extent: [373217.65,32395.09,622710.74,194645.86], units: 'm', yx: false};            //Slovenia new
-CustomProj['EPSG:3857'] = {extent: [-20026376.39,-20048966.10,20026376.39,20048966.10], units: 'm', yx: false};
+CustomProj['EPSG:3857'] = {extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], units: 'm', yx: false};
 CustomProj['EPSG:3909'] = {extent: [6857660.55,4550994.70,7655918.26,5194896.94], units: 'm', yx: true};        //Balkan Zone 7
 CustomProj['EPSG:3912'] = {extent: [363774.72,-475760.46,1113039.95,224384.21], units: 'm', yx: false};         //Slovenia old
