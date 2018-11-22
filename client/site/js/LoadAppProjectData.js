@@ -209,7 +209,7 @@ projectData.setLayerLegend = function (layer,node) {
             var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
 
             Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
-                "<div style='overflow-y:auto; max-height:"+height+"px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + url + "\"/></div>"
+                "<div style='overflow-x:hidden; overflow-y:auto; max-height:"+height+"px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + url + "\"/></div>"
             );
 
             var el = Ext.get('legend_'+layerId);
