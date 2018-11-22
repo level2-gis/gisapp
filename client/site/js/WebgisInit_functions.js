@@ -639,8 +639,7 @@ function postLoading() {
         });
 
         //set EPSG text from OpenLayers
-        var proj = geoExtMap.map.getProjectionObject();
-        rightStatusText.setText(proj.getCode());
+        rightStatusText.setText(authid);
 
         if (urlParams.startExtent) {
             var startExtentParams = urlParams.startExtent.split(",");
@@ -1718,7 +1717,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
                             Ext.each(filt, function (f) {
                                 if (f.data.type == 'string') {
-                                    wmsFilter.push("\"" + f.field + "\" LIKE \'%" + f.data.value + "%\'");
+                                    wmsFilter.push("\"" + f.field + "\" ILIKE \'%" + f.data.value + "%\'");
                                 } else if (f.data.type == 'numeric') {
                                     var sep = '';
                                     switch (f.data.comparison) {
