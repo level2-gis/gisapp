@@ -286,13 +286,15 @@ function zoomHandler(grid, rowIndex, colIndex, item, e) {
 
 function showRecordSelected(args) {
 
-        var layer = args["layer"] == null ? args["fid"].split('.')[0] : args["layer"];
-        var layerId = wmsLoader.layerTitleNameMapping[layer];
+        //var layer = args["layer"] == null ? args["fid"].split('.')[0] : args["layer"];
+        //var layerId = wmsLoader.layerTitleNameMapping[layer];
 
         // select feature in layer
-        thematicLayer.mergeNewParams({
-            "SELECTION": layerId + ":" + args["id"]
-        });
+        //this is yellow selection, problem is that we get double request to server, one for selection + another to zoom mao
+        //currently disabled
+        //thematicLayer.mergeNewParams({
+        //    "SELECTION": layerId + ":" + args["id"]
+        //});
 
         if (args["doZoomToExtent"]) {
             geoExtMap.map.zoomToExtent(args["bbox"]);

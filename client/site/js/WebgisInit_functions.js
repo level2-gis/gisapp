@@ -178,7 +178,7 @@ function postLoading() {
 
         thematicLayer.mergeNewParams({
             LAYERS: selectedLayers.join(","),
-            OPACITIES: layerOpacities(selectedLayers),
+            //OPACITIES: layerOpacities(selectedLayers),
             FORMAT: format
         });
         if (identificationMode != 'activeLayers') {
@@ -576,7 +576,7 @@ function postLoading() {
                         thematicLayer = new OpenLayers.Layer.WMS(layerTree.root.firstChild.text,
                             wmsURI, {
                                 layers: selectedLayers.join(","),
-                                opacities: layerOpacities(selectedLayers),
+                                //opacities: layerOpacities(selectedLayers),
                                 format: format,
                                 transparent: qgisLayerTransparency,
                                 dpi: screenDpi,
@@ -615,7 +615,7 @@ function postLoading() {
         thematicLayer.url = wmsURI;
         thematicLayer.mergeNewParams({
             "LAYERS": selectedLayers.join(","),
-            "OPACITIES": layerOpacities(selectedLayers),
+            //"OPACITIES": layerOpacities(selectedLayers),
             "FORMAT": format
         });
     }
@@ -1035,6 +1035,7 @@ function postLoading() {
                     tpl: '<tpl for="."><div class="x-combo-list-item"><h3>{text}</h3>{place_name}</div></tpl>',
                     layers: projectData.geoCode.layers,
                     provider: projectData.geoCode.provider,
+                    displayField: 'text',
                     maxRows: 10
                 });
             } else {

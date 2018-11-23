@@ -233,6 +233,8 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
     },
 
     beforeselectHandler: function(combo,record,index) {
+        combo.setValue(record.data[this.displayField]);
+
         if (record.get('selectable') == "1") {
             this.collapse();
         }

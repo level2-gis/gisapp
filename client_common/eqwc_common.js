@@ -3,6 +3,21 @@
  *
  */
 
+//Set projectData from settings if set and if project values are empty
+//Way to set up things in general and still be possible to override it with project.json
+if(projectData.search === null && Eqwc.settings.search) {
+    projectData.search = Eqwc.settings.search;
+}
+if(projectData.geoCode === null && Eqwc.settings.geoCode) {
+    projectData.geoCode = Eqwc.settings.geoCode;
+}
+if(projectData.wsgi === null && Eqwc.settings.wsgi) {
+    projectData.wsgi = Eqwc.settings.wsgi;
+}
+if(projectData.locationServices === null && Eqwc.settings.locationServices) {
+    projectData.locationServices = Eqwc.settings.locationServices;
+}
+
 Eqwc.common = {};
 
 Eqwc.common.createHyperlink = function(att, val, pattern) {
