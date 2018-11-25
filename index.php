@@ -49,7 +49,7 @@ function goMobile($lang) {
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20181107" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20181125" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026" />
     </head>
     <body>
@@ -64,7 +64,7 @@ function goMobile($lang) {
                 <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
                 <a href="#" id="btnInfo" data-role="button" data-icon="loc_info" data-iconpos="notext"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
-                <a href="#" style="display:none" id="btnEnd" data-role="button" data-icon="goto_stop" data-iconpos="notext" data-rel="dialog"></a>
+                <a href="#" style="display:none" id="btnEnd" data-role="button" data-icon="save" data-iconpos="notext" data-rel="dialog"></a>
                 <a href="#" style="display:none" id="btnGotoPage" data-role="button" data-icon="goto_more" data-iconpos="notext" data-rel="dialog" data-theme="e"></a>
                 <a href="#" style="display:none" id="btnGotoStop" data-role="button" data-icon="goto_stop" data-iconpos="notext" data-rel="dialog" data-theme="e"></a>
             </div>
