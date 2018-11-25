@@ -8,6 +8,9 @@ session_start();
 $version = \GisApp\Helpers::getEqwcVersion();
 $lang = [];
 $plugins = [];
+
+$plugin_list = \GisApp\Helpers::getPluginsFromSession();
+
 $eqwc_debug = [
    "client_common/eqwc_common.js?v=".$version,
     "client_mobile/src/url_params.js?v=".$version,
@@ -42,30 +45,32 @@ $debug = defined('DEBUG') ? DEBUG : false;
 array_push($lang, "admin/languages/". $def_lang .".js");
 
 //add into array all js files in plugins/xxx/src_mobile subfolder
-foreach ($scan as $item) {
-    if (is_dir($dir . $item)) {
-        $plugin_path = $dir . $item;
+if (!(empty($plugin_list))) {
+    foreach ($plugin_list as $item) {
+        if (is_dir($dir . $item)) {
+            $plugin_path = $dir . $item;
 
-        //plugin language file
-        $lang_fn = $dir . basename($plugin_path) . "/lang_mobile/" . $def_lang . ".js";
-        if (!file_exists($lang_fn)) {
-            $def_lang = 'en';
-        }
-        if (file_exists($lang_fn)) {
-            array_push($plugins, "plugins/" . basename($plugin_path) . "/lang_mobile/" . $def_lang . ".js?v=".rand());
-        }
+            //plugin language file
+            $lang_fn = $dir . basename($plugin_path) . "/lang_mobile/" . $def_lang . ".js";
+            if (!file_exists($lang_fn)) {
+                $def_lang = 'en';
+            }
+            if (file_exists($lang_fn)) {
+                array_push($plugins, "plugins/" . basename($plugin_path) . "/lang_mobile/" . $def_lang . ".js?v=" . rand());
+            }
 
-        //add plugin config.js if exists
-        if (file_exists($plugin_path . "/js/config.js")) {
-            array_push($plugins, "plugins/" . basename($plugin_path) . "/js/config.js?v=" . rand());
-        }
+            //add plugin config.js if exists
+            if (file_exists($plugin_path . "/js/config.js")) {
+                array_push($plugins, "plugins/" . basename($plugin_path) . "/js/config.js?v=" . rand());
+            }
 
-        if (is_dir($plugin_path . '/src_mobile/')) {
-            $js_arr = array_slice(scandir($plugin_path . '/src_mobile/'), 2);
-            foreach ($js_arr as $script) {
-                //only js files
-                if (substr($script, -2) == 'js') {
-                    array_push($plugins, "plugins/" . basename($plugin_path) . "/src_mobile/" . $script . "?v=" . rand());
+            if (is_dir($plugin_path . '/src_mobile/')) {
+                $js_arr = array_slice(scandir($plugin_path . '/src_mobile/'), 2);
+                foreach ($js_arr as $script) {
+                    //only js files
+                    if (substr($script, -2) == 'js') {
+                        array_push($plugins, "plugins/" . basename($plugin_path) . "/src_mobile/" . $script . "?v=" . rand());
+                    }
                 }
             }
         }
