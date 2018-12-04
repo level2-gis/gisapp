@@ -1284,7 +1284,7 @@ QGIS.FeatureInfoParser = Ext.extend(Object, {
                             this.fields.push(attributeNode.getAttribute("name"));
                         }
                         // add feature attribute value
-                        feature.push(attributeNode.getAttribute("value").replace("NULL",Eqwc.settings.noDataValue));
+                        feature.push(attributeNode.getAttribute("value").replace(/null/ig,Eqwc.settings.noDataValue));
                     }
                     var bboxNodes = featureNode.getElementsByTagName("BoundingBox");
                     if (bboxNodes.length > 0) {

@@ -161,7 +161,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
             if ($(this).attr('name') != 'geometry') {
               attributes.push({
                 name: $(this).attr('name'),
-                value: $(this).attr('value').replace("NULL", Eqwc.settings.noDataValue)
+                value: $(this).attr('value').replace(/null/ig, Eqwc.settings.noDataValue)
               });
             }
           });
@@ -177,7 +177,7 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
         $(this).find('Attribute').each(function() {
           attributes.push({
             name: Eqwc.common.getRasterFieldName(Config.getLayerName(lay), $(this).attr('name')),
-            value: $(this).attr('value').replace("NULL", Eqwc.settings.noDataValue)
+            value: $(this).attr('value').replace(/null/ig, Eqwc.settings.noDataValue)
           });
         });
         features.push({
