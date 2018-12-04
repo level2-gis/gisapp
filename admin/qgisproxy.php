@@ -169,7 +169,7 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
                 break;
             case "DescribeFeatureType":
                 $layer = $query_arr["TYPENAME"];
-                if (file_exists(PROJECT_PATH.'_data_definitions/'.$layer.'.xml')) {
+                if (is_readable(PROJECT_PATH.'_data_definitions/'.$layer.'.xml')) {
                     $content = file_get_contents(PROJECT_PATH.'_data_definitions/'.$layer.'.xml');
                 }
                 $contentType = "text/xml";
@@ -201,24 +201,27 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
             }
         }
 
+    }
 
-        if ($content == null) {
-            $response = $client->send($new_request, [
-                'query' => $query_arr,
-                'http_errors' => true,
-                //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
-                'verify' => false
-            ]);
-            $contentType = $response->getHeaderLine('Content-Type');
-            $contentLength = $response->getHeaderLine('Content-Length');
-            $content = $response->getBody()->__toString();
+    if ($content == null) {
+        $response = $client->send($new_request, [
+            'query' => $query_arr,
+            'http_errors' => true,
+            //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+            'verify' => false
+        ]);
+        $contentType = $response->getHeaderLine('Content-Type');
+        $contentLength = $response->getHeaderLine('Content-Length');
+        $content = $response->getBody()->__toString();
+        $code = $response->getStatusCode();
 
-            //check GetProjectSettings XML
-            if ($query_arr["REQUEST"] == "GetProjectSettings") {
+        if($code == 200) {
+        //check GetProjectSettings XML
+        if ($query_arr["REQUEST"] == "GetProjectSettings") {
                 $contentXml = simplexml_load_string($content);
                 if ($contentXml !== false) {
                     if ($contentXml->getName() !== 'WMS_Capabilities') {
-                        $m = "Unknown GetCapabilities error";
+                        $m = "Unknown error";
                         if ($contentXml->ServiceException !== null) {
                             $m = (string)$contentXml->ServiceException;
                         }
@@ -228,26 +231,12 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
                     throw new Exception\ServerException($content, $new_request);
                 }
             }
-            if ($response->getStatusCode() == 200) {
-                $cache->set($cacheKey, $content);
-            } else {
-                throw new Exception\ServerException($content, $new_request);
-            }
+        } else {
+            throw new Exception\ServerException($content, $new_request);
         }
-    } else {
 
-        if ($content == null) {
-            //no caching request
-            $response = $client->send($new_request, [
-                'query' => $query_arr,
-                'http_errors' => true,
-                //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
-                'verify' => false
-            ]);
-
-            $contentType = $response->getHeaderLine('Content-Type');
-            $contentLength = $response->getHeaderLine('Content-Length');
-            $content = $response->getBody();
+        if($useCache === TRUE) {
+            $cache->set($cacheKey, $content);
         }
     }
 
