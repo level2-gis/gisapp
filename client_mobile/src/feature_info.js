@@ -59,20 +59,26 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layersArr) {
     $.ajax({
         url: url,
         dataType: 'text',
+        timeout: 5000,
         context: this
-    }).done(function(data, status) {
-        var results = null;
-        if (Config.featureInfo.format === 'text/xml') {
-            results = this.parseResults([data]);
-        }
-        else {
-            results = [data];
-        }
+    })
+        .done(function (data, status, xhr) {
+            var results = null;
+            if (Config.featureInfo.format === 'text/xml') {
+                results = this.parseResults([data]);
+            }
+            else {
+                results = [data];
+            }
 
-        this.resultsCallback(results);
-        //allow clicking again
-        Map.toggleClickHandling(true);
-    });
+            this.resultsCallback(status,results);
+            //allow clicking again
+            Map.toggleClickHandling(true);
+        })
+        .fail(function (xhr, status, error) {
+            this.resultsCallback(status,error);
+            Map.toggleClickHandling(true);
+        });
 };
 
 

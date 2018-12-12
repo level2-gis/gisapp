@@ -30,12 +30,13 @@ Gui.updateLayout = function() {
   $('#map').width(window.innerWidth);
 
   // limit panels to screen height
-  $('#panelTopics .ui-listview').height(window.innerHeight - 90);
-  $('#panelLayerAll').height(window.innerHeight - 90);
-  $('#panelLayerOrder .ui-listview').height(window.innerHeight - 200);
-  $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 80);
-  $('#panelSearch .ui-listview').height(window.innerHeight - 170);
-  $('#properties').height(window.innerHeight - 80);
+  $('#panelTopics').height(window.innerHeight - 60);
+  $('#panelLayerAll').height(window.innerHeight - 60);
+  $('#panelLayerOrder').height(window.innerHeight - 60);
+  $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 40);
+  $('#panelSearch .ui-listview').height(window.innerHeight);
+  $('#panelPropertiesMap').height(window.innerHeight - 60);
+  $('#panelPropertiesEditor').height(window.innerHeight - 60);
 };
 
 // show selected panel
@@ -723,16 +724,22 @@ Gui.selectLayer = function(layer) {
 };
 
 // show feature info results
-Gui.showFeatureInfoResults = function(data) {
-  if (Config.featureInfo.format === 'text/xml') {
-    Gui.showXMLFeatureInfoResults(data);
-  }
-  else {
-    $('#featureInfoResults').html(data.join(''));
-  }
+Gui.showFeatureInfoResults = function(status, data) {
+    if(status != 'success') {
+        Map.toggleClickMarker(true);
+        alert(data);
+        return;
+    }
 
-  $('#panelFeatureInfo').panel('open');
-  Map.toggleClickMarker(true);
+    if (Config.featureInfo.format === 'text/xml') {
+        Gui.showXMLFeatureInfoResults(data);
+    }
+    else {
+        $('#featureInfoResults').html(data.join(''));
+    }
+
+    $('#panelFeatureInfo').panel('open');
+    Map.toggleClickMarker(true);
 };
 
 // convert XML feature info results to HTML

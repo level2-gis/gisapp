@@ -49,7 +49,7 @@ function goMobile($lang) {
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20181125" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20181212" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026" />
     </head>
     <body>
@@ -81,8 +81,8 @@ function goMobile($lang) {
                         <li><a id="buttonPropertiesEditor" style="display:none" href="#panelPropertiesEditor">Editor</a></li>
                     </ul>
                 </div>
-                <div id="panelPropertiesMap">
-                    <div id="properties" class="scrollable">
+                <div id="panelPropertiesMap" class="scrollable">
+                    <div id="properties">
                         <div data-role="fieldcontain">
                             <label for="switchFollow">Kartennachf&uuml;hrung</label>
                             <select id="switchFollow" name="switchFollow" data-role="slider">
@@ -118,7 +118,7 @@ function goMobile($lang) {
                         <!--                    </div>-->
                     </div>
                 </div>
-                <div id="panelPropertiesEditor"></div>
+                <div id="panelPropertiesEditor" class="scrollable"></div>
             </div>
         </div>
 
@@ -138,7 +138,7 @@ function goMobile($lang) {
                     </div>
                 </div>
                 <div id="panelLayerAll" class="scrollable"></div>
-                <div id="panelLayerOrder">
+                <div id="panelLayerOrder" class="scrollable">
                     <div data-role="controlgroup">
                         <ul id="listOrder" data-role="listview" data-inset="true"></ul>
                     </div>
