@@ -638,14 +638,17 @@ Map.toggleTracking = function (enabled) {
         }
 
         //adjust antennatype offset if set
+        var antOffset = 0;
         if (typeof(Editor)=='function') {
-            antenna+=mobEditor.getAntennaOffset();
+            antOffset = mobEditor.getAntennaOffset();
+            antenna+=antOffset;
         }
 
         Map.geolocation.setProperties({
             altCorrection: 0,
             altCorrectionSource: '',
-            antenna: antenna
+            antenna: antenna,
+            antennaOffset: antOffset
         });
 
         Map.geolocation.on('error', function (error) {
