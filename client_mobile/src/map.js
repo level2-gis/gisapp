@@ -632,15 +632,20 @@ Map.toggleTracking = function (enabled) {
             Map.geolocation.set('source', 'Android API');
         }
 
-        var antenna = $('#antennaHeight').length > 0 ? $('#antennaHeight')[0].value : 0;
+        var antenna = parseFloat($('#antennaHeight').length > 0 ? $('#antennaHeight')[0].value : 0);
         if (isNaN(antenna)) {
             antenna = 0;
+        }
+
+        //adjust antennatype offset if set
+        if (typeof(Editor)=='function') {
+            antenna+=mobEditor.getAntennaOffset();
         }
 
         Map.geolocation.setProperties({
             altCorrection: 0,
             altCorrectionSource: '',
-            antenna: parseFloat(antenna)
+            antenna: antenna
         });
 
         Map.geolocation.on('error', function (error) {
