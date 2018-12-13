@@ -127,7 +127,7 @@ FeatureInfo.prototype.handleEvent = function (e) {
             results = [data];
         }
 
-        this.resultsCallback(results);
+        this.resultsCallback(status,results);
         //allow clicking again
         Map.toggleClickHandling(true);
     });
