@@ -141,6 +141,7 @@ projectData.setLayerLegend = function (layer,node) {
     //for raster layers show default raster legend image
     if (layer.provider == 'gdal' || layer.provider == 'wms') {
         legend = iconDirectory+"raster.png?" + Ext.urlEncode({
+            DUMMY: "hi",
             LAYERS: layername,
             NODE: node.id});
     } else {
@@ -166,31 +167,10 @@ projectData.setLayerLegend = function (layer,node) {
             NODE: node.id
         });
     }
-    //
-    //Ext.Ajax.request({
-    //    // doesn't work in 3.4 binary: true,  //set binary to true
-    //    url: legend,
-    //    scope: {
-    //        layerId: layer.id,
-    //        node: node
-    //    },
-    //    success: function(response) {
-    //        var blob = new Blob([response.responseBytes], {type: 'image/png'}),
-    //        //var blob = new Blob([response.responseText], {type: 'image/png'}),
-    //            url = window.URL.createObjectURL(blob),
-    //            img = document.createElement('img');
-    //        img.src = url;
-    //        var x = response.responseText;
-    //
-    //        var el = Ext.DomHelper.insertAfter(this.node.getUI().getAnchor(),
-    //           "<div style='overflow-y:auto; max-height:50px;' id='legend_" + this.layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + x + "\"/></div>"
-    //        );
-    //    }
-    //});
 
     var xhr = new XMLHttpRequest();
-    var params = 'layer='+layer.id+'&node='+node.id;
-    xhr.open("GET", legend+"?"+params, true);
+    //var params = 'layer='+layer.id+'&node='+node.id;
+    xhr.open("GET", legend, true);
     //Now set response type
     xhr.responseType = 'arraybuffer';
     xhr.addEventListener('load', function () {
@@ -203,7 +183,7 @@ projectData.setLayerLegend = function (layer,node) {
                 //img = document.createElement('img');
             //img.src = url;
 
-            var nodeId = Ext.urlDecode(xhr.responseURL).node;
+            var nodeId = Ext.urlDecode(xhr.responseURL).NODE;
             var layerId = Ext.urlDecode(xhr.responseURL).LAYERS;
             var node = layerTree.getNodeById(nodeId);
             var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
@@ -219,9 +199,6 @@ projectData.setLayerLegend = function (layer,node) {
         }
     });
     xhr.send();
-
-
-
 };
 
 //plugins
