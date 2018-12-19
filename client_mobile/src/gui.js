@@ -103,7 +103,7 @@ Gui.showLocationPanel = function (show) {
                 html.push(extra.altCorrectionSource);
             }
             //if(extra.source == 'Android API') {
-                html.push('AH: ' + parseFloat(extra.antenna-extra.antennaOffset)+ ' m');
+                html.push('AH: ' + parseFloat(extra.antenna-extra.antennaOffset)+ ' m ' + extra.antennaType);
             //}
         }
 

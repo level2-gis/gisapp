@@ -639,16 +639,19 @@ Map.toggleTracking = function (enabled) {
 
         //adjust antennatype offset if set
         var antOffset = 0;
+        var antType = '';
         if (typeof(Editor)=='function') {
             antOffset = mobEditor.getAntennaOffset();
             antenna+=antOffset;
+            antType = mobEditor.getAntennaType();
         }
 
         Map.geolocation.setProperties({
             altCorrection: 0,
             altCorrectionSource: '',
             antenna: antenna,
-            antennaOffset: antOffset
+            antennaOffset: antOffset,
+            antennaType: antType
         });
 
         Map.geolocation.on('error', function (error) {
