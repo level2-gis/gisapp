@@ -114,7 +114,7 @@ I18n.geolocation = {
     altitude: "Wysokość",
     heading: "Kierunek",
     speed: "Prędkość",
-    obtaining: "Wyznaczanie pozycji..."
+    obtaining: "Wyznaczanie pozycji...",
     lowAccuracy: "Niska dokładność!"
 };
 
