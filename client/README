@@ -813,8 +813,8 @@ This method however is slower than tsvector but not relevantly at least if you o
     ===========================================
 
 Geometry must have set CRS code.
-Check (must return <>0):
-SELECT ST_Srid(geom) from [TABLE] LIMIT 1;
+Check (must not return 0):
+SELECT DISTINCT ST_Srid(geom) from [TABLE];
 
 Set (example, table name: admin, geometry column: geom, CRS to set:4326):
 SELECT UpdateGeometrySRID('admin', 'geom', 4326);
