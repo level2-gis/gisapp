@@ -201,6 +201,27 @@ projectData.setLayerLegend = function (layer,node) {
     xhr.send();
 };
 
+/**
+ * List of CRS names that exist in Proj4js definitions based on crs_list from QGIS project
+ * Map projection is always first in the list!
+ */
+projectData.getProjectionsList = function() {
+    var ret = [];
+
+    //first element is map projection
+    if(Proj4js.defs[projectData.crs]) {
+        ret.push(projectData.crs);
+    }
+
+    for (var i = 0; i < projectData.crs_list.length; ++i) {
+        var crs = projectData.crs_list[i];
+        if (crs != projectData.crs && Proj4js.defs[crs]) {
+            ret.push(crs);
+        }
+    }
+    return ret;
+};
+
 //plugins
 Eqwc.plugins = {};
 
