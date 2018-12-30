@@ -202,21 +202,22 @@ projectData.setLayerLegend = function (layer,node) {
 };
 
 /**
- * List of CRS names that exist in Proj4js definitions based on crs_list from QGIS project
- * Map projection is always first in the list!
+ * Array of Projections arrays (0 Code, 1 Title, 2 Openlayers.Projection object) that exist in Proj4js definitions based on crs_list from QGIS project
+ * Map projection is always first element!
  */
 projectData.getProjectionsList = function() {
     var ret = [];
 
     //first element is map projection
     if(Proj4js.defs[projectData.crs]) {
-        ret.push(projectData.crs);
+        ret.push([projectData.crs,projectData.crs_description,geoExtMap.map.getProjectionObject()]);
     }
 
     for (var i = 0; i < projectData.crs_list.length; ++i) {
         var crs = projectData.crs_list[i];
+        var olProj = new OpenLayers.Projection(crs);
         if (crs != projectData.crs && Proj4js.defs[crs]) {
-            ret.push(crs);
+            ret.push([crs,olProj.title,olProj]);
         }
     }
     return ret;
