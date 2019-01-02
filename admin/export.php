@@ -158,11 +158,13 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             break;
         case 'KML':
             $format_name = $destinationFormat;
-            $makeZip = true;
+            $makeZip = false;
+            $fileExt = 'kml';
             break;
         case 'GeoJSON':
             $format_name = $destinationFormat;
-            $makeZip = true;
+            $makeZip = false;
+            $fileExt = 'geojson';
             break;
         default:
             throw new Exception('Format not supported');
