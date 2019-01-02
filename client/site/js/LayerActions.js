@@ -100,6 +100,11 @@ function buildLayerContextMenu(node) {
                     text: contextUseExtent[lang],
                     checked: true,
                     hideOnClick: false
+                },{
+                    itemId: 'useMapCRS',
+                    text: TR.exportUseMapCrs+" ("+projectData.crs+")",
+                    checked: true,
+                    hideOnClick: false
                 }]
         });
     }
@@ -207,8 +212,9 @@ function exportHandler(item) {
     var myFormat = item.container.menuItemId;
 
     var exportExtent = item.ownerCt.getComponent('currentExtent');
+    var crs = item.ownerCt.getComponent('useMapCRS').checked ? projectData.crs : projectData.layers[layerId].crs;
 
-    exportData(exportLayer, myFormat, exportExtent.checked);
+    exportData(exportLayer, myFormat, exportExtent.checked, crs);
 }
 
 function layerProperties(item) {
@@ -304,7 +310,7 @@ function showRecordSelected(args) {
         }
 }
 
-function exportData(layername,format, useBbox) {
+function exportData(layername,format, useBbox, crs) {
 
     function joinObj(obj, attr) {
         var out = [];
@@ -329,7 +335,7 @@ function exportData(layername,format, useBbox) {
 
     var exportUrl = "./admin/export.php?" + Ext.urlEncode({
             map:projectData.project,
-            SRS:authid,
+            SRS:crs,
             map0_extent:mapCrsBbox,
             layer_extent:layCrsBbox,
             layer:layername,
