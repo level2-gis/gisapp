@@ -54,7 +54,8 @@ var TR = {
     emptyPrintDescriptionText: 'Добавить описание ...',
     loadMore: 'Загрузить больше...',
     loadMoreToolTip: 'Table is not complete.Click to load more data from server!',
-    height: 'Height'
+    height: 'Height',
+    exportUseMapCrs: "Use map CRS"
 };
 
 /**

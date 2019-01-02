@@ -52,7 +52,8 @@ var TR = {
     emptyPrintDescriptionText: 'Beschreibung hinzufügen ...',
     loadMore: 'Lade weiteres ...',
     loadMoreToolTip: 'Tabelle ist nicht vollständig. Klicken, um weitere Daten vom Server zu laden!',
-    height: 'Höhe'
+    height: 'Höhe',
+    exportUseMapCrs: "Use map CRS"
 };
 
 /**

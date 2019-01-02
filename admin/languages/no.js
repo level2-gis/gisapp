@@ -55,7 +55,8 @@ var TR = {
     emptyPrintDescriptionText: 'Legg til beskrivelse ...',
     loadMore: 'Load more...',
     loadMoreToolTip: 'Tabellen er ikke lastet.Klikk for å laste nye data fra serveren!',
-    height: 'Høyde'
+    height: 'Høyde',
+    exportUseMapCrs: "Use map CRS"
 };
 
 /**::

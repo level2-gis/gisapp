@@ -55,7 +55,8 @@ var TR = {
     emptyPrintDescriptionText: 'Add Description ...',
     loadMore: 'Load more...',
     loadMoreToolTip: 'Table is not complete.Click to load more data from server!',
-    height: 'Altezza'
+    height: 'Altezza',
+    exportUseMapCrs: "Use map CRS"
 };
 
 /**

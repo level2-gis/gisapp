@@ -55,7 +55,8 @@ var TR = {
     emptyPrintDescriptionText: 'Dodaj opis ...',
     loadMore: 'Več...',
     loadMoreToolTip: 'Tabela ni popolna. Klikni za več podatkov iz strežnika!',
-    height: 'Višina'
+    height: 'Višina',
+    exportUseMapCrs: "Uporabi projektni koord. sistem"
 };
 
 /**

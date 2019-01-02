@@ -55,7 +55,8 @@ var TR = {
     emptyPrintDescriptionText: 'Wpisz własny opis...',
     loadMore: 'Wczytaj więcej...',
     loadMoreToolTip: 'Tabela jest niekompletna. Kliknij by załadować więcej danych z serwera!',
-    height: 'Wysokość'
+    height: 'Wysokość',
+    exportUseMapCrs: "Use map CRS"
 };
 
 /**
