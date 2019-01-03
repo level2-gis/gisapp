@@ -1628,7 +1628,11 @@ function showSearchPanelResults(searchPanelInstance, features) {
             pagingConfig = new Ext.ux.PagingToolbar({
                 pageSize: searchPanelInstance.gridResultsPageSize,
                 store: searchPanelInstance.store,
-                displayInfo: false
+                displayInfo: false,
+                grid: searchPanelInstance,
+                doRefresh: function () {
+                    this.grid.onSubmit(true);
+                }
             });
 
         }

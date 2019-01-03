@@ -892,7 +892,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         //Ext.Ajax.on('requestexception', this.onAjaxRequestException, this);
     },
 
-    onSubmit: function() {
+    onSubmit: function(reload) {
 
         if(this.form !== null) {
             if(this.form.getForm().isValid()===false){
@@ -927,7 +927,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             //alert(maskElement.id);
             //check if we already have table for layer in case of open table call
             if (this.resultsGrid !== null && this.resultsGrid.store !== null) {
-                if (maskElement.id=='BottomPanel' && this.gridResults === this.resultsGrid.store.maxResults && !this.useBbox) {
+                if (maskElement.id=='BottomPanel' && this.gridResults === this.resultsGrid.store.maxResults && !this.useBbox && !reload) {
                     maskElement.activate(Ext.getCmp('table_' + this.queryLayer));
                 }
                 else {
