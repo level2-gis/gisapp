@@ -56,7 +56,8 @@ var TR = {
     loadMore: 'Load more...',
     loadMoreToolTip: 'Table is not complete.Click to load more data from server!',
     height: 'Výška',
-    exportUseMapCrs: "Use map CRS"
+    exportUseMapCrs: "Use map CRS",
+    tableUseExtent: "Only show features in map extent"
 };
 
 /**
