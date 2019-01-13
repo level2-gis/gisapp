@@ -35,7 +35,8 @@ Visit **<a target="_blank" href="http://test.level2.si">Demo by Level2</a>**
 * Hosting of projects on our servers
 
 ## Documentation
-Read **[Wiki](../../wiki)**
+**[Wiki](../../wiki)**
+**[Client settings](docs/index.html)**
 
 ## Contributing
 
