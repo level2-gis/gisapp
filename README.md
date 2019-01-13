@@ -18,7 +18,7 @@ Database administration and project browsing is done with - **[gisportal](https:
 * using external API services for geocoding, reverse geocoding and getting point elevation data
 * [plugins](https://github.com/uprel/gisapp/wiki/8.-Plugins) support, currently available: Google StreetView, SimpleAction and [**Editor**](http://level2.si/product/editor-for-extended-qgis-web-client/)
 * layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
-* layer table synchronized with current map view (optional)
+* layer table synchronized with current map view
 * geolocation button (you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/))
 * legend in layer tree
 * separating project settings and code
@@ -73,7 +73,7 @@ This software is released under a GPL-v3.0 license.
 ## Copyright 
 2010-2014, The QGIS Project for official QGIS Web Client I and
 
-2014-2018 Level2 team for Extended QGIS Web Client, 
+2014-2019 Level2 for Extended QGIS Web Client,
 
 All rights reserved.
 
