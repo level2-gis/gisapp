@@ -30,6 +30,13 @@
     background-image:url(../gis_icons/mActionClear.png);
 }
 
+.x-extent-icon {
+    background-image:url(../gis_icons/extents.png);
+    height:16px;
+    background-position:center right;
+}
+
+
 .x-exclamation-icon {
     background-image:url(../libs/ext/resources/images/access/form/exclamation.gif);
     height:16px;

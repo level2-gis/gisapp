@@ -1589,6 +1589,11 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 searchPanelId = 'table_'+searchPanelInstance.queryLayer;
                 collapsible = false; // No collapsible in bottom
                 autoHeight = false;
+
+                // Make sure it's shown and expanded
+                targetComponent.show();
+                targetComponent.collapsible && targetComponent.expand();
+
                 break;
             case 'popup':
                 if (typeof(Ext.getCmp('SearchResultsPopUp')) == 'undefined') {
@@ -1759,12 +1764,22 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 }
             },
                 {
-                    iconCls: 'x-clear-icon',
-                    tooltip: TR.clearSelection,
+                    iconCls: 'x-extent-icon',
+                    tooltip: TR.tableUseExtent,
+                    pressed: Eqwc.settings.syncAttributeTableWithView,
                     //scale: 'medium',
                     //disabled: true,
-                    handler: clearTableSelection
+                    enableToggle: true,
+                    toggleHandler: switchBbox,
+                    scope: searchPanelInstance
                 },
+                //{
+                //    iconCls: 'x-clear-icon',
+                //    tooltip: TR.clearSelection,
+                //    //scale: 'medium',
+                //    //disabled: true,
+                //    handler: clearTableSelection
+                //},
                 {
                     itemId: 'loadmore',
                     iconCls: 'x-exclamation-icon',

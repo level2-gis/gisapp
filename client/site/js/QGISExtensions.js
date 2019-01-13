@@ -919,9 +919,10 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         if(this.gridLocation=='bottom') {
             maskElement = Ext.getCmp('BottomPanel');
         }
+        //moved
         // Make sure it's shown and expanded
-        maskElement.show();
-        maskElement.collapsible && maskElement.expand();
+        //maskElement.show();
+        //maskElement.collapsible && maskElement.expand();
 
         if (this.useWmsRequest) {
             //alert(maskElement.id);
@@ -990,11 +991,21 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             'QUERY_LAYERS': layerId,
             'FEATURE_COUNT': this.gridResults,
             'INFO_FORMAT': 'text/xml',
-            'SRS': authid,
-            'FILTER': filter
+            'CRS': authid
+            //'FILTER': filter
         };
         if (this.useBbox) {
-            params.BBOX=geoExtMap.map.calculateBounds().left+","+geoExtMap.map.calculateBounds().bottom+","+geoExtMap.map.calculateBounds().right+","+geoExtMap.map.calculateBounds().top;
+            //qgis3 workaround
+            if(Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2) {
+                var xx = geoExtMap.map.getExtent().toGeometry();
+                params.FILTER_GEOM = xx.toString();
+            } else {
+                params.FILTER = filter;
+                params.BBOX=geoExtMap.map.calculateBounds().left+","+geoExtMap.map.calculateBounds().bottom+","+geoExtMap.map.calculateBounds().right+","+geoExtMap.map.calculateBounds().top;
+            }
+
+        } else {
+            params.FILTER = filter;
         }
 
         if (fieldsValidate) {

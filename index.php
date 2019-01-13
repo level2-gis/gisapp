@@ -219,6 +219,7 @@ $login_check = new Login();
 if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
 
     $edit = $helpers->checkModulexist("editing");
+    $editVer = $helpers->getPluginVersion("editing");
     $google = $helpers->loadGoogle();
 
 	//OK open application
@@ -244,7 +245,7 @@ if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20180320"/>
 
                 <?php if ($edit) {
-                    echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v=20181107"/>';
+                    echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v='.$editVer.'"/>';
                 }?>
 
                 <script type="text/javascript" src="client_common/load.php"></script>

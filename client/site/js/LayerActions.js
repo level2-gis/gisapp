@@ -445,6 +445,12 @@ function loadMore() {
     grid.onSubmit();
 }
 
+function switchBbox(btn,state) {
+    var grid = this;
+    grid.useBbox = state;
+    grid.onSubmit(true);
+}
+
 function applyWMSFilter(item) {
     var idx = item.itemId.split('_')[1]-1;
     var node = layerTree.getSelectionModel().getSelectedNode();

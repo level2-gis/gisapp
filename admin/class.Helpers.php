@@ -525,6 +525,18 @@ class Helpers
         return $version;
     }
 
+    public static function getPluginVersion($name) {
+        $version = '0';
+        $dir = dirname(dirname(__FILE__)) . "/plugins/";
+        if (self::checkModulexist($name)) {
+            if (file_exists($dir . $name . '/changelog.txt')) {
+                $version = trim(file_get_contents($dir . $name . '/changelog.txt',null,null,null,5));
+            }
+        }
+        return $version;
+    }
+
+
     public static function getClientPath() {
         $root = filter_input(INPUT_SERVER,'DOCUMENT_ROOT',FILTER_SANITIZE_STRING);
         if (basename($root)=='gisportal') {
