@@ -35,8 +35,8 @@ Visit **<a target="_blank" href="http://test.level2.si">Demo by Level2</a>**
 * Hosting of projects on our servers
 
 ## Documentation
-**[Wiki](../../wiki)**
-**[Client settings](docs/index.html)**
+* **[Wiki](../../wiki)**
+* **[Client settings](https://test.level2.si/gisapp/docs/Eqwc.settings.html)**
 
 ## Contributing
 
