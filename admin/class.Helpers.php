@@ -280,7 +280,7 @@ class Helpers
             $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
             try {
 
-                $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],$prop->title,0);
+                $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],$prop->title);
 
                 //get wfs layers
                 $wfs = (array)($qgs["message"]->properties->WFSLayers->value);
@@ -447,19 +447,18 @@ class Helpers
 
     }
 
-    public function LayersToClientArray($group,$groupname,$cnt)
+    public function LayersToClientArray($group,$groupname)
     {
         foreach ($group->children() as $el) {
+            $cnt = sizeof($this->qgs_layers);
             $type = $el->getName();
             $lay = new \stdClass();
             if ($type == 'layer-tree-group') {
-
-                $this->LayersToClientArray($el,(string)$el->attributes()["name"],$cnt);
+                $this->LayersToClientArray($el,(string)$el->attributes()["name"]);
 
             } else {
-
                 if ($el->attributes()["id"] > '') {
-                    ++$cnt;
+                    $cnt++;
                     $lay->topic = 'Topic';
                     $lay->groupname = $groupname;
                     $lay->layername = (string)$el->attributes()["name"];
