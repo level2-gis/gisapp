@@ -106,7 +106,8 @@ FeatureInfo.prototype.handleEvent = function (e) {
                 FI_POINT_TOLERANCE: Math.round(Config.featureInfo.tolerances.point * e.frameState.pixelRatio),
                 FI_LINE_TOLERANCE: Math.round(Config.featureInfo.tolerances.line * e.frameState.pixelRatio),
                 FI_POLYGON_TOLERANCE: Math.round(Config.featureInfo.tolerances.polygon * e.frameState.pixelRatio),
-                QUERY_LAYERS: layers.join(',')
+                QUERY_LAYERS: layers.join(','),
+                WITH_MAPTIP: true
             });
         }
         url = Map.getGetFeatureInfoUrl(e.coordinate, params);

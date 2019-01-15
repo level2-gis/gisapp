@@ -820,7 +820,8 @@ function postLoading() {
         queryVisible: true,
         maxFeatures: Eqwc.settings.limitSearchMaxResults,
         vendorParams: {
-            QUERY_LAYERS: selectedQueryableLayers.join(",")
+            QUERY_LAYERS: selectedQueryableLayers.join(","),
+            WITH_MAPTIP: true
         }
     });
     WMSGetFInfo.events.register("getfeatureinfo", this, showFeatureInfo);
