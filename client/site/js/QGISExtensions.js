@@ -105,6 +105,14 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                     "Layer": function(node, obj) {
                         var parentLayer, capability;
                         if (obj.capability) {
+
+                            //QGIS Server 3.4.3 can have blank title and name, probably bug, workaround
+                            if(obj.title == undefined) {
+                                obj.title = projectData.project;
+                            }
+                            if(obj.name == undefined) {
+                                obj.name = projectData.project;
+                            }
                             capability = obj.capability;
                             parentLayer = obj;
                         } else {
