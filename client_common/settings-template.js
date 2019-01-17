@@ -15,6 +15,11 @@ Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 Eqwc.settings.limitAttributeFeatures = 2000;
 Eqwc.settings.syncAttributeTableWithView = false;
 Eqwc.settings.limitSearchMaxResults = 10;
+Eqwc.settings.featureInfoTolerances = {
+    point: 4,
+    line: 4,
+    polygon: 2
+};
 Eqwc.settings.enableHoverPopup = false;
 Eqwc.settings.defaultIdentificationMode = "allLayers";
 Eqwc.settings.showCoordinatesIdentify = true;
