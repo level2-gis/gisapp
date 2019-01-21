@@ -294,9 +294,15 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
             var definition = $.parseJSON(lay.definition);
 
+            //if extra layer take visibility from options if exists
+            var visibility = visible;
+            if (!visible && definition.visibility != undefined) {
+                visibility = definition.visibility;
+            }
+
             //tiled wms layer
             layOl3 = new ol.layer.Tile({
-                visible: visible,
+                visible: visibility,
                 //name: lay.name,
                 source: new ol.source.TileWMS({
                     url: definition.url,
