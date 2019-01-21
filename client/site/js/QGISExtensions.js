@@ -423,22 +423,25 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 printResolution = this.dpi.get("value");
             }
 
-            var layers = thematicLayer.params.LAYERS;
+            var layers = [];
+            if(thematicLayer.params.LAYERS > '') {
+                layers = layers.concat(thematicLayer.params.LAYERS.split(','));
+            }
             var extra = getVisibleExtraLayersForPrint();
 
             //add currently visible base layer for printing if exists in projects
             var printBaseLayer = wmsLoader.layerTitleNameMapping[currentlyVisibleBaseLayer];
 
             if (printBaseLayer != undefined) {
-                layers = printBaseLayer + ',' + layers;
+                layers.unshift(printBaseLayer);
             }
 
             if(extra>'') {
-                layers += ',' + extra;
+                layers.push(extra);
             }
 
             if(this.additionalLayers.length>0) {
-                layers += ',' + this.additionalLayers.join(',');
+                layers = layers.concat(this.additionalLayers);
             }
 
             var printUrl = this.url + '&' + Ext.urlEncode({
@@ -450,7 +453,7 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                     'map0:rotation': (printExtent.page.rotation * -1),
                     'map0:grid_interval_x': grid_interval,
                     'map0:grid_interval_y': grid_interval,
-                    'LAYERS': layers
+                    'LAYERS': layers.join(',')
                 });
 
             printUrl += '&' + Ext.urlEncode(this.customParams);
