@@ -64,7 +64,11 @@ function loadWMSConfig(topicName) {
                 // hide checkbox
                 attr.cls = 'layer-checkbox-hidden';
             }
-            return QGIS.WMSCapabilitiesLoader.prototype.createNode.apply(this, [attr]);
+
+            //dont' create node for hidden elements
+            if(!attr.hidden) {
+                return QGIS.WMSCapabilitiesLoader.prototype.createNode.apply(this, [attr]);
+            }
         },
         baseAttrs: {
             uiProvider: Ext.tree.TriStateNodeUI
