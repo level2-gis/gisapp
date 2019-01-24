@@ -428,16 +428,15 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 layers = layers.concat(thematicLayer.params.LAYERS.split(','));
             }
             var extra = getVisibleExtraLayersForPrint();
+            if(extra>'') {
+                layers.unshift(extra);
+            }
 
             //add currently visible base layer for printing if exists in projects
             var printBaseLayer = wmsLoader.layerTitleNameMapping[currentlyVisibleBaseLayer];
 
             if (printBaseLayer != undefined) {
                 layers.unshift(printBaseLayer);
-            }
-
-            if(extra>'') {
-                layers.push(extra);
             }
 
             if(this.additionalLayers.length>0) {
