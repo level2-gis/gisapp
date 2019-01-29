@@ -102,7 +102,7 @@ function buildLayerContextMenu(node) {
                     hideOnClick: false
                 },{
                     itemId: 'useMapCRS',
-                    text: TR.exportUseMapCrs+" ("+projectData.crs+")",
+                    text: TR.exportUseMapCrs,
                     checked: true,
                     hideOnClick: false
                 }]
@@ -212,7 +212,7 @@ function exportHandler(item) {
     var myFormat = item.container.menuItemId;
 
     var exportExtent = item.ownerCt.getComponent('currentExtent');
-    var crs = item.ownerCt.getComponent('useMapCRS').checked ? projectData.crs : projectData.layers[layerId].crs;
+    var crs = item.ownerCt.getComponent('useMapCRS').checked ? Eqwc.currentMapProjection[0] : projectData.layers[layerId].crs;
 
     exportData(exportLayer, myFormat, exportExtent.checked, crs);
 }

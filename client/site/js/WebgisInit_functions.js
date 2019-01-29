@@ -643,7 +643,8 @@ function postLoading() {
         });
 
         //set EPSG text from OpenLayers
-        rightStatusText.setText(authid);
+        //rightStatusText.setText(authid);
+        Eqwc.currentMapProjection = [projectData.crs, projectData.crs_description, geoExtMap.map.getProjectionObject()];
 
         if (urlParams.startExtent) {
             var startExtentParams = urlParams.startExtent.split(",");
@@ -754,23 +755,37 @@ function postLoading() {
         //coordinate display
         coordinateTextField = Ext.getCmp('CoordinateTextField');
         geoExtMap.map.events.register('mousemove', this, function (evt) {
+            var projectCrs = projectData.crs;
+            var mapCrs = rightStatusText.getValue();
+            var mapCrsUnits = Eqwc.currentMapProjection[2].proj.units;
             var xy = geoExtMap.map.events.getMousePosition(evt);
             var geoxy = geoExtMap.map.getLonLatFromPixel(xy);
             var nDeci = 0;
+            if(mapCrsUnits=='degrees') {
+                nDeci = 4;
+            }
             var currentScale = geoExtMap.map.getScale();
             if (currentScale <= 400) {
-                nDeci = 1;
+                nDeci += 1;
                 if (currentScale <= 100) {
-                    nDeci = 2;
+                    nDeci += 2;
                 }
+            }
+            if(projectCrs != mapCrs) {
+                geoxy.transform(geoExtMap.map.getProjectionObject(),Eqwc.currentMapProjection[2]);
             }
             coordinateTextField.setRawValue(geoxy.lon.toFixed(nDeci) + "," + geoxy.lat.toFixed(nDeci));
         });
 
         coordinateTextField.on('specialkey', function (textField, evt) {
             if (evt.getKey() == evt.ENTER) {
+                var projectCrs = projectData.crs;
+                var mapCrs = rightStatusText.getValue();
                 var coords = textField.getValue().split(",");
                 var newCenter = new OpenLayers.LonLat(parseFloat(coords[0]), parseFloat(coords[1]));
+                if(projectCrs != mapCrs) {
+                    newCenter.transform(Eqwc.currentMapProjection[2],geoExtMap.map.getProjectionObject());
+                }
                 geoExtMap.map.setCenter(newCenter);
             }
             //supress arrow keys propagation to underlying OpenLayers
@@ -779,8 +794,13 @@ function postLoading() {
             }
         });
         coordinateTextField.on('change', function (numberField, newValue, oldValue) {
+            var projectCrs = projectData.crs;
+            var mapCrs = rightStatusText.getValue();
             var coords = newValue.split(",");
             var newCenter = new OpenLayers.LonLat(parseFloat(coords[0]), parseFloat(coords[1]));
+            if(projectCrs != mapCrs) {
+                newCenter.transform(Eqwc.currentMapProjection[2],geoExtMap.map.getProjectionObject());
+            }
             geoExtMap.map.setCenter(newCenter);
         });
 

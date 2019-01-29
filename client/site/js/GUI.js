@@ -268,6 +268,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							width: 120,
 							store: 'objIdentificationModes',
 							valueField: 'value',
+                            editable: false,
 							mode: 'local',
 							displayField: 'name',
 							triggerAction: 'all',
@@ -350,9 +351,28 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						}, {
 							xtype: 'tbfill'
 						}, {
-							xtype: 'tbtext',
-							text: '',
-							id: 'rightStatusText'
+							xtype: 'combo',
+							id: 'rightStatusText',
+                            hideLabel: true,
+                            editable: false,
+                            mode: 'local',
+                            triggerAction: 'all',
+                            width: 90,
+                            store: projectData.crsComboStore(),
+                            value: projectData.crsComboStore()[0],
+                            listeners: {
+                                "select": function(combo, record, index) {
+                                    Eqwc.currentMapProjection = projectData.getProjectionsList().filter(function (val) {
+                                        return val[0] === record.data.field1;
+                                    })[0];
+                                }
+                                //"render": function(c) {
+                                //    new Ext.ToolTip({
+                                //        target: c.getEl(),
+                                //        html: 'Tooltip content'
+                                //    });
+                                //}
+                            }
 						}, {
 							xtype: 'tbtext',
 							text: coordinateTextLabel[lang]
@@ -361,8 +381,9 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						}, {
 							xtype: 'textfield',
 							width: 120,
-							regex: /^\d{6}\.?\d{0,2},\d{6}\.?\d{0,2}$/,
-							enableKeyEvents: true,
+							//regex: /^\d{6}\.?\d{0,2},\d{6}\.?\d{0,2}$/,
+							maskRe: /[0-9]/,
+                            enableKeyEvents: true,
 							id: 'CoordinateTextField'
 						}, {
 							xtype: 'tbtext',

@@ -210,16 +210,27 @@ projectData.getProjectionsList = function() {
 
     //first element is map projection
     if(Proj4js.defs[projectData.crs]) {
-        ret.push([projectData.crs,projectData.crs_description,geoExtMap.map.getProjectionObject()]);
+        ret.push([projectData.crs, projectData.crs_description, new OpenLayers.Projection(projectData.crs)]);
     }
 
     for (var i = 0; i < projectData.crs_list.length; ++i) {
         var crs = projectData.crs_list[i];
         var olProj = new OpenLayers.Projection(crs);
         if (crs != projectData.crs && Proj4js.defs[crs]) {
-            ret.push([crs,olProj.title,olProj]);
+            ret.push([crs,olProj.proj.title,olProj]);
         }
     }
+    return ret;
+};
+
+projectData.crsComboStore = function() {
+    var ret = [];
+
+    projectData.getProjectionsList().map(function(currentValue, index, arr) {
+        var code = currentValue[0];
+        ret.push(code);
+    }, ret);
+
     return ret;
 };
 

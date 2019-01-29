@@ -42,7 +42,8 @@ function showFeatureInfo(evt) {
         var text = "";
         var locationText = "<h2>" + TR.fiLocation + "</h2>";
         var locationUnits = map.getLonLatFromPixel(evt.xy);
-        var locationObj = new QGIS.LocationService({location: locationUnits, language: projectData.lang});
+        var locationProj = projectData.crs == Eqwc.currentMapProjection[0] ? null : Eqwc.currentMapProjection[2];
+        var locationObj = new QGIS.LocationService({location: locationUnits, language: projectData.lang, projection: locationProj});
         var popupItems = [];
 
         if (Eqwc.settings.showCoordinatesIdentify) {
