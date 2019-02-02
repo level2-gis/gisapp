@@ -357,9 +357,9 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                             editable: false,
                             mode: 'local',
                             triggerAction: 'all',
-                            width: 90,
+                            width: 160,
                             store: projectData.crsComboStore(),
-                            value: projectData.crsComboStore()[0],
+                            value: projectData.crsComboStore()[0][1],
                             listeners: {
                                 "select": function(combo, record, index) {
                                     Eqwc.currentMapProjection = projectData.getProjectionsList().filter(function (val) {

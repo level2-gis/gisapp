@@ -228,7 +228,9 @@ projectData.crsComboStore = function() {
 
     projectData.getProjectionsList().map(function(currentValue, index, arr) {
         var code = currentValue[0];
-        ret.push(code);
+        var title = currentValue[1];
+        title = title ? title : code;
+        ret.push([code,title]);
     }, ret);
 
     return ret;
