@@ -123,28 +123,37 @@ function showLegendAndMetadata(layertitle) {
     var projDataLayer = projectData.layers[layername];
     var properties = {};
 
+    //create legend URI
+    var legendUrl = wmsURI + Ext.urlEncode({
+            SERVICE: "WMS",
+            VERSION: "1.3.0",
+            REQUEST: "GetLegendGraphics",
+            FORMAT: "image/png",
+            EXCEPTIONS: "application/vnd.ogc.se_inimage",
+            BOXSPACE: 1,
+            LAYERSPACE: 2,
+            SYMBOLSPACE: 1,
+            SYMBOLHEIGHT: 2,
+            LAYERFONTSIZE: 8,
+            ITEMFONTSIZE: 8,
+            LAYERS: layername,
+            DPI: screenDpi
+        });
+    legendMetaTabPanel = Ext.getCmp('legendMetaTabPanel');
+    //create legend image
+    legendMetaTabPanel.activate(legendTab);
+    var legendImage = '<img src="' + legendUrl + '" />';
+    legendTab.update(legendImage);
+
     if (projDataLayer) {
-        //create legend URI
-        var legendUrl = wmsURI + Ext.urlEncode({
-                SERVICE: "WMS",
-                VERSION: "1.3.0",
-                REQUEST: "GetLegendGraphics",
-                FORMAT: "image/png",
-                EXCEPTIONS: "application/vnd.ogc.se_inimage",
-                BOXSPACE: 1,
-                LAYERSPACE: 2,
-                SYMBOLSPACE: 1,
-                SYMBOLHEIGHT: 2,
-                LAYERFONTSIZE: 8,
-                ITEMFONTSIZE: 8,
-                LAYERS: layername,
-                DPI: screenDpi
+
+        var describeUrl = wmsURI + Ext.urlEncode({
+                SERVICE: "WFS",
+                VERSION: "1.1.0",
+                REQUEST: "DescribeFeatureType",
+                TYPENAME: layertitle
             });
-        legendMetaTabPanel = Ext.getCmp('legendMetaTabPanel');
-        //create legend image
-        legendMetaTabPanel.activate(legendTab);
-        var legendImage = '<img src="' + legendUrl + '" />';
-        legendTab.update(legendImage);
+        var describeUrlLink = '<a target="_blank" href="'+describeUrl+'">DescribeFeatureType</a>';
 
         var type = projDataLayer.geom_type;
         if (type == '' && (projDataLayer.provider == 'ogr' || projDataLayer.provider == 'spatialite')) {
@@ -158,8 +167,8 @@ function showLegendAndMetadata(layertitle) {
             'TYPE': type,
             'PROVIDER': projDataLayer.provider,
             'CRS': projDataLayer.crs,
-            'IDENTIFY': wmsLoader.layerProperties[layername].queryable,
-            'EDITABLE': projDataLayer.wfs,
+            'IDENTIFY': wmsLoader.layerProperties[layername].queryable ? Ext.MessageBox.buttonText.yes : Ext.MessageBox.buttonText.no,
+            'EDITABLE': projDataLayer.wfs ?  Ext.MessageBox.buttonText.yes : Ext.MessageBox.buttonText.no,
             'ID': projDataLayer.id
         };
     }
@@ -172,6 +181,9 @@ function showLegendAndMetadata(layertitle) {
 	if (wmsLoader.layerProperties[layername].abstract) {
 		metadataText += '<p><b>'+abstractString[lang]+'</b><p><p>'+wmsLoader.layerProperties[layername].abstract+'</p>';
 	}
+    if(projDataLayer && projDataLayer.wfs) {
+        metadataText += '<p>'+describeUrlLink+'</p>';
+    }
 	//is layer queryable
 	//metadataText += '<p style="margin-top:1em;">'+layerQueryable[lang];
 	//if (wmsLoader.layerProperties[layername].queryable) {
