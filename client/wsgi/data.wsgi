@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #sample queries
-#http://localhost/wsgi/data.wsgi?table=lookup.temakode&filter=SOSI%20kode&gtype=2&cb=bla
+#if query paramater is missing whole table is returned
+#http://localhost/wsgi/data.wsgi?table=lookup.temakode&category=SOSI%20kode&gtype=2&query=1234&cb=bla
 
 import re #regular expression support
 import string #string manipulation support
@@ -26,8 +27,13 @@ def application(environ, start_response):
 
   table = request.params["table"]
   gtype = request.params["gtype"]
-
-  filterString = request.params["filter"]
+  categoryString = request.params["category"]
+  
+  queryString = ''
+  if "query" in request.params:
+    queryString = request.params["query"]
+    #strip away leading and trailing whitespaces
+    queryString = queryString.strip()
   
   sql = ""
   errorText = ''
@@ -44,16 +50,25 @@ def application(environ, start_response):
   #    else:
   #      filt.extend(filterString.split(','))
   
-  filt.extend(filterString.split(','))
+  filt.extend(categoryString.split(','))
   filtLength = len(filt)
 
   #add single quotes
   for i in range(filtLength):
     filt[i] = "'"+filt[i]+"'"
 
-  sql += "SELECT code, description FROM " + table + " WHERE category IN("+','.join(filt)+") AND geom_type="+gtype+";"
+  sql += "SELECT code, description FROM " + table + " WHERE category IN("+','.join(filt)+") AND geom_type="+gtype
 
-  #sql += "SELECT * FROM " + table + ";"
+  if queryString:
+    #sql += " AND (description ILIKE '%"+query+"%' OR code::text ILIKE '%"+query+"%')"
+    sql += " AND (description ILIKE %s"
+    data += ("%" + queryString + "%",)
+    sql += " OR code::text ILIKE %s)"
+    data += ("%" + queryString + "%",)
+
+  sql += ";"
+
+  #return [sql]
 
   conn = qwc_connect.getConnection(environ, start_response)
   
