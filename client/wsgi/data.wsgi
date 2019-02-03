@@ -1,8 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#sample queries
-#if query paramater is missing whole table is returned
-#http://localhost/wsgi/data.wsgi?table=lookup.temakode&category=SOSI%20kode&gtype=2&query=1234&cb=bla
+#table structure for this script to work:
+#CREATE TABLE my_lookup_table (
+#	id serial PRIMARY KEY,
+#	code integer,
+#	description text,
+#	geom_type integer NOT NULL,
+#	category text,
+#	CONSTRAINT "uc_temakode" UNIQUE (code, geom_type)
+#);
+#geom_type: 1=point, 2=line, 3=polygon
+#
+#required paramaters are table and gtype (geom_type), category and query are for filtering results, sample query
+#http://localhost/wsgi/data.wsgi?table=my_lookup_table&category=field&gtype=2&query=1234
 
 import re #regular expression support
 import string #string manipulation support
@@ -27,7 +37,10 @@ def application(environ, start_response):
 
   table = request.params["table"]
   gtype = request.params["gtype"]
-  categoryString = request.params["category"]
+  categoryString = ''
+  if "category" in request.params:
+    categoryString = request.params["category"]
+    categoryString = categoryString.strip()
   
   queryString = ''
   if "query" in request.params:
@@ -49,16 +62,19 @@ def application(environ, start_response):
   #      filt = [] # set empty to have no search table error returned
   #    else:
   #      filt.extend(filterString.split(','))
+
+  sql += "SELECT code, description FROM " + table + " WHERE geom_type="+gtype 
+
+  if categoryString:
+    filt.extend(categoryString.split(','))
+    filtLength = len(filt)
+
+    #add single quotes
+    for i in range(filtLength):
+      filt[i] = "'"+filt[i]+"'"
+
+    sql += " AND category IN("+','.join(filt)+")" 
   
-  filt.extend(categoryString.split(','))
-  filtLength = len(filt)
-
-  #add single quotes
-  for i in range(filtLength):
-    filt[i] = "'"+filt[i]+"'"
-
-  sql += "SELECT code, description FROM " + table + " WHERE category IN("+','.join(filt)+") AND geom_type="+gtype
-
   if queryString:
     #sql += " AND (description ILIKE '%"+query+"%' OR code::text ILIKE '%"+query+"%')"
     sql += " AND (description ILIKE %s"
