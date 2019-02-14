@@ -642,8 +642,12 @@ function postLoading() {
             });
         });
 
-        //set EPSG text from OpenLayers
-        //rightStatusText.setText(authid);
+        //set crs values
+        rightStatusText.store.on("load", function() {
+            rightStatusText.setValue(this.data.itemAt(0).data.description);
+        });
+        rightStatusText.store.loadData(projectData.crsComboStore());
+
         Eqwc.currentMapProjection = [projectData.crs, projectData.crs_description, geoExtMap.map.getProjectionObject()];
 
         if (urlParams.startExtent) {

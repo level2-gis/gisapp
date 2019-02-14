@@ -108,10 +108,6 @@ Ext.onReady(function () {
     mainStatusText = Ext.getCmp('mainStatusText');
     rightStatusText = Ext.getCmp('rightStatusText');
 
-    //set crs values
-    rightStatusText.store.loadData(projectData.crsComboStore());
-    rightStatusText.setValue(projectData.crsComboStore()[0][1]);
-
     //set some status messsages
     mainStatusText.setText(mapAppLoadingString[lang]);
 
