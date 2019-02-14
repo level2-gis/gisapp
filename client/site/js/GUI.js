@@ -351,19 +351,33 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						}, {
 							xtype: 'tbfill'
 						}, {
-							xtype: 'combo',
-							id: 'rightStatusText',
+                            xtype: 'combo',
+                            id: 'rightStatusText',
+                            valueField: 'code',
+                            displayField: 'description',
                             hideLabel: true,
                             editable: false,
                             mode: 'local',
                             triggerAction: 'all',
                             width: 160,
-                            store: projectData.crsComboStore(),
-                            value: projectData.crsComboStore()[0][1],
+                            store: {
+                                xtype: 'arraystore',
+                                // store configs
+                                autoDestroy: true,
+                                storeId: 'crsStore',
+                                // reader configs
+                                idIndex: 0,
+                                fields: [{
+                                    name: 'code', mapping: 0
+                                }, {
+                                    name: 'description', mapping: 1
+                                }]
+                            },
+                            //value: projectData.crsComboStore()[0][1],
                             listeners: {
                                 "select": function(combo, record, index) {
                                     Eqwc.currentMapProjection = projectData.getProjectionsList().filter(function (val) {
-                                        return val[0] === record.data.field1;
+                                        return val[0] === record.data.code;
                                     })[0];
                                 }
                                 //"render": function(c) {
