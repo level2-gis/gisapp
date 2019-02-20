@@ -16,8 +16,10 @@ Config.parseExtentToArray = function(str){
 
 Config.extractStringFromObject = function (objName, string) {
 
-    if (string.indexOf(objName)==-1) {
+    if (string && string.indexOf(objName)==-1) {
         return string;
+    } else {
+        return null;
     }
 
     var ret = '';

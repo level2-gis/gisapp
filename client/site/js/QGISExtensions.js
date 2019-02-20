@@ -1703,7 +1703,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
         if(this.projection) {
             loc = loc.clone().transform(authid, this.projection);
         }
-        return loc.lon.toFixed(coordinatePrecision)+ ", " + this.location.lat.toFixed(coordinatePrecision);
+        return loc.lon.toFixed(coordinatePrecision)+ ", " + loc.lat.toFixed(coordinatePrecision);
     },
 
     locationToWgs: function () {
