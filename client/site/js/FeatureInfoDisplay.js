@@ -420,10 +420,9 @@ function parseFIResult(node) {
                 htmlText += "<h2>" + layerTitle + "</h2>";
             }
 
-            var fid = layerTitle+"."+node.firstElementChild.getAttribute("id");
             while (layerChildNode) {
 
-
+                var fid = layerTitle+"."+layerChildNode.id;
 
                 if (layerChildNode.hasChildNodes() && layerChildNode.nodeName === "Feature") {
                     var attributeNode = layerChildNode.firstChild;
