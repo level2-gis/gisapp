@@ -449,9 +449,10 @@ function parseFIResult(node) {
                     while (attributeNode) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
+                            var attNameCase = attName.toUpperCase();
                             var attValue = attributeNode.getAttribute("value").replace(/null/ig, Eqwc.settings.noDataValue);
                             if ((attName !== mapInfoFieldName) && ((suppressEmptyValues == true && attValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '') !== "") || suppressEmptyValues == false)) {
-                                if (attName === "geometry") {
+                                if (attNameCase === "GEOMETRY") {
                                     var feature = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(attValue));
                                     //var feature = {};
                                     //feature.geometry = attValue;
@@ -468,14 +469,15 @@ function parseFIResult(node) {
                                 } else {
                                     //specific check if attribute name is "files" and we have an alias
                                     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
+                                    filesAlias = filesAlias.toUpperCase();
 
                                     //if (attName !== "maptip") {
                                     htmlText += "\n   <tr>";
-                                    if (showFieldNamesInClickPopup && attName !== "maptip" && attName!== filesAlias) {
+                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
                                         htmlText += "<td>" + attName + ":</td>";
                                     }
 
-                                    if (attName == filesAlias){
+                                    if (attNameCase == filesAlias){
                                         if (attValue>'') {
                                             var attArr = Ext.util.JSON.decode(attValue);
                                             var newArr = [];
@@ -489,7 +491,7 @@ function parseFIResult(node) {
                                         attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
                                     }
 
-                                    if (attName == 'maptip' || attName == filesAlias) {
+                                    if (attNameCase == 'MAPTIP' || attNameCase == filesAlias) {
                                         htmlText += "<td colspan='2'>" + attValue + "</td></tr>";
                                     } else {
                                         htmlText += "<td>" + attValue + "</td></tr>";

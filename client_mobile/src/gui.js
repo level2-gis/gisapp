@@ -748,6 +748,7 @@ Gui.showFeatureInfoResults = function(status, data) {
 Gui.showXMLFeatureInfoResults = function (results) {
     var html = "";
     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
+    filesAlias = filesAlias.toUpperCase();
 
     //add button
     if (typeof(Editor) == 'function' && mobEditor.layer) {
@@ -802,12 +803,13 @@ Gui.showXMLFeatureInfoResults = function (results) {
 
             for (var k = 0; k < feature.attributes.length; k++) {
                 var attribute = feature.attributes[k];
+                var name = attribute.name.toUpperCase();
 
                 // skip hidden attributes and hidden values
                 //if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
                     html += '<li>';
 
-                    if (attribute.name == filesAlias) {
+                    if (name == filesAlias) {
                         if (attribute.value > '') {
                             var attArr = $.parseJSON(attribute.value);
                             var newArr = [];
@@ -826,7 +828,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
 
                     // add attribute name and value
                     //hide field name in this cases, hardcoded
-                    if (attribute.name !== 'maptip' && attribute.name !== filesAlias) {
+                    if (name !== 'MAPTIP' && name !== filesAlias) {
                         html += '<span class="name">' + attribute.name + ': </span>';
                     }
                     html += '<span class="value">' + attribute.value + '</span>';
