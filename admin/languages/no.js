@@ -7,12 +7,12 @@
  */
 var TR = {
     appName: 'Spatial info. system - ',
-    loginTitle: 'Logg Inn',
+    loginTitle: 'Logg inn',
     loginMessage: 'Tilgang for autoriserte brukere.' +
     '<br />Skriv Brukernavn og passord.',
     loginFailMessage: 'Klarte ikke å logge inn',
     loginWaitMessage: 'Vennligst vent...',
-    loginButton: 'Logg Inn',
+    loginButton: 'Logg inn',
     guestButton: 'Gjest',
     loginUsernameLabel: 'Brukernavn',
     loginPasswordLabel: 'Passord',
@@ -43,7 +43,7 @@ var TR = {
     fiLocation: 'Musepeker',
     fiElevation: 'm.o.h.',
     cancel: 'Avbryt',
-    send: 'Sende',
+    send: 'Send inn',
     feedback: 'Tilbakemelding',
     feedbackTitle: 'Send din tilbakemelding',
     feedbackDescription: 'Ditt navn, prosjekt og nåværende kartlink vil bli lagt til meldingen!',
@@ -67,7 +67,7 @@ var TR = {
 var I18n = {};
 I18n.title = "Mobile Viewer";
 I18n.search = {
-    header: "Søke",
+    header: "Søk",
     results: "Resultater",
     failed: "Søket mislyktes:"
 };
@@ -113,9 +113,9 @@ I18n.geolocation = {
     accuracy: "Kvalitet",
     altitude: "Høyde",
     heading: "Retning",
-    speed: "Fart",
+    speed: "Hastighet",
     obtaining: "Finner plassering...",
-    lowAccuracy: "Low Accuracy!"
+    lowAccuracy: "Dårlig nøyaktighet!"
 };
 
 I18n.login = {

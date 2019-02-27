@@ -262,4 +262,3 @@ var errMessageSearchComboNetworkRequestFailureTitleString = [];
 errMessageSearchComboNetworkRequestFailureTitleString["en"] = "Network request failed";
 var errMessageSearchComboNetworkRequestFailureString = [];
 errMessageSearchComboNetworkRequestFailureString["en"] = "The network request for the geometry of the search result failed:\n";
-errMessageSearchComboNetworkRequestFailureString["en"] = "Zapytanie sieci o geometrię wyszukiwania nie powiodło się:\n";
