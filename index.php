@@ -41,6 +41,9 @@ function goMobile($lang) {
 
         <!-- Proj4js -->
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
+        <script type="text/javascript">
+            Proj4js = {defs: {}};
+        </script>
 
         <!-- OpenLayers 3 -->
         <script src="client_mobile/lib/ol3/ol.js?v=4.6.5a"></script>
