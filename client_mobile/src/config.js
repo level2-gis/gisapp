@@ -201,6 +201,13 @@ else {
     Config.map.projection = ol.proj.get(projectData.crs);
 }
 
+//add projection definition objects for other values in crs_list
+for (var j=0; j<projectData.crs_list.length; j++) {
+    if(proj4.defs[projectData.crs_list[j]] === undefined) {
+        proj4.defs(projectData.crs_list[j], Proj4js.defs[projectData.crs_list[j]]);
+    }
+}
+
 //Config.map.projection.setExtent(Config.map.extent);
 
 // calculate resolutions from scales
