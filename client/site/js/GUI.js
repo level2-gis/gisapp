@@ -360,6 +360,8 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                             mode: 'local',
                             triggerAction: 'all',
                             width: 160,
+                            valueField: 'code',
+                            displayField: 'description',
                             store: {
                                 xtype: 'arraystore',
                                 // store configs

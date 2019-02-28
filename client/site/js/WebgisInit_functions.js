@@ -644,7 +644,7 @@ function postLoading() {
 
         //set crs values
         rightStatusText.store.on("load", function() {
-            rightStatusText.setValue(this.data.itemAt(0).data.description);
+            rightStatusText.setValue(this.data.itemAt(0).data.code);
         });
         rightStatusText.store.loadData(projectData.crsComboStore());
 
