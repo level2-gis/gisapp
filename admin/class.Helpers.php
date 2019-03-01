@@ -303,6 +303,10 @@ class Helpers
                     if (in_array($lay->id,$wfs) and (!empty($lay->geom_type) and $lay->geom_type != 'No geometry')) {
                         if($lay->provider == 'postgres' or $lay->provider == 'spatialite') {
                             $lay->wfs = true;
+                            //layer CRS must be included in crs list for client to load projection file
+                            if(!(in_array($lay->crs,$prop->crs_list))) {
+                                array_push($prop->crs_list,$lay->crs);
+                            }
                             if(strpos(strtolower($lay->geom_type), 'polygon') === false) {
                                 $lay->goto = true;
                             }
