@@ -18,8 +18,6 @@ Config.extractStringFromObject = function (objName, string) {
 
     if (string && string.indexOf(objName)==-1) {
         return string;
-    } else {
-        return null;
     }
 
     var ret = '';
