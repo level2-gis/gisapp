@@ -184,6 +184,7 @@ Config.map.init = {
 };
 
 Config.map.projectionList = [];
+Config.map.projectionList.push([projectData.crs, projectData.crs_description]);
 
 // ol.proj.Projection
 // add definition if doesn't exist
@@ -210,7 +211,9 @@ for (var j=0; j<projectData.crs_list.length; j++) {
         proj4.defs(code, Proj4js.defs[code]);
     }
     var title = proj4.defs[code].title ? proj4.defs[code].title : code;
-    Config.map.projectionList.push([code, title]);
+    if(code != projectData.crs) {
+        Config.map.projectionList.push([code, title]);
+    }
 }
 
 //Config.map.projection.setExtent(Config.map.extent);

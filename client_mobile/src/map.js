@@ -50,6 +50,13 @@ Map.singleClickHandlers = {};
 Map.useTiledWMS = Eqwc.settings.mobileUseTiledWMS;
 
 Map.userCrs = null;  //later holds value from Map CRS selection combo
+Map.userCrsTitle = function() {
+    var list = Config.map.projectionList;
+    var crs = list.filter(function(item) {
+        return item[0] == Map.userCrs;
+    });
+    return crs[0][1];
+};
 
 Map.createMap = function() {
   // override from URL params
