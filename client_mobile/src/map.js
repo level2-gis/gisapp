@@ -49,6 +49,8 @@ Map.singleClickHandlers = {};
 
 Map.useTiledWMS = Eqwc.settings.mobileUseTiledWMS;
 
+Map.userCrs = null;  //later holds value from Map CRS selection combo
+
 Map.createMap = function() {
   // override from URL params
   if (Config.permalink.useTiledWMS != null) {

@@ -67,7 +67,20 @@ Gui.showLocationPanel = function (show) {
     }
 
     if (show) {
+
+        var units = proj4.defs[Map.userCrs].units;
+        var prec = 2;
+        if (units == 'degrees') {
+            prec = 4;
+        }
+
         var coordinates = Map.geolocation.getPosition();
+        var pos = new ol.geom.Point(coordinates);
+
+        if(Map.userCrs != projectData.crs) {
+            pos.transform(projectData.crs, Map.userCrs);
+        }
+
         var accuracy = Map.geolocation.getAccuracy();
         var altitude = Map.geolocation.getAltitude();
 
@@ -76,13 +89,11 @@ Gui.showLocationPanel = function (show) {
         }
 
         var extra = Map.geolocation.getProperties();
-
-
         var heading = Map.geolocation.getHeading();
         var speed = Map.geolocation.getSpeed();
 
         var html = [
-            coordinates[0].toFixed(2) + ', ' + coordinates[1].toFixed(2)
+            pos.getCoordinates()[0].toFixed(prec) + ', ' + pos.getCoordinates()[1].toFixed(prec)
         ];
 
         if (Eqwc.settings.mobileShowAccuracy) {
@@ -90,7 +101,7 @@ Gui.showLocationPanel = function (show) {
                 if (accuracy < EditorConfig.accuracyLimit) {
                     html.push(I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(3) + ' m');
                 } else {
-                    html.push('<span style="color:red;font-weight:bold;">' + I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(3) + ' m </span>');
+                    html.push('<span style="color:red;font-weight:bold;">' + I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(4) + ' m </span>');
                 }
             } else {
                 html.push(I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(3) + ' m');
@@ -1108,8 +1119,27 @@ Gui.toggleLogin = function(signedIn) {
   $('#buttonSignOut').toggle(signedIn);
 };
 
+Gui.fillMapCrs = function() {
+    $.each(Config.map.projectionList, function (i, item) {
+        $('#mapCrs').append($('<option>', {
+            value: item[0],
+            text: item[1]
+        }));
+    });
+
+    $('#mapCrs').on('change', function () {
+        Map.userCrs = this.value;
+        if($('#locationPanel').is(":visible") && Map.geolocation) {
+            Gui.showLocationPanel(true);
+        }
+    });
+
+    $('#mapCrs').val(projectData.crs).change();
+};
+
 Gui.initViewer = function() {
   Gui.updateTranslations();
+  Gui.fillMapCrs();
 
   Gui.updateLayout();
   $(window).on('resize', function() {

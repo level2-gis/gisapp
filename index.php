@@ -107,18 +107,9 @@ function goMobile($lang) {
                                 <option value="on">Ein</option>
                             </select>
                         </div>
-                        <!--                    <a href="#dlgAbout" id="buttonLogo" class="btn-icon-text" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="logo">Impressum</a>-->
-
-                        <!--                    <div data-role="popup" id="dlgAbout" class="ui-corner-all" data-theme="c" data-overlay-theme="a">-->
-                        <!--                        <div data-role="header" data-theme="c" class="ui-corner-top">-->
-                        <!--                            <h1>Impressum</h1>-->
-                        <!--                        </div>-->
-                        <!--                        <div id="aboutContent" data-role="content" data-theme="c" class="ui-corner-bottom ui-content"></div>-->
-                        <!--                    </div>-->
-                        <!---->
-                        <!--                    <div>-->
-                        <!--                        <a href="#" id="buttonShare" data-role="button" data-inline="true">Share</a>-->
-                        <!--                    </div>-->
+                        <div>
+                            <select name="mapCrs" id="mapCrs" data-mini="false"></select>
+                        </div>
                     </div>
                 </div>
                 <div id="panelPropertiesEditor" class="scrollable"></div>

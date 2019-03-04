@@ -183,6 +183,8 @@ Config.map.init = {
   zoom: 6
 };
 
+Config.map.projectionList = [];
+
 // ol.proj.Projection
 // add definition if doesn't exist
 if(proj4.defs[projectData.crs] === undefined) {
@@ -201,11 +203,14 @@ else {
     Config.map.projection = ol.proj.get(projectData.crs);
 }
 
-//add projection definition objects for other values in crs_list
+//add projection definition objects for other values in crs_list and fill Config.map.projectionList
 for (var j=0; j<projectData.crs_list.length; j++) {
-    if(proj4.defs[projectData.crs_list[j]] === undefined) {
-        proj4.defs(projectData.crs_list[j], Proj4js.defs[projectData.crs_list[j]]);
+    var code = projectData.crs_list[j];
+    if(proj4.defs[code] === undefined) {
+        proj4.defs(code, Proj4js.defs[code]);
     }
+    var title = proj4.defs[code].title ? proj4.defs[code].title : code;
+    Config.map.projectionList.push([code, title]);
 }
 
 //Config.map.projection.setExtent(Config.map.extent);
