@@ -45,6 +45,7 @@ function customBeforeMapInit() {
 function customAfterMapInit() {
 
     // Add legend symbols to the toc for initially visible layers
+    // Also trigger prepareEdit in case of Editor plugin
     var treeRoot = layerTree.getNodeById("wmsNode");
     treeRoot.firstChild.cascade(
         function (n) {
@@ -56,6 +57,10 @@ function customAfterMapInit() {
                             provider: '',
                             layername: layerId
                         } : projectData.layers[layerId];
+                        //editor
+                        if(layer.wfs && (typeof(prepareEdit) == 'function') && EditorConfig && EditorConfig.autoPrepareAllLayersOnStartup) {
+                            prepareEdit(layer);
+                        }
                         projectData.setLayerLegend(layer,n);
                     }
                 }
