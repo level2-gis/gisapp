@@ -35,13 +35,14 @@ class DbLoader
         if($exec) {
             $result_row = $query->fetchObject();
             if ($result_row) {
-                return $result_row->check_user_project;
+                $role = isset($result_row->role) ? $result_row->role : null;
+                return ['check' => $result_row->check_user_project, 'role' => $role];
             } else
-                return 'TR.loginFailMessage';
+                return ['check' => 'TR.loginFailMessage'];
         }
         else {
             //SQL execute error, get error message
-            return $query->errorInfo()[2];
+            return ['check' => $query->errorInfo()[2]];
         }
     }
 

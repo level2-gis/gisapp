@@ -327,11 +327,10 @@ class Login
             return false;
         }
 
-
-
         //aditional check if project and user exists and user has permission to use project
         $check = $gisApp->checkUserProject();
-        if ($check == 'OK') {
+        if ($check['check'] == 'OK') {
+            $role = $check['role'];
             //get additional project info
             $project_data = $gisApp->getProjectDataFromDB();
             if ($project_data == false) {
@@ -383,6 +382,7 @@ class Login
 
             $_SESSION['project'] = $project;
             $_SESSION['project_path'] = $projectPath['message'];
+            $_SESSION['role'] = $role;
             $_SESSION['data'] = $project_data;
             $_SESSION['settings'] = $project_settings['message'];
             $_SESSION['description'] = $project_description['message'];
