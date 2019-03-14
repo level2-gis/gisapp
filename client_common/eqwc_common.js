@@ -8,10 +8,11 @@
 if(projectData.search === null && Eqwc.settings.search) {
     projectData.search = Eqwc.settings.search;
 }
-if(projectData.geoCode === null && Eqwc.settings.geoCode) {
+//wsgi and geocode exclude each other
+if(projectData.geoCode === null &&  projectData.wsgi === null && Eqwc.settings.geoCode) {
     projectData.geoCode = Eqwc.settings.geoCode;
 }
-if(projectData.wsgi === null && Eqwc.settings.wsgi) {
+if(projectData.wsgi === null && projectData.geoCode === null && Eqwc.settings.wsgi) {
     projectData.wsgi = Eqwc.settings.wsgi;
 }
 if(projectData.locationServices === null && Eqwc.settings.locationServices) {
