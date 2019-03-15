@@ -185,6 +185,9 @@ Config.map.init = {
   zoom: 6
 };
 
+if(projectData.crs == '') {
+    alert('Map CRS must be set in QGIS!');
+}
 Config.map.projectionList = [];
 Config.map.projectionList.push([projectData.crs, projectData.crs_description]);
 
