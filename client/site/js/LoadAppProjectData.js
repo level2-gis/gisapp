@@ -138,6 +138,9 @@ projectData.setLayerLegend = function (layer,node) {
     var legend = '';
     var layername = wmsLoader.layerTitleNameMapping[layer.layername];
 
+    //IE 11 does not support xhr.responseURL, so old way is used for IE
+    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+
     //for raster layers show default raster legend image
     if (layer.provider == 'gdal' || layer.provider == 'wms') {
         legend = iconDirectory+"raster.png?" + Ext.urlEncode({
@@ -168,37 +171,49 @@ projectData.setLayerLegend = function (layer,node) {
         });
     }
 
-    var xhr = new XMLHttpRequest();
-    //var params = 'layer='+layer.id+'&node='+node.id;
-    xhr.open("GET", legend, true);
-    //Now set response type
-    xhr.responseType = 'arraybuffer';
-    xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
-            //onsole.log(xhr.response) // ArrayBuffer
-            //console.log(new Blob([xhr.response])) // Blob
-
-            var blob = new Blob([xhr.response], {type: 'image/png'}),
-                url = window.URL.createObjectURL(blob);
-                //img = document.createElement('img');
-            //img.src = url;
-
-            var nodeId = Ext.urlDecode(xhr.responseURL).NODE;
-            var layerId = Ext.urlDecode(xhr.responseURL).LAYERS;
-            var node = layerTree.getNodeById(nodeId);
-            var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
-
-            Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
-                "<div style='overflow-x:hidden; overflow-y:auto; max-height:"+height+"px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + url + "\"/></div>"
-            );
-
-            var el = Ext.get('legend_'+layerId);
-            if(el) {
-                el.setVisibilityMode(Ext.Element.DISPLAY);
-            }
+    if(isIE11) {
+        var layerId = layer.id;
+        var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
+        Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
+            "<div style='overflow-y:auto; max-height:"+height+"px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + legend + "\"/></div>"
+        );
+        var el = Ext.get('legend_'+layerId);
+        if(el) {
+            el.setVisibilityMode(Ext.Element.DISPLAY);
         }
-    });
-    xhr.send();
+    } else {
+        var xhr = new XMLHttpRequest();
+        //var params = 'layer='+layer.id+'&node='+node.id;
+        xhr.open("GET", legend, true);
+        //Now set response type
+        xhr.responseType = 'arraybuffer';
+        xhr.addEventListener('load', function () {
+            if (xhr.status === 200) {
+                //onsole.log(xhr.response) // ArrayBuffer
+                //console.log(new Blob([xhr.response])) // Blob
+
+                var blob = new Blob([xhr.response], {type: 'image/png'}),
+                    url = window.URL.createObjectURL(blob);
+                //img = document.createElement('img');
+                //img.src = url;
+
+                var nodeId = Ext.urlDecode(xhr.responseURL).NODE;
+                var layerId = Ext.urlDecode(xhr.responseURL).LAYERS;
+                var node = layerTree.getNodeById(nodeId);
+                var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
+
+                Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
+                    "<div style='overflow-x:hidden; overflow-y:auto; max-height:" + height + "px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + url + "\"/></div>"
+                );
+
+                var el = Ext.get('legend_' + layerId);
+                if (el) {
+                    el.setVisibilityMode(Ext.Element.DISPLAY);
+                }
+            }
+        });
+        xhr.send();
+    }
 };
 
 /**
