@@ -187,6 +187,7 @@ Config.map.init = {
 
 if(projectData.crs == '') {
     alert('Map CRS must be set in QGIS!');
+    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot : window.location.href="/";
 }
 Config.map.projectionList = [];
 Config.map.projectionList.push([projectData.crs, projectData.crs_description]);
