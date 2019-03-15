@@ -27,7 +27,7 @@ class DbLoader
 
     public function checkUserProject()
     {
-        $sql = 'SELECT check_user_project(:user_name,:project);';
+        $sql = 'SELECT * FROM check_user_project(:user_name,:project);';
         $query = $this->db_connection->prepare($sql);
         $query->bindValue(':user_name', $this->user);
         $query->bindValue(':project', $this->project);

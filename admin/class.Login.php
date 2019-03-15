@@ -397,7 +397,7 @@ class Login
 
             return true;
         } else {
-            $this->feedback = $check;
+            $this->feedback = $check['check'];
             return false;
         }
     }
