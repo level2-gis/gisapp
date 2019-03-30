@@ -842,7 +842,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line104">line 104</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -882,17 +882,18 @@
 
 
 <div class="description">
-    <p>Replace layer name in GetFeatureInfo request (identify) and in layer export. Useful to create database view for layer, where you can reorder fields or create new read only fields from geometry, like: area, length, X, Y. This data will be displayed in identify window and attributes table and used in layer export instead of data from original layer.
+    <p>Replace layer name in GetFeatureInfo request (identify and attributes table) and in layer export. Useful to create database view for layer, where you can reorder fields or create new read only fields from geometry, like: area, length, X, Y. This data will be displayed in identify window and attributes table and used in layer export instead of data from original layer.
 You could use view in QGIS in the first place for ordinary layers, but if you wish that layer is editable it cannot be connected to view.</p>
 <blockquote>
 <p>Prepare:</p>
 <ol>
 <li>Write in this array layer name as it is in QGIS project,</li>
 <li>Create corresponding view named as <em>your_layer_name_view</em> and add it to the QGIS project. View will be hidden from legend and map.</li>
+<li>Set view symbology to transparent or no symbol, to avoid &quot;seeing&quot; it in print, because it must be added to print layers in case if its table is used in print layout.</li>
 </ol>
 </blockquote>
 <blockquote>
-<p>Example: layer name is <strong>&quot;points&quot;</strong>, view name must be <strong>&quot;points_view&quot;</strong>, add in array only <strong>&quot;points&quot;</strong></p>
+<p>If layer name is <strong>&quot;points&quot;</strong>, view name must be <strong>&quot;points_view&quot;</strong>, add in array only <strong>&quot;points&quot;</strong></p>
 </blockquote>
 </div>
 
@@ -912,6 +913,11 @@ You could use view in QGIS in the first place for ordinary layers, but if you wi
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>"['points']";</code></pre>
+
+
 
         
             
@@ -926,7 +932,7 @@ You could use view in QGIS in the first place for ordinary layers, but if you wi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line113">line 113</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line115">line 115</a>
     </li></ul></dd>
     
 
@@ -1008,7 +1014,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line120">line 120</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line122">line 122</a>
     </li></ul></dd>
     
 
@@ -1086,7 +1092,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line127">line 127</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -1164,7 +1170,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line136">line 136</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -1249,7 +1255,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line143">line 143</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line145">line 145</a>
     </li></ul></dd>
     
 
@@ -1327,7 +1333,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line151">line 151</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line153">line 153</a>
     </li></ul></dd>
     
 
@@ -1413,7 +1419,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line157">line 157</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -1486,7 +1492,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line211">line 211</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -1562,7 +1568,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line238">line 238</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line240">line 240</a>
     </li></ul></dd>
     
 
@@ -1643,7 +1649,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line250">line 250</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line252">line 252</a>
     </li></ul></dd>
     
 
@@ -1724,7 +1730,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line258">line 258</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line260">line 260</a>
     </li></ul></dd>
     
 
@@ -1805,7 +1811,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line266">line 266</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line268">line 268</a>
     </li></ul></dd>
     
 
@@ -1886,7 +1892,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line274">line 274</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line276">line 276</a>
     </li></ul></dd>
     
 
@@ -1967,7 +1973,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line282">line 282</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line284">line 284</a>
     </li></ul></dd>
     
 
@@ -2048,7 +2054,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line297">line 297</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line299">line 299</a>
     </li></ul></dd>
     
 
@@ -2138,7 +2144,7 @@ This table is removed from EQWC legend tree</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line304">line 304</a>
+        <a href="settings-template.js.html">settings-template.js</a>, <a href="settings-template.js.html#line306">line 306</a>
     </li></ul></dd>
     
 
@@ -2223,7 +2229,7 @@ This table is removed from EQWC legend tree</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 25 2019 11:43:39 GMT+0100 (CET) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 28 2019 19:41:30 GMT+0100 (CET) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
