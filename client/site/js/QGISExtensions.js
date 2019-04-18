@@ -443,11 +443,13 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 layers = layers.concat(this.additionalLayers);
             }
 
+            //only check for reverse axis for QGIS 3.x, for QGIS 2 is false
+            var reverseAxisOrder = (Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2) ? OpenLayers.Projection.defaults[authid].yx : false;
             var printUrl = this.url + '&' + Ext.urlEncode({
                     'SRS': authid,
                     'DPI': printResolution,
                     'TEMPLATE': this.layout.get("name"),
-                    'map0:extent': printExtent.page.getPrintExtent(map).toBBOX(1, false),
+                    'map0:extent': printExtent.page.getPrintExtent(map).toBBOX(1, reverseAxisOrder),
                     'map0:scale': mapScale,
                     'map0:rotation': (printExtent.page.rotation * -1),
                     'map0:grid_interval_x': grid_interval,
