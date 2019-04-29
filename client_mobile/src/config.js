@@ -213,12 +213,15 @@ else {
 //add projection definition objects for other values in crs_list and fill Config.map.projectionList
 for (var j=0; j<projectData.crs_list.length; j++) {
     var code = projectData.crs_list[j];
+    var title = code;
     if(proj4.defs[code] === undefined) {
         proj4.defs(code, Proj4js.defs[code]);
     }
-    var title = proj4.defs[code].title ? proj4.defs[code].title : code;
-    if(code != projectData.crs) {
-        Config.map.projectionList.push([code, title]);
+    if(proj4.defs[code] !== undefined) {
+        title = proj4.defs[code].title ? proj4.defs[code].title : code;
+        if (code != projectData.crs) {
+            Config.map.projectionList.push([code, title]);
+        }
     }
 }
 
