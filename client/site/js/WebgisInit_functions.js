@@ -1054,7 +1054,7 @@ function postLoading() {
                 qgisSearchCombo = new GeoExt.ux.GeocodingSearchCombo({
                     map: geoExtMap.map,
                     highlightLayerName: 'attribHighLight',
-                    width: 300,
+                    width: geoExtMap.getWidth() / 3,
                     minChars: 2,
                     loadingText: geonamesLoadingString[lang],
                     emptyText: geonamesEmptyString[lang],
@@ -1072,8 +1072,9 @@ function postLoading() {
                     map: geoExtMap.map,
                     highlightLayerName: 'attribHighLight',
                     hasReverseAxisOrder: false, // PostGIS returns bbox' coordinates always x/y
-                    width: 300,
+                    width: geoExtMap.getWidth() / 3,
                     searchtables: searchtables,
+                    emptyText: (projectData.wsgi && projectData.wsgi.emptytext) ? projectData.wsgi.emptytext : searchFieldDefaultTextString["en"],
                     url: searchBoxQueryURL,
                     geomUrl: searchBoxGetGeomURL,
                     srs: projectData.crs.split(':')[1]        //this is the map coordinate system and that's what we need to get from server
@@ -1334,18 +1335,16 @@ function postLoading() {
                             {
                                 id: 'printTitle',
                                 xtype: 'textfield',
-                                maxLength: 70,
                                 //fieldLabel: 'TITLE',
                                 hideLabel: true,
                                 emptyText: TR.emptyPrintTitleText,
                                 hidden: projectData.user=='guest',
-                                anchor:'100%'
-
-
+                                anchor:'100%',
+                                autoCreate: {tag: 'input', type: 'text', autocomplete: 'off', maxlength: '50'}
                             },{
                                 id: 'printDescription',
                                 xtype: 'textarea',
-                                maxLength: 150,
+                                maxLength: 100,
                                 boxMaxHeight: 35,
                                 boxMinHeight: 35,
                                 height: 35,
