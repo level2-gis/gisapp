@@ -335,6 +335,10 @@
   padding-left: 48px;
 }
 
+.ui-collapsible-heading .ui-btn-icon-right .ui-btn-inner {
+    padding-right: 26px;
+}
+
 .btn-icon-text.ui-btn-icon-left .ui-btn-inner .ui-icon {
   background-color: transparent;
   background-size: 32px 32px;

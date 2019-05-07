@@ -136,7 +136,7 @@ GeoExt.ux.GeocodingSearchCombo = Ext.extend(Ext.form.ComboBox, {
             this.highlightLayer = this.map.getLayersByName(this.highlightLayerName)[0];
         }
 
-
+        this.listWidth = this.width;
 
         //setup for mapbox params
         var params = {
