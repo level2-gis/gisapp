@@ -1054,7 +1054,7 @@ function postLoading() {
                 qgisSearchCombo = new GeoExt.ux.GeocodingSearchCombo({
                     map: geoExtMap.map,
                     highlightLayerName: 'attribHighLight',
-                    width: geoExtMap.getWidth() / 3,
+                    width: Math.round(geoExtMap.getWidth()/3),
                     minChars: 2,
                     loadingText: geonamesLoadingString[lang],
                     emptyText: geonamesEmptyString[lang],
@@ -1072,7 +1072,7 @@ function postLoading() {
                     map: geoExtMap.map,
                     highlightLayerName: 'attribHighLight',
                     hasReverseAxisOrder: false, // PostGIS returns bbox' coordinates always x/y
-                    width: geoExtMap.getWidth() / 3,
+                    width: Math.round(geoExtMap.getWidth()/3),
                     searchtables: searchtables,
                     emptyText: (projectData.wsgi && projectData.wsgi.emptytext) ? projectData.wsgi.emptytext : searchFieldDefaultTextString["en"],
                     url: searchBoxQueryURL,
