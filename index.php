@@ -212,8 +212,11 @@ $login_check = new Login();
 
 if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
 
-    $edit = $helpers->checkModulexist("editing");
-    $editVer = $helpers->getPluginVersion("editing");
+    $edit = $helpers->checkModulexist("editing") && $helpers->hasPluginAccess("editing");
+    $editVer = 0;
+    if($edit) {
+        $helpers->getPluginVersion("editing");
+    }
     $google = $helpers->loadGoogle();
 
 	//OK open application

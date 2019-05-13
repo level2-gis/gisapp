@@ -49,7 +49,7 @@ array_push($lang, "client/site/js/lang/Translations_". $def_lang .".js?v=".rand(
 //add into array all js files in plugins/xxx/js subfolder
 if (!(empty($plugin_list))) {
     foreach ($plugin_list as $item) {
-        if (is_dir($dir . $item)) {
+        if (is_dir($dir . $item) && \GisApp\Helpers::hasPluginAccess($item)) {
             $plugin_path = $dir . $item;
 
             //plugin language file
