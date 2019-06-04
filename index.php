@@ -52,7 +52,7 @@ function goMobile($lang) {
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20181212" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20190604" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026" />
     </head>
     <body>

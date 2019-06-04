@@ -727,7 +727,9 @@ Gui.onLayerOrderChanged = function(event, ui) {
 
   // update map
   Map.layers = orderedLayers;
-  Map.refresh();
+  setTimeout(function() {
+    Map.refresh();
+  }, 1000);
 };
 
 // select layer in layer order panel
@@ -1408,6 +1410,29 @@ Gui.initViewer = function() {
 };
 
 $(document).ready(function(e) {
+
+    //ajax global loading enable
+    $(document).on({
+        ajaxSend: function () { loading('show'); },
+        ajaxStart: function () { loading('show'); },
+        ajaxStop: function () { loading('hide'); },
+        ajaxError: function () { loading('hide'); }
+    });
+
+    function loading(showOrHide) {
+        setTimeout(function(){
+            $.mobile.loading(showOrHide);
+        }, 1);
+    }
+
+    //Thanks: https://github.com/jquery/jquery-mobile/issues/3414
+    $.mobile.loader.prototype.defaultHtml = "<div class='ui-loader'>" +
+    "<span class='ui-icon ui-icon-loading'></span>" +
+    "<h1></h1>" +
+    "<div class='ui-loader-curtain'></div>" +
+    "</div>";
+
+
   UrlParams.parse();
   Config.permalink.read(UrlParams.params, Gui.initViewer);
 });
