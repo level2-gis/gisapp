@@ -51,9 +51,9 @@ Progress.prototype.update = function() {
         this.hide();
     } else {
         if (this.loading > 1) {
-            this.show("Loading Map... " + this.loaded + "/" + this.loading);
+            this.show(I18n.properties.mapLoading + this.loaded + "/" + this.loading);
         } else {
-            this.show("Loading Map... ");
+            this.show(I18n.properties.mapLoading);
         }
     }
 };
