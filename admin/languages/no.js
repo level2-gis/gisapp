@@ -76,6 +76,7 @@ I18n.properties = {
     header: "Oppsett",
     mapFollowing: "Følg i kartet",
     mapRotation: "Auto-rotasjon",
+    mapLoading: "Laster kart ...",
     scaleBar: "Skala",
     about: "Avtrykk",
     share: "Del",
