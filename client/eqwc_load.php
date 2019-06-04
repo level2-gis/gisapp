@@ -53,7 +53,7 @@ if (!(empty($plugin_list))) {
             $plugin_path = $dir . $item;
 
             //plugin language file
-            $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js";
+            $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js?v=" . rand();
             if (!file_exists($lang_fn)) {
                 $def_lang = 'en';
             }
