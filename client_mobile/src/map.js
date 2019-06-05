@@ -892,13 +892,14 @@ Map.initialCenterOnLocation = function () {
 
 Map.centerOnLocation = function() {
     //we do not recenter every position update
-    var center = Map.map.getView().getCenter();
+    var view = Map.map.getView();
+    var center = view.getCenter();
     var pos = Map.geolocation.getPosition();
     var dx = Math.abs(center[0]-pos[0]);
     var dy = Math.abs(center[1]-pos[1]);
     var extent = Map.map.getView().calculateExtent();
     if(dx > (ol.extent.getWidth(extent) / 4) || (dy > (ol.extent.getHeight(extent) / 4))) {
-        Map.map.getView().setCenter(pos);
+        view.animate({center: pos});
         Map.clampToScale(Config.map.minScaleDenom.geolocation);
     }
 };
