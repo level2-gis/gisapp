@@ -265,18 +265,18 @@ Gui.loadLayers = function (data) {
                 }
 
                 // add layer
-                html += '<label>';
-                html += '<input type="' + type + '" ';
+                //html += '<label>';
+                //html += '<input type="' + type + '" ';
 
                 //group layer + legend
-                //html += '<div data-role="collapsible" data-theme="c"';
-                //html += ' data-iconpos="right" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-groupcheckbox="true"';
-                //html += '>';
-                //html += '<h3>' + node.name + '</h3>';
-                //
-                //// add layer, but hidden, checkbox in group above will control layer on/off
-                //html += '<label style="display:none">';
-                //html += '<input style="display:none" type="' + type + '" ';
+                html += '<div data-role="collapsible" data-theme="c" id="'+layer.id+'"';
+                html += ' data-iconpos="right" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-groupcheckbox="true"';
+                html += '>';
+                html += '<h3>' + node.name + '</h3>';
+
+                // add layer, but hidden, checkbox in group above will control layer on/off
+                html += '<label style="display:none">';
+                html += '<input style="display:none" type="' + type + '" ';
                 if (parent != null) {
                     // prevent auto-enhancement by jQuery Mobile if layer belongs to a group
                     html += 'data-role="none" ';
@@ -289,32 +289,8 @@ Gui.loadLayers = function (data) {
                 html += '>' + layer.toclayertitle;
                 html += '</input>';
                 html += '</label>';
+                html += '</div>';
 
-                //var legendUrl = Map.topics[Map.topic].wms_url +
-					//	"?SERVICE=WMS"+
-					//	"&VERSION=1.3.0"+
-					//	"&REQUEST=GetLegendGraphics"+
-					//	"&FORMAT=image/png"+
-					//	"&EXCEPTIONS=application/vnd.ogc.se_inimage"+
-					//	"&BOXSPACE=1"+
-					//	"&LAYERSPACE=2"+
-					//	"&SYMBOLSPACE=1"+
-					//	"&SYMBOLHEIGHT=2"+
-					//	"&LAYERFONTSIZE=8"+
-					//	"&ITEMFONTSIZE=8"+
-                //        "&LAYERTITLE=FALSE"+
-                //        "&LAYERTITLESPACE=0"+
-                //        "&TRANSPARENT=TRUE"+
-					//	"&LAYERS="+encodeURIComponent(layer.id)+
-					//	"&DPI="+encodeURIComponent(Config.map.dpi);
-                //html+='<img data-layer="'+layer.id+'" src="' + legendUrl + '"';
-                //html += '</img>';
-                //
-                //html += '</div>';
-                //if (!layer.visini) {
-                //    html += '" style="display:none;" ';
-                //}
-                //html+=' />';
                 layers.push({
                     id: layer.id,
                     layername: layer.layername,
@@ -349,9 +325,44 @@ Gui.loadLayers = function (data) {
 
     // enhance checkboxes of group children when expanding for the first time
     function enhanceCheckbox() {
-        var labels = $(this).children('.ui-collapsible-content').children('label');
-        labels.find(':checkbox[data-role="none"]').attr('data-role', null);
-        labels.trigger('create');
+        if(this.id == '') {
+            var labels = $(this).children('.ui-collapsible-content').children('label');
+            labels.find(':checkbox[data-role="none"]').attr('data-role', null);
+            labels.trigger('create');
+        } else {
+            //legend
+            var lay = this.id;
+            var layer = projectData.layers[lay];
+
+            if(layer) {
+                if(layer.provider !== 'gdal' && layer.provider !== 'wms') {
+
+                    var legendUrl = Map.topics[Map.topic].wms_url +
+                        "?SERVICE=WMS" +
+                        "&VERSION=1.3.0" +
+                        "&REQUEST=GetLegendGraphics" +
+                        "&FORMAT=image/png" +
+                        "&EXCEPTIONS=application/vnd.ogc.se_inimage" +
+                        "&BOXSPACE=1" +
+                        "&LAYERSPACE=2" +
+                        "&SYMBOLSPACE=1" +
+                        "&SYMBOLHEIGHT=2" +
+                        "&LAYERFONTSIZE=8" +
+                        "&ITEMFONTSIZE=8" +
+                        "&ICONLABELSPACE=2" +
+                        "&LAYERTITLE=FALSE" +
+                        "&LAYERTITLESPACE=0" +
+                        "&TRANSPARENT=TRUE" +
+                        "&LAYERS=" + encodeURIComponent(lay) +
+                        "&DPI=" + encodeURIComponent(Config.map.dpi);
+
+                    var leg = '<img data-layer="'+lay+'" src="' + legendUrl + '"</img>';
+
+                    //var legend
+                    $(this).children('.ui-collapsible-content').html(leg);
+                }
+            }
+        }
         $(this).unbind('expand', enhanceCheckbox);
     }
     var groups = $('#panelLayerAll').find('.ui-collapsible');
