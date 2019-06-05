@@ -118,6 +118,7 @@ FeatureInfo.prototype.handleEvent = function (e) {
     $.ajax({
         url: url,
         dataType: 'text',
+        timeout: 3000,
         context: this
     }).done(function (data, status) {
         var results = null;
@@ -131,7 +132,11 @@ FeatureInfo.prototype.handleEvent = function (e) {
         this.resultsCallback(status,results);
         //allow clicking again
         Map.toggleClickHandling(true);
-    });
+    })
+        .fail(function (xhr, status, error) {
+            //todo what with error here
+            Map.toggleClickHandling(true);
+        });
 };
 
 /**
