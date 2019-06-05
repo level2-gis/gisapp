@@ -63,9 +63,11 @@ Progress.prototype.update = function() {
  * Show the progress.
  */
 Progress.prototype.show = function(par) {
-    //do not show it over layer panel
-    if( $("#panelLayer").hasClass("ui-panel-open") === false ) {
-        $.mobile.loading('show', {textVisible: true, text: par, theme: 'c'});
+    //do not show it over layer panel and don't show it if location and following are on
+    if($("#panelLayer").hasClass("ui-panel-open") === false) {
+       if(Map.geolocation===null || !Map.geolocation.getTracking() || !Gui.following) {
+           $.mobile.loading('show', {textVisible: true, text: par, theme: 'c'});
+       }
     }
 };
 
@@ -889,8 +891,16 @@ Map.initialCenterOnLocation = function () {
 };
 
 Map.centerOnLocation = function() {
-  Map.map.getView().setCenter(Map.geolocation.getPosition());
-  Map.clampToScale(Config.map.minScaleDenom.geolocation);
+    //we do not recenter every position update
+    var center = Map.map.getView().getCenter();
+    var pos = Map.geolocation.getPosition();
+    var dx = Math.abs(center[0]-pos[0]);
+    var dy = Math.abs(center[1]-pos[1]);
+    var extent = Map.map.getView().calculateExtent();
+    if(dx > (ol.extent.getWidth(extent) / 4) || (dy > (ol.extent.getHeight(extent) / 4))) {
+        Map.map.getView().setCenter(pos);
+        Map.clampToScale(Config.map.minScaleDenom.geolocation);
+    }
 };
 
 Map.setWindowOrientation = function(orientation) {
