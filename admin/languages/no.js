@@ -53,11 +53,11 @@ var TR = {
     description: 'Dokumenter',
     emptyPrintTitleText: 'Legg til tittel ...',
     emptyPrintDescriptionText: 'Legg til beskrivelse ...',
-    loadMore: 'Load more...',
+    loadMore: 'Laster...',
     loadMoreToolTip: 'Tabellen er ikke lastet.Klikk for å laste nye data fra serveren!',
     height: 'Høyde',
-    exportUseMapCrs: "Use map CRS",
-    tableUseExtent: "Only show features in map extent"
+    exportUseMapCrs: "Bruk kart CRS",
+    tableUseExtent: "Bruk gjeldende kartutsnitt"
 };
 
 /**::
