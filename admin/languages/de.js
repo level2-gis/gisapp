@@ -75,6 +75,7 @@ I18n.properties = {
     header: "Karteneinstellungen",
     mapFollowing: "Verfolgung",
     mapRotation: "Kartenausrichtung",
+    mapLoading: "Karte wird geladen...",
     scaleBar: "Massstab",
     about: "Impressum",
     share: "Share",

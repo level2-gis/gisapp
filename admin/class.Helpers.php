@@ -523,7 +523,7 @@ class Helpers
     public static function getEqwcVersion() {
         $version = '0';
         if (file_exists('../version.txt')) {
-            $version = trim(file_get_contents('../version.txt',null,null,null,7));
+            $version = trim(file_get_contents('../version.txt',null,null,null,9));
         }
         return $version;
     }
@@ -531,10 +531,8 @@ class Helpers
     public static function getPluginVersion($name) {
         $version = '0';
         $dir = dirname(dirname(__FILE__)) . "/plugins/";
-        if (self::checkModulexist($name)) {
-            if (file_exists($dir . $name . '/changelog.txt')) {
+        if (file_exists($dir . $name . '/changelog.txt')) {
                 $version = trim(file_get_contents($dir . $name . '/changelog.txt',null,null,null,5));
-            }
         }
         return $version;
     }
@@ -576,5 +574,38 @@ class Helpers
         }
 
         return TRUE;
+    }
+
+    public static function hasPluginAccess($plugin) {
+
+        //check only for editing plugin
+        if($plugin !== 'editing') {
+            return TRUE;
+        }
+
+        $role = null;
+        if (isset($_SESSION['role'])) {
+            $role = $_SESSION['role'];
+        }
+
+        switch($role) {
+            case null :
+                return TRUE;
+
+            case 'admin' :
+                return TRUE;
+
+            case 'editor' :
+                return TRUE;
+
+            case 'user' :
+                return FALSE;
+
+            case 'public' :
+                return FALSE;
+
+            default :
+                return FALSE;
+        }
     }
 }

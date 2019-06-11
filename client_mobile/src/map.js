@@ -5,7 +5,87 @@
  *   maprotation({rotation: <rad>})
  */
 
+/**
+ * Map loading progress info
+ * Only for main topicLayer
+ * @constructor
+ */
+function Progress() {
+    this.loading = 0;
+    this.loaded = 0;
+}
+
+
+/**
+ * Increment the count of loading tiles.
+ */
+Progress.prototype.addLoading = function() {
+    if (this.loading === 0) {
+        this.show();
+    }
+    ++this.loading;
+    this.update();
+};
+
+
+/**
+ * Increment the count of loaded tiles.
+ */
+Progress.prototype.addLoaded = function() {
+    var this_ = this;
+    //setTimeout(function() {
+        ++this_.loaded;
+        this_.update();
+    //}, 100);
+};
+
+
+/**
+ * Update the progress.
+ */
+Progress.prototype.update = function() {
+
+    if (this.loading === this.loaded) {
+        this.loading = 0;
+        this.loaded = 0;
+        this.hide();
+    } else {
+        if (this.loading > 1) {
+            this.show(I18n.properties.mapLoading + this.loaded + "/" + this.loading);
+        } else {
+            this.show(I18n.properties.mapLoading);
+        }
+    }
+};
+
+
+/**
+ * Show the progress.
+ */
+Progress.prototype.show = function(par) {
+    //do not show it over layer panel and don't show it if location and following are on
+    if($("#panelLayer").hasClass("ui-panel-open") === false) {
+       if(Map.geolocation===null || !Map.geolocation.getTracking() || !Gui.following) {
+           $.mobile.loading('show', {textVisible: true, text: par, theme: 'c'});
+       }
+    }
+};
+
+
+/**
+ * Hide the progress.
+ */
+Progress.prototype.hide = function() {
+    if (this.loading === this.loaded) {
+        $.mobile.loading('hide');
+    }
+};
+
+
+
 var Map = {};
+
+Map.progress = new Progress();
 
 // topics (key = topic name)
 Map.topics = {};
@@ -143,10 +223,17 @@ Map.setTopicLayer = function() {
   else {
     wmsOptions['ratio'] = 1;
     source = new ol.source.ImageWMS(wmsOptions);
-    source.on('imageloaderror', function(evt) {
-        alert('Error loading image from QGIS!');
-        //Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
+      source.on('imageloadstart', function() {
+          Map.progress.addLoading();
+      });
+      source.on('imageloadend', function() {
+        Map.progress.addLoaded();
     });
+      source.on('imageloaderror', function() {
+          Map.progress.addLoaded();
+          //alert('Error loading image from QGIS!');
+          //Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
+      });
     Map.topicLayer = new ol.layer.Image({
         //extent: Config.map.extent,
         source: source
@@ -804,8 +891,17 @@ Map.initialCenterOnLocation = function () {
 };
 
 Map.centerOnLocation = function() {
-  Map.map.getView().setCenter(Map.geolocation.getPosition());
-  Map.clampToScale(Config.map.minScaleDenom.geolocation);
+    //we do not recenter every position update
+    var view = Map.map.getView();
+    var center = view.getCenter();
+    var pos = Map.geolocation.getPosition();
+    var dx = Math.abs(center[0]-pos[0]);
+    var dy = Math.abs(center[1]-pos[1]);
+    var extent = Map.map.getView().calculateExtent();
+    if(dx > (ol.extent.getWidth(extent) / 4) || (dy > (ol.extent.getHeight(extent) / 4))) {
+        view.animate({center: pos});
+        Map.clampToScale(Config.map.minScaleDenom.geolocation);
+    }
 };
 
 Map.setWindowOrientation = function(orientation) {

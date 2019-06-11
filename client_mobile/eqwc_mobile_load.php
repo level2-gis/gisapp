@@ -51,12 +51,12 @@ $def_lang = $_SESSION['lang'];
 $debug = defined('DEBUG') ? DEBUG : false;
 
 //eqwc language files
-array_push($lang, "admin/languages/". $def_lang .".js");
+array_push($lang, "admin/languages/". $def_lang .".js?v=".rand());
 
 //add into array all js files in plugins/xxx/src_mobile subfolder
 if (!(empty($plugin_list))) {
     foreach ($plugin_list as $item) {
-        if (is_dir($dir . $item)) {
+        if (is_dir($dir . $item) && \GisApp\Helpers::hasPluginAccess($item)) {
             $plugin_path = $dir . $item;
 
             //plugin language file

@@ -78,6 +78,7 @@ I18n.properties = {
     header: "Impostazioni Mappa",
     mapFollowing: "Tracking",
     mapRotation: "Auto Rotation",
+    mapLoading: "Caricamento della mappa...",
     scaleBar: "Scala",
     about: "Imprint",
     share: "Condividi",

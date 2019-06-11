@@ -78,6 +78,7 @@ I18n.properties = {
     header: "Inställning karta",
     mapFollowing: "Spårning",
     mapRotation: "Automatisk rotation",
+    mapLoading: "Laddar karta...",
     scaleBar: "Skala",
     about: "Om",
     share: "Dela",
