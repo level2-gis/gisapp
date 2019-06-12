@@ -873,12 +873,19 @@ Map.toggleFollowing = function(enabled) {
 };
 
 Map.initialCenterOnLocation = function () {
-    Map.centerOnLocation();
+
+    var pos = Map.geolocation.getPosition();
+    var view = Map.map.getView();
+
     if (Config.map.initialGeolocationMaxScale != null) {
         var maxRes = Map.scaleDenomToResolution(Config.map.initialGeolocationMaxScale, true);
         if (Map.map.getView().getResolution() > maxRes) {
-            Map.map.getView().setResolution(maxRes);
+            view.animate({center: pos, resolution: maxRes});
+        } else {
+            view.animate({center: pos});
         }
+    } else {
+        view.animate({center: pos});
     }
 
     if (typeof(Editor) == 'function') {
@@ -887,7 +894,7 @@ Map.initialCenterOnLocation = function () {
         }
     }
     // disable after first update
-    //Map.geolocation.un('change:position', Map.initialCenterOnLocation);
+    Map.geolocation.un('change:position', Map.initialCenterOnLocation);
 };
 
 Map.centerOnLocation = function() {
