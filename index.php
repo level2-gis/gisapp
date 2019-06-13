@@ -256,7 +256,7 @@ if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/ext/ext-all.js"></script>
                 <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js?v=20180215"></script>
 
-                <script type="text/javascript" src="client/site/libs/proj4js/proj4js-compressed.js"></script>
+                <script type="text/javascript" src="client/site/libs/proj4js/proj4js-1.1.0-compressed.js"></script>
                 <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20181008"></script>
 
 <!--                FOR DEBUGGING-->
