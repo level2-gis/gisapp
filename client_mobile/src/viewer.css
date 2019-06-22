@@ -32,6 +32,10 @@
     background-image: url("../img/add.png");
 }
 
+.ui-icon-remove {
+    background-image: url("../img/remove.png");
+}
+
 .ui-icon-goto_more {
     background-image: url("../img/goto_more.png");
 }
@@ -68,8 +72,13 @@
   bottom: 105px;
 }
 
-#btnEnd {
+#btnRemove {
     right: 60px;
+    bottom: 105px;
+}
+
+#btnEnd {
+    right: 110px;
     bottom: 105px;
 }
 
