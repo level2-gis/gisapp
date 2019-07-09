@@ -429,6 +429,7 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             }
             var extra = getVisibleExtraLayersForPrint();
             var extraDefinition = '';
+            var baseDefinition = '';
             if(extra.length>0) {
                 var extraNames = extra.map(function(item){return item.name;});
                 extraDefinition = extra.map(function(item){return item.definition;})[0];    //get only first one, ok?
@@ -436,10 +437,19 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             }
 
             //add currently visible base layer for printing if exists in projects
-            var printBaseLayer = wmsLoader.layerTitleNameMapping[currentlyVisibleBaseLayer];
+            if(currentlyVisibleBaseLayer) {
+                var printBaseLayer = wmsLoader.layerTitleNameMapping[currentlyVisibleBaseLayer];
 
-            if (printBaseLayer != undefined) {
-                layers.unshift(printBaseLayer);
+                if (printBaseLayer != undefined) {
+                    layers.unshift(printBaseLayer);
+                } else {
+                    var printBaseLayerOl2 = geoExtMap.map.getLayersByName(currentlyVisibleBaseLayer)[0];
+                    var baseWms = getExternalWMSDefinition(printBaseLayerOl2);
+                    if(baseWms) {
+                        layers.unshift(baseWms.name);
+                        baseDefinition = baseWms.definition;
+                    }
+                }
             }
 
             if(this.additionalLayers.length>0) {
@@ -468,6 +478,10 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
 
             if (extraDefinition>'') {
                 printUrl += '&' + extraDefinition;
+            }
+
+            if (baseDefinition>'') {
+                printUrl += '&' + baseDefinition;
             }
 
             // add highlight

@@ -2771,16 +2771,15 @@ function home() {
 function getExternalWMSDefinition(layer) {
 
     var layerName = layer.name;
-    var type = layer.type;
-    var def = JSON.parse(layer.definition);
+    var type = layer.params.SERVICE ? layer.params.SERVICE : 'unknown';
 
     if(type=='WMS' && (Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2)) {
         var definition = {
-            [layerName+':url']: def.url,
-            [layerName+':format']: def.params.FORMAT,
+            [layerName+':url']: layer.url.toLowerCase().replace('https','http'),    //QGIS issue with https, assume URL is working also on http
+            [layerName+':format']: layer.params.FORMAT,
             [layerName+':crs']: projectData.crs,
-            [layerName+':layers']: def.params.LAYERS,
-            [layerName+':styles']: def.params.STYLES
+            [layerName+':layers']: layer.params.LAYERS,
+            [layerName+':styles']: layer.params.STYLES
         };
 
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
@@ -2802,7 +2801,7 @@ function getVisibleExtraLayersForPrint() {
             if(wmsLoader.layerTitleNameMapping[extra.title]) {
                 ret.push({name: wmsLoader.layerTitleNameMapping[extra.title], definition: ''});
             } else {
-                var externalWms = getExternalWMSDefinition(extra);
+                var externalWms = getExternalWMSDefinition(lay);
                 if(externalWms) {
                     ret.push({name: externalWms.name, definition: externalWms.definition});
                 }
