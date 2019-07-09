@@ -2770,7 +2770,7 @@ function home() {
 
 function getExternalWMSDefinition(layer) {
 
-    var layerName = layer.name;
+    var layerName = layer.id;
     var type = layer.params.SERVICE ? layer.params.SERVICE : 'unknown';
 
     if(type=='WMS' && (Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2)) {
