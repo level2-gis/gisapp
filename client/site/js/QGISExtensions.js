@@ -428,8 +428,11 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 layers = layers.concat(thematicLayer.params.LAYERS.split(','));
             }
             var extra = getVisibleExtraLayersForPrint();
-            if(extra>'') {
-                layers.unshift(extra);
+            var extraDefinition = '';
+            if(extra.length>0) {
+                var extraNames = extra.map(function(item){return item.name;});
+                extraDefinition = extra.map(function(item){return item.definition;})[0];    //get only first one, ok?
+                layers.unshift(extraNames.join(','));
             }
 
             //add currently visible base layer for printing if exists in projects
@@ -461,6 +464,10 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
 
             if (thematicLayer.params.OPACITIES) {
                 printUrl += '&OPACITIES='+encodeURIComponent(thematicLayer.params.OPACITIES);
+            }
+
+            if (extraDefinition>'') {
+                printUrl += '&' + extraDefinition;
             }
 
             // add highlight

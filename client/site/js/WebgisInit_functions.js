@@ -2768,6 +2768,27 @@ function home() {
     //Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
 }
 
+function getExternalWMSDefinition(layer) {
+
+    var layerName = layer.name;
+    var type = layer.type;
+    var def = JSON.parse(layer.definition);
+
+    if(type=='WMS' && (Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2)) {
+        var definition = {
+            [layerName+':url']: def.url,
+            [layerName+':format']: def.params.FORMAT,
+            [layerName+':crs']: projectData.crs,
+            [layerName+':layers']: def.params.LAYERS,
+            [layerName+':styles']: def.params.STYLES
+        };
+
+        return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
+    } else {
+        return null;
+    }
+}
+
 function getVisibleExtraLayersForPrint() {
     var ret = [];
     var extraLayers = projectData.extraLayers();
@@ -2775,11 +2796,18 @@ function getVisibleExtraLayersForPrint() {
         return '';
     }
     for (var i=0; i<extraLayers.length; i++) {
-        var extra = extraLayers[i].title;
-        var lay = geoExtMap.map.getLayersByName(extra)[0];
-        if (lay && lay.visibility && wmsLoader.layerTitleNameMapping[extra]) {
-            ret.push(wmsLoader.layerTitleNameMapping[extra]);
+        var extra = extraLayers[i];
+        var lay = geoExtMap.map.getLayersByName(extra.title)[0];
+        if (lay && lay.visibility) {
+            if(wmsLoader.layerTitleNameMapping[extra.title]) {
+                ret.push({name: wmsLoader.layerTitleNameMapping[extra.title], definition: ''});
+            } else {
+                var externalWms = getExternalWMSDefinition(extra);
+                if(externalWms) {
+                    ret.push({name: externalWms.name, definition: externalWms.definition});
+                }
+            }
         }
     }
-    return ret.join(',');
+    return ret;
 }
