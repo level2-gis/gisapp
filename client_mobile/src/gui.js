@@ -359,7 +359,7 @@ Gui.loadLayers = function (data) {
                     var leg = '<img data-layer="'+lay+'" src="' + legendUrl + '"</img>';
 
                     //var legend
-                    $(this).children('.ui-collapsible-content').html(leg);
+                    $(this).children('.ui-collapsible-content').append(leg);
                 }
             }
         }
