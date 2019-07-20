@@ -40,14 +40,21 @@ function buildLayerContextMenu(node) {
     var layerId = wmsLoader.layerTitleNameMapping[node.attributes.text];
     var layer = wmsLoader.layerProperties[layerId];
     var projDataLayer = projectData.layers[layerId];
+    var hasGeom = true;
+
+    if(projDataLayer && projDataLayer.geom_type == 'No geometry') {
+        hasGeom = false;
+    }
 
     var menuItems = [];
-    //all get zoom to extent
-    menuItems.push({
-        text: contextZoomLayerExtent[lang],
-        iconCls: 'x-zoom-icon',
-        handler: zoomToLayerExtent
-    });
+    //all get zoom to extent, except tables
+    if(hasGeom) {
+        menuItems.push({
+            text: contextZoomLayerExtent[lang],
+            iconCls: 'x-zoom-icon',
+            handler: zoomToLayerExtent
+        });
+    }
 
     //Open att table
     if (layer.queryable && typeof(layer.attributes) !== 'undefined') {
@@ -61,52 +68,73 @@ function buildLayerContextMenu(node) {
 
     //Export
     if (projDataLayer != undefined && projDataLayer.provider !== 'gdal' && projDataLayer.provider !== 'wms') {
-        menuItems.push({
-            itemId: 'contextExport',
-            text: contextDataExport[lang],
-            iconCls: 'x-export-icon',
-            menu: [{
-                itemId: 'SHP',
-                text: 'ESRI Shapefile',
-                handler: exportHandler
-            }, {
-                itemId: 'DXF',
-                text: 'AutoCAD DXF',
-                handler: exportHandler
-            }, {
-                itemId: 'XLSX',
-                text: 'MS Office Open XLSX',
-                handler: exportHandler
-            }, {
-                itemId: 'CSV',
-                text: 'Text CSV (semicolon)',
-                handler: exportHandler
-            }, {
-                itemId: 'TSV',
-                text: 'Text TSV (tab)',
-                handler: exportHandler
-            },{
-                itemId: 'KML',
-                text: 'Keyhole Markup Language KML',
-                handler: exportHandler
-            },{
-                itemId: 'GeoJSON',
-                text: 'GeoJSON',
-                handler: exportHandler
-            }
-                , "-",
-                {
-                    itemId: 'currentExtent',
-                    text: contextUseExtent[lang],
-                    checked: true,
-                    hideOnClick: false
-                },{
-                    itemId: 'useMapCRS',
-                    text: TR.exportUseMapCrs,
-                    checked: true,
-                    hideOnClick: false
+        if(hasGeom) {
+            menuItems.push({
+                itemId: 'contextExport',
+                text: contextDataExport[lang],
+                iconCls: 'x-export-icon',
+                menu: [{
+                    itemId: 'SHP',
+                    text: 'ESRI Shapefile',
+                    handler: exportHandler
+                }, {
+                    itemId: 'DXF',
+                    text: 'AutoCAD DXF',
+                    handler: exportHandler
+                }, {
+                    itemId: 'XLSX',
+                    text: 'MS Office Open XLSX',
+                    handler: exportHandler
+                }, {
+                    itemId: 'CSV',
+                    text: 'Text CSV (semicolon)',
+                    handler: exportHandler
+                }, {
+                    itemId: 'TSV',
+                    text: 'Text TSV (tab)',
+                    handler: exportHandler
+                }, {
+                    itemId: 'KML',
+                    text: 'Keyhole Markup Language KML',
+                    handler: exportHandler
+                }, {
+                    itemId: 'GeoJSON',
+                    text: 'GeoJSON',
+                    handler: exportHandler
+                }
+                    , "-",
+                    {
+                        itemId: 'currentExtent',
+                        text: contextUseExtent[lang],
+                        checked: true,
+                        hideOnClick: false
+                    }, {
+                        itemId: 'useMapCRS',
+                        text: TR.exportUseMapCrs,
+                        checked: true,
+                        hideOnClick: false
+                    }]
+            });
+        } else {
+            menuItems.push({
+                itemId: 'contextExport',
+                text: contextDataExport[lang],
+                iconCls: 'x-export-icon',
+                menu: [{
+                    itemId: 'XLSX',
+                    text: 'MS Office Open XLSX',
+                    handler: exportHandler
+                }, {
+                    itemId: 'CSV',
+                    text: 'Text CSV (semicolon)',
+                    handler: exportHandler
+                }, {
+                    itemId: 'TSV',
+                    text: 'Text TSV (tab)',
+                    handler: exportHandler
                 }]
-        });
+            });
+        }
     }
 
     //properties
@@ -211,10 +239,11 @@ function exportHandler(item) {
     var exportLayer = Eqwc.common.getIdentifyLayerName(layerId);
     var myFormat = item.container.menuItemId;
 
-    var exportExtent = item.ownerCt.getComponent('currentExtent');
-    var crs = item.ownerCt.getComponent('useMapCRS').checked ? Eqwc.currentMapProjection[0] : projectData.layers[layerId].crs;
+    var exportExtent = item.ownerCt.getComponent('currentExtent') ? item.ownerCt.getComponent('currentExtent').checked : false;
+    var useMapCrs = item.ownerCt.getComponent('useMapCRS');
+    var crs = (useMapCrs && useMapCrs.checked) ? Eqwc.currentMapProjection[0] : projectData.layers[layerId].crs;
 
-    exportData(exportLayer, myFormat, exportExtent.checked, crs);
+    exportData(exportLayer, myFormat, exportExtent, crs);
 }
 
 function layerProperties(item) {
@@ -387,6 +416,12 @@ function openAttTable() {
     var editable = projectData.use_ids ? projectData.layers[layerId].wfs : false;
     var filter = null;
     var layer = null;
+    var hasGeom = true;
+
+    var layer = projectData.layers[layerId];
+    if(layer && layer.geom_type == 'No geometry') {
+        hasGeom = false;
+    }
 
     var m = this.parentMenu.getComponent('mapFilter');
     if (m) {
@@ -399,8 +434,9 @@ function openAttTable() {
     if (table == undefined) {
 
         layer = new QGIS.SearchPanel({
+            hasGeom: hasGeom,
             useWmsRequest: true,
-            useBbox: Eqwc.settings.syncAttributeTableWithView ? Eqwc.settings.syncAttributeTableWithView : false,
+            useBbox: (Eqwc.settings.syncAttributeTableWithView && hasGeom) ? Eqwc.settings.syncAttributeTableWithView : false,
             wmsFilter: filter,
             queryLayer: myQueryLayerName,
             gridColumns: getLayerAttributes(myQueryLayerName).columns,
@@ -560,6 +596,12 @@ function getLayerAttributes(layer) {
 }
 
 function getActionColumns(layerId) {
+
+    var lay = projectData.layers[layerId];
+
+    if(lay && lay.geom_type == 'No geometry') {
+        return null;
+    }
 
     var action = new Ext.grid.ActionColumn({
         width: 22,

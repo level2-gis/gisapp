@@ -1712,6 +1712,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
             searchPanelInstance.resultsGrid = new Ext.grid.GridPanel({
                 id: searchPanelId,
+                hasGeom: searchPanelInstance.hasGeom,
                 panel: searchPanelInstance,
                 title: searchPanelInstance.gridTitle,
                 itemId: searchPanelInstance.gridTitle,
@@ -1790,8 +1791,10 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 handler: function () {
                     searchPanelInstance.resultsGrid.filters.clearFilters();
                 }
-            },
-                {
+            }];
+
+            if(searchPanelInstance.hasGeom) {
+                toolBar.push({
                     iconCls: 'x-extent-icon',
                     tooltip: TR.tableUseExtent,
                     pressed: Eqwc.settings.syncAttributeTableWithView,
@@ -1800,7 +1803,10 @@ function showSearchPanelResults(searchPanelInstance, features) {
                     enableToggle: true,
                     toggleHandler: switchBbox,
                     scope: searchPanelInstance
-                },
+                });
+            }
+
+            toolBar.push(
                 //{
                 //    iconCls: 'x-clear-icon',
                 //    tooltip: TR.clearSelection,
@@ -1816,7 +1822,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                     tooltip: TR.loadMoreToolTip,
                     scope: searchPanelInstance,
                     handler: loadMore
-                }];
+                });
 
             //if paging config is defined, otherwise we don't need this
             if(pagingConfig.displayInfo==false) {
