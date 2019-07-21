@@ -97,16 +97,16 @@ class Helpers
 
         }
 
-        if (isset($params['SRS'])) {
-            $srid = substr(strrchr($params['SRS'], ':'), 1);
+        //if (isset($params['SRS'])) {
+        //    $srid = substr(strrchr($params['SRS'], ':'), 1);
+        
+        //    if (!is_numeric($srid)) {
+        //        return "SQL injection prevention : bad srid";
+        //    }
 
-            if (!is_numeric($srid)) {
-                return "SQL injection prevention : bad srid";
-            }
-
-        } else {
-            return "No SRS!";
-        }
+        //} else {
+        //    return "No SRS!";
+        //}
 
         if (!(isset($params['format']))) {
             return "No format";
