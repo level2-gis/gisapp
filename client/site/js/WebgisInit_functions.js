@@ -1510,7 +1510,7 @@ function postLoading() {
                                     };
 
                                     if (usersPrint !== undefined) {
-                                        printProvider.customParams.filter = usersPrint+':"user_name" = \''+projectData.user+'\'';
+                                        printProvider.customParams.filterToAdd = usersPrint+':"user_name" = \''+projectData.user+'\'';
                                     }
 
                                     printProvider.print(geoExtMap, [printExtent.page]);

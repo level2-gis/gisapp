@@ -470,6 +470,19 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                     'LAYERS': layers.join(',')
                 });
 
+            if(this.customParams.filterToAdd) {
+                if(thematicLayer.params.FILTER) {
+                    printUrl += '&FILTER='+encodeURIComponent(thematicLayer.params.FILTER+";"+this.customParams.filterToAdd);
+                } else {
+                    printUrl += '&FILTER='+encodeURIComponent(this.customParams.filterToAdd);
+                }
+                delete this.customParams.filterToAdd;
+            } else {
+                if(thematicLayer.params.FILTER) {
+                    printUrl += '&FILTER='+encodeURIComponent(thematicLayer.params.FILTER);
+                }
+            }
+
             printUrl += '&' + Ext.urlEncode(this.customParams);
 
             if (thematicLayer.params.OPACITIES) {
