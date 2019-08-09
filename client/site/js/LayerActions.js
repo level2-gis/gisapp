@@ -352,60 +352,90 @@ function exportData(layername,format, useBbox, crs) {
 
     var layerId = wmsLoader.layerTitleNameMapping[layername];
     var layerCrs = projectData.layers[layerId].crs;
-    var layerFields = joinObj(wmsLoader.layerProperties[layerId].attributes,'name');
-    var mapCrsBbox = null;
-    var layCrsBbox = null;
-    //current view is used as bounding box for exporting data
-    if (useBbox) {
-        mapCrsBbox = geoExtMap.map.calculateBounds(); //.transform(authid,layerCrs);
-        layCrsBbox = geoExtMap.map.calculateBounds().transform(authid,layerCrs);
-    }
-    //Ext.Msg.alert('Info',layer+' ' + bbox);
+    var layerFields = layerId.indexOf("_view")>-1 ? "" : joinObj(wmsLoader.layerProperties[layerId].attributes,'name'); //workaround for ogr issue when selecting field names with specific language characters. In case of view export all fields
 
-    var exportUrl = "./admin/export.php?" + Ext.urlEncode({
-            map:projectData.project,
-            SRS:crs,
-            map0_extent:mapCrsBbox,
-            layer_extent:layCrsBbox,
-            layer:layername,
-            fields: layerId.indexOf("_view")>-1 ? "" : layerFields,     //workaround for ogr issue when selecting field names with specific language characters. In case of view export all fields
-            format:format
+    var exportUrl = "./admin/export.php?";
+
+    if(format == 'KOF') {
+
+        layerFields = [];
+        if(Eqwc.common.layerFieldNameExists(layerId,EditorConfig.spatialFormatsOptions.kof.fieldmap.name)) {
+            layerFields.push(EditorConfig.spatialFormatsOptions.kof.fieldmap.name);
+        } else {
+            layerFields.push(projectData.layers[layerId].key);
+        }
+        if(Eqwc.common.layerFieldNameExists(layerId,EditorConfig.spatialFormatsOptions.kof.fieldmap.code)) {
+            layerFields.push(EditorConfig.spatialFormatsOptions.kof.fieldmap.code);
+        }
+
+        exportUrl = "./admin/text_export.php?";
+        var zField = Eqwc.common.layerFieldNameExists(layerId,EditorConfig.spatialFormatsOptions.kof.fieldmap.h) ? EditorConfig.spatialFormatsOptions.kof.fieldmap.h : 'use_geom';
+
+        exportUrl += Ext.urlEncode({
+            map: projectData.project,
+            SRS: crs,
+            layer: layername,
+            fields: layerFields.join(','),
+            z: zField,
+            format: format
+        })
+
+    } else {
+
+        var mapCrsBbox = null;
+        var layCrsBbox = null;
+        //current view is used as bounding box for exporting data
+        if (useBbox) {
+            mapCrsBbox = geoExtMap.map.calculateBounds(); //.transform(authid,layerCrs);
+            layCrsBbox = geoExtMap.map.calculateBounds().transform(authid, layerCrs);
+        }
+        //Ext.Msg.alert('Info',layer+' ' + bbox);
+
+        exportUrl += Ext.urlEncode({
+            map: projectData.project,
+            SRS: crs,
+            map0_extent: mapCrsBbox,
+            layer_extent: layCrsBbox,
+            layer: layername,
+            fields: layerFields,
+            format: format
         });
+    }
 
     Ext.Ajax.request({
         url: exportUrl,
-        disableCaching : false,
+        disableCaching: false,
         params: {
-          cmd: 'prepare'
+            cmd: 'prepare'
         },
         method: 'GET',
         success: function (response) {
 
             var result = Ext.util.JSON.decode(response.responseText);
 
-            if(result.success) {
+            if (result.success) {
                 var key = result.message;
-                var body = Ext.getBody();
-                var frame = body.createChild({
-                    tag: 'iframe',
-                    cls: 'x-hidden',
-                    id: 'hiddenform-iframe',
-                    name: 'iframe',
-                    src: exportUrl + "&cmd=get&key="+key
-                });
+
+                window.location = exportUrl + "&cmd=get&key=" + key;
+
+                //var body = Ext.getBody();
+                //var frame = body.createChild({
+                //    tag: 'iframe',
+                //    cls: 'x-hidden',
+                //    id: 'hiddenform-iframe',
+                //    name: 'iframe',
+                //    src: exportUrl + "&cmd=get&key=" + key
+                //});
             }
             else {
-                Ext.Msg.alert("Error",result.message);
+                Ext.Msg.alert("Error", result.message);
             }
         },
         //this doesn't fire, why?
-        failure: function(response, opts) {
-            Ext.Msg.alert('Error','server-side failure with status code ' + response.status);
+        failure: function (response, opts) {
+            Ext.Msg.alert('Error', 'server-side failure with status code ' + response.status);
         }
     });
-
-
-
 }
 
 function openAttTable() {

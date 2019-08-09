@@ -99,7 +99,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
         $options = " -where \"".$sql."\" ";
     }
 
-    $options .= "-preserve_fid ";
+    //$options .= "-preserve_fid ";
 
     //export only selection inside bounding box if provided
     //we have to transform extent to layers CRS on client side

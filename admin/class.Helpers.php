@@ -14,6 +14,7 @@ namespace GisApp;
 
 use Exception;
 use SimpleXMLElement;
+use PDO;
 
 class Helpers
 {
@@ -435,6 +436,31 @@ class Helpers
         }
 
         return self::msg(true, $ds_parms);
+    }
+
+    /**
+     * Get PG connection from layer
+     */
+    public static function getPGConnection($ds_parms)
+    {
+        if(empty($ds_parms['host']))
+        {
+            $ds_parms['host'] = 'localhost';
+        }
+        if ($ds_parms['provider'] == 'postgres') {
+            $PDO_DSN = "pgsql:host=${ds_parms['host']};port=${ds_parms['port']};dbname=${ds_parms['dbname']}";
+        } else {
+            return self::msg(false, 'provider not supported:'.$ds_parms['provider']);
+        }
+
+        try {
+            $dbh = new PDO($PDO_DSN, @$ds_parms['user'], @$ds_parms['password']);
+            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            return self::msg(false, 'db error: ' . $e->getMessage());
+        }
+
+        return self::msg(true, $dbh);
     }
 
     public static function getMapFromUrl()
