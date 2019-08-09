@@ -437,10 +437,10 @@ function postLoading() {
     // apply printing parameters from project settings
     var composerTemplates = wmsLoader.projectSettings.capability.composerTemplates;
     if (composerTemplates.length > 0) {
-        printLayoutsDefined = true;
         for (var i = 0; i < composerTemplates.length; i++) {
             var composerTemplate = composerTemplates[i];
             if(composerTemplate.map) {
+                printLayoutsDefined = true;
                 var mapWidth = composerTemplate.map.width / ptTomm;
                 var mapHeight = composerTemplate.map.height / ptTomm;
                 //for some strange reason we need to provide a "map" and a "size" object with identical content
@@ -456,6 +456,8 @@ function postLoading() {
                     },
                     "rotation": true
                 });
+            } else {
+                printLayoutsDefined = false;
             }
         }
     }
@@ -1549,6 +1551,8 @@ function postLoading() {
     }
     else {
         printLayoutsCombobox = Ext.getCmp('PrintLayoutsCombobox');
+        if(
+            0)
         printLayoutsCombobox.setValue(printLayoutsCombobox.store.getAt(0).data.name);
         var printDPICombobox = Ext.getCmp('PrintDPICombobox');
         printDPICombobox.setValue("300");
