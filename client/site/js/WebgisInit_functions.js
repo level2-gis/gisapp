@@ -1774,8 +1774,14 @@ function showSearchPanelResults(searchPanelInstance, features) {
                                 }
                             });
 
-
-                            thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
+                            //filter also view (for print table)
+                            if(layer.indexOf('_view')>-1) {
+                                thematicLayer.mergeNewParams({
+                                    FILTER: layerId + ":" + wmsFilter.join(" AND ") + ";" + wmsLoader.layerTitleNameMapping[layer] + ":" + wmsFilter.join(" AND ")
+                                });
+                            } else {
+                                thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
+                            }
                         }
                     }
                 }
