@@ -440,21 +440,23 @@ function postLoading() {
         printLayoutsDefined = true;
         for (var i = 0; i < composerTemplates.length; i++) {
             var composerTemplate = composerTemplates[i];
-            var mapWidth = composerTemplate.map.width / ptTomm;
-            var mapHeight = composerTemplate.map.height / ptTomm;
-            //for some strange reason we need to provide a "map" and a "size" object with identical content
-            printCapabilities.layouts.push({
-                "name": composerTemplate.name,
-                "map": {
-                    "width": mapWidth,
-                    "height": mapHeight
-                },
-                "size": {
-                    "width": mapWidth,
-                    "height": mapHeight
-                },
-                "rotation": true
-            });
+            if(composerTemplate.map) {
+                var mapWidth = composerTemplate.map.width / ptTomm;
+                var mapHeight = composerTemplate.map.height / ptTomm;
+                //for some strange reason we need to provide a "map" and a "size" object with identical content
+                printCapabilities.layouts.push({
+                    "name": composerTemplate.name,
+                    "map": {
+                        "width": mapWidth,
+                        "height": mapHeight
+                    },
+                    "size": {
+                        "width": mapWidth,
+                        "height": mapHeight
+                    },
+                    "rotation": true
+                });
+            }
         }
     }
 
