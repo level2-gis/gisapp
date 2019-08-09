@@ -29,6 +29,7 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         $fields = explode(',', $query['fields']);
     }
 
+    //srid user wants data in
     $srid = substr(strrchr($query['SRS'], ':'), 1);
 
     // Get project
@@ -49,6 +50,8 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         throw new Exception ($lay_info["message"]);
     }
 
+    $lay_srid = substr(strrchr($lay_info["message"]['crs'], ':'), 1);
+
     // Get PG connection
     $lay_dsn = Helpers::getPGConnection($lay_info["message"]);
     if (!($lay_dsn["status"])) {
@@ -61,7 +64,11 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         $z_sql = "st_z((st_dump(geom)).geom)";
     }
 
-    $sql = "SELECT *,".$z_sql."::numeric(8,3) AS z,st_y((st_dump(st_transform(geom,".$srid."))).geom)::numeric(15,3) AS y, st_x((st_dump(st_transform(geom,".$srid."))).geom)::numeric(15,3) AS x ";
+    if($srid==$lay_srid) {
+        $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(geom)).geom)::numeric(15,3) AS y, st_x((st_dump(geom)).geom)::numeric(15,3) AS x ";
+    } else {
+        $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS y, st_x((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS x ";
+    }
     $sql.= "FROM ".$lay_info['message']['table'];
 
     $result = [];

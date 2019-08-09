@@ -52,6 +52,11 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
         throw new Exception ($lay_info["message"]);
     }
 
+    $use_geom = true;
+    if($lay_info["message"]['type'] == "No geometry") {
+        $use_geom = false;
+    }
+
     $sourceProvider = $lay_info["message"]['provider'];
     $sql = '';
     switch ($sourceProvider) {
@@ -173,8 +178,14 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     //putenv('CPL_LOG_ERRORS=ON');
     //putenv('CPL_LOG=/var/tmp/ogr_errors.log');
 
+    if($use_geom) {
+        $geom_sql = '-s_srs EPSG:' . $source_srid . ' -t_srs EPSG:' . $srid;
+    } else {
+        $geom_sql = '';
+    }
+
     //$mycmd = OGR2OGR . ' -f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '" ' . $options . ' "' . $conn . '" -sql "SELECT * FROM ' . $table . ' WHERE ' . $geom . ' && ST_Transform(ST_MakeEnvelope(' . $xmin . ', ' . $ymin . ', ' . $xmax . ', ' . $ymax . ', ' . $srid . '),' . $source_srid . ')" -progress';
-    $mycmd = OGR2OGR . ' -skipfailures -s_srs EPSG:' . $source_srid . ' -t_srs EPSG:' . $srid . $options . '-f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '"' .$source . ' -progress';
+    $mycmd = OGR2OGR . ' -skipfailures ' . $geom_sql . $options . '-f "' . $format_name . '" "' . $fileName . '.' . strtolower($destinationFormat) . '"' .$source . ' -progress';
 
     chdir(dirname($map));
     $output = exec($mycmd);
