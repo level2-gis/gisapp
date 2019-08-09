@@ -1601,7 +1601,7 @@ function postLoading() {
  * Show search panel results
  */
 function showSearchPanelResults(searchPanelInstance, features) {
-    if (features.length) {
+    //if (features.length) {
         // Here we select where to show the search results
         var targetComponent = null;
         //if (typeof(mapSearchPanelOutputRegion) == 'undefined') {
@@ -1866,25 +1866,25 @@ function showSearchPanelResults(searchPanelInstance, features) {
         //var bbox = new OpenLayers.Bounds(bx.minx,bx.miny,bx.maxx,bx.maxy);
         //geoExtMap.map.zoomToExtent(bbox,false);
 
-    } else {
-        // No features: shouldn't we warn the user?
-
-        //remove loading mask
-        var maskElement = this.el;
-        if(this.gridLocation=='bottom') {
-            maskElement = Ext.getCmp('BottomPanel').el;
-        }
-
-        maskElement.unmask();
-
-        Ext.MessageBox.alert(searchPanelTitleString[lang], searchNoRecordsFoundString[lang]);
-        //try {
-        //    Ext.getCmp('SearchPanelResultsGrid').destroy();
-        //} catch (e) {
-        //    // Eventually log...
-        //}
-        //searchPanelInstance.resultsGrid = null;
-    }
+    //} else {
+    //    // No features: shouldn't we warn the user?
+    //
+    //    //remove loading mask
+    //    var maskElement = this.el;
+    //    if(this.gridLocation=='bottom') {
+    //        maskElement = Ext.getCmp('BottomPanel').el;
+    //    }
+    //
+    //    maskElement.unmask();
+    //
+    //    //Ext.MessageBox.alert(searchPanelTitleString[lang], searchNoRecordsFoundString[lang]);
+    //    //try {
+    //    //    Ext.getCmp('SearchPanelResultsGrid').destroy();
+    //    //} catch (e) {
+    //    //    // Eventually log...
+    //    //}
+    //    //searchPanelInstance.resultsGrid = null;
+    //}
     return true;
 }
 

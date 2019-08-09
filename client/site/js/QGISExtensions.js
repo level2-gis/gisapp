@@ -1182,8 +1182,10 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                                 }
                             } else if (this.gridLocation =='default') {
                                 var grid = Ext.getCmp('SearchPanelResultsGrid');
-                                var tt = searchResultString[lang] + " ("+grid.store.totalCount+")";
-                                grid.setTitle(tt);
+                                if(grid) {
+                                    var tt = searchResultString[lang] + " (" + grid.store.totalCount + ")";
+                                    grid.setTitle(tt);
+                                }
                             }
                         }
                     }
