@@ -552,7 +552,7 @@ function getLayerAttributes(layer) {
             fieldType='boolean';
         }
 
-        if (fieldType == 'QDateTime') {
+        if (fieldType.indexOf('Date')>-1) {
             fieldType = 'date';
         }
 
