@@ -1551,8 +1551,6 @@ function postLoading() {
     }
     else {
         printLayoutsCombobox = Ext.getCmp('PrintLayoutsCombobox');
-        if(
-            0)
         printLayoutsCombobox.setValue(printLayoutsCombobox.store.getAt(0).data.name);
         var printDPICombobox = Ext.getCmp('PrintDPICombobox');
         printDPICombobox.setValue("300");
