@@ -552,9 +552,12 @@ function getLayerAttributes(layer) {
             fieldType='boolean';
         }
 
-        if (fieldType.indexOf('Date')>-1) {
+        if (fieldType.indexOf('DateTime')>-1) {
+            fieldType = 'time';
+        } else if (fieldType.indexOf('Date')>-1) {
             fieldType = 'date';
         }
+
 
         //if(fieldType=='int' || fieldType=='date' || fieldType=='boolean') {
         //    ret.fields.push({name: attribute.name,type:fieldType});
@@ -604,14 +607,18 @@ function getLayerAttributes(layer) {
 
         if(fieldType=='date') {
             ret.columns[i].xtype = 'datecolumn';
-            ret.columns[i].format = 'Y-m-d H:i:s';
+            ret.columns[i].format = 'Y-m-d';
+        }
 
+        if(fieldType=='time') {
+            ret.columns[i].xtype = 'datecolumn';
+            ret.columns[i].format = 'Y-m-d H:i:s';
         }
 
         //if(fieldType=='boolean') {
-        //    ret.columns[i].xtype = 'booleancolumn';
-        //    //ret.columns[i].falseText = 'f';
-        //    //ret.columns[i].trueText = 't';
+        //    //ret.columns[i].xtype = 'booleancolumn';
+        //    ret.columns[i].falseText = Ext.MessageBox.buttonText.no;
+        //    ret.columns[i].trueText = Ext.MessageBox.buttonText.yes;
         //}
     }
 
