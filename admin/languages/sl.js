@@ -66,25 +66,25 @@ var TR = {
 
 var I18n = {};
 
-I18n.title = "Mobile Viewer";
+I18n.title = "Mobilni GIS";
 
 I18n.search = {
-    header: "Search",
-    results: "Results",
-    failed: "Search failed:"
+    header: "Iskanje",
+    results: "Rezultati",
+    failed: "Iskanje neuspešno:"
 };
 
 I18n.properties = {
-    header: "Map Settings",
-    mapFollowing: "Tracking",
-    mapRotation: "Auto Rotation",
+    header: "Nastavitve",
+    mapFollowing: "Sledenje",
+    mapRotation: "Auto rotacija",
     mapLoading: "Nalaganje karte...",
-    scaleBar: "Scale",
+    scaleBar: "Merilo",
     about: "Imprint",
     share: "Share",
     login: "Login",
-    on: "On",
-    off: "Off"
+    on: "DA",
+    off: "NE"
 };
 
 I18n.about = {
@@ -94,25 +94,25 @@ I18n.about = {
 
 I18n.layers = {
     project: "Projekt",
-    topics: "Themes",
+    topics: "Teme",
     layers: "Sloji",
     layerOrder: "Možnosti",
-    background: "Background",
-    overlays: "Overlays",
-    selection: "Selection",
+    background: "Podlage",
+    overlays: "Dodatni sloji",
+    selection: "Izbor",
     redlining: "Redlining",
-    transparency: "Transparency"
+    transparency: "Prosojnost"
 };
 
 I18n.featureInfo = {
-    header: "Information",
-    feature: "Feature ID:",
+    header: "Informacije",
+    feature: "Element ID:",
     raster: "Raster",
-    noFeatureFound: "No objects found"
+    noFeatureFound: "Ni elementov"
 };
 
 I18n.geolocation = {
-    permissionDeniedMessage: "Location is not available.\n\nPlease check your browser or device settings.",
+    permissionDeniedMessage: "Lokacija ni na voljo.\n\nPreverite nastavitve brskalnika in naprave.",
     accuracy: "Natančnost",
     altitude: "Višina",
     heading: "Smer",
