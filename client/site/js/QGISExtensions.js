@@ -1114,7 +1114,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     //    fieldType='boolean';
                     //}
 
-                    if (fieldType == 'QDateTime') {
+                    if (fieldType.indexOf('Date')>-1) {
                         fieldType = 'date';
                     }
 
