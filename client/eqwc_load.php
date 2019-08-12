@@ -54,11 +54,13 @@ if (!(empty($plugin_list))) {
 
             //plugin language file
             $lang_fn = $dir . basename($plugin_path) . "/lang/" . $def_lang . ".js";
-            if (!file_exists($lang_fn)) {
-                $def_lang = 'en';
-            }
             if (file_exists($lang_fn)) {
                 array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/" . $def_lang . ".js?v=" . rand());
+            } else {
+                $lang_en = $dir . basename($plugin_path) . "/lang/en.js";
+                if(file_exists($lang_en)) {
+                    array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/en.js?v=" . rand());
+                }
             }
             $js_arr = array_slice(scandir($plugin_path . '/js/'), 2);
             foreach ($js_arr as $script) {
