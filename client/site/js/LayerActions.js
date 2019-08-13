@@ -236,8 +236,12 @@ function zoomToLayerExtent(item) {
 function exportHandler(item) {
     var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
     var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
-    var exportLayer = Eqwc.common.getIdentifyLayerName(layerId);
+    var exportLayer = myLayerName;
     var myFormat = item.container.menuItemId;
+
+    if(myFormat != 'KOF') {
+        exportLayer = Eqwc.common.getIdentifyLayerName(layerId);
+    }
 
     var exportExtent = item.ownerCt.getComponent('currentExtent') ? item.ownerCt.getComponent('currentExtent').checked : false;
     var useMapCrs = item.ownerCt.getComponent('useMapCRS');
