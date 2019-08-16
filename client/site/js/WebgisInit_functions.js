@@ -2787,21 +2787,33 @@ function home() {
 function getExternalWMSDefinition(layer) {
 
     var layerName = layer.id;
+    var definition;
     var type = layer.params.SERVICE ? layer.params.SERVICE : 'unknown';
 
-    if(type=='WMS' && (Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2)) {
-        var definition = {
+    if(Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)<3) {
+        return null;
+    }
+
+    if(type=='WMS') {
+        definition = {
             [layerName+':url']: layer.url.toLowerCase().replace('https','http'),    //QGIS issue with https, assume URL is working also on http
             [layerName+':format']: layer.params.FORMAT,
             [layerName+':crs']: projectData.crs,
             [layerName+':layers']: layer.params.LAYERS,
             [layerName+':styles']: layer.params.STYLES
         };
-
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
-    } else {
-        return null;
+    } else if (layer.print) {
+        definition = {
+            [layerName+':url']: layer.print.url.toLowerCase().replace('https','http'),    //QGIS issue with https, assume URL is working also on http
+            [layerName+':format']: layer.print.format,
+            [layerName+':crs']: projectData.crs,
+            [layerName+':layers']: layer.print.layers,
+            [layerName+':styles']: layer.print.styles
+        };
+        return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
     }
+    return null;
 }
 
 function getVisibleExtraLayersForPrint() {

@@ -72,7 +72,8 @@ function makeLayer(layDef, visible) {
                 numZoomLevels: eval(options.numZoomLevels),
                 maxResolution: eval(options.maxResolution),
                 resolutions: eval(options.resolutions),
-                serverResolutions: eval(options.serverResolutions)
+                serverResolutions: eval(options.serverResolutions),
+                print: eval(options.print)
             });
 
             break;
