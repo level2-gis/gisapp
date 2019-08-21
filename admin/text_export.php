@@ -51,6 +51,7 @@ function sendText($type, $layer_name, $project_path, $query, $format)
     }
 
     $lay_srid = substr(strrchr($lay_info["message"]['crs'], ':'), 1);
+    $type = $lay_info["message"]['type'];
 
     // Get PG connection
     $lay_dsn = Helpers::getPGConnection($lay_info["message"]);
@@ -58,34 +59,61 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         throw new Exception ($lay_dsn["message"]);
     }
 
-    $z_field = $query['z'];
-    $z_sql = $z_field;
-    if($z_field=='use_geom') {
-        $z_sql = "st_z((st_dump(geom)).geom)";
-    }
-
-    if($srid==$lay_srid) {
-        $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(geom)).geom)::numeric(15,3) AS y, st_x((st_dump(geom)).geom)::numeric(15,3) AS x ";
-    } else {
-        $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS y, st_x((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS x ";
-    }
-    $sql.= "FROM ".$lay_info['message']['table'];
-
     $result = [];
 
+    if(strpos($type,'Point')>-1) {
+        $name = isset($fields[0]) ? $fields[0] : 'id';
+        $code = isset($fields[1]) ? $fields[1] : null;
+
+        $z_field = $query['z'];
+        $z_sql = $z_field;
+        if ($z_field == 'use_geom') {
+            $z_sql = "st_z((st_dump(geom)).geom)";
+        }
+
+        if ($srid == $lay_srid) {
+            $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(geom)).geom)::numeric(15,3) AS y, st_x((st_dump(geom)).geom)::numeric(15,3) AS x ";
+        } else {
+            $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS y, st_x((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS x ";
+        }
+        $sql .= "FROM " . $lay_info['message']['table'];
+    } else if(strpos($type,'LineString')>-1) {
+        $name = 'index';
+        $code = isset($fields[1]) ? $fields[1] : null;
+
+        if ($srid == $lay_srid) {
+            $sql = "SELECT *,(p).path[1] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y((p).geom)::numeric(15,3) as y, st_x((p).geom)::numeric(15,3) as x ";
+        } else {
+            $sql = "SELECT *,(p).path[1] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y(st_transform((p).geom," . $srid ."))::numeric(15,3) as y, st_x(st_transform((p).geom," . $srid . "))::numeric(15,3) as x ";
+        }
+        $sql.= "FROM " . $lay_info['message']['table'] . " l, (SELECT id, st_dumppoints(geom) AS p FROM " . $lay_info['message']['table'] . ") v ";
+        $sql.= "WHERE l.id = v.id ORDER by l.id;";
+    } else {
+        throw new Exception ('Type not supported: '.$type);
+    }
+
     foreach ($lay_dsn['message']->query($sql) as $row) {
+
+        if((strpos($type,'LineString')>-1) && ($row['index'] == 1)) {
+            array_push($result, ' 09 91');
+        }
+
         $specific = ' 05 ';
-        $specific.= str_pad($row[$fields[0]],11);
-        if(empty($fields[1])) {
+        $specific.= str_pad(substr($row[$name],0,11),11);
+        if(empty($code)) {
             $specific .= str_pad(' ', 9);
         } else {
-            $specific .= str_pad($row[$fields[1]], 9);
+            $specific .= str_pad(substr($row[$code],0,9), 9);
         }
         $specific.= str_pad($row['y'],12,' ',STR_PAD_LEFT);
         $specific.= str_pad($row['x'],12,' ',STR_PAD_LEFT);
         $specific.= str_pad($row['z'],9,' ',STR_PAD_LEFT);
 
         array_push($result, $specific);
+
+        if((strpos($type,'LineString')>-1) && ($row['index'] == $row['points'])) {
+            array_push($result, ' 09 99');
+        }
     }
 
     if($cmd=='prepare') {
