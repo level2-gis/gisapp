@@ -239,7 +239,13 @@ function exportHandler(item) {
     var exportLayer = myLayerName;
     var myFormat = item.container.menuItemId;
 
-    if(myFormat != 'KOF') {
+    if(myFormat == 'KOF') {
+        var layer = projectData.layers[layerId];
+        if(layer.provider != 'postgres') {
+            Ext.Msg.alert('Error','Provider: '+layer.provider + ' not supported!');
+            return false;
+        }
+    } else {
         exportLayer = Eqwc.common.getIdentifyLayerName(layerId);
     }
 
@@ -360,6 +366,15 @@ function exportData(layername,format, useBbox, crs) {
 
     var exportUrl = "./admin/export.php?";
 
+    //var mapCrsBbox = null;
+    var layCrsBbox = null;
+    //current view is used as bounding box for exporting data
+    if (useBbox) {
+        //mapCrsBbox = geoExtMap.map.calculateBounds(); //.transform(authid,layerCrs);
+        layCrsBbox = geoExtMap.map.calculateBounds().transform(authid, layerCrs);
+    }
+    //Ext.Msg.alert('Info',layer+' ' + bbox);
+
     if(format == 'KOF') {
 
         layerFields = [];
@@ -378,6 +393,7 @@ function exportData(layername,format, useBbox, crs) {
         exportUrl += Ext.urlEncode({
             map: projectData.project,
             SRS: crs,
+            layer_extent: layCrsBbox,
             layer: layername,
             fields: layerFields.join(','),
             z: zField,
@@ -386,19 +402,10 @@ function exportData(layername,format, useBbox, crs) {
 
     } else {
 
-        var mapCrsBbox = null;
-        var layCrsBbox = null;
-        //current view is used as bounding box for exporting data
-        if (useBbox) {
-            mapCrsBbox = geoExtMap.map.calculateBounds(); //.transform(authid,layerCrs);
-            layCrsBbox = geoExtMap.map.calculateBounds().transform(authid, layerCrs);
-        }
-        //Ext.Msg.alert('Info',layer+' ' + bbox);
-
         exportUrl += Ext.urlEncode({
             map: projectData.project,
             SRS: crs,
-            map0_extent: mapCrsBbox,
+            //map0_extent: mapCrsBbox,
             layer_extent: layCrsBbox,
             layer: layername,
             fields: layerFields,

@@ -61,6 +61,17 @@ function sendText($type, $layer_name, $project_path, $query, $format)
 
     $result = [];
 
+    //bounding box
+    $box = '';
+    if ($query['layer_extent']!='') {
+        $extent = explode(",", $query['layer_extent']);
+        $xmin = $extent[0];
+        $ymin = $extent[1];
+        $xmax = $extent[2];
+        $ymax = $extent[3];
+        $box = 'geom && ST_MakeEnvelope('. $xmin . ',' . $ymin . ',' . $xmax . ',' . $ymax . ',' . $lay_srid . ')';
+    }
+
     if(strpos($type,'Point')>-1) {
         $name = isset($fields[0]) ? $fields[0] : 'id';
         $code = isset($fields[1]) ? $fields[1] : null;
@@ -72,11 +83,14 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         }
 
         if ($srid == $lay_srid) {
-            $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(geom)).geom)::numeric(15,3) AS y, st_x((st_dump(geom)).geom)::numeric(15,3) AS x ";
+            $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z, st_y((st_dump(geom)).geom)::numeric(15,3) AS y, st_x((st_dump(geom)).geom)::numeric(15,3) AS x ";
         } else {
-            $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z,st_y((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS y, st_x((st_dump(st_transform(geom," . $srid . "))).geom)::numeric(15,3) AS x ";
+            $sql = "SELECT *," . $z_sql . "::numeric(8,3) AS z, st_y((st_dump(st_transform(st_setsrid(geom," . $lay_srid . ")," . $srid . "))).geom)::numeric(15,3) AS y, st_x((st_dump(st_transform(st_setsrid(geom," . $lay_srid . ")," . $srid . "))).geom)::numeric(15,3) AS x ";
         }
         $sql .= "FROM " . $lay_info['message']['table'];
+        if(!empty($box)) {
+            $sql .= " WHERE " . $box;
+        }
     } else if(strpos($type,'LineString')>-1) {
         $name = 'index';
         $code = isset($fields[1]) ? $fields[1] : null;
@@ -84,10 +98,14 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         if ($srid == $lay_srid) {
             $sql = "SELECT *,(p).path[1] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y((p).geom)::numeric(15,3) as y, st_x((p).geom)::numeric(15,3) as x ";
         } else {
-            $sql = "SELECT *,(p).path[1] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y(st_transform((p).geom," . $srid ."))::numeric(15,3) as y, st_x(st_transform((p).geom," . $srid . "))::numeric(15,3) as x ";
+            $sql = "SELECT *,(p).path[1] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y(st_transform(st_setsrid((p).geom," . $lay_srid . ")," . $srid ."))::numeric(15,3) as y, st_x(st_transform(st_setsrid((p).geom," . $lay_srid . ")," . $srid . "))::numeric(15,3) as x ";
         }
         $sql.= "FROM " . $lay_info['message']['table'] . " l, (SELECT id, st_dumppoints(geom) AS p FROM " . $lay_info['message']['table'] . ") v ";
-        $sql.= "WHERE l.id = v.id ORDER by l.id;";
+        $sql.= "WHERE l.id = v.id";
+        if(!empty($box)) {
+            $sql .= " AND " . $box;
+        }
+        $sql.= " ORDER by l.id;";
     } else {
         throw new Exception ('Type not supported: '.$type);
     }
