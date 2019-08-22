@@ -105,7 +105,7 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         if(!empty($box)) {
             $sql .= " AND " . $box;
         }
-        $sql.= " ORDER by l.id;";
+        $sql.= " ORDER by l.id,index;";
     } else {
         throw new Exception ('Type not supported: '.$type);
     }
