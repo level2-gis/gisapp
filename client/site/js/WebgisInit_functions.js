@@ -2787,7 +2787,7 @@ function home() {
 function getExternalWMSDefinition(layer) {
 
     var layerName = layer.id;
-    var definition;
+    var definition = {};
     var type = layer.params.SERVICE ? layer.params.SERVICE : 'unknown';
 
     if(Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)<3) {
@@ -2795,22 +2795,20 @@ function getExternalWMSDefinition(layer) {
     }
 
     if(type=='WMS') {
-        definition = {
-            [layerName+':url']: layer.url.toLowerCase().replace('https','http'),    //QGIS issue with https, assume URL is working also on http
-            [layerName+':format']: layer.params.FORMAT,
-            [layerName+':crs']: projectData.crs,
-            [layerName+':layers']: layer.params.LAYERS,
-            [layerName+':styles']: layer.params.STYLES
-        };
+        definition[layerName+':url']        = layer.url.toLowerCase().replace('https','http');    //QGIS issue with https, assume URL is working also on http
+        definition[layerName+':format']     = layer.params.FORMAT;
+        definition[layerName+':crs']        = projectData.crs;
+        definition[layerName+':layers']     = layer.params.LAYERS;
+        definition[layerName+':styles']     = layer.params.STYLES;
+
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
     } else if (layer.print) {
-        definition = {
-            [layerName+':url']: layer.print.url.toLowerCase().replace('https','http'),    //QGIS issue with https, assume URL is working also on http
-            [layerName+':format']: layer.print.format,
-            [layerName+':crs']: projectData.crs,
-            [layerName+':layers']: layer.print.layers,
-            [layerName+':styles']: layer.print.styles
-        };
+        definition[layerName+':url']        = layer.print.url.toLowerCase().replace('https','http');    //QGIS issue with https, assume URL is working also on http
+        definition[layerName+':format']     = layer.print.format;
+        definition[layerName+':crs']        = projectData.crs;
+        definition[layerName+':layers']     = layer.print.layers;
+        definition[layerName+':styles']     = layer.print.styles;
+
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
     }
     return null;
