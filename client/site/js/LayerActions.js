@@ -626,11 +626,11 @@ function getLayerAttributes(layer) {
             ret.columns[i].format = 'Y-m-d H:i:s';
         }
 
-        //if(fieldType=='boolean') {
-        //    //ret.columns[i].xtype = 'booleancolumn';
-        //    ret.columns[i].falseText = Ext.MessageBox.buttonText.no;
-        //    ret.columns[i].trueText = Ext.MessageBox.buttonText.yes;
-        //}
+        if(fieldType=='boolean') {
+            ret.columns[i].xtype = 'booleancolumn';
+            ret.columns[i].falseText = '-';
+            ret.columns[i].trueText = Ext.MessageBox.buttonText.yes;
+        }
     }
 
     var actionColumn = getActionColumns(sourceLayerId);
