@@ -353,8 +353,6 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						}, {
                             xtype: 'combo',
                             id: 'rightStatusText',
-                            valueField: 'code',
-                            displayField: 'description',
                             hideLabel: true,
                             editable: false,
                             mode: 'local',
