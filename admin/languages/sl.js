@@ -56,8 +56,14 @@ var TR = {
     loadMore: 'Več...',
     loadMoreToolTip: 'Tabela ni popolna. Klikni za več podatkov iz strežnika!',
     height: 'Višina',
+    exportData: 'Izvoz podatkov',
+    exportFormat: 'Format',
+    exportCrs: 'CRS',
+    exportLayer: 'Sloj',
+    exportExtent: 'Območje',
+    exportLayerExtent: 'Uporabi območje sloja',
     exportUseMapCrs: "Uporabi projektni koord. sistem",
-    tableUseExtent: "Only show features in map extent"
+    tableUseExtent: "Prikaži samo elemente znotraj trenutnega prikaza"
 };
 
 /**

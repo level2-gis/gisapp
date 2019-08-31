@@ -56,6 +56,12 @@ var TR = {
     loadMore: 'Laster...',
     loadMoreToolTip: 'Tabellen er ikke lastet.Klikk for å laste nye data fra serveren!',
     height: 'Høyde',
+    exportData: 'Export data',
+    exportFormat: 'Format',
+    exportCrs: 'CRS',
+    exportLayer: 'Layer',
+    exportExtent: 'Extent',
+    exportLayerExtent: 'Use layer extent',
     exportUseMapCrs: "Bruk kart CRS",
     tableUseExtent: "Bruk gjeldende kartutsnitt"
 };

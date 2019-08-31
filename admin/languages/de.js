@@ -53,6 +53,12 @@ var TR = {
     loadMore: 'Lade weiteres ...',
     loadMoreToolTip: 'Tabelle ist nicht vollständig. Klicken, um weitere Daten vom Server zu laden!',
     height: 'Höhe',
+    exportData: 'Export data',
+    exportFormat: 'Format',
+    exportCrs: 'CRS',
+    exportLayer: 'Layer',
+    exportExtent: 'Extent',
+    exportLayerExtent: 'Use layer extent',
     exportUseMapCrs: "Use map CRS",
     tableUseExtent: "Only show features in map extent"
 };
