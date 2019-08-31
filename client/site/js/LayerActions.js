@@ -471,19 +471,26 @@ function exportData(layername,format, useBbox, crs) {
     if(format == 'KOF') {
 
         layerFields = [];
-        if(Eqwc.common.layerFieldNameExists(layerId,EditorConfig.spatialFormatsOptions.kof.fieldmap.name)) {
-            layerFields.push(EditorConfig.spatialFormatsOptions.kof.fieldmap.name);
-        } else {
-            layerFields.push(projectData.layers[layerId].key);
-        }
-        if(Eqwc.common.layerFieldNameExists(layerId,EditorConfig.spatialFormatsOptions.kof.fieldmap.code)) {
-            layerFields.push(EditorConfig.spatialFormatsOptions.kof.fieldmap.code);
+
+        var def = Eqwc.settings.vectorExportFormats.find(function(item) {if(item[0] == 'KOF') {return item;}});
+        var zField = 'use_geom';
+
+        if (def.length == 3) {
+            if (Eqwc.common.layerFieldNameExists(layerId, def[2].name)) {
+                layerFields.push(def[2].name);
+            } else {
+                layerFields.push(projectData.layers[layerId].key);
+            }
+            if (Eqwc.common.layerFieldNameExists(layerId, def[2].code)) {
+                layerFields.push(def[2].code);
+            }
+            if (Eqwc.common.layerFieldNameExists(layerId, def[2].h)) {
+                zField = def[2].h;
+            }
         }
 
         exportUrl = "./admin/text_export.php?";
-        var zField = Eqwc.common.layerFieldNameExists(layerId,EditorConfig.spatialFormatsOptions.kof.fieldmap.h) ? EditorConfig.spatialFormatsOptions.kof.fieldmap.h : 'use_geom';
-
-        exportUrl += Ext.urlEncode({
+        exportUrl+= Ext.urlEncode({
             map: projectData.project,
             SRS: crs,
             layer_extent: layCrsBbox,
