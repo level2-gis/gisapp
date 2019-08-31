@@ -109,3 +109,17 @@ Eqwc.settings.mobileShowAccuracy = true;
 Eqwc.settings.qgisFilesFieldAlias = 'files';
 Eqwc.settings.measurementsUnitSystem = 'metric';
 Eqwc.settings.layerLegendMaxHeightPx = 200;
+Eqwc.settings.vectorExportFormats = [
+    ['SHP', 'ESRI Shapefile'],
+    ['DXF', 'AutoCAD DXF'],
+    ['XLSX', 'MS Office Open XLSX'],
+    ['CSV', 'Text CSV (semicolon)'],
+    ['TSV', 'Text TSV (tab)'],
+    ['KML', 'Keyhole Markup Language KML'],
+    ['GeoJSON', 'GeoJSON']
+];
+Eqwc.settings.tableExportFormats = [
+    ['XLSX', 'MS Office Open XLSX'],
+    ['CSV', 'Text CSV (semicolon)'],
+    ['TSV', 'Text TSV (tab)']
+];

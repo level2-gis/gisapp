@@ -68,71 +68,19 @@ function buildLayerContextMenu(node) {
 
     //Export
     if (projDataLayer != undefined && projDataLayer.provider !== 'gdal' && projDataLayer.provider !== 'wms') {
-        if(hasGeom) {
+        if(hasGeom && Eqwc.settings.vectorExportFormats && Eqwc.settings.vectorExportFormats.length>0) {
             menuItems.push({
                 itemId: 'contextExport',
                 text: contextDataExport[lang],
                 iconCls: 'x-export-icon',
-                menu: [{
-                    itemId: 'SHP',
-                    text: 'ESRI Shapefile',
-                    handler: exportHandler
-                }, {
-                    itemId: 'DXF',
-                    text: 'AutoCAD DXF',
-                    handler: exportHandler
-                }, {
-                    itemId: 'XLSX',
-                    text: 'MS Office Open XLSX',
-                    handler: exportHandler
-                }, {
-                    itemId: 'CSV',
-                    text: 'Text CSV (semicolon)',
-                    handler: exportHandler
-                }, {
-                    itemId: 'TSV',
-                    text: 'Text TSV (tab)',
-                    handler: exportHandler
-                }, {
-                    itemId: 'KML',
-                    text: 'Keyhole Markup Language KML',
-                    handler: exportHandler
-                }, {
-                    itemId: 'GeoJSON',
-                    text: 'GeoJSON',
-                    handler: exportHandler
-                }
-                    , "-",
-                    {
-                        itemId: 'currentExtent',
-                        text: contextUseExtent[lang],
-                        checked: true,
-                        hideOnClick: false
-                    }, {
-                        itemId: 'useMapCRS',
-                        text: TR.exportUseMapCrs,
-                        checked: true,
-                        hideOnClick: false
-                    }]
+                handler: exportHandler
             });
-        } else {
+        } else if (!hasGeom && Eqwc.settings.tableExportFormats && Eqwc.settings.tableExportFormats.length>0) {
             menuItems.push({
                 itemId: 'contextExport',
                 text: contextDataExport[lang],
                 iconCls: 'x-export-icon',
-                menu: [{
-                    itemId: 'XLSX',
-                    text: 'MS Office Open XLSX',
-                    handler: exportHandler
-                }, {
-                    itemId: 'CSV',
-                    text: 'Text CSV (semicolon)',
-                    handler: exportHandler
-                }, {
-                    itemId: 'TSV',
-                    text: 'Text TSV (tab)',
-                    handler: exportHandler
-                }]
+                handler: exportTableHandler
             });
         }
     }
@@ -233,27 +181,172 @@ function zoomToLayerExtent(item) {
     geoExtMap.map.zoomToExtent(bbox);
 }
 
+function exportWindowHandler(btn) {
+    var win = Ext.getCmp('exportWindow');
+    var id = btn.itemId;
+    if(id == 'cancel') {
+        win.close();
+        win.destroy();
+    } else {
+        var fieldValues = win.items.item(0).getForm().getFieldValues(); //layer, format, crs
+        var values = win.items.item(0).getForm().getValues();   //extent
+        var exportExtent = values.extent == 'map' ? true : false;
+
+        //validate stuff before export
+        var myLayerName = fieldValues.layer;
+        var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
+        var myFormat = fieldValues.format;
+
+        if(myFormat == 'KOF') {
+            var layer = projectData.layers[layerId];
+            if(layer.provider != 'postgres') {
+                Ext.Msg.alert('Error','Provider: '+layer.provider + ' not supported!');
+                return false;
+            }
+        } else {
+            myLayerName = Eqwc.common.getIdentifyLayerName(layerId);
+        }
+
+        exportData(myLayerName, myFormat, exportExtent, fieldValues.crs);
+
+        win.close();
+        win.destroy();
+    }
+}
+
+function exportTableHandler(item) {
+    var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
+    var hasGeom = false;
+
+    var exportWin = getExportWin(myLayerName, hasGeom);
+    exportWin.show();
+}
+
 function exportHandler(item) {
     var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
-    var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
-    var exportLayer = myLayerName;
-    var myFormat = item.container.menuItemId;
+    var hasGeom = true;
+    //var myFormat = item.container.menuItemId;
 
-    if(myFormat == 'KOF') {
-        var layer = projectData.layers[layerId];
-        if(layer.provider != 'postgres') {
-            Ext.Msg.alert('Error','Provider: '+layer.provider + ' not supported!');
-            return false;
+    var exportWin = getExportWin(myLayerName, hasGeom);
+    exportWin.show();
+    //var exportExtent = item.ownerCt.getComponent('currentExtent') ? item.ownerCt.getComponent('currentExtent').checked : false;
+    //var useMapCrs = item.ownerCt.getComponent('useMapCRS');
+    //var crs = (useMapCrs && useMapCrs.checked) ? Eqwc.currentMapProjection[0] : projectData.layers[layerId].crs;
+
+    //exportData(exportLayer, myFormat, exportExtent, crs);
+}
+
+function getExportWin(layer, geom) {
+
+    var formatCombo = new Ext.form.ComboBox({
+        xtype: 'combo',
+        hideLabel: false,
+        editable: false,
+        mode: 'local',
+        triggerAction: 'all',
+        width: '100%',
+        name: 'format',
+        fieldLabel: TR.exportFormat,
+        valueField: 'code',
+        displayField: 'description',
+        store: {
+            xtype: 'arraystore',
+            // store configs
+            autoDestroy: true,
+            storeId: 'crsStore',
+            // reader configs
+            idIndex: 0,
+            fields: [{
+                name: 'code', mapping: 0
+            }, {
+                name: 'description', mapping: 1
+            }]
         }
+    });
+    formatCombo.store.on("load", function () {
+        formatCombo.setValue(this.data.itemAt(0).data.code);
+    });
+
+    if (geom) {
+        var crsCombo = formatCombo.cloneConfig({fieldLabel: TR.exportCrs, name: 'crs'});
+        //set crs values
+        crsCombo.store.on("load", function () {
+            crsCombo.setValue(this.data.itemAt(0).data.code);
+        });
+        crsCombo.store.loadData(projectData.crsComboStore());
+        formatCombo.store.loadData(Eqwc.settings.vectorExportFormats);
+
+        var items = [
+            {
+                xtype: 'displayfield',
+                fieldLabel: TR.exportLayer,
+                name: 'layer',
+                value: layer,
+                inputValue: layer
+            },
+            formatCombo,
+            crsCombo,
+            {
+                xtype: 'radiogroup',
+                allowBlank: false,
+                fieldLabel: TR.exportExtent,
+                name: 'extent_group',
+                border: false,
+                itemCls: 'x-check-group-alt',
+                columns: 1,
+                vertical: true,
+                submitValue: false,
+                items: [{
+                    boxLabel: contextUseExtent[lang],
+                    inputValue: 'map',
+                    name: 'extent',
+                    checked: true
+                },{
+                    boxLabel: TR.exportLayerExtent,
+                    inputValue: 'layer',
+                    name: 'extent'
+                }]
+            }
+        ];
     } else {
-        exportLayer = Eqwc.common.getIdentifyLayerName(layerId);
+        formatCombo.store.loadData(Eqwc.settings.tableExportFormats);
+
+        var items = [
+            {
+                xtype: 'displayfield',
+                fieldLabel: TR.exportLayer,
+                name: 'layer',
+                value: layer,
+                inputValue: layer
+            },
+            formatCombo
+        ];
     }
 
-    var exportExtent = item.ownerCt.getComponent('currentExtent') ? item.ownerCt.getComponent('currentExtent').checked : false;
-    var useMapCrs = item.ownerCt.getComponent('useMapCRS');
-    var crs = (useMapCrs && useMapCrs.checked) ? Eqwc.currentMapProjection[0] : projectData.layers[layerId].crs;
+    return new Ext.Window({
+        id: 'exportWindow',
+        title: TR.exportData+'...',
+        width: 350,
+        renderTo: "geoExtMapPanel",
+        resizable: false,
+        closable: false,
+        items: [{
+            xtype: 'form',
+            padding: '3',
+            items: items
+        }],
+            buttons: [{
+                itemId: 'ok',
+                text: Ext.MessageBox.buttonText.ok,
+                handler: exportWindowHandler
+            }, {
+                itemId: 'cancel',
+                text: Ext.MessageBox.buttonText.cancel,
+                handler: exportWindowHandler
+            }]
 
-    exportData(exportLayer, myFormat, exportExtent, crs);
+    });
+
 }
 
 function layerProperties(item) {
