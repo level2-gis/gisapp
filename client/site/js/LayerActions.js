@@ -271,7 +271,7 @@ function getExportWin(layer, geom) {
         var crsCombo = formatCombo.cloneConfig({fieldLabel: TR.exportCrs, name: 'crs'});
         //set crs values
         crsCombo.store.on("load", function () {
-            crsCombo.setValue(this.data.itemAt(0).data.code);
+            crsCombo.setValue(Eqwc.currentMapProjection[0]);
         });
         crsCombo.store.loadData(projectData.crsComboStore());
         formatCombo.store.loadData(Eqwc.settings.vectorExportFormats);

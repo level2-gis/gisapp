@@ -22,6 +22,7 @@ Eqwc.settings.featureInfoTolerances = {
 };
 Eqwc.settings.enableHoverPopup = false;
 Eqwc.settings.defaultIdentificationMode = "allLayers";
+Eqwc.settings.defaultCoordinatesCrsCode = null;
 Eqwc.settings.showCoordinatesIdentify = true;
 Eqwc.settings.replaceIdentifyLayerWithView = [];
 Eqwc.settings.QgisUsersPrintName = "users_print_view";

@@ -30,6 +30,9 @@ if (!property_exists($settings, "wsgi")) {
 if (!property_exists($settings, "locationServices")) {
     $settings->locationServices = null;
 }
+if (!property_exists($settings, "defaultCoordinatesCrsCode")) {
+    $settings->defaultCoordinatesCrsCode = null;
+}
 if (!property_exists($settings, "editor")) {
     $settings->editor = null;
 }
@@ -67,6 +70,7 @@ projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifi
 projectData.geoCode = eval(<?php echo json_encode($settings->geoCode) ?>);
 projectData.wsgi = eval(<?php echo json_encode($settings->wsgi) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
+projectData.defaultCoordinatesCrsCode = eval(<?php echo json_encode($settings->defaultCoordinatesCrsCode) ?>);
 projectData.editor = eval(<?php echo json_encode($settings->editor) ?>);
 
 projectData.geolocation = <?php echo json_encode($data->geolocation) ?>;

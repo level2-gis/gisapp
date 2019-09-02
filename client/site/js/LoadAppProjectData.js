@@ -220,23 +220,38 @@ projectData.setLayerLegend = function (layer,node) {
 /**
  * Array of Projections arrays (0 Code, 1 Title, 2 Openlayers.Projection object) that exist in Proj4js definitions based on crs_list from QGIS project
  * Map projection is always first element!
+ * If parameter code exists, get results only for passed projection, otherwise for all available
  */
-projectData.getProjectionsList = function() {
+projectData.getProjectionsList = function(code) {
     var ret = [];
 
-    //first element is map projection
-    if(Proj4js.defs[projectData.crs]) {
-        ret.push([projectData.crs, projectData.crs_description, new OpenLayers.Projection(projectData.crs)]);
-    }
+    if(code === undefined) {
 
-    for (var i = 0; i < projectData.crs_list.length; ++i) {
-        var crs = projectData.crs_list[i];
-        var olProj = new OpenLayers.Projection(crs);
-        if (crs != projectData.crs && Proj4js.defs[crs]) {
-            ret.push([crs,olProj.proj.title,olProj]);
+        //first element is map projection
+        if (Proj4js.defs[projectData.crs]) {
+            ret.push([projectData.crs, projectData.crs_description, new OpenLayers.Projection(projectData.crs)]);
+        }
+
+        for (var i = 0; i < projectData.crs_list.length; ++i) {
+            var crs = projectData.crs_list[i];
+            var olProj = new OpenLayers.Projection(crs);
+            if (crs != projectData.crs && Proj4js.defs[crs]) {
+                ret.push([crs, olProj.proj.title, olProj]);
+            }
+        }
+
+    } else {
+
+        var crs = projectData.crs_list.filter(function (val) {
+            return val === code;
+        })[0];
+        if(crs) {
+            var olProj = new OpenLayers.Projection(crs);
+            ret.push([crs, olProj.proj.title, olProj]);
         }
     }
-    return ret;
+
+    return ret.length == 1 ? ret[0] : ret;
 };
 
 projectData.crsComboStore = function() {

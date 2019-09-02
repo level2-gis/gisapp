@@ -376,9 +376,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                             //value: projectData.crsComboStore()[0][1],
                             listeners: {
                                 "select": function(combo, record, index) {
-                                    Eqwc.currentMapProjection = projectData.getProjectionsList().filter(function (val) {
-                                        return val[0] === record.data.code;
-                                    })[0];
+                                    Eqwc.currentMapProjection = projectData.getProjectionsList(record.data.code);
                                 }
                                 //"render": function(c) {
                                 //    new Ext.ToolTip({
