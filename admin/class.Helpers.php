@@ -435,6 +435,16 @@ class Helpers
             $ds_parms['type'] = (string)$layer['geometry'];
         }
 
+        //read user and pass for authcfg from settings
+        if(isset($ds_parms['authcfg']) && defined('AUTHCFG')) {
+            $auth = AUTHCFG;
+            $cfg = $auth[$ds_parms['authcfg']];
+            if(!empty($cfg)) {
+                $ds_parms['user'] = $cfg['user'];
+                $ds_parms['password'] = $cfg['password'];
+            }
+        }
+
         return self::msg(true, $ds_parms);
     }
 
