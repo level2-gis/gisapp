@@ -43,6 +43,15 @@ if (!property_exists($data, "project_id")) {
 if (!property_exists($data, "client_url")) {
     $data->client_url = "";
 }
+
+if (!property_exists($data, "custom1")) {
+    $data->custom1 = "";
+}
+
+if (!property_exists($data, "custom2")) {
+    $data->custom2 = "";
+}
+
 if (file_exists($client_path . 'admin/resources/images/' . $data->client_name . '.png')) {
     $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png';
 } else {
@@ -63,6 +72,8 @@ projectData.client_name = '<?php echo $data->client_name ?>';
 projectData.client_display_name = '<?php echo $data->client_display_name ?>';
 projectData.client_url = '<?php echo $data->client_url ?>';
 projectData.client_logo = '<?php echo $data->client_logo ?>';
+projectData.custom1 = '<?php echo $data->custom1 ?>';
+projectData.custom2 = '<?php echo $data->custom2 ?>';
 projectData.lang = '<?php echo $lang ?>';
 
 projectData.search = eval(<?php echo json_encode($settings->search) ?>);

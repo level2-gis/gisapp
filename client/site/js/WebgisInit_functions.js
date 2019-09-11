@@ -781,7 +781,7 @@ function postLoading() {
             var geoxy = geoExtMap.map.getLonLatFromPixel(xy);
             var nDeci = 0;
             if(mapCrsUnits=='degrees') {
-                nDeci = 4;
+                nDeci = 5;
             }
             var currentScale = geoExtMap.map.getScale();
             if (currentScale <= 400) {
