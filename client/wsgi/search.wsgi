@@ -57,7 +57,12 @@ def application(environ, start_response):
   #limit
   limit = '10'
   if "limit" in request.params:
-    limit = request.params["limit"];
+    limit = request.params["limit"]
+
+  #filter
+  filter = ''
+  if "filter" in request.params:
+    filter = request.params["filter"]
 
   # any searchtable given?
   if searchtableLength == 0:
@@ -96,6 +101,9 @@ def application(environ, start_response):
 
       if j < querystringsLength - 1:
         sql += " AND "
+
+    if filter>'':
+      sql += " AND filter='"+filter+"'"
 
     sql += " LIMIT " + limit + ")"
 
