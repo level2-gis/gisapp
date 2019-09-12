@@ -54,6 +54,11 @@ def application(environ, start_response):
   sql = ""
   errorText = ''
 
+  #limit
+  limit = '10'
+  if "limit" in request.params:
+    limit = request.params["limit"];
+
   # any searchtable given?
   if searchtableLength == 0:
     errorText += 'error: no search table'
@@ -68,7 +73,7 @@ def application(environ, start_response):
   data = ()
   #for each table
   for i in range(searchtableLength):
-    sql += "SELECT displaytext, '"+searchtables[i]+r"' AS searchtable, search_category, substring(search_category from 4) AS searchcat_trimmed, showlayer, "
+    sql += "(SELECT displaytext, '"+searchtables[i]+r"' AS searchtable, search_category, substring(search_category from 4) AS searchcat_trimmed, showlayer, "
     # the following line is responsible for zooming in to the features
     # this is supposed to work in PostgreSQL since version 9.0
     sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX\(|\)','','g'),' ',',')||']'::text AS bbox "
@@ -91,6 +96,8 @@ def application(environ, start_response):
 
       if j < querystringsLength - 1:
         sql += " AND "
+
+      sql += " LIMIT " + limit + ")"
     #union for next table
     if i < searchtableLength - 1:
       sql += " UNION "
