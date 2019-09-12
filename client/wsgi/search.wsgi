@@ -97,7 +97,8 @@ def application(environ, start_response):
       if j < querystringsLength - 1:
         sql += " AND "
 
-      sql += " LIMIT " + limit + ")"
+    sql += " LIMIT " + limit + ")"
+
     #union for next table
     if i < searchtableLength - 1:
       sql += " UNION "
