@@ -652,14 +652,14 @@ function postLoading() {
             //initial CRS to display coordinates. Take setting if exists or first item crsComboStore which is QGIS project CRS.
             var value = this.data.itemAt(0).data.code;
             if(projectData.defaultCoordinatesCrsCode) {
-                var test = projectData.getProjectionsList('EPSG:'+projectData.defaultCoordinatesCrsCode);
-                if(test.length>0) {
+                var test = projectData.getProjectionsList('EPSG:'+projectData.defaultCoordinatesCrsCode)[0];
+                if(test && test.length>0) {
                     value = test[0];
                 }
             }
 
             rightStatusText.setValue(value);
-            Eqwc.currentMapProjection = projectData.getProjectionsList(value);
+            Eqwc.currentMapProjection = projectData.getProjectionsList(value)[0];
         });
         rightStatusText.store.loadData(projectData.crsComboStore());
 

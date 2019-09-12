@@ -142,5 +142,12 @@ projectData.overViewLayer = function () {
     }
 };
 
+//put crs into crs_list if it doesn't exist
+if(projectData.crs_list.indexOf(projectData.crs) == -1)
+{
+    projectData.crs_list.unshift(projectData.crs);
+}
+
+
 //TODO use in css!
 var userLogoImg = projectData.gis_projects.path + 'admin/resources/images/user_gray.png';

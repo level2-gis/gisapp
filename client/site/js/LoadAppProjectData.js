@@ -251,7 +251,7 @@ projectData.getProjectionsList = function(code) {
         }
     }
 
-    return ret.length == 1 ? ret[0] : ret;
+    return ret;
 };
 
 projectData.crsComboStore = function() {
