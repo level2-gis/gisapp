@@ -1083,7 +1083,7 @@ function postLoading() {
                     maxRows: 10
                 });
             } else {
-                qgisSearchCombo = new QGIS.SearchComboBox({
+                var conf = {
                     map: geoExtMap.map,
                     highlightLayerName: 'attribHighLight',
                     hasReverseAxisOrder: false, // PostGIS returns bbox' coordinates always x/y
@@ -1093,7 +1093,14 @@ function postLoading() {
                     url: searchBoxQueryURL,
                     geomUrl: searchBoxGetGeomURL,
                     srs: projectData.crs.split(':')[1]        //this is the map coordinate system and that's what we need to get from server
-                });
+                }
+                if(projectData.wsgi.limit) {
+                    conf.limit = projectData.wsgi.limit;
+                }
+                if(projectData.wsgi.filter) {
+                    conf.filter = projectData.wsgi.filter;
+                }
+                qgisSearchCombo = new QGIS.SearchComboBox(conf);
             }
             myTopToolbar.insert(myTopToolbar.items.length, qgisSearchCombo);
         }

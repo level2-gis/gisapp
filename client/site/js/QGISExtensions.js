@@ -594,6 +594,8 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
     forceSelection: true,
     searchtables: null,
     srs: null,
+    limit: null,
+    filter: null,
 
     initComponent: function() {
 
@@ -604,6 +606,20 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
         this.on("keyUp", this.keyUpHandler);
         this.on("afterrender", this.afterrenderHandler);
         this.on("beforeselect", this.beforeselectHandler);
+
+
+        var params =   {
+            searchtables: this.getSearchTables(),
+            srs: this.srs
+        };
+
+        if(this.limit) {
+            params.limit = this.limit;
+        }
+        if(this.filter) {
+            params.filter = this.filter;
+        }
+
         this.store = new Ext.data.JsonStore({
             proxy: new Ext.data.ScriptTagProxy({
                 url: this.url,
@@ -612,10 +628,7 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
                 nocache: false,
                 autoAbort: true
             }),
-            baseParams: {
-                searchtables: this.getSearchTables(),
-                srs: this.srs
-            },
+            baseParams: params,
             root: 'results',
             fields: ['searchtable', 'searchtext', 'displaytext', 'bbox', 'showlayer', 'selectable']
         });
