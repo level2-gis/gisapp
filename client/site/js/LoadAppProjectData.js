@@ -57,7 +57,8 @@ function makeLayer(layDef, visible) {
             var layer = new OpenLayers.Layer.WMTS({
                 name: title,
                 visibility: visibility,
-                url: options.url,
+		opacity:options.opacity, 
+		url: options.url,
                 layer: options.layer,
                 requestEncoding: options.requestEncoding,
                 matrixSet: options.matrixSet,

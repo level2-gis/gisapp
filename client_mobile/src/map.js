@@ -367,7 +367,8 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
             layOl3 = new ol.layer.Tile({
                 visible: visibility,
-                extent: projectData.restrictToStartExtent ? projectData.extent.split(',') : undefined,
+		opacity: definition.opacity, 
+		extent: projectData.restrictToStartExtent ? projectData.extent.split(',') : undefined,
                 source: new ol.source.WMTS({
                     url: definition.url,
                     layer: definition.layer,
