@@ -100,7 +100,23 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         } else {
             $sql = "SELECT *,(p).path[1] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y(st_transform(st_setsrid((p).geom," . $lay_srid . ")," . $srid ."))::numeric(15,3) as y, st_x(st_transform(st_setsrid((p).geom," . $lay_srid . ")," . $srid . "))::numeric(15,3) as x ";
         }
-        $sql.= "FROM " . $lay_info['message']['table'] . " l, (SELECT id, st_dumppoints(geom) AS p FROM " . $lay_info['message']['table'] . ") v ";
+        $sql.= "FROM " . $lay_info['message']['table'] . " l, (SELECT id, st_dumppoints((st_dump(geom)).geom) AS p FROM " . $lay_info['message']['table'] . ") v ";
+        $sql.= "WHERE l.id = v.id";
+        if(!empty($box)) {
+            $sql .= " AND " . $box;
+        }
+        $sql.= " ORDER by l.id,index;";
+
+    }  else if(strpos($type,'Polygon')>-1) {
+        $name = 'index';
+        $code = isset($fields[1]) ? $fields[1] : null;
+
+        if ($srid == $lay_srid) {
+            $sql = "SELECT *,(p).path[2] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y((p).geom)::numeric(15,3) as y, st_x((p).geom)::numeric(15,3) as x ";
+        } else {
+            $sql = "SELECT *,(p).path[2] as index, st_npoints(geom) AS points, st_z((p).geom)::numeric(15,3) as z, st_y(st_transform(st_setsrid((p).geom," . $lay_srid . ")," . $srid ."))::numeric(15,3) as y, st_x(st_transform(st_setsrid((p).geom," . $lay_srid . ")," . $srid . "))::numeric(15,3) as x ";
+        }
+        $sql.= "FROM " . $lay_info['message']['table'] . " l, (SELECT id, st_dumppoints((st_dump(geom)).geom) AS p FROM " . $lay_info['message']['table'] . ") v ";
         $sql.= "WHERE l.id = v.id";
         if(!empty($box)) {
             $sql .= " AND " . $box;
@@ -113,6 +129,9 @@ function sendText($type, $layer_name, $project_path, $query, $format)
     foreach ($lay_dsn['message']->query($sql) as $row) {
 
         if((strpos($type,'LineString')>-1) && ($row['index'] == 1)) {
+            array_push($result, ' 09 91');
+        }
+        if((strpos($type,'Polygon')>-1) && ($row['index'] == 1)) {
             array_push($result, ' 09 91');
         }
 
@@ -131,6 +150,9 @@ function sendText($type, $layer_name, $project_path, $query, $format)
 
         if((strpos($type,'LineString')>-1) && ($row['index'] == $row['points'])) {
             array_push($result, ' 09 99');
+        }
+        if((strpos($type,'Polygon')>-1) && ($row['index'] == $row['points'])) {
+            array_push($result, ' 09 96');
         }
     }
 
