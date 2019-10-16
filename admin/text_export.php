@@ -50,6 +50,9 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         throw new Exception ($lay_info["message"]);
     }
 
+    //get layer filter
+    $lay_filt = $lay_info["message"]['sql'];
+
     $lay_srid = substr(strrchr($lay_info["message"]['crs'], ':'), 1);
     $type = $lay_info["message"]['type'];
 
@@ -90,6 +93,13 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         $sql .= "FROM " . $lay_info['message']['table'];
         if(!empty($box)) {
             $sql .= " WHERE " . $box;
+            if($lay_filt>'') {
+                $sql.=" AND ".$lay_filt;
+            }
+        } else {
+            if($lay_filt>'') {
+                $sql.=" WHERE ".$lay_filt;
+            }
         }
     } else if(strpos($type,'LineString')>-1) {
         $name = 'index';
@@ -104,6 +114,9 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         $sql.= "WHERE l.id = v.id";
         if(!empty($box)) {
             $sql .= " AND " . $box;
+        }
+        if($lay_filt>'') {
+            $sql.=" AND ".$lay_filt;
         }
         $sql.= " ORDER by l.id,index;";
 
@@ -120,6 +133,9 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         $sql.= "WHERE l.id = v.id";
         if(!empty($box)) {
             $sql .= " AND " . $box;
+        }
+        if($lay_filt>'') {
+            $sql.=" AND ".$lay_filt;
         }
         $sql.= " ORDER by l.id,index;";
     } else {
