@@ -455,7 +455,7 @@ function exportData(layername,format, useBbox, crs) {
 
     var layerId = wmsLoader.layerTitleNameMapping[layername];
     var layerCrs = projectData.layers[layerId].crs;
-    var layerFields = layerId.indexOf("_view")>-1 ? "" : joinObj(wmsLoader.layerProperties[layerId].attributes,'name'); //workaround for ogr issue when selecting field names with specific language characters. In case of view export all fields
+    var layerFields = "";   //layerId.indexOf("_view")>-1 ? "" : joinObj(wmsLoader.layerProperties[layerId].attributes,'name'); //workaround for ogr issue when selecting field names with specific language characters. In case of view export all fields
 
     var exportUrl = "./admin/export.php?";
 
