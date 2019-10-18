@@ -83,7 +83,7 @@ function buildLayerContextMenu(node) {
 
     menuItems.push({
         itemId: 'contextStyle',
-        text: 'TODO Style',
+        text: TR.style,
         menu: styleItems
     });
 
