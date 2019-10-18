@@ -262,7 +262,8 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                 minScale: (layer.minScale != null) ? parseFloat(layer.minScale) : null,
                 maxScale: (layer.maxScale != null) ? parseFloat(layer.maxScale) : null,
                 showLegend: layer.showLegend,
-                showMetadata: layer.showMetadata
+                showMetadata: layer.showMetadata,
+                styles: layer.styles
             };
             this.layerTitleNameMapping[layer.title] = layer.name;
             if (layer.visible) {

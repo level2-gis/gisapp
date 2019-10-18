@@ -180,9 +180,16 @@ function postLoading() {
             thematicLayer.setVisibility(true);
         }
 
+        //don't add layer default styles until there is really change in any layers style
+        var styles = [];
+        if(thematicLayer.params.STYLES>"") {
+            layerStyles(selectedLayers);
+        }
+
         thematicLayer.mergeNewParams({
             LAYERS: selectedLayers.join(","),
             //OPACITIES: layerOpacities(selectedLayers),
+            STYLES: styles.join(','),
             FORMAT: format
         });
         if (identificationMode != 'activeLayers') {
@@ -2853,4 +2860,17 @@ function getVisibleExtraLayersForPrint() {
         }
     }
     return ret;
+}
+
+function layerStyles(layerIds) {
+    var styles = [];
+    for (var i=0; i<layerIds.length; i++) {
+        var layer = wmsLoader.layerProperties[layerIds[i]];
+        if(layer && layer.currentStyle > '') {
+            styles.push(layer.currentStyle);
+        } else {
+            styles.push('default');
+        }
+    }
+    return styles;
 }

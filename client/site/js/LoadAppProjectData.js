@@ -139,6 +139,7 @@ projectData.setBaseLayers = function (isBase) {
 projectData.setLayerLegend = function (layer,node) {
     var legend = '';
     var layername = wmsLoader.layerTitleNameMapping[layer.layername];
+    var style = typeof(wmsLoader.layerProperties[layer.id].currentStyle) == 'undefined' ? 'default' : wmsLoader.layerProperties[layer.id].currentStyle;
 
     //IE 11 does not support xhr.responseURL, so old way is used for IE
     var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
@@ -168,6 +169,7 @@ projectData.setLayerLegend = function (layer,node) {
             LAYERTITLESPACE: 0,
             TRANSPARENT: true,
             LAYERS: layername,
+            STYLES: style,
             DPI: screenDpi,
             NODE: node.id
         });

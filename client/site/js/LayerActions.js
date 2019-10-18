@@ -66,6 +66,27 @@ function buildLayerContextMenu(node) {
         });
     }
 
+    //style
+    var styleItems = [];
+    for (var s = 0; s < layer.styles.length; s++) {
+        var style = layer.styles[s];
+        var checked = s == 0; //layer.currentStyle == style.name;
+        styleItems.push({
+            xtype: 'radio',
+            name: layer.name+'_style',
+            itemId: style.name,
+            boxLabel: style.title,
+            checked: checked,
+            handler: styleHandler
+        });
+    }
+
+    menuItems.push({
+        itemId: 'contextStyle',
+        text: 'TODO Style',
+        menu: styleItems
+    });
+
     //Export
     if (projDataLayer != undefined && projDataLayer.provider !== 'gdal' && projDataLayer.provider !== 'wms') {
         if(hasGeom && Eqwc.settings.vectorExportFormats && Eqwc.settings.vectorExportFormats.length>0) {
@@ -94,6 +115,7 @@ function buildLayerContextMenu(node) {
 
     var menuCfg = {
         //id: 'layerContextMenu',
+        itemId: layerId,
         items: menuItems
     };
 
@@ -220,6 +242,42 @@ function exportTableHandler(item) {
 
     var exportWin = getExportWin(myLayerName, hasGeom);
     exportWin.show();
+}
+
+function styleHandler(item) {
+
+    if(!item.checked) {
+        return;
+    }
+
+    //if layer is off it must be enabled
+    var node = layerTree.getSelectionModel().getSelectedNode();
+    if(!node.attributes.checked) {
+        node.getUI().toggleCheck(true);
+    }
+
+    //var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
+    var layerId = item.findParentByType('menu').parentMenu.itemId;
+
+    //check layer current style
+    var style = item.itemId; //item.container.menuItemId;
+    var menu = item.findParentByType('menu').parentMenu;
+    wmsLoader.layerProperties[layerId].currentStyle = style;
+
+    var el = Ext.get('legend_'+layerId);
+    if(el) {
+        el.remove();
+    }
+
+    var layer = projectData.layers[layerId];
+    if(layer) {
+        projectData.setLayerLegend(layer,node);
+    }
+
+    var styles = layerStyles(selectedLayers);
+    thematicLayer.mergeNewParams({STYLES: styles.join(',')});
+
+    menu.hide();
 }
 
 function exportHandler(item) {
