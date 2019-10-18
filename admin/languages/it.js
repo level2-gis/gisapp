@@ -63,7 +63,8 @@ var TR = {
     exportExtent: 'Extent',
     exportLayerExtent: 'Use layer extent',
     exportUseMapCrs: "Use map CRS",
-    tableUseExtent: "Only show features in map extent"
+    tableUseExtent: "Only show features in map extent",
+    style: "Style"
 };
 
 /**
