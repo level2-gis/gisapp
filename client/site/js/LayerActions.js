@@ -70,7 +70,8 @@ function buildLayerContextMenu(node) {
     var styleItems = [];
     for (var s = 0; s < layer.styles.length; s++) {
         var style = layer.styles[s];
-        var checked = s == 0; //layer.currentStyle == style.name;
+        //don't rename default style
+        var checked = s.name == 'default'; //layer.currentStyle == style.name;
         styleItems.push({
             xtype: 'radio',
             name: layer.name+'_style',
