@@ -181,15 +181,15 @@ function postLoading() {
         }
 
         //don't add layer default styles until there is really change in any layers style
-        var styles = [];
+        var styles = '';
         if(thematicLayer.params.STYLES>"") {
-            layerStyles(selectedLayers);
+            styles = layerStyles(selectedLayers).join(',');
         }
 
         thematicLayer.mergeNewParams({
             LAYERS: selectedLayers.join(","),
             //OPACITIES: layerOpacities(selectedLayers),
-            STYLES: styles.join(','),
+            STYLES: styles,
             FORMAT: format
         });
         if (identificationMode != 'activeLayers') {
