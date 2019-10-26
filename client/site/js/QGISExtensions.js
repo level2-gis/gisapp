@@ -193,7 +193,6 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                         var geom = node.getAttribute('geometryType');
                         if(geom && geom.indexOf('NoGeometry')>-1) {
                             layer.showLegend = false;
-                            layer.queryable = false;
                             layer.visible = false;
                             layer.showCheckbox = false;
                             layer.styles = [];
