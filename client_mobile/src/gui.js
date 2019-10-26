@@ -256,6 +256,11 @@ Gui.loadLayers = function (data) {
                     return;
                 }
 
+                //skip if layer is table (no geometry)
+                if(layer.geom_type == 'No geometry') {
+                    return;
+                }
+
                 //skip if layer with same name exists in backgroundLayers
                 if (Config.baseLayerExists(layer.layername)) {
                     return;
@@ -1427,7 +1432,13 @@ $(document).ready(function(e) {
         ajaxSend: function () { loading('show'); },
         ajaxStart: function () { loading('show'); },
         ajaxStop: function () { loading('hide'); },
-        ajaxError: function () { loading('hide'); }
+        ajaxError: function (event, request, settings) {
+            loading('hide');
+            //When XHR Status code is 0 there is no connection with the server
+            if (request.status == 0){
+                alert("Communication with the server is lost!");
+            }
+        }
     });
 
     function loading(showOrHide) {
