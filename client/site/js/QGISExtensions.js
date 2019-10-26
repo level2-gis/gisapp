@@ -189,6 +189,16 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                             attribution: parent.attribution
                         };
 
+                        //tables without geometry
+                        var geom = node.getAttribute('geometryType');
+                        if(geom && geom.indexOf('NoGeometry')>-1) {
+                            layer.showLegend = false;
+                            layer.queryable = false;
+                            layer.visible = false;
+                            layer.showCheckbox = false;
+                            layer.styles = [];
+                        }
+
                         layer.capability = capability;
                         this.readChildNodes(node, layer);
                         delete layer.capability;
@@ -263,6 +273,7 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                 maxScale: (layer.maxScale != null) ? parseFloat(layer.maxScale) : null,
                 showLegend: layer.showLegend,
                 showMetadata: layer.showMetadata,
+                showCheckbox: layer.showCheckbox,
                 styles: layer.styles
             };
             this.layerTitleNameMapping[layer.title] = layer.name;

@@ -68,26 +68,28 @@ function buildLayerContextMenu(node) {
 
     //style
     var styleItems = [];
-    for (var s = 0; s < layer.styles.length; s++) {
-        var style = layer.styles[s];
-        //don't rename default style
-        var checked = style.name == 'default'; //layer.currentStyle == style.name;
-        styleItems.push({
-            xtype: 'radio',
-            name: layer.name+'_style',
-            itemId: style.name,
-            boxLabel: style.title,
-            checked: checked,
-            handler: styleHandler
+    if(hasGeom) {
+        for (var s = 0; s < layer.styles.length; s++) {
+            var style = layer.styles[s];
+            //don't rename default style
+            var checked = style.name == 'default'; //layer.currentStyle == style.name;
+            styleItems.push({
+                xtype: 'radio',
+                name: layer.name + '_style',
+                itemId: style.name,
+                boxLabel: style.title,
+                checked: checked,
+                handler: styleHandler
+            });
+        }
+
+        menuItems.push({
+            itemId: 'contextStyle',
+            text: TR.style,
+            menu: styleItems
         });
     }
-
-    menuItems.push({
-        itemId: 'contextStyle',
-        text: TR.style,
-        menu: styleItems
-    });
-
+    
     //Export
     if (projDataLayer != undefined && projDataLayer.provider !== 'gdal' && projDataLayer.provider !== 'wms') {
         if(hasGeom && Eqwc.settings.vectorExportFormats && Eqwc.settings.vectorExportFormats.length>0) {

@@ -137,6 +137,11 @@ projectData.setBaseLayers = function (isBase) {
 };
 
 projectData.setLayerLegend = function (layer,node) {
+
+    if(layer.geom_type == 'No geometry') {
+        return;
+    }
+
     var legend = '';
     var layername = wmsLoader.layerTitleNameMapping[layer.layername];
     var style = typeof(wmsLoader.layerProperties[layer.id].currentStyle) == 'undefined' ? 'default' : wmsLoader.layerProperties[layer.id].currentStyle;

@@ -63,6 +63,7 @@ function loadWMSConfig(topicName) {
             if (!attr.layer.metadata.showCheckbox) {
                 // hide checkbox
                 attr.cls = 'layer-checkbox-hidden';
+                attr.checked = undefined;
             }
 
             //dont' create node for hidden elements
