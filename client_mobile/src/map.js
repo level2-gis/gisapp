@@ -1016,3 +1016,19 @@ Map.featureInfoOnLocation = function() {
         Map.lastClickPos = location;
     }
 };
+
+Map.openNavigation = function() {
+
+    var destination = new ol.geom.Point(Map.lastClickPos);
+    var destWgs = destination.transform(projectData.crs,'EPSG:4326');
+    var url = "https://www.google.com/maps/dir/?api=1&";
+    var params = {};
+    params.destination = destWgs.getCoordinates().reverse().toString();
+
+    //if (Map.geolocation) {
+    //    params.origin = Map.geolocation.getPositionRaw().reverse().toString();  //wgs84
+    //}
+
+    //console.log(url+ $.param(params));
+    window.open(url+ $.param(params), '_blank');
+};

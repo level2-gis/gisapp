@@ -793,6 +793,8 @@ Gui.showXMLFeatureInfoResults = function (results) {
     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
     filesAlias = filesAlias.toUpperCase();
 
+    html += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">'+TR.navigation+'</a>';
+
     //add button
     if (typeof(Editor) == 'function' && mobEditor.layer) {
         html += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">'+TR.editAdd+'</a>';

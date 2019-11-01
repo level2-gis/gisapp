@@ -64,7 +64,8 @@ var TR = {
     exportLayerExtent: 'Use layer extent',
     exportUseMapCrs: "Bruk kart CRS",
     tableUseExtent: "Bruk gjeldende kartutsnitt",
-    style: "Style"
+    style: "Style",
+    navigation: "Navigation"
 };
 
 /**::

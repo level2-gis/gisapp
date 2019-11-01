@@ -64,7 +64,8 @@ var TR = {
     exportLayerExtent: 'Uporabi območje sloja',
     exportUseMapCrs: "Uporabi projektni koord. sistem",
     tableUseExtent: "Prikaži samo elemente znotraj trenutnega prikaza",
-    style: "Stil"
+    style: "Stil",
+    navigation: "Navigacija"
 };
 
 /**
