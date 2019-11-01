@@ -51,8 +51,8 @@ function goMobile($lang, $scanner) {
             }
         ?>
         <!-- OpenLayers 3 -->
-<!--        <script src="client_mobile/lib/ol3/ol.js?v=4.6.5a"></script>-->
-        <script src="client_mobile/lib/ol3/ol-debug.js?v=4.6.5a"></script>
+        <script src="client_mobile/lib/ol3/ol.js?v=4.6.5a"></script>
+<!--        <script src="client_mobile/lib/ol3/ol-debug.js?v=4.6.5a"></script>-->
         <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css?v=4.6.5" />
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
