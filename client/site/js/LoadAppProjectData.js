@@ -36,7 +36,7 @@ function makeLayer(layDef, visible) {
             break;
 
         case 'XYZ' :
-            var url = options.url.replace(/\/{/g, '/${');
+            var url = options.url.replace(/\{/g, '${');
             layer = new OpenLayers.Layer.XYZ(title, url, options.options);
             break;
 
