@@ -101,6 +101,7 @@ Eqwc.settings.symbolizersHighLightLayer = {
 };
 Eqwc.settings.useGisPortal = false;
 Eqwc.settings.gisPortalRoot = '/gisportal/index.php/';
+Eqwc.settings.gisPortalTitle = '';
 Eqwc.settings.mailServiceUrl = Eqwc.settings.gisPortalRoot + 'mail/send';
 Eqwc.settings.gisPortalProfile = Eqwc.settings.gisPortalRoot + 'profile';
 Eqwc.settings.mobileUseTiledWMS = false;

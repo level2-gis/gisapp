@@ -955,7 +955,8 @@ $(document).bind('pageinit', function() {
 });
 
 Gui.updateTranslations = function() {
-  document.title = I18n.title;
+  var titleBarText = projectData.title;
+  document.title = Eqwc.settings.gisPortalTitle ? titleBarText + ' | ' + Eqwc.settings.gisPortalTitle : titleBarText;
 
   $('#panelSearch b').html(I18n.search.header);
   $('#panelSearch #searchResults b').html(I18n.search.results);
