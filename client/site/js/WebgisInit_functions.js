@@ -580,6 +580,9 @@ function postLoading() {
         //we need to make sure that OpenLayers.map.fallThrough is set to true
         //otherwise the mouse events are swallowed
         MapOptions.fallThrough = true;
+
+        var reverseExtra = Eqwc.common.reverseArray(extraLayers);
+
         //creating the GeoExt map panel
         geoExtMap = new GeoExt.MapPanel({
             frame: false,
@@ -587,7 +590,7 @@ function postLoading() {
             //zoom: 1.6,
             extent: projectData.makeExtentFromArray(projectData.extent.split(','), false),
             layers: baseLayers.concat(
-                extraLayers.concat(
+                reverseExtra.concat(
                     [
                         thematicLayer = new OpenLayers.Layer.WMS(layerTree.root.firstChild.text,
                             wmsURI, {

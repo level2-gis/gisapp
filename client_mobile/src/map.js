@@ -415,7 +415,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
     layOl3.name = lay.name;
 
     // add background as base layer
-    Map.map.getLayers().insertAt(layerId, layOl3);
+    Map.map.getLayers().insertAt(0, layOl3);
     Map.backgroundLayers[layOl3.name] = layOl3;
 };
 
