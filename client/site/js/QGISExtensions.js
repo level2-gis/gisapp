@@ -443,8 +443,8 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             var baseDefinition = '';
             if(extra.length>0) {
                 var extraNames = extra.map(function(item){return item.name;});
-                extraDefinition = extra.map(function(item){return item.definition;}).reverse();
-                layers.unshift(extraNames.join(','));
+                extraDefinition = extra.map(function(item){return item.definition;});
+                layers.unshift(extraNames.reverse().join(','));
             }
 
             //add currently visible base layer for printing if exists in projects
