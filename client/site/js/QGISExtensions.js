@@ -443,7 +443,7 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             var baseDefinition = '';
             if(extra.length>0) {
                 var extraNames = extra.map(function(item){return item.name;});
-                extraDefinition = extra.map(function(item){return item.definition;})[0];    //get only first one, ok?
+                extraDefinition = extra.map(function(item){return item.definition;});
                 layers.unshift(extraNames.join(','));
             }
 
@@ -500,8 +500,8 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 printUrl += '&OPACITIES='+encodeURIComponent(thematicLayer.params.OPACITIES);
             }
 
-            if (extraDefinition>'') {
-                printUrl += '&' + extraDefinition;
+            if (extraDefinition.length>0) {
+                printUrl += '&' + extraDefinition.join('&');
             }
 
             if (baseDefinition>'') {
