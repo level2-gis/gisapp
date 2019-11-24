@@ -443,7 +443,7 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             var baseDefinition = '';
             if(extra.length>0) {
                 var extraNames = extra.map(function(item){return item.name;});
-                extraDefinition = extra.map(function(item){return item.definition;});
+                extraDefinition = extra.map(function(item){return item.definition;}).reverse();
                 layers.unshift(extraNames.join(','));
             }
 
