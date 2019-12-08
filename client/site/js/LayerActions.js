@@ -529,11 +529,11 @@ function exportData(layername,format, useBbox, crs) {
     }
     //Ext.Msg.alert('Info',layer+' ' + bbox);
 
-    if(format == 'KOF') {
+    if((format == 'KOF') || (format == 'XYZ')) {
 
         layerFields = [];
 
-        var def = Eqwc.settings.vectorExportFormats.find(function(item) {if(item[0] == 'KOF') {return item;}});
+        var def = Eqwc.settings.vectorExportFormats.find(function(item) {if(item[0] == format) {return item;}});
         var zField = 'use_geom';
 
         if (def.length == 3) {

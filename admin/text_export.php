@@ -56,6 +56,10 @@ function sendText($type, $layer_name, $project_path, $query, $format)
     $lay_srid = substr(strrchr($lay_info["message"]['crs'], ':'), 1);
     $type = $lay_info["message"]['type'];
 
+    if($format == 'XYZ' && strpos($type,'Point')===FALSE) {
+        throw new Exception ('XYZ Format only for points!');
+    }
+
     // Get PG connection
     $lay_dsn = Helpers::getPGConnection($lay_info["message"]);
     if (!($lay_dsn["status"])) {
@@ -151,16 +155,22 @@ function sendText($type, $layer_name, $project_path, $query, $format)
             array_push($result, ' 09 91');
         }
 
-        $specific = ' 05 ';
-        $specific.= str_pad(substr($row[$name],0,11),11);
-        if(empty($code)) {
-            $specific .= str_pad(' ', 9);
-        } else {
-            $specific .= str_pad(substr($row[$code],0,9), 9);
+        if($format == 'KOF') {
+            $specific = ' 05 ';
+            $specific .= str_pad(substr($row[$name], 0, 11), 11);
+            if (empty($code)) {
+                $specific .= str_pad(' ', 9);
+            } else {
+                $specific .= str_pad(substr($row[$code], 0, 9), 9);
+            }
+            $specific .= str_pad($row['y'], 12, ' ', STR_PAD_LEFT);
+            $specific .= str_pad($row['x'], 12, ' ', STR_PAD_LEFT);
+            $specific .= str_pad($row['z'], 9, ' ', STR_PAD_LEFT);
         }
-        $specific.= str_pad($row['y'],12,' ',STR_PAD_LEFT);
-        $specific.= str_pad($row['x'],12,' ',STR_PAD_LEFT);
-        $specific.= str_pad($row['z'],9,' ',STR_PAD_LEFT);
+
+        if($format == 'XYZ') {
+            $specific = implode(';',[$row[$name],$row['x'],$row['y'],$row['z']]);
+        }
 
         array_push($result, $specific);
 
@@ -216,6 +226,9 @@ try {
         $ctype = "text/csv";
     }
 
+    if ($format == 'XYZ') {
+        $ctype = "text/csv";
+    }
 
     if ($format == 'TSV') {
         $ctype = "text/tab-separated-values";
