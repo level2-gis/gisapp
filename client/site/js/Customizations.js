@@ -50,20 +50,21 @@ function customAfterMapInit() {
     treeRoot.firstChild.cascade(
         function (n) {
             if (n.isLeaf()) {
-                if (n.attributes.checked) {
-                    var layerId = wmsLoader.layerTitleNameMapping[n.text];
-                    if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId) >= 0) {
-                        var layer = projectData.layers[layerId] == undefined ? {
-                            provider: '',
-                            layername: layerId
-                        } : projectData.layers[layerId];
-                        //editor
-                        if(layer.wfs && (typeof(prepareEdit) == 'function') && EditorConfig && EditorConfig.autoPrepareAllLayersOnStartup) {
-                            prepareEdit(layer);
-                        }
-                        projectData.setLayerLegend(layer,n);
+                var layerId = wmsLoader.layerTitleNameMapping[n.text];
+                //if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId) >= 0) {
+                    var layer = projectData.layers[layerId] == undefined ? {
+                        provider: '',
+                        layername: layerId
+                    } : projectData.layers[layerId];
+                    //editor
+                    if (layer.wfs && (typeof (prepareEdit) == 'function') && EditorConfig && EditorConfig.autoPrepareAllLayersOnStartup) {
+                        prepareEdit(layer);
                     }
-                }
+                    //get legend for visible layers at startup
+                    if (n.attributes.checked) {
+                        projectData.setLayerLegend(layer, n);
+                    }
+                //}
             }
         }
     );
