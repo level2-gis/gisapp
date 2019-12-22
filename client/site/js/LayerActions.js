@@ -702,6 +702,7 @@ function addRecord() {
         feat.state = OpenLayers.State.INSERT;
 
         if (preparePass) {
+            editor.editLayer.addFeatures([feat]);
             editor.attributesForm.loadRecord(feat);
         }
     }
