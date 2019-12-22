@@ -1844,7 +1844,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                     scope: searchPanelInstance
                 });
             } else {
-                if (searchPanelInstance.gridEditable && (typeof(editor) == 'object')) {
+                if (searchPanelInstance.gridEditable && (typeof(prepareEdit) == 'function')) {
                     toolBar.push({
                         iconCls: 'x-add-icon',
                         tooltip: TR.tableAddRecord,
