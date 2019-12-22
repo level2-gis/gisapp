@@ -64,6 +64,7 @@ var TR = {
     exportLayerExtent: 'Uporabi območje sloja',
     exportUseMapCrs: "Uporabi projektni koord. sistem",
     tableUseExtent: "Prikaži samo elemente znotraj trenutnega prikaza",
+    tableAddRecord: "Dodaj nov zapis",
     style: "Stil",
     navigation: "Navigacija"
 };
