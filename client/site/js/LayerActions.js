@@ -689,6 +689,27 @@ function switchBbox(btn,state) {
     grid.onSubmit(true);
 }
 
+function addRecord() {
+    var grid = this;
+    var layer = grid.queryLayer;
+    var layerId = wmsLoader.layerTitleNameMapping[layer];
+
+    var check = checkEditorState(layerId);
+    if(check) {
+        var preparePass = prepareEdit(projectData.layers[layerId]);
+
+        var feat = new OpenLayers.Feature.Vector();
+        feat.state = OpenLayers.State.INSERT;
+
+        if (preparePass) {
+            editor.attributesForm.loadRecord(feat);
+        }
+    }
+
+
+
+}
+
 function applyWMSFilter(item) {
     var idx = item.itemId.split('_')[1]-1;
     var node = layerTree.getSelectionModel().getSelectedNode();

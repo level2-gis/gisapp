@@ -1843,6 +1843,15 @@ function showSearchPanelResults(searchPanelInstance, features) {
                     toggleHandler: switchBbox,
                     scope: searchPanelInstance
                 });
+            } else {
+                if (searchPanelInstance.gridEditable && (typeof(editor) == 'object')) {
+                    toolBar.push({
+                        iconCls: 'x-add-icon',
+                        tooltip: TR.tableAddRecord,
+                        handler: addRecord,
+                        scope: searchPanelInstance
+                    });
+                }
             }
 
             toolBar.push(

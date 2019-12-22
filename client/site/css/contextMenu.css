@@ -36,6 +36,11 @@
     background-position:center right;
 }
 
+.x-add-icon{
+    background-image: url(../libs/ext/resources/images/default/dd/drop-add.gif);
+    height:16px;
+    background-position:center right;
+}
 
 .x-exclamation-icon {
     background-image:url(../libs/ext/resources/images/access/form/exclamation.gif);

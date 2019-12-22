@@ -301,7 +301,7 @@ class Helpers
                     }
 
                     //enable wfs just for postgres and spatialite regardless project setting
-                    if (in_array($lay->id,$wfs) and (!empty($lay->geom_type) and $lay->geom_type != 'No geometry')) {
+                    if (in_array($lay->id,$wfs) and (!empty($lay->geom_type))) {
                         if($lay->provider == 'postgres' or $lay->provider == 'spatialite') {
                             $lay->wfs = true;
                             //layer CRS must be included in crs list for client to load projection file
