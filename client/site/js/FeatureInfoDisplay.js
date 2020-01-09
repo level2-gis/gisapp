@@ -415,14 +415,20 @@ function parseFIResult(node) {
             var layerName = Eqwc.common.getIdentifyLayerNameRevert(sourceLayerName);
             var layerId = wmsLoader.layerTitleNameMapping[layerName];
             var layer = wmsLoader.layerProperties[layerId];
+            var countRelations = 0;
             var layerTitle = layer.title;
             if (showFILayerTitle) {
                 htmlText += "<h2>" + layerTitle + "</h2>";
             }
 
+            if(projectData.relations[layerName]) {
+                countRelations = projectData.relations[layerName].length;
+            }
+
             while (layerChildNode) {
 
-                var fid = layerTitle+"."+layerChildNode.id;
+                var id = layerChildNode.id;
+                var fid = layerTitle+"."+id;
 
                 if (layerChildNode.hasChildNodes() && layerChildNode.nodeName === "Feature") {
                     var attributeNode = layerChildNode.firstChild;
@@ -446,6 +452,16 @@ function parseFIResult(node) {
                         }
                         htmlText += "<tr><td colspan='2'>" + select + edit + clear + "</td></tr>";
                     }
+
+                    if (countRelations == 1) {
+                        var show = '';
+                        var table = projectData.relations[layerName][0].relate_layer;
+                        var field = projectData.relations[layerName][0].join_field;
+                        var rid = table+"."+id;
+                        var add = '<a class="i-add" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
+                        htmlText += "<tr><td colspan='2'>" + show + add + "</td></tr>";
+                    }
+
                     while (attributeNode) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
@@ -475,6 +491,16 @@ function parseFIResult(node) {
                                     htmlText += "\n   <tr>";
                                     if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
                                         htmlText += "<td>" + attName + ":</td>";
+                                    }
+
+                                    //TODO finish this for layers with more than 1 relation
+                                    if(countRelations > 1) {
+                                        var search = projectData.relations[layerName].find(function(currentValue, index, arr) {
+                                            return currentValue.count_field.toUpperCase() === attNameCase;
+                                        });
+                                        if(search) {
+                                            attValue += ' ' + search.join_field+'='+id;
+                                        }
                                     }
 
                                     if (attNameCase == filesAlias){
@@ -621,7 +647,7 @@ function updateAddress(data, location, field, template, templateMin, factor) {
 
 }
 
-function identifyAction(type,id) {
+function identifyAction(type, id, extra) {
 
     var layer = id.split('.')[0];
     if (id.split('.')[1] == 'undefined') {
@@ -643,6 +669,26 @@ function identifyAction(type,id) {
 
                 if (preparePass) {
                     editor.attributesForm.requestAndLoadFeature(id);
+                }
+            }
+
+            break;
+
+        case 'addRelation' :
+
+            var check = checkEditorState(layerId);
+            if(check) {
+                var preparePass = prepareEdit(projectData.layers[layerId]);
+
+                var feat = new OpenLayers.Feature.Vector();
+                feat.state = OpenLayers.State.INSERT;
+
+                if (preparePass) {
+
+                    feat.data[extra] = id.split('.')[1];
+
+                    editor.editLayer.addFeatures([feat]);
+                    editor.attributesForm.loadRecord(feat);
                 }
             }
 

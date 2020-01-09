@@ -42,6 +42,29 @@
     background: url(../gis_icons/mActionClear.png);
 }
 
+.i-add {
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 16px;
+    width: 16px;
+    padding-top: 16px;
+    overflow: hidden;
+    background: url(../libs/ext/resources/images/default/dd/drop-add.gif);
+
+}
+
+.i-table {
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 16px;
+    width: 16px;
+    padding-top: 16px;
+    overflow: hidden;
+    background: url(../gis_icons/contextmenu/table.png);
+}
+
 
 /*
 a:link, a:visited

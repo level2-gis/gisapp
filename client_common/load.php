@@ -27,6 +27,9 @@ if (!property_exists($settings, "geoCode")) {
 if (!property_exists($settings, "wsgi")) {
     $settings->wsgi = null;
 }
+if (!property_exists($settings, "relations")) {
+    $settings->relations = null;
+}
 if (!property_exists($settings, "locationServices")) {
     $settings->locationServices = null;
 }
@@ -80,6 +83,7 @@ projectData.search = eval(<?php echo json_encode($settings->search) ?>);
 projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics) ?>);
 projectData.geoCode = eval(<?php echo json_encode($settings->geoCode) ?>);
 projectData.wsgi = eval(<?php echo json_encode($settings->wsgi) ?>);
+projectData.relations = eval(<?php echo json_encode($settings->relations) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
 projectData.defaultCoordinatesCrsCode = eval(<?php echo json_encode($settings->defaultCoordinatesCrsCode) ?>);
 projectData.editor = eval(<?php echo json_encode($settings->editor) ?>);
