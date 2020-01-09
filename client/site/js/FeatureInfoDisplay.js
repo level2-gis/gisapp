@@ -421,7 +421,7 @@ function parseFIResult(node) {
                 htmlText += "<h2>" + layerTitle + "</h2>";
             }
 
-            if(projectData.relations[layerName]) {
+            if(projectData.relations && projectData.relations[layerName]) {
                 countRelations = projectData.relations[layerName].length;
             }
 
