@@ -82,7 +82,7 @@ def application(environ, start_response):
     sql += " OR code::text ILIKE %s)"
     data += ("%" + queryString + "%",)
 
-  sql += ";"
+  sql += " ORDER BY code;"
 
   #return [sql]
 
