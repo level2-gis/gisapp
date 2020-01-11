@@ -803,6 +803,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var layer = Map.layers[result.layer];
+        var countRelations = 0;
 
         //replace back layer
         if (layer == undefined) {
@@ -815,6 +816,10 @@ Gui.showXMLFeatureInfoResults = function (results) {
         var layerTitle = result.layer;
         if (layer != undefined) {
             layerTitle = layer.title;
+        }
+
+        if(projectData.relations[layerTitle]) {
+            countRelations = projectData.relations[layerTitle].length;
         }
 
         html += '<div data-role="collapsible" data-collapsed="false" data-theme="c">';
@@ -842,6 +847,17 @@ Gui.showXMLFeatureInfoResults = function (results) {
             }
             if(typeof(Editor) == 'function' && Config.data.gotolayers[layer.id]) {
                 html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="e" data-inline="true" data-mini="true" data-role="button">'+I18n.editor.goto+'</a>';
+            }
+
+            if (countRelations == 1) {
+                var table = projectData.relations[layerTitle][0].relate_layer;
+                var tableId = Eqwc.common.getLayerId(table);
+                var field = projectData.relations[layerTitle][0].join_field;
+
+                if(typeof(Editor) == 'function' && Config.data.wfslayers[tableId]) {
+                    //feature.id can be string, so need to quote here
+                    html += '<a href="javascript:Eqwc.common.callEditor(\''+tableId+'\',\''+feature.id+'\', \'addRelation\', \''+field+'\');" data-theme="a" data-inline="true" data-mini="true" data-role="button">'+TR.editAdd+'</a>';
+                }
             }
 
             html += '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';

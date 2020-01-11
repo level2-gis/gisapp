@@ -455,11 +455,17 @@ function parseFIResult(node) {
 
                     if (countRelations == 1) {
                         var show = '';
+                        var add = '';
                         var table = projectData.relations[layerName][0].relate_layer;
+                        var tableId = Eqwc.common.getLayerId(table);
                         var field = projectData.relations[layerName][0].join_field;
                         var rid = table+"."+id;
-                        var add = '<a class="i-add" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
-                        htmlText += "<tr><td colspan='2'>" + show + add + "</td></tr>";
+                        if(Eqwc.plugins["editing"] !== undefined && projectData.layers[tableId].wfs) {
+                            add = '<a class="i-add" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
+                        }
+                        if (show > '' || add > '') {
+                            htmlText += "<tr><td colspan='2'>" + show + add + "</td></tr>";
+                        }
                     }
 
                     while (attributeNode) {
