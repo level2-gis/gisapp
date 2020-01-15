@@ -52,9 +52,15 @@ Layers.loadLayers = function(url, callback) {
                 // mark layers without group
                 layer.groupname = Layers.markerPrefix + layer.layername;
             }
+
+            if (layer.parent && groups[layer.parent] === undefined) {
+                groups[layer.parent] = [];
+            }
+
             if (groups[layer.groupname] === undefined) {
                 groups[layer.groupname] = [];
             }
+
             groups[layer.groupname].push(layer);
         }
 
@@ -63,7 +69,7 @@ Layers.loadLayers = function(url, callback) {
             if (groups.hasOwnProperty(key)) {
                 sortedGroups.push({
                     title: key,
-                    parent: groups[key][0].parent,
+                    parent: groups[key].length > 0 ? groups[key][0].parent : null,
                     layers: groups[key]
                 });
             }
@@ -93,6 +99,8 @@ Layers.loadLayers = function(url, callback) {
                     };
                     if(subtree.parent) {
                         //find index of parent
+                        //this searches only first level array, if parent is itself subroup its not found!!
+                        //if this will be a problem go for data.layertree json solution from server
                         var indx = layertree.findIndex(function(el) {return el.name==group.parent;});
                         if(indx > -1) {
                             layertree[indx].layers.push(subtree);
