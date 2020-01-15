@@ -93,7 +93,7 @@ Layers.loadLayers = function(url, callback) {
                     };
                     if(subtree.parent) {
                         //find index of parent
-                        var indx = layertree.findIndex(function(el) {return el.name==group.parent;});
+                        var indx = layertree.findIndex(function(el) {return el[name]==group[parent];});
                         if(indx > -1) {
                             layertree[indx].layers.push(subtree);
                         }
