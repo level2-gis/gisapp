@@ -818,7 +818,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
             layerTitle = layer.title;
         }
 
-        if(projectData.relations[layerTitle]) {
+        if(projectData.relations && projectData.relations[layerTitle]) {
             countRelations = projectData.relations[layerTitle].length;
         }
 
