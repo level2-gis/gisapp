@@ -281,7 +281,7 @@ class Helpers
             $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
             try {
 
-                $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],$prop->title);
+                $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],null, null);
 
                 //get wfs layers
                 $wfs = (array)($qgs["message"]->properties->WFSLayers->value);
@@ -305,7 +305,10 @@ class Helpers
                         if($lay->provider == 'postgres' or $lay->provider == 'spatialite') {
                             $lay->wfs = true;
                             //layer CRS must be included in crs list for client to load projection file
-                            if(($lay->geom_type != 'No geometry') && !(in_array($lay->crs,$prop->crs_list))) {
+                            if(empty($lay->crs)) {
+                                $lay->crs = $prop->crs;
+                            }
+                            if(!(in_array($lay->crs,$prop->crs_list))) {
                                 array_push($prop->crs_list,$lay->crs);
                             }
                             if(strpos(strtolower($lay->geom_type), 'polygon') === false) {
@@ -487,19 +490,20 @@ class Helpers
 
     }
 
-    public function LayersToClientArray($group,$groupname)
+    public function LayersToClientArray($group,$groupname,$parent)
     {
         foreach ($group->children() as $el) {
             $cnt = sizeof($this->qgs_layers);
             $type = $el->getName();
             $lay = new \stdClass();
             if ($type == 'layer-tree-group') {
-                $this->LayersToClientArray($el,(string)$el->attributes()["name"]);
+                $this->LayersToClientArray($el,(string)$el->attributes()["name"],$groupname);
 
             } else {
                 if ($el->attributes()["id"] > '') {
                     $cnt++;
                     $lay->topic = 'Topic';
+                    $lay->parent = $parent;
                     $lay->groupname = $groupname;
                     $lay->layername = (string)$el->attributes()["name"];
                     $lay->toclayertitle = (string)$el->attributes()["name"];

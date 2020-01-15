@@ -173,6 +173,10 @@ function showLegendAndMetadata(layertitle) {
             'EDITABLE': projDataLayer.wfs ?  Ext.MessageBox.buttonText.yes : Ext.MessageBox.buttonText.no,
             'ID': projDataLayer.id
         };
+
+        if (type == 'No geometry') {
+            delete properties.CRS;
+        }
     }
 	
 	//create metadata text
@@ -231,7 +235,7 @@ function showLegendAndMetadata(layertitle) {
 			metadataText += '<td class="mdCell">'+attribute.name+'</td><td class="mdCell">'+attribute.type+'</td><td class="mdCell">'+attribute.comment+'</td><td class="mdCell">'+attribute.length+'</td><td class="mdCell">'+attribute.precision+'</td></tr>';
 			rowCounter++;
 		}
-		metadataText += '</table>'
+		metadataText += '</table>';
 	}
 	metadataText += '</div>';
 
