@@ -649,7 +649,8 @@ function openAttTable() {
             gridResultsPageSize: 20,
             selectionLayer: myLayerName,
             formItems: [],
-            doZoomToExtent: true
+            doZoomToExtent: true,
+            maskElement: btm.el ? btm.el : null
         });
 
         //Ext.getCmp('BottomPanel').setTitle(layer.gridTitle,'x-cols-icon');

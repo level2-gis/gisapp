@@ -1657,20 +1657,30 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
                 break;
             case 'popup':
-                if (typeof(Ext.getCmp('SearchResultsPopUp')) == 'undefined') {
-                    targetComponent = new Ext.Window(
+                var win = Ext.getCmp('window_'+searchPanelInstance.selectionLayer);
+                //searchPanelId = 'popup_'+searchPanelInstance.queryLayer;
+                if (typeof(win) == 'undefined') {
+                    new Ext.Window(
                         {
-                            id: 'SearchResultsPopUp',
+                            id: 'window_'+searchPanelInstance.selectionLayer,
                             layout: 'fit',
-                            width: "80%",
-                            height: 300,
+                            width: "60%",
+                            height: 250,
                             modal: false,
-                            closeAction: 'hide'
-                        });
+                            title: searchPanelInstance.selectionLayer,
+                            items: [{
+                                xtype: 'tabpanel',
+                                title: ''
+                            }]
+                            //closeAction: 'hide'
+                        }).show();
+                    win = Ext.getCmp('window_'+searchPanelInstance.selectionLayer);
+                } else {
+                    win.toFront();
                 }
                 autoHeight = false; // No scrollbars if true
                 collapsible = false; // No collapsible in popup
-                targetComponent = Ext.getCmp('SearchResultsPopUp');
+                targetComponent = win.items.item(0);
                 break;
             default:
                 collapsible = false;
@@ -1820,6 +1830,33 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 }
 
             });
+
+            //update title and other stuff on store datachanged event
+            searchPanelInstance.resultsGrid.store.on("datachanged", function() {
+                var grid = this;
+                var store = grid.store;
+
+                var cnt_all = store.totalCount;
+                var cnt_filt = store.getTotalCount();
+
+                if(grid.getBottomToolbar()) {
+                    var complete = (store.totalCount == store.maxResults) ? false : true;
+                    var loadmore = grid.getBottomToolbar().getComponent('loadmore');
+                    if (loadmore != undefined) {
+                        if (complete) {
+                            loadmore.setVisible(false);
+                        } else {
+                            loadmore.setVisible(true);
+                        }
+                    }
+                }
+
+                if (cnt_filt < cnt_all) {
+                    grid.setTitle(store.gridTitle + "* (" + cnt_filt + ")");
+                } else {
+                    grid.setTitle(store.gridTitle + " (" + cnt_all + ")");
+                }
+            }, searchPanelInstance.resultsGrid);
 
             //additional buttons in bottom toolbar
             var toolBar = [{
