@@ -453,15 +453,17 @@ function parseFIResult(node) {
                         htmlText += "<tr><td colspan='2'>" + select + edit + clear + "</td></tr>";
                     }
 
-                    if (countRelations == 1) {
-                        var show = '';
+                    if (countRelations > 0) {
                         var add = '';
-                        var table = projectData.relations[layerName][0].relate_layer;
-                        var tableId = Eqwc.common.getLayerId(table);
-                        var field = projectData.relations[layerName][0].join_field;
-                        var rid = table+"."+id;
-                        if(Eqwc.plugins["editing"] !== undefined && projectData.layers[tableId].wfs) {
-                            add = '<a class="i-add" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
+                        var show =  '<a class="i-table" href="javascript:;" onclick="showRelations(\'' + layerId + '\',\'' + id + '\');"></a>';
+                        if(countRelations == 1 && Eqwc.plugins["editing"] !== undefined) {
+                            var table = projectData.relations[layerName][0].relate_layer;
+                            var tableId = Eqwc.common.getLayerId(table);
+                            var field = projectData.relations[layerName][0].join_field;
+                            var rid = table+"."+id;
+                            if(projectData.layers[tableId].wfs) {
+                                add = '<a class="i-add" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
+                            }
                         }
                         if (show > '' || add > '') {
                             htmlText += "<tr><td colspan='2'>" + show + add + "</td></tr>";
@@ -497,16 +499,6 @@ function parseFIResult(node) {
                                     htmlText += "\n   <tr>";
                                     if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
                                         htmlText += "<td>" + attName + ":</td>";
-                                    }
-
-                                    //TODO finish this for layers with more than 1 relation
-                                    if(countRelations > 1) {
-                                        var search = projectData.relations[layerName].find(function(currentValue, index, arr) {
-                                            return currentValue.count_field.toUpperCase() === attNameCase;
-                                        });
-                                        if(search) {
-                                            attValue += ' ' + search.join_field+'='+id;
-                                        }
                                     }
 
                                     if (attNameCase == filesAlias){
@@ -653,9 +645,47 @@ function updateAddress(data, location, field, template, templateMin, factor) {
 
 }
 
+function showRelations(layerId, id) {
+
+    var layerName = projectData.layers[layerId].layername;
+    //for now take only first one, later make loop
+    var table = projectData.relations[layerName][0].relate_layer;
+    var field = projectData.relations[layerName][0].join_field;
+
+    var filter =  '"' + field + '" = \'' + id + '\'';
+
+    var cmp = Ext.getCmp('window_' + layerName);
+
+    var relations = new QGIS.SearchPanel({
+        hasGeom: false,
+        useWmsRequest: true,
+        useBbox: false,
+        wmsFilter: filter,
+        queryLayer: table,
+        gridColumns: getLayerAttributes(table).columns,
+        gridLocation: 'popup',
+        gridEditable: false,
+        gridTitle: table + ': ' + id,
+        gridResults: Eqwc.settings.limitAttributeFeatures,
+        gridResultsPageSize: 20,
+        selectionLayer: layerName,
+        formItems: [],
+        doZoomToExtent: false,
+        maskElement: (cmp && cmp.el) ? cmp.el : null
+    });
+
+    //Ext.getCmp('BottomPanel').setTitle(layer.gridTitle,'x-cols-icon');
+    //Ext.get('BottomPanel').setStyle('padding-top', '2px');
+
+    relations.onSubmit();
+    //relations.on("featureselectioncleared", clearFeatureSelected);
+    relations.on("beforesearchdataloaded", showSearchPanelResults);
+}
+
 function identifyAction(type, id, extra) {
 
     var layer = id.split('.')[0];
+    var fid = id.split('.')[1];
     if (id.split('.')[1] == 'undefined') {
         return;
     }
