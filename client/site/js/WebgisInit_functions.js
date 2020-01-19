@@ -1653,8 +1653,10 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
                 // Make sure it's shown and expanded
                 targetComponent.show();
-                targetComponent.collapsible && targetComponent.expand();
 
+                if (searchPanelInstance.resultsGrid == null) {
+                    targetComponent.expand();
+                }
                 break;
             case 'popup':
                 var win = Ext.getCmp('window_'+searchPanelInstance.selectionLayer);
@@ -1928,11 +1930,10 @@ function showSearchPanelResults(searchPanelInstance, features) {
             }
         });
 
-
         targetComponent.doLayout();
         // Always make sure it's shown and expanded
         searchPanelInstance.resultsGrid.show();
-        searchPanelInstance.resultsGrid.collapsible && searchPanelInstance.resultsGrid.expand();
+        //searchPanelInstance.resultsGrid.collapsible && searchPanelInstance.resultsGrid.expand();
 
         //zoom to the extent from GetFeatureInfo results
         //var bx = searchPanelInstance.store.totalBbox;
