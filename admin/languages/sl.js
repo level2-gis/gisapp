@@ -66,7 +66,8 @@ var TR = {
     tableUseExtent: "Prikaži samo elemente znotraj trenutnega prikaza",
     tableAddRecord: "Dodaj nov zapis",
     style: "Stil",
-    navigation: "Navigacija"
+    navigation: "Navigacija",
+    relations: "Relations"
 };
 
 /**

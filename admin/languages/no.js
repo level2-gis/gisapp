@@ -66,7 +66,8 @@ var TR = {
     tableUseExtent: "Bruk gjeldende kartutsnitt",
     tableAddRecord: "Add new record",
     style: "Style",
-    navigation: "Navigation"
+    navigation: "Navigation",
+    relations: "Relations"
 };
 
 /**::

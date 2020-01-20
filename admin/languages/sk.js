@@ -66,7 +66,8 @@ var TR = {
     tableUseExtent: "Only show features in map extent",
     tableAddRecord: "Add new record",
     style: "Style",
-    navigation: "Navigation"
+    navigation: "Navigation",
+    relations: "Relations"
 };
 
 /**
