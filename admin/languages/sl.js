@@ -67,7 +67,7 @@ var TR = {
     tableAddRecord: "Dodaj nov zapis",
     style: "Stil",
     navigation: "Navigacija",
-    relations: "Relations"
+    relations: "Relacije"
 };
 
 /**
