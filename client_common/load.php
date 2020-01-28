@@ -55,6 +55,26 @@ if (!property_exists($data, "custom2")) {
     $data->custom2 = "";
 }
 
+if (!property_exists($data, "custom3")) {
+    $data->custom3 = "";
+}
+
+if (!property_exists($data, "custom4")) {
+    $data->custom4 = "";
+}
+
+if (!property_exists($data, "link1")) {
+    $data->link1 = "";
+}
+
+if (!property_exists($data, "link2")) {
+    $data->link2 = "";
+}
+
+if (!property_exists($data, "link3")) {
+    $data->link3 = "";
+}
+
 if (file_exists($client_path . 'admin/resources/images/' . $data->client_name . '.png')) {
     $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png';
 } else {
@@ -77,6 +97,11 @@ projectData.client_url = '<?php echo $data->client_url ?>';
 projectData.client_logo = '<?php echo $data->client_logo ?>';
 projectData.custom1 = '<?php echo $data->custom1 ?>';
 projectData.custom2 = '<?php echo $data->custom2 ?>';
+projectData.custom3 = '<?php echo $data->custom3 ?>';
+projectData.custom4 = '<?php echo $data->custom4 ?>';
+projectData.link1 = '<?php echo $data->link1 ?>';
+projectData.link2 = '<?php echo $data->link2 ?>';
+projectData.link3 = '<?php echo $data->link3 ?>';
 projectData.lang = '<?php echo $lang ?>';
 
 projectData.search = eval(<?php echo json_encode($settings->search) ?>);
