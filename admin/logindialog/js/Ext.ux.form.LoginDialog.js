@@ -186,22 +186,24 @@ Ext.ux.form.LoginDialog = function (config) {
                     }
                 }
             }
-        }, {
-            xtype: 'checkbox',
-            id: this._rememberMeId,
-            name: this.rememberMeField,
-            boxLabel: '&nbsp;' + this.rememberMeLabel,
-            width: 200,
-            listeners: {
-                render: function () {
-                    Ext.get(Ext.DomQuery.select('#x-form-el-' + this._rememberMeId + ' input')).set({
-                        qtip: 'This is not recommended for shared computers.'
-                    });
-
-                },
-                scope: this
-            }
-        }, {
+        },
+        //     {
+        //     xtype: 'checkbox',
+        //     id: this._rememberMeId,
+        //     name: this.rememberMeField,
+        //     boxLabel: '&nbsp;' + this.rememberMeLabel,
+        //     width: 200,
+        //     listeners: {
+        //         render: function () {
+        //             Ext.get(Ext.DomQuery.select('#x-form-el-' + this._rememberMeId + ' input')).set({
+        //                 qtip: 'This is not recommended for shared computers.'
+        //             });
+        //
+        //         },
+        //         scope: this
+        //     }
+        // },
+            {
             //extraparameter
             xtype: 'hidden',
             name: this.extraParamField,
