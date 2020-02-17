@@ -58,6 +58,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     }
 
     $sourceProvider = $lay_info["message"]['provider'];
+    $table = $lay_info["message"]['table'];
     $sql = '';
     switch ($sourceProvider) {
         case 'ogr':
@@ -74,7 +75,6 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             //$conn = "PG:" . rtrim(substr($conn, 0, strpos($conn, 'sslmode')));
             $conn = "PG:dbname='".$lay_info['message']['dbname']."' host=".$lay_info['message']['host']." port=".$lay_info['message']['port']." user=".$lay_info['message']['user']." password=".$lay_info['message']['password'];
 
-            $table = $lay_info["message"]['table'];
             $sql = $lay_info["message"]['sql'];
 
             $source = ' "' . $conn . '" ' . $table;
@@ -83,7 +83,6 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
 
         case 'spatialite':
             $conn = $lay_info["message"]['dbname'];
-            $table = $lay_info["message"]['table'];
             $sql = $lay_info["message"]['sql'];
 
             $source = ' ' . $conn . ' ' . $table;
@@ -128,6 +127,10 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
         }
         $fields = array_diff(explode(',',$query_arr['fields']),[$key]);
         $options .= '-select "' . implode(',',$fields) . '" ';
+    } else {
+        if(!empty($table)) {
+            $options .= '-sql "SELECT * FROM ' . $table . '" ';
+        }
     }
 
     switch ($destinationFormat) {
