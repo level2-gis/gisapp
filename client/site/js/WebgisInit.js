@@ -52,6 +52,7 @@ var feedbackWin;
 var legendMetaTabPanel; //a reference to the Ext tabpanel holding the tabs for legend graphic and metadata
 var legendTab; //a reference to the Ext tab holding the legend graphic
 var metadataTab; //a reference to the Ext tab holding the metadata information
+var propertyTab;
 var measurePopup;
 var currentlyVisibleBaseLayer = null;
 var layerImageFormats = layerImageFormats || []; // use config from GlobalOptions if any

@@ -115,7 +115,7 @@ function showLegendAndMetadata(layertitle) {
 	if (legendMetadataWindow == undefined) {
 		setupLegendAndMetadataWindow();
 	}
-	legendMetadataWindow.setTitle(legendMetadataWindowTitleString[lang] + ' "'+layertitle+'"');
+	legendMetadataWindow.setTitle(layertitle);
 	if (legendMetadataWindow_active == false) {
 		legendMetadataWindow.show();
 	}
@@ -182,7 +182,8 @@ function showLegendAndMetadata(layertitle) {
 	//create metadata text
 	legendMetaTabPanel.activate(metadataTab);
 	var metadataText = '<style type="text/css">.even { background-color:rgb(240,240,240);border:none;} .mdCell {padding:0.3em;border:none;} .mdHeader {padding:0.3em;font-weight:bold;border:none;}</style>';
-	metadataText += '<div style="margin:1em;"><h1 style="margin-bottom:0.8em;">'+metadataSectionTitleString[lang]+' "'+layertitle+'"</h1>';
+	//metadataText += '<div style="margin:1em;"><h1 style="margin-bottom:0.8em;">'+metadataSectionTitleString[lang]+' "'+layertitle+'"</h1>';
+	metadataText += '<div style="margin:1em;">';
 	//abstract
 	if (wmsLoader.layerProperties[layername].abstract) {
 		metadataText += '<p><b>'+abstractString[lang]+'</b><p><p>'+wmsLoader.layerProperties[layername].abstract+'</p>';
@@ -242,7 +243,7 @@ function showLegendAndMetadata(layertitle) {
     var text = metadataTab.getComponent('propertyText');
     text.update(metadataText);
 
-    var grid = metadataTab.getComponent('propertyGrid');
+    var grid = propertyTab.getComponent('propertyGrid');
     grid.setSource(properties);
 
     //if no metadata shall be displayed, remove tab
@@ -271,35 +272,39 @@ function setupLegendAndMetadataWindow() {
                 //layout: 'fit',
                 id: 'metadataTab',
                 items: [
-                    new Ext.grid.PropertyGrid({
-                        //title: 'Properties Grid',
-                        itemId: 'propertyGrid',
-                        autoHeight: true,
-                        stripeRows: false,
-                        hideHeaders: true,
-                        //width: 300,
-                        //renderTo: 'grid-ct',
-                        viewConfig: {
-                            forceFit: true,
-                            scrollOffset: 2, // the grid will never have scrollbars
-                            templates: {cell: new Ext.Template(
-                                '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
-                                '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
-                                '</td>'
-                                )}
-                        },
-                        listeners: {
-                            'beforeedit': function (e) {
-                                return false;
-                            }
-                        }
-                    }), new Ext.Container({
+                    new Ext.Container({
                         itemId: 'propertyText'
                     })]
             }, {
                 title: legendTabTitleString[lang],
                 id: 'legendTab'
-            }]
+            }, {
+                title: TR.properties,
+                id: 'propertyTab',
+                items: [new Ext.grid.PropertyGrid({
+                    itemId: 'propertyGrid',
+                    autoHeight: true,
+                    stripeRows: false,
+                    hideHeaders: true,
+                    //width: 300,
+                    //renderTo: 'grid-ct',
+                    viewConfig: {
+                        forceFit: true,
+                        scrollOffset: 2, // the grid will never have scrollbars
+                        templates: {cell: new Ext.Template(
+                                '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
+                                '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
+                                '</td>'
+                            )}
+                    },
+                    listeners: {
+                        'beforeedit': function (e) {
+                            return false;
+                        }
+                    }
+                })]
+            }
+            ]
         }],
         listeners: {
             show: function () {
@@ -316,4 +321,5 @@ function setupLegendAndMetadataWindow() {
     legendMetaTabPanel = Ext.getCmp('legendMetaTabPanel');
     legendTab = Ext.getCmp('legendTab');
     metadataTab = Ext.getCmp('metadataTab');
+    propertyTab = Ext.getCmp('propertyTab');
 }
