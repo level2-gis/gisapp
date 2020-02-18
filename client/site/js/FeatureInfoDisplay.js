@@ -143,6 +143,20 @@ function showFeatureInfo(evt) {
                     if (this.getHeight() > maxHeight) {
                         this.setHeight(maxHeight);
                     }
+
+                    //create tooltips defined in settings.js
+                    function set(field) {
+                        if(this[field].url) {
+                            new Ext.ToolTip({
+                                target: this[field].id,
+                                width: 150,
+                                autoLoad: {url: this[field].url+this[field].value}
+                            });
+                        }
+                    }
+
+                    Ext.iterate(Eqwc.settings.fieldTemplates, set, Eqwc.settings.fieldTemplates);
+
                 }
             }
         });
@@ -512,7 +526,26 @@ function parseFIResult(node) {
                                             attValue = newArr.join('</br>');
                                         }
                                     } else {
-                                        attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
+                                        if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attName) && Eqwc.settings.fieldTemplates[attName].template) {
+                                            Eqwc.settings.fieldTemplates[attName].value = attValue;
+                                            var templ = Eqwc.settings.fieldTemplates[attName];
+                                            var newVal = "";
+                                            if(templ.template == 'BOOLEAN') {
+                                                if(attValue=='true') {
+                                                    newVal = Ext.MessageBox.buttonText.yes;
+                                                } else if (attValue == 'false') {
+                                                    newVal = Ext.MessageBox.buttonText.no;
+                                                } else {
+                                                    newVal = '';
+                                                }
+                                                attValue = newVal;
+                                            } else {
+                                                newVal = templ.template.replaceAll('%VALUE%',attValue);
+                                                attValue = '<div class="tip-target" id="'+templ.id+'">'+newVal+'</div>';
+                                            }
+                                        } else {
+                                            attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
+                                        }
                                     }
 
                                     if (attNameCase == 'MAPTIP' || attNameCase == filesAlias) {

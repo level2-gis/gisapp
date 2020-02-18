@@ -11,8 +11,8 @@
 #);
 #geom_type: 1=point, 2=line, 3=polygon
 #
-#required paramaters are table and gtype (geom_type), category and query are for filtering results, sample query
-#http://localhost/wsgi/data.wsgi?table=my_lookup_table&category=field&gtype=2&query=1234
+#required paramaters are table, gtype (geom_type) and code, category is for filtering results, sample query
+#http://localhost/wsgi/lookup.wsgi?table=my_lookup_table&gtype=2&code=1
 
 import re #regular expression support
 import string #string manipulation support
@@ -37,16 +37,11 @@ def application(environ, start_response):
 
   table = request.params["table"]
   gtype = request.params["gtype"]
+  code = request.params["code"]
   categoryString = ''
   if "category" in request.params:
     categoryString = request.params["category"]
     categoryString = categoryString.strip()
-  
-  queryString = ''
-  if "query" in request.params:
-    queryString = request.params["query"]
-    #strip away leading and trailing whitespaces
-    queryString = queryString.strip()
   
   sql = ""
   errorText = ''
@@ -63,7 +58,7 @@ def application(environ, start_response):
   #    else:
   #      filt.extend(filterString.split(','))
 
-  sql += "SELECT code, description FROM " + table + " WHERE geom_type="+gtype 
+  sql += "SELECT description FROM " + table + " WHERE geom_type="+gtype+" AND code="+code 
 
   if categoryString:
     filt.extend(categoryString.split(','))
@@ -75,15 +70,6 @@ def application(environ, start_response):
 
     sql += " AND category IN("+','.join(filt)+")" 
   
-  if queryString:
-    #sql += " AND (description ILIKE '%"+query+"%' OR code::text ILIKE '%"+query+"%')"
-    sql += " AND (description ILIKE %s"
-    data += ("%" + queryString + "%",)
-    sql += " OR code::text ILIKE %s)"
-    data += ("%" + queryString + "%",)
-
-  sql += " ORDER BY code;"
-
   #return [sql]
 
   conn = qwc_connect.getConnection(environ, start_response)
@@ -107,21 +93,19 @@ def application(environ, start_response):
 
     return [errorText]
 
-  rowData = [];
   rows = cur.fetchall()
   
-  resultString = '{"results": '+json.dumps(rows)+'}'
+  resultString = ''
+  
+  if len(rows) > 0:
+    resultString = json.dumps(rows[0][0]).strip('\"')  
+  
   #resultString = string.replace(resultString,'"bbox": "[','"bbox": [')
   #resultString = string.replace(resultString,']",','],')
-
-  #we need to add the name of the callback function if the parameter was specified
-  if "cb" in request.params:
-    resultString = request.params["cb"] + '(' + resultString + ')'
 
   response = Response(resultString,"200 OK",[("Content-type","text/plain; charset=utf-8"),("Content-length", str(len(resultString)) )])
 
   conn.close()
 
   return response(environ, start_response)
-
 

@@ -65,6 +65,15 @@
     background: url(../gis_icons/contextmenu/table.png);
 }
 
+.tip-target {
+    padding: 1px;
+    border:1px dotted #99bbe8;
+    color: #15428b;
+    cursor:default;
+    font:bold 10px tahoma,arial,sans-serif;
+    float:left;
+}
+
 
 /*
 a:link, a:visited
