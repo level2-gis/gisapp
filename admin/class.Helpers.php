@@ -277,7 +277,7 @@ class Helpers
             $prop->add_geom_to_fi = filter_var($qgs["message"]->properties->WMSAddWktGeometry,FILTER_VALIDATE_BOOLEAN);
             $prop->time = $time;
             $prop->version = (string)$qgs["message"]["version"];
-            $prop->crs_list = (array)($qgs["message"]->properties->WMSCrsList->value);
+            $prop->crs_list = array_filter((array)($qgs["message"]->properties->WMSCrsList->value));
             $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
             try {
 
