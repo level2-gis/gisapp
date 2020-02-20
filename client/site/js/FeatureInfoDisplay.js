@@ -84,6 +84,10 @@ function showFeatureInfo(evt) {
         // open AttributeTree panel
         featureInfoResultLayers = [];
         highLightGeometry = [];
+
+        //temp array for storing target element ids for tooltips, recreate on each featureinfocall
+        Eqwc._temp_ids = [];
+
         parseFIResult(xmlDoc);
         featureInfoResultLayers.reverse();
         //highLightGeometry.reverse();
@@ -144,19 +148,28 @@ function showFeatureInfo(evt) {
                         this.setHeight(maxHeight);
                     }
 
-                    //create tooltips defined in settings.js
-                    function set(field) {
-                        if(this[field].url) {
-                            new Ext.ToolTip({
-                                target: this[field].id,
-                                width: 150,
-                                autoLoad: {url: this[field].url+this[field].value}
-                            });
-                        }
+                    //create ajax tooltips defined in settings.js for each id in _temp_ids
+                    function set(element) {
+                        var split = element.split('::');
+                        var field = split[0];
+                        var value = split[1];
+
+                        new Ext.ToolTip({
+                            target: element,
+                            width: 150,
+                            autoLoad: {
+                                url: this[field].url + value,
+                                scripts: false,
+                                callback: function(el, success, response, object) {
+                                    if(success && response.responseText == '') {
+                                        el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                                    }
+                                }
+                            }
+                        });
                     }
 
-                    Ext.iterate(Eqwc.settings.fieldTemplates, set, Eqwc.settings.fieldTemplates);
-
+                    Ext.iterate(Eqwc._temp_ids, set, Eqwc.settings.fieldTemplates);
                 }
             }
         });
@@ -528,6 +541,11 @@ function parseFIResult(node) {
                                     } else {
                                         if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attName) && Eqwc.settings.fieldTemplates[attName].template) {
                                             Eqwc.settings.fieldTemplates[attName].value = attValue;
+                                            //if we have URL need to store target element ids into array and later create tooltips
+                                            var target_el = attName+'::'+attValue+'::'+id;
+                                            if(Eqwc.settings.fieldTemplates[attName].url && Eqwc._temp_ids.indexOf(target_el)==-1) {
+                                                Eqwc._temp_ids.push(target_el);
+                                            }
                                             var templ = Eqwc.settings.fieldTemplates[attName];
                                             var newVal = "";
                                             if(templ.template == 'BOOLEAN') {
@@ -541,7 +559,7 @@ function parseFIResult(node) {
                                                 attValue = newVal;
                                             } else {
                                                 newVal = templ.template.replaceAll('%VALUE%',attValue);
-                                                attValue = '<div class="tip-target" id="'+templ.id+'">'+newVal+'</div>';
+                                                attValue = '<div class="tip-target" id="'+target_el+'">'+newVal+'</div>';
                                             }
                                         } else {
                                             attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
