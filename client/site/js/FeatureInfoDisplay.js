@@ -161,8 +161,12 @@ function showFeatureInfo(evt) {
                                 url: this[field].url + value,
                                 scripts: false,
                                 callback: function(el, success, response, object) {
-                                    if(success && response.responseText == '') {
-                                        el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                                    if(success) {
+                                        if(response.responseText == '') {
+                                            el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                                        } else {
+                                            el.dom.textContent = Ext.util.Format.htmlDecode(response.responseText);
+                                        }
                                     }
                                 }
                             }
