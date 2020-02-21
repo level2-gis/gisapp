@@ -164,8 +164,6 @@ function showFeatureInfo(evt) {
                                     if(success) {
                                         if(response.responseText == '') {
                                             el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
-                                        } else {
-                                            el.dom.textContent = Ext.util.Format.htmlDecode(response.responseText);
                                         }
                                     }
                                 }
