@@ -73,6 +73,7 @@ def application(environ, start_response):
   #return [sql]
 
   conn = qwc_connect.getConnection(environ, start_response)
+  conn.set_client_encoding('UTF8')
   
   if conn == None:
     return [""]
@@ -98,7 +99,7 @@ def application(environ, start_response):
   resultString = ''
   
   if len(rows) > 0:
-    resultString = json.dumps(rows[0][0]).strip('\"')  
+    resultString = json.dumps(rows[0][0], ensure_ascii=False).strip('\"')
   
   #resultString = string.replace(resultString,'"bbox": "[','"bbox": [')
   #resultString = string.replace(resultString,']",','],')
