@@ -527,7 +527,7 @@ function parseFIResult(node) {
                                     //if (attName !== "maptip") {
                                     htmlText += "\n   <tr>";
                                     if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
-                                        htmlText += "<td>" + attName + ":</td>";
+                                        htmlText += "<td>" + attNameCase + ":</td>";
                                     }
 
                                     if (attNameCase == filesAlias){
@@ -541,14 +541,13 @@ function parseFIResult(node) {
                                             attValue = newArr.join('</br>');
                                         }
                                     } else {
-                                        if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attName) && Eqwc.settings.fieldTemplates[attName].template) {
-                                            Eqwc.settings.fieldTemplates[attName].value = attValue;
+                                        if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase) && Eqwc.settings.fieldTemplates[attNameCase].template) {
                                             //if we have URL need to store target element ids into array and later create tooltips
-                                            var target_el = attName+'::'+attValue+'::'+id;
-                                            if(Eqwc.settings.fieldTemplates[attName].url && Eqwc._temp_ids.indexOf(target_el)==-1) {
+                                            var target_el = attNameCase+'::'+attValue+'::'+id;
+                                            if(Eqwc.settings.fieldTemplates[attNameCase].url && Eqwc._temp_ids.indexOf(target_el)==-1) {
                                                 Eqwc._temp_ids.push(target_el);
                                             }
-                                            var templ = Eqwc.settings.fieldTemplates[attName];
+                                            var templ = Eqwc.settings.fieldTemplates[attNameCase];
                                             var newVal = "";
                                             if(templ.template == 'BOOLEAN') {
                                                 if(attValue=='true') {
