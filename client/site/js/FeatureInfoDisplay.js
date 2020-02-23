@@ -700,38 +700,39 @@ function updateAddress(data, location, field, template, templateMin, factor) {
 function showRelations(layerId, id) {
 
     var layerName = projectData.layers[layerId].layername;
-    //for now take only first one, later make loop
-    var table = projectData.relations[layerName][0].relate_layer;
-    var field = projectData.relations[layerName][0].join_field;
-
-    var filter =  '"' + field + '" = \'' + id + '\'';
-
     var cmp = Ext.getCmp('window_' + layerName);
 
-    var relations = new QGIS.SearchPanel({
-        hasGeom: false,
-        useWmsRequest: true,
-        useBbox: false,
-        wmsFilter: filter,
-        queryLayer: table,
-        gridColumns: getLayerAttributes(table).columns,
-        gridLocation: 'popup',
-        gridEditable: false,
-        gridTitle: table + ': ' + id,
-        gridResults: Eqwc.settings.limitAttributeFeatures,
-        gridResultsPageSize: 20,
-        selectionLayer: layerName,
-        formItems: [],
-        doZoomToExtent: false,
-        maskElement: (cmp && cmp.el) ? cmp.el : null
-    });
+    for(var i=0;i<projectData.relations[layerName].length;i++) {
+        var table = projectData.relations[layerName][i].relate_layer;
+        var field = projectData.relations[layerName][i].join_field;
 
-    //Ext.getCmp('BottomPanel').setTitle(layer.gridTitle,'x-cols-icon');
-    //Ext.get('BottomPanel').setStyle('padding-top', '2px');
+        var filter = '"' + field + '" = \'' + id + '\'';
 
-    relations.onSubmit();
-    //relations.on("featureselectioncleared", clearFeatureSelected);
-    relations.on("beforesearchdataloaded", showSearchPanelResults);
+        var relations = new QGIS.SearchPanel({
+            hasGeom: false,
+            useWmsRequest: true,
+            useBbox: false,
+            wmsFilter: filter,
+            queryLayer: table,
+            gridColumns: getLayerAttributes(table).columns,
+            gridLocation: 'popup',
+            gridEditable: false,
+            gridTitle: table + ': ' + id,
+            gridResults: Eqwc.settings.limitAttributeFeatures,
+            gridResultsPageSize: 20,
+            selectionLayer: layerName,
+            formItems: [],
+            doZoomToExtent: false,
+            maskElement: (cmp && cmp.el) ? cmp.el : null
+        });
+
+        //Ext.getCmp('BottomPanel').setTitle(layer.gridTitle,'x-cols-icon');
+        //Ext.get('BottomPanel').setStyle('padding-top', '2px');
+
+        relations.onSubmit();
+        //relations.on("featureselectioncleared", clearFeatureSelected);
+        relations.on("beforesearchdataloaded", showSearchPanelResults);
+    }
 }
 
 function identifyAction(type, id, extra) {
