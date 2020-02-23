@@ -11,7 +11,7 @@
 #);
 #geom_type: 1=point, 2=line, 3=polygon
 #
-#required paramaters are table, gtype (geom_type) and code, category is for filtering results, sample query
+#required paramaters are table and code, category is for filtering results, sample query
 #http://localhost/wsgi/lookup.wsgi?table=my_lookup_table&gtype=2&code=1
 
 import re #regular expression support
@@ -36,7 +36,6 @@ def application(environ, start_response):
   filt = [];
 
   table = request.params["table"]
-  gtype = request.params["gtype"]
   code = request.params["code"]
   categoryString = ''
   if "category" in request.params:
@@ -58,7 +57,7 @@ def application(environ, start_response):
   #    else:
   #      filt.extend(filterString.split(','))
 
-  sql += "SELECT description FROM " + table + " WHERE geom_type="+gtype+" AND code="+code 
+  sql += "SELECT description FROM " + table + " WHERE code="+code
 
   if categoryString:
     filt.extend(categoryString.split(','))
