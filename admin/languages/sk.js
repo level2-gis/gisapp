@@ -28,6 +28,7 @@ var TR = {
     noPublicAccess: 'Volný pristup pre tento projekt nie je nastavený.',
     clearFilter: 'Zmaz vetky filtre',
     clearSelection: 'Clear selection',
+    select: 'Select element to display its geometry',
     menuFilterText: 'Filtre',
     editData: 'Editovat data',
     editMode: 'Edit mode',

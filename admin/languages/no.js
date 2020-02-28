@@ -28,6 +28,7 @@ var TR = {
     noPublicAccess: 'Offentlig tilgang er ikke tillatt på dette prosjektet.',
     clearFilter: 'Fjern alle filtre',
     clearSelection: 'Fjern filter',
+    select: 'Select element to display its geometry',
     menuFilterText: 'Filter ',
     editData: 'Rediger data',
     editMode: 'Redigeringsmodus',

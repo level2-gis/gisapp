@@ -28,6 +28,7 @@ var TR = {
     noPublicAccess: 'Javni dostop ni omogočen za ta projekt.',
     clearFilter: 'Pobriši vse filtre',
     clearSelection: 'Pobriši izbor',
+    select: 'Izberi element za prikaz geometrije',
     menuFilterText: 'Filtri',
     editData: 'Uredi podatke',
     editMode: 'Urejanje',

@@ -28,6 +28,7 @@ var TR = {
     noPublicAccess: 'Projekt nie jest dostępny w trybie publicznym.',
     clearFilter: 'Wyczyść filtry',
     clearSelection: 'Zlikwiduj zaznaczenie',
+    select: 'Select element to display its geometry',
     menuFilterText: 'Filtry',
     editData: 'Edytuj dane',
     editMode: 'Tryb edycji',

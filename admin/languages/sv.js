@@ -28,6 +28,7 @@ var TR = {
     noPublicAccess: 'Tillgång som gäst är ej tillåtet för detta projekt.',
     clearFilter: 'Rensa alla filter',
     clearSelection: 'Rensa val',
+    select: 'Select element to display its geometry',
     menuFilterText: 'Filter',
     editData: 'Editera data',
     editMode: 'Editeringsläge',

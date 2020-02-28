@@ -28,6 +28,7 @@ var TR = {
     noPublicAccess: 'Public access is not allowed with this project.',
     clearFilter: 'Clear all filters',
     clearSelection: 'Clear selection',
+    select: 'Select element to display its geometry',
     menuFilterText: 'Filters',
     editData: 'Edit data',
     editMode: 'Edit mode',

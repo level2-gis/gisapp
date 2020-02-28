@@ -28,6 +28,7 @@ var TR = {
     noPublicAccess: 'Accesso publico non permesso per questo progetto.',
     clearFilter: 'Cancella tutti i filtri',
     clearSelection: 'Cancella la selezione',
+    select: 'Select element to display its geometry',
     menuFilterText: 'Filtri',
     editData: 'Modifica',
     editMode: 'Modalità modifica',
