@@ -148,27 +148,42 @@ function showFeatureInfo(evt) {
                         this.setHeight(maxHeight);
                     }
 
-                    //create ajax tooltips defined in settings.js for each id in _temp_ids
+                    //create layer abstract and ajax tooltips defined in settings.js for each id in _temp_ids
                     function set(element) {
                         var split = element.split('::');
                         var field = split[0];
                         var value = split[1];
 
-                        new Ext.ToolTip({
-                            target: element,
-                            width: 150,
-                            autoLoad: {
-                                url: this[field].url + value,
-                                scripts: false,
-                                callback: function(el, success, response, object) {
-                                    if(success) {
-                                        if(response.responseText == '') {
-                                            el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                        //workaround to create layer abstract tooltip
+                        if (value == 'abstract' && wmsLoader.layerProperties[field].abstract) {
+
+                            new Ext.ToolTip({
+                                target: element,
+                                anchor: 'left',
+                                html: wmsLoader.layerProperties[field].abstract,
+                                autoHide: false
+                                //closable: true
+                            });
+
+                        } else {
+
+                            new Ext.ToolTip({
+                                target: element,
+                                anchor: 'left',
+                                width: 150,
+                                autoLoad: {
+                                    url: this[field].url + value,
+                                    scripts: false,
+                                    callback: function (el, success, response, object) {
+                                        if (success) {
+                                            if (response.responseText == '') {
+                                                el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
 
                     Ext.iterate(Eqwc._temp_ids, set, Eqwc.settings.fieldTemplates);
@@ -447,7 +462,14 @@ function parseFIResult(node) {
             var countRelations = 0;
             var layerTitle = layer.title;
             if (showFILayerTitle) {
-                htmlText += "<h2>" + layerTitle + "</h2>";
+                htmlText += "<h2>" + layerTitle;
+                if(layer.abstract) {
+                    //htmlText += " <div class='i-more' ext:qtip='"+layer.abstract+"'></div>";
+                    var layerAbEl = layerId+"::abstract";
+                    htmlText += " <div class='i-more' id='"+layerAbEl+"'></div>";
+                    Eqwc._temp_ids.push(layerAbEl);
+                }
+                htmlText += "</h2>";
             }
 
             if(projectData.relations && projectData.relations[layerName]) {
@@ -473,25 +495,25 @@ function parseFIResult(node) {
                     }
 
                     if (addActions) {
-                        var select = '<a class="i-select" href="javascript:;" onclick="identifyAction(\'select\',\'' + fid + '\');"></a>';
-                        var clear = '<a class="i-clear" href="javascript:;" onclick="identifyAction(\'clear\',\'\');"></a>';
+                        var select = '<a class="i-select" ext:qtip="'+TR.select+'" href="javascript:;" onclick="identifyAction(\'select\',\'' + fid + '\');"></a>';
+                        var clear = '<a class="i-clear" ext:qtip="'+TR.clearSelection+'" href="javascript:;" onclick="identifyAction(\'clear\',\'\');"></a>';
                         var edit = '';
                         if (Eqwc.plugins["editing"] !== undefined) {
-                            edit = '<a class="i-edit" href="javascript:;" onclick="identifyAction(\'edit\',\'' + fid + '\');"></a>';
+                            edit = '<a class="i-edit" ext:qtip="'+TR.editData+'" href="javascript:;" onclick="identifyAction(\'edit\',\'' + fid + '\');"></a>';
                         }
                         htmlText += "<tr><td colspan='2'>" + select + edit + clear + "</td></tr>";
                     }
 
                     if (countRelations > 0) {
                         var add = '';
-                        var show =  '<a class="i-table" href="javascript:;" onclick="showRelations(\'' + layerId + '\',\'' + id + '\');"></a>';
+                        var show =  '<a class="i-table" ext:qtip="'+TR.relations+'" href="javascript:;" onclick="showRelations(\'' + layerId + '\',\'' + id + '\');"></a>';
                         if(countRelations == 1 && Eqwc.plugins["editing"] !== undefined) {
                             var table = projectData.relations[layerName][0].relate_layer;
                             var tableId = Eqwc.common.getLayerId(table);
                             var field = projectData.relations[layerName][0].join_field;
                             var rid = table+"."+id;
                             if(projectData.layers[tableId].wfs) {
-                                add = '<a class="i-add" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
+                                add = '<a class="i-add" ext:qtip="'+TR.tableAddRecord+'" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
                             }
                         }
                         if (show > '' || add > '') {
@@ -541,7 +563,7 @@ function parseFIResult(node) {
                                             attValue = newArr.join('</br>');
                                         }
                                     } else {
-                                        if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase) && Eqwc.settings.fieldTemplates[attNameCase].template) {
+                                        if(attValue>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase) && Eqwc.settings.fieldTemplates[attNameCase].template) {
                                             //if we have URL need to store target element ids into array and later create tooltips
                                             var target_el = attNameCase+'::'+attValue+'::'+id;
                                             if(Eqwc.settings.fieldTemplates[attNameCase].url && Eqwc._temp_ids.indexOf(target_el)==-1) {

@@ -51,7 +51,22 @@
     padding-top: 16px;
     overflow: hidden;
     background: url(../libs/ext/resources/images/default/dd/drop-add.gif);
+}
 
+.i-more {
+    display: inline-block;
+    padding: 1px 2px 1px 2px;
+    margin-top: -2px;
+    border:1px dotted #99bbe8;
+    color: #15428b;
+    cursor:default;
+    font:normal 11px tahoma,arial,sans-serif;
+}
+
+.i-more:before{
+    content:'?';
+    font-weight: bold;
+    color:#15428b;
 }
 
 .i-table {
