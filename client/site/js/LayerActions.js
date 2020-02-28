@@ -742,7 +742,7 @@ function getLayerAttributes(layer) {
         var fieldType = attribute.type;
         var editType = attribute.editType;
 
-        //boolean is type QString, to correct this we look at editType
+        //boolean is type QString, to correct this we look at editType (old QGIS)
         if (editType == 'CheckBox') {
             fieldType='boolean';
         }
@@ -810,7 +810,7 @@ function getLayerAttributes(layer) {
             ret.columns[i].format = 'Y-m-d H:i:s';
         }
 
-        if(fieldType=='boolean') {
+        if(fieldType.indexOf('bool')>-1) {
             ret.columns[i].xtype = 'booleancolumn';
             ret.columns[i].falseText = '-';
             ret.columns[i].trueText = Ext.MessageBox.buttonText.yes;
