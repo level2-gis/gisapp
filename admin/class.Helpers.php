@@ -595,6 +595,22 @@ class Helpers
         return $ret;
     }
 
+    public function isValidUserProj($project)
+    {
+        $valid = isset($_SESSION['user_is_logged_in']);
+        $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;
+
+        if (($valid === true) && ($project === $sess)) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+     * Obsolete, not in use!
+     * @param $project
+     * @return bool
+     */
     public function checkReferer($project) {
         //disabling referer check due to some issues
         //should take also port number

@@ -216,7 +216,7 @@ if( $detect->isMobile() && !$detect->isTablet() ){
 
 $login_check = new Login();
 
-if ($login_check->isValidUserProj($helpers->getMapFromUrl())) {
+if ($login_check->setUserProj($helpers->getMapFromUrl())) {
 
     $edit = $helpers->checkModulexist("editing") && $helpers->hasPluginAccess("editing");
     $scanner = FALSE;

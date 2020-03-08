@@ -179,7 +179,7 @@ class Login
         return true;
     }
 
-    public function isValidUserProj($project)
+    public function setUserProj($project)
     {
         $valid = isset($_SESSION['user_is_logged_in']);
         $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;

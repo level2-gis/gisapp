@@ -646,15 +646,7 @@ function postLoading() {
         //    console.log('loadend '+selectedQueryableLayers.length);
         //});
         thematicLayer.events.register('tileerror', this, function () {
-            //loadMask.hide();
-            Ext.Msg.show({
-                title: 'Error!',
-                msg: "Map loading error",
-                //width: 300,
-                buttons: Ext.MessageBox.OK,
-                //multiline: true,
-                fn: home
-            });
+            Eqwc.common.redirect();
         });
 
         //set crs values
@@ -2847,17 +2839,12 @@ function exceptionLoading(res) {
         //width: 300,
         buttons: Ext.MessageBox.OK,
         //multiline: true,
-        fn: logout
+        fn: Eqwc.common.redirect
     });
 }
 
 function logout() {
     window.location.href = "./admin/login.php?action=logout";
-}
-
-function home() {
-    //don't redirect, do what?
-    //Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href="/";
 }
 
 function getExternalWMSDefinition(layer) {

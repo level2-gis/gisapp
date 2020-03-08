@@ -249,8 +249,7 @@ try {
     }
 
     //check user session and permissions
-    $login_check =new GisApp\Login();
-    if (!($login_check->isValidUserProj($map))) {
+    if (!(Helpers::isValidUserProj($map))) {
         throw new Exception("Session time out or unathorized access!");
     }
 

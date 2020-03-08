@@ -770,17 +770,15 @@ Gui.selectLayer = function(layer) {
 
 // show feature info results
 Gui.showFeatureInfoResults = function(status, data) {
-    if(status != 'success') {
-        Map.toggleClickMarker(true);
-        alert(data);
-        return;
-    }
 
-    if (Config.featureInfo.format === 'text/xml') {
-        Gui.showXMLFeatureInfoResults(data);
-    }
-    else {
-        $('#featureInfoResults').html(data.join(''));
+    if(status == 'success') {
+        if (Config.featureInfo.format === 'text/xml') {
+            Gui.showXMLFeatureInfoResults(data);
+        } else {
+            $('#featureInfoResults').html(data.join(''));
+        }
+    } else {
+        $('#featureInfoResults').html("<span style='color:red'>"+data+"</span>");
     }
 
     $('#panelFeatureInfo').panel('open');

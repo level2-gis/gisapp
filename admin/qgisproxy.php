@@ -277,22 +277,19 @@ try {
         $map = explode(".", $query_arr["map"])[0];
     }
 
-    //if (!(Helpers::isValidUserProj($map))) {
-    //    throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
-    //}
-
     $helpers = new Helpers();
 
-    if(!($helpers->checkReferer($map))) {
-        throw new Exception\ClientException("Invalid referer!", new Request('GET', QGISSERVERURL));
+    //session check
+    session_start();
+
+    if (!($helpers->isValidUserProj($map))) {
+        throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
     }
 
     //get project path from cache
     $sep = "_x_";
     $projectPath = $helpers->readFromCache($map . $sep . "PROJECT_PATH");
 
-    //session check
-    session_start();
     $user = null;
     if (isset($_SESSION["user_name"])) {
         $user = $_SESSION["user_name"];

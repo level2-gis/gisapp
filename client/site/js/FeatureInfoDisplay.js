@@ -88,8 +88,13 @@ function showFeatureInfo(evt) {
         //temp array for storing target element ids for tooltips, recreate on each featureinfocall
         Eqwc._temp_ids = [];
 
-        parseFIResult(xmlDoc);
-        featureInfoResultLayers.reverse();
+        if(evt.request.status == 200) {
+            parseFIResult(xmlDoc);
+            featureInfoResultLayers.reverse();
+        } else {
+            text += "<b><span style='color:red'>" + evt.text + "</span></b>";
+        }
+
         //highLightGeometry.reverse();
 
         //    if (hoverPopup) {
@@ -111,14 +116,14 @@ function showFeatureInfo(evt) {
                     //featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
                 }
             }
-
-            popupItems.push({
-                id: "fi_qgis",
-                xtype: 'box',
-                //margins: '3 0 3 3',
-                html: text
-            });
         }
+
+        popupItems.push({
+            id: "fi_qgis",
+            xtype: 'box',
+            //margins: '3 0 3 3',
+            html: text
+        });
 
         //new way GeoExt Popup
         clickPopup = new GeoExt.Popup({

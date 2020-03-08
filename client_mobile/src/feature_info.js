@@ -134,7 +134,7 @@ FeatureInfo.prototype.handleEvent = function (e) {
         Map.toggleClickHandling(true);
     })
         .fail(function (xhr, status, error) {
-            //todo what with error here
+            this.resultsCallback(status,xhr.responseText);
             Map.toggleClickHandling(true);
         });
 };

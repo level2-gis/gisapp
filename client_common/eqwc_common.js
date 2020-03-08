@@ -211,6 +211,10 @@ Eqwc.common.reverseArray = function(arr) {
     return newArray;
 };
 
+Eqwc.common.redirect = function() {
+    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href = "/";
+};
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
