@@ -2843,10 +2843,6 @@ function exceptionLoading(res) {
     });
 }
 
-function logout() {
-    window.location.href = "./admin/login.php?action=logout";
-}
-
 function getExternalWMSDefinition(layer) {
 
     var layerName = layer.id;

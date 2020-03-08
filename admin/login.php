@@ -25,6 +25,12 @@ if (isset($_SESSION['project'])) {
 
 //check action parameter
 $action = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
+$map = filter_input(INPUT_GET, "map", FILTER_SANITIZE_STRING);
+
+if(empty($pp) && !empty($map)) {
+    $pp = $map;
+}
+
 if ($action != null) {
     if ($action == "logout") {
         //logout

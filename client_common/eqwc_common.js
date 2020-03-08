@@ -212,7 +212,7 @@ Eqwc.common.reverseArray = function(arr) {
 };
 
 Eqwc.common.redirect = function() {
-    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href = "/";
+    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href = "./admin/login.php?action=logout&map="+projectData.project;
 };
 
 String.prototype.replaceAll = function(search, replacement) {

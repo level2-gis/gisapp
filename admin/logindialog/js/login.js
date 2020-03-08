@@ -122,6 +122,9 @@ Ext.onReady(function () {
 
             loginDialog.show();
 
+            //example of adding message to login
+            //var msg = 'test';
+            //loginDialog.setMessage(loginDialog.message + '<br /><span class="error">' + msg + '</span>');
         }
 
     }
