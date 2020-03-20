@@ -172,6 +172,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             break;
         case 'GeoJSON':
             $format_name = $destinationFormat;
+            $options .= "-lco WRITE_NAME=NO ";
             $makeZip = false;
             $fileExt = 'geojson';
             break;
