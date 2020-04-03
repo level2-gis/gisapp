@@ -642,9 +642,18 @@ function postLoading() {
     if (!initialLoadDone) {
 
         //listeners for thematicLayer
-        //thematicLayer.events.register('loadend', this, function () {
-        //    console.log('loadend '+selectedQueryableLayers.length);
-        //});
+        thematicLayer.events.register('loadend', this, function () {
+            if (!initialLoadDone) {
+                //show that we are done with initializing the map
+                //mainStatusText.setText(modeNavigationString[lang]);
+                if (loadMask) {
+                    loadMask.hide();
+                }
+                initialLoadDone = true;
+                // run the function in the Customizations.js
+                customAfterMapInit();
+            }
+        });
         thematicLayer.events.register('tileerror', this, function () {
             Eqwc.common.redirect();
         });
@@ -1603,18 +1612,8 @@ function postLoading() {
     //add listeners to selection model
     selModel.addListener("selectionChange", layerTreeSelectionChangeHandlerFunction);
 
-    //show that we are done with initializing the map
-    //mainStatusText.setText(modeNavigationString[lang]);
-    if (loadMask) {
-        loadMask.hide();
-    }
-    initialLoadDone = true;
-
     //draw layers outside scale gray
     setGrayNameWhenOutsideScale();
-
-    // run the function in the Customizations.js
-    customAfterMapInit();
 }
 
 /*
