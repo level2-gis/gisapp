@@ -901,15 +901,17 @@ function postLoading() {
     //overview map
     if (!initialLoadDone && overviewLayer != null) {
         OverviewMapOptions.maxExtent = maxExtent;
-        geoExtMap.map.addControl(new OpenLayers.Control.OverviewMap({
+        var olMap = new OpenLayers.Control.OverviewMap({
             size: OverviewMapSize,
             minRatio: 16,
             maxRatio: 64,
             mapOptions: OverviewMapOptions,
             maximized: OverviewMapMaximized,
             layers: [overviewLayer]
-        }));
-
+        });
+        geoExtMap.map.addControl(olMap);
+        olMap.maximizeDiv.innerHTML = "<a href='#'><<</a>";
+        olMap.minimizeDiv.innerHTML = "<a href='#'>>></a>";
     }
     else {
         //todo: find out how to change the max extent in the OverviewMap

@@ -248,6 +248,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
                 <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20200228"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css"/>
                 <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20191222"/>
+                <link rel="stylesheet" type="text/css" href="client/site/css/style.css?v=20200404"/>
 
                 <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v='.$editVer.'"/>';
@@ -278,52 +279,9 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
 
                 <script type="text/javascript" src="client/eqwc_load.php"></script>
 
-
 <!--                DEBUG remove editor.js before-->
 <!--                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>-->
 
-                <style type="text/css">
-                    #dpiDetection {
-                        height: 1in;
-                        left: -100%;
-                        position: absolute;
-                        top: -100%;
-                        width: 1in;
-                    }
-
-                    #panel_header_title {
-                        float: left;
-                        font-size: 20px;
-                    }
-
-                    #panel_header_link {
-                        float: left;
-                    }
-
-                    #panel_header_terms_of_use {
-                        float: right;
-                        font-weight: normal;
-                    }
-
-                    #panel_header_user {
-                        float: right;
-                        font-weight: bold;
-                    }
-
-                    .olTileImage.olImageLoadError {
-                        display: none !important;
-                    }
-
-                    div.olMap {
-                        z-index: 0;
-                        padding: 0 !important;
-                        margin: 0 !important;
-                        cursor: default;
-                        -ms-touch-action: none;
-                        touch-action: none;
-                    }
-
-                </style>
             </head>
             <body>
             <!-- this empty div is used for dpi-detection - do not remove it -->
