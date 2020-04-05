@@ -1179,7 +1179,13 @@ function postLoading() {
         if (searchPanelConfigs != null && searchPanelConfigs.length > 0) {
             // add QGIS search panels
             var searchTabPanel = Ext.getCmp('SearchTabPanel');
-            for (var i = 0; i < searchPanelConfigs.length; i++) {
+            for (var j = 0; j < searchPanelConfigs.length; j++) {
+                //set pointer cursor for first column
+                searchPanelConfigs[j].gridColumns[0].renderer = function (val, metadata, record) {
+                    metadata.style = 'cursor: pointer;';
+                    return val;
+                };
+
                 var panel = new QGIS.SearchPanel(searchPanelConfigs[i]);
                 panel.gridLocation = 'default';
                 panel.gridTitle = searchResultString[lang];

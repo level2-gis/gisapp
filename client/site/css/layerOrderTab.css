@@ -29,9 +29,9 @@
   background-position: 0 -30px;
 }
 
-.x-grid3-row tr {
-  cursor: move;
-}
+/*.x-grid3-row tr {*/
+/*  cursor: move;*/
+/*}*/
 .opacity-slider {
   cursor: default !important;
 }
