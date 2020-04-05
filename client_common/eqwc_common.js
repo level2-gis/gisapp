@@ -35,6 +35,9 @@ Eqwc.common.createHyperlink = function(att, val, pattern) {
             //do not reformat already formated tags
             att = "<a class=\"link\" href=\"" + att + "\" target=\"_blank\">" + val + "</a>";
         }
+    } else if(val.length>10 && typeof Ext != 'undefined') {
+        //create tooltip for longer texts
+        att = "<div class='x-grid3-cell-inner' ext:qtip='" + val + "'>" + val + "</div>";
     }
     // add hyperlinks for URLs containing mediaurl pattern
     if (pattern > '') {
