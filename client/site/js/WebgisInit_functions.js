@@ -1186,7 +1186,7 @@ function postLoading() {
                     return val;
                 };
 
-                var panel = new QGIS.SearchPanel(searchPanelConfigs[i]);
+                var panel = new QGIS.SearchPanel(searchPanelConfigs[j]);
                 panel.gridLocation = 'default';
                 panel.gridTitle = searchResultString[lang];
                 panel.gridResults = Eqwc.settings.limitSearchMaxResults ? Eqwc.settings.limitSearchMaxResults: 10;
@@ -1638,6 +1638,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
         // These option are for different output modes
         var collapsible = true;
         var autoHeight = true;
+        var horFit = false;      //forceFit (no horizontal scroller)
         var searchPanelId = '';
         switch (searchPanelInstance.gridLocation) {
             case 'right':
@@ -1686,6 +1687,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 break;
             default:
                 collapsible = false;
+                horFit = true;
                 searchPanelId = 'SearchPanelResultsGrid';
                 targetComponent = searchPanelInstance;
                 break;
@@ -1713,12 +1715,6 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 }
             });
 
-        }
-
-        //assumption that if we have less than 5 columns in grid we want forceFit (no horizontal scroller)
-        var horFit = false;
-        if (searchPanelInstance.gridColumns.length<5){
-            horFit = true;
         }
 
         if (!searchPanelInstance.resultsGrid) {
