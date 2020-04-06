@@ -37,7 +37,7 @@ Eqwc.common.createHyperlink = function(att, val, pattern) {
         }
     } else if(val.length>10 && typeof Ext != 'undefined') {
         //create tooltip for longer texts
-        att = "<div class='x-grid3-cell-inner' ext:qtip='" + val + "'>" + val + "</div>";
+        att = "<div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' ext:qtip='" + val + "'>" + val + "</div>";
     }
     // add hyperlinks for URLs containing mediaurl pattern
     if (pattern > '') {
