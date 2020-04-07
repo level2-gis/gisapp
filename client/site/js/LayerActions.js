@@ -71,8 +71,11 @@ function buildLayerContextMenu(node) {
     if(hasGeom) {
         for (var s = 0; s < layer.styles.length; s++) {
             var style = layer.styles[s];
-            //don't rename default style
-            var checked = style.name == 'default'; //layer.currentStyle == style.name;
+            //don't rename default style if there is more than one style
+            var checked = false;
+            if(layer.styles.length == 1 || style.name == 'default') {
+                checked = true;
+            }
             styleItems.push({
                 xtype: 'radio',
                 name: layer.name + '_style',

@@ -2907,7 +2907,11 @@ function layerStyles(layerIds) {
         if(layer && layer.currentStyle > '') {
             styles.push(layer.currentStyle);
         } else {
-            styles.push('default');
+            if(layer.styles.length==1) {
+                styles.push(layer.styles[0].name);
+            } else {
+                styles.push('default');
+            }
         }
     }
     return styles;
