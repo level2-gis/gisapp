@@ -435,16 +435,22 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             }
 
             var layers = [];
+            var styles = [];
             if(thematicLayer.params.LAYERS > '') {
                 layers = layers.concat(thematicLayer.params.LAYERS.split(','));
+            }
+            if(thematicLayer.params.STYLES > '') {
+                styles = styles.concat(thematicLayer.params.STYLES.split(','));
             }
             var extra = getVisibleExtraLayersForPrint();
             var extraDefinition = '';
             var baseDefinition = '';
             if(extra.length>0) {
                 var extraNames = extra.map(function(item){return item.name;});
+                var extraStyles = extra.map(function(item){return item.definition[item.name+':styles'];});
                 extraDefinition = extra.map(function(item){return item.definition;});
                 layers.unshift(extraNames.reverse().join(','));
+                styles.unshift(extraStyles.reverse().join(','));
             }
 
             //add currently visible base layer for printing if exists in projects
@@ -458,6 +464,7 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                     var baseWms = getExternalWMSDefinition(printBaseLayerOl2);
                     if(baseWms) {
                         layers.unshift(baseWms.name);
+                        styles.unshift(baseWms.definition[baseWms.name+':styles']);
                         baseDefinition = baseWms.definition;
                     }
                 }
@@ -478,7 +485,8 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                     'map0:rotation': (printExtent.page.rotation * -1),
                     'map0:grid_interval_x': grid_interval,
                     'map0:grid_interval_y': grid_interval,
-                    'LAYERS': layers.join(',')
+                    'LAYERS': layers.join(','),
+                    'STYLES': styles.join(',')
                 });
 
             if(this.customParams.filterToAdd) {
