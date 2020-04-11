@@ -61,6 +61,8 @@ var TR = {
     exportExtent: 'Extent',
     exportLayerExtent: 'Use layer extent',
     exportUseMapCrs: "Use map CRS",
+    exportFilter: "Filter",
+    exportUseTableFilter: "Use attribute filter set on table",
     tableUseExtent: "Only show features in map extent",
     tableAddRecord: "Add new record",
     style: "Style",

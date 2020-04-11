@@ -64,6 +64,8 @@ var TR = {
     exportExtent: 'Extent',
     exportLayerExtent: 'Use layer extent',
     exportUseMapCrs: "Bruk kart CRS",
+    exportFilter: "Filter",
+    exportUseTableFilter: "Use attribute filter set on table",
     tableUseExtent: "Bruk gjeldende kartutsnitt",
     tableAddRecord: "Add new record",
     style: "Style",

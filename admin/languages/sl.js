@@ -64,6 +64,8 @@ var TR = {
     exportExtent: 'Območje',
     exportLayerExtent: 'Uporabi območje sloja',
     exportUseMapCrs: "Uporabi projektni koord. sistem",
+    exportFilter: "Filter",
+    exportUseTableFilter: "Uporabi filter tabele",
     tableUseExtent: "Prikaži samo elemente znotraj trenutnega prikaza",
     tableAddRecord: "Dodaj nov zapis",
     style: "Stil",
