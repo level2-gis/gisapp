@@ -1823,6 +1823,9 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             } else {
                                 thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
                             }
+
+                            //store filter
+                            wmsLoader.layerProperties[layerId].currentFilter = wmsFilter.join(" AND ");
                         }
                     }
                 }

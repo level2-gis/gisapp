@@ -98,12 +98,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
 
     $srid = substr(strrchr($query_arr['SRS'], ':'), 1);
     $options = " ";
-
-    //sql filter from qgis project layer properties
-    if ($sql>'') {
-        $options = " -where \"".$sql."\" ";
-    }
-
+    $filter = html_entity_decode($query_arr['filter'], ENT_QUOTES);
     $options .= "-preserve_fid ";
 
     //export only selection inside bounding box if provided
@@ -120,16 +115,38 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
 
     //field set
     if ($query_arr['fields']!='') {
-        //primary key if exists must be removed form fields, otherwise we get ogr2ogr error
+        //primary key if exists must be removed from fields, otherwise we get ogr2ogr error
         $key = null;
         if ($sourceProvider=='postgres') {
             $key = str_replace("'",'',$lay_info["message"]['key']);
         }
         $fields = array_diff(explode(',',$query_arr['fields']),[$key]);
         $options .= '-select "' . implode(',',$fields) . '" ';
+
+        //sql filter from qgis project layer properties combine with table filter from request
+        if ($sql>'') {
+            $options = " -where \"".$sql."\" ";
+        } elseif ($filter!='') {
+            $options = " -where \"".$filter."\" ";
+        }
+
     } else {
+        //we cannot mix where and sql parameters, so where must pa part of sql
         if(!empty($table)) {
-            $options .= '-sql "SELECT * FROM ' . $table . '" ';
+            $options .= '-sql "SELECT * FROM ' . $table;
+
+            if ($sql>'') {
+                $options .= ' WHERE '. $sql;
+                if ($filter!='') {
+                    $options .= ' AND '. $filter .  '" ';
+                } else {
+                    $options .= '" ';
+                }
+            } elseif ($filter!='') {
+                $options .= ' WHERE '. $filter .  '" ';
+            } else {
+                $options .= '" ';
+            }
         }
     }
 

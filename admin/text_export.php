@@ -52,6 +52,8 @@ function sendText($type, $layer_name, $project_path, $query, $format)
 
     //get layer filter
     $lay_filt = $lay_info["message"]['sql'];
+    //user table filter
+    $filter = html_entity_decode($query['filter'], ENT_QUOTES);
 
     $lay_srid = substr(strrchr($lay_info["message"]['crs'], ':'), 1);
     $type = $lay_info["message"]['type'];
@@ -100,9 +102,19 @@ function sendText($type, $layer_name, $project_path, $query, $format)
             if($lay_filt>'') {
                 $sql.=" AND ".$lay_filt;
             }
+            if($filter>'') {
+                $sql .= " AND ". $filter;
+            }
         } else {
             if($lay_filt>'') {
                 $sql.=" WHERE ".$lay_filt;
+                if($filter>'') {
+                    $sql .= " AND ". $filter;
+                }
+            } else {
+                if($filter>'') {
+                    $sql .= " WHERE ". $filter;
+                }
             }
         }
     } else if(strpos($type,'LineString')>-1) {
@@ -122,6 +134,9 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         if($lay_filt>'') {
             $sql.=" AND ".$lay_filt;
         }
+        if($filter>'') {
+            $sql .= " AND ". $filter;
+        }
         $sql.= " ORDER by l.id,index;";
 
     }  else if(strpos($type,'Polygon')>-1) {
@@ -140,6 +155,9 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         }
         if($lay_filt>'') {
             $sql.=" AND ".$lay_filt;
+        }
+        if($filter>'') {
+            $sql .= " AND ". $filter;
         }
         $sql.= " ORDER by l.id,index;";
     } else {
@@ -215,28 +233,7 @@ try {
     $map = $query_arr["map"];
     $format = $query_arr["format"];
 
-    $ctype = "application/zip";
-
-    //TODO FIX this
-    if ($format == 'CSV') {
-        $ctype = "text/csv";
-    }
-
-    if ($format == 'KOF') {
-        $ctype = "text/csv";
-    }
-
-    if ($format == 'XYZ') {
-        $ctype = "text/csv";
-    }
-
-    if ($format == 'TSV') {
-        $ctype = "text/tab-separated-values";
-    }
-
-    if ($format == 'XLSX') {
-        $ctype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    }
+    $ctype = "text/csv";
 
     //check if user is guest
     session_start();

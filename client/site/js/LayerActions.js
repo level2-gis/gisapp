@@ -224,6 +224,8 @@ function exportWindowHandler(btn) {
         var myLayerName = fieldValues.layer;
         var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
         var myFormat = fieldValues.format;
+        var useFilter = fieldValues.filter;
+        var filter = '';
 
         if(myFormat == 'KOF') {
             var layer = projectData.layers[layerId];
@@ -235,7 +237,11 @@ function exportWindowHandler(btn) {
             myLayerName = Eqwc.common.getIdentifyLayerName(layerId);
         }
 
-        exportData(myLayerName, myFormat, exportExtent, fieldValues.crs);
+        if(useFilter) {
+            filter = wmsLoader.layerProperties[layerId].currentFilter;
+        }
+
+        exportData(myLayerName, myFormat, exportExtent, fieldValues.crs, filter);
 
         win.close();
         win.destroy();
@@ -244,9 +250,13 @@ function exportWindowHandler(btn) {
 
 function exportTableHandler(item) {
     var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
+    var layerId = item.parentMenu.itemId;
     var hasGeom = false;
 
     var exportWin = getExportWin(myLayerName, hasGeom);
+    //set filter
+    var hasFilter = wmsLoader.layerProperties[layerId].currentFilter > '' ? true : false;
+    exportWin.find('name','filter')[0].setDisabled(!hasFilter);
     exportWin.show();
 }
 
@@ -288,10 +298,14 @@ function styleHandler(item) {
 
 function exportHandler(item) {
     var myLayerName = layerTree.getSelectionModel().getSelectedNode().text;
+    var layerId = item.parentMenu.itemId;
     var hasGeom = true;
     //var myFormat = item.container.menuItemId;
 
     var exportWin = getExportWin(myLayerName, hasGeom);
+    //set filter
+    var hasFilter = wmsLoader.layerProperties[layerId].currentFilter > '' ? true : false;
+    exportWin.find('name','filter')[0].setDisabled(!hasFilter);
     exportWin.show();
     //var exportExtent = item.ownerCt.getComponent('currentExtent') ? item.ownerCt.getComponent('currentExtent').checked : false;
     //var useMapCrs = item.ownerCt.getComponent('useMapCRS');
@@ -330,6 +344,14 @@ function getExportWin(layer, geom) {
     formatCombo.store.on("load", function () {
         formatCombo.setValue(this.data.itemAt(0).data.code);
     });
+
+    var filter = {
+        xtype: 'checkbox',
+        fieldLabel: TR.exportFilter,
+        boxLabel: TR.exportUseTableFilter,
+        name: 'filter',
+        checked: false
+    };
 
     if (geom) {
         var crsCombo = formatCombo.cloneConfig({fieldLabel: TR.exportCrs, name: 'crs'});
@@ -370,7 +392,8 @@ function getExportWin(layer, geom) {
                     inputValue: 'layer',
                     name: 'extent'
                 }]
-            }
+            },
+            filter
         ];
     } else {
         formatCombo.store.loadData(Eqwc.settings.tableExportFormats);
@@ -383,7 +406,8 @@ function getExportWin(layer, geom) {
                 value: layer,
                 inputValue: layer
             },
-            formatCombo
+            formatCombo,
+            filter
         ];
     }
 
@@ -506,7 +530,7 @@ function showRecordSelected(args) {
         }
 }
 
-function exportData(layername,format, useBbox, crs) {
+function exportData(layername,format, useBbox, crs, filter) {
 
     function joinObj(obj, attr) {
         var out = [];
@@ -561,8 +585,9 @@ function exportData(layername,format, useBbox, crs) {
             layer: layername,
             fields: layerFields.join(','),
             z: zField,
-            format: format
-        })
+            format: format,
+            filter: filter
+        });
 
     } else {
 
@@ -573,7 +598,8 @@ function exportData(layername,format, useBbox, crs) {
             layer_extent: layCrsBbox,
             layer: layername,
             fields: layerFields,
-            format: format
+            format: format,
+            filter: filter
         });
     }
 
@@ -715,15 +741,15 @@ function addRecord() {
 
 }
 
-function applyWMSFilter(item) {
-    var idx = item.itemId.split('_')[1]-1;
-    var node = layerTree.getSelectionModel().getSelectedNode();
-    var filter = node.filter[idx].value;
-
-    thematicLayer.params["FILTER"] = node.text+":"+filter;
-    thematicLayer.redraw();
-
-}
+// function applyWMSFilter(item) {
+//     var idx = item.itemId.split('_')[1]-1;
+//     var node = layerTree.getSelectionModel().getSelectedNode();
+//     var filter = node.filter[idx].value;
+//
+//     thematicLayer.params["FILTER"] = node.text+":"+filter;
+//     thematicLayer.redraw();
+//
+// }
 
 /**
  *
