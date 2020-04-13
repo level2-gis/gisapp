@@ -550,7 +550,7 @@ Map.featureInfoLayers = function () {
     var currentRes = Map.map.getView().getResolution();
     for (var key in Map.layers) {
         var layer = Map.layers[key];
-        if (layer.visible) {
+        if (layer.visible && layer.identify) {
             var visible = true;
 
             // check if layer is in scale range

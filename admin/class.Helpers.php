@@ -297,6 +297,7 @@ class Helpers
                             $lay->crs = (string)$lay_info["message"]["crs"];
                             $lay->sql = (string)$lay_info["message"]["sql"];
                             $lay->key = (string)$lay_info["message"]["key"];
+                            $lay->identify = (int)$lay_info["message"]["identify"];
                         }
                     }
 
@@ -394,7 +395,8 @@ class Helpers
             'geom_column' => '',
             'crs' => (string)$layer->srs->spatialrefsys->authid,
             'sql' => '',
-            'key' => ''
+            'key' => '',
+            'identify' =>$layer->flags->Identifiable
         );
 
         //only for postgres and spatialite layers

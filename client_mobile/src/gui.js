@@ -305,7 +305,8 @@ Gui.loadLayers = function (data) {
                     minscale: layer.minscale,
                     maxscale: layer.maxscale,
                     hidden_attributes: layer.hidden_attributes,
-                    hidden_values: layer.hidden_values
+                    hidden_values: layer.hidden_values,
+                    identify: !!layer.identify
                 });
             }
         }
@@ -402,7 +403,8 @@ Gui.loadLayers = function (data) {
             maxscale: layer.maxscale,
             hidden_attributes: layer.hidden_attributes,
             hidden_values: layer.hidden_values,
-            transparency: 0
+            transparency: 0,
+            identify: layer.identify
         };
     }
 
