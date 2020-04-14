@@ -51,7 +51,7 @@ function sendText($type, $layer_name, $project_path, $query, $format)
     }
 
     //get layer filter
-    $lay_filt = $lay_info["message"]['sql'];
+    $lay_filt = "(".$lay_info["message"]['sql'].")";
     //user table filter
     $filter = html_entity_decode($query['filter'], ENT_QUOTES);
 

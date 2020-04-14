@@ -133,10 +133,10 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     } else {
         //we cannot mix where and sql parameters, so where must pa part of sql
         if(!empty($table)) {
-            $options .= '-sql "SELECT * FROM ' . $table;
+            $options .= '-sql "SELECT * FROM ' . str_replace('"','\"',$table);
 
             if ($sql>'') {
-                $options .= ' WHERE '. $sql;
+                $options .= ' WHERE ('. $sql . ')';
                 if ($filter!='') {
                     $options .= ' AND '. $filter .  '" ';
                 } else {
