@@ -10,7 +10,7 @@ var Eqwc = {
     plugins:    {}
 };
 
-Eqwc.settings.qgisVersion = "2.18";
+Eqwc.settings.qgisVersion = "3.4";
 Eqwc.settings.title = "projectData.title+' '+projectData.client_display_name";
 Eqwc.settings.limitAttributeFeatures = 2000;
 Eqwc.settings.syncAttributeTableWithView = false;
