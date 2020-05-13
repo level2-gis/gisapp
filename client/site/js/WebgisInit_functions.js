@@ -1796,10 +1796,11 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             var layerId = wmsLoader.layerTitleNameMapping[sourceLayer];
                             var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
                             Ext.each(filt, function (f) {
+                                var sep = '';
+                                var valStr = "'"+f.data.value+"'";
                                 if (f.data.type == 'string') {
                                     wmsFilter.push("\"" + f.field + "\" ILIKE \'%" + f.data.value + "%\'");
-                                } else if (f.data.type == 'numeric') {
-                                    var sep = '';
+                                } else if (f.data.type == 'numeric' || f.data.type == 'date') {
                                     switch (f.data.comparison) {
                                         case 'gt':
                                             sep = '>';
@@ -1811,7 +1812,13 @@ function showSearchPanelResults(searchPanelInstance, features) {
                                             sep = '=';
                                             break;
                                     }
-                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + f.data.value);
+                                    if(f.data.type=='numeric') {
+                                        valStr = f.data.value;
+                                    }
+                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
+                                } else {
+                                    sep = '=';
+                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
                                 }
                             });
 
