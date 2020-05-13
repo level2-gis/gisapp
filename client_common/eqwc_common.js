@@ -25,6 +25,10 @@ if(projectData.defaultCoordinatesCrsCode === null && Eqwc.settings.defaultCoordi
 Eqwc.common = {};
 
 Eqwc.common.createHyperlink = function(att, val, pattern) {
+    if(att == null || att == '') {
+        return att;
+    }
+
     if (val == null) {
         val = att;
     }
