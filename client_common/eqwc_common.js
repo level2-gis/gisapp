@@ -34,11 +34,14 @@ Eqwc.common.createHyperlink = function(att, val, pattern) {
     }
 
     // add hyperlinks for URLs in attribute values
-    if (att != '' && /^((http|https|ftp):\/\/).+\..+/i.test(att)) {
+    if (/^((http|https|ftp):\/\/)./i.test(att)) {
         if (!/\<a./i.test(att)) {
             //do not reformat already formated tags
             att = "<a class=\"link\" href=\"" + att + "\" target=\"_blank\">" + val + "</a>";
         }
+    } else if(val.indexOf('href=')>-1 && val.indexOf(' target=')==-1) {
+        //add target blank if contains href and not target
+        att = val.replaceAll('<a ', '<a target="_blank"');
     } else if(val.length>10 && typeof Ext != 'undefined') {
         //create tooltip for longer texts
         att = "<div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' ext:qtip='" + val + "'>" + val + "</div>";
