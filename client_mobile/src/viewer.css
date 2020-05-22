@@ -1,3 +1,8 @@
+/*prevent pull to reload effect on every panel*/
+body {
+    overscroll-behavior: none;
+}
+
 /* icons */
 
 .ui-icon-logo {
