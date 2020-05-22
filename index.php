@@ -73,6 +73,7 @@ function goMobile($lang, $scanner) {
                 <a href="#" id="btnInfo" data-role="button" data-icon="loc_info" data-iconpos="notext"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
                 <a href="#" style="display:none" id="btnRemove" data-role="button" data-icon="remove" data-iconpos="notext" data-rel="dialog"></a>
+                <a href="#" style="display:none" id="btnRecord" data-role="button" data-icon="goto_stop" data-iconpos="notext" data-rel="dialog"></a>
                 <a href="#" style="display:none" id="btnEnd" data-role="button" data-icon="save" data-iconpos="notext" data-rel="dialog"></a>
                 <a href="#" style="display:none" id="btnGotoPage" data-role="button" data-icon="goto_more" data-iconpos="notext" data-rel="dialog" data-theme="e"></a>
                 <a href="#" style="display:none" id="btnGotoStop" data-role="button" data-icon="goto_stop" data-iconpos="notext" data-rel="dialog" data-theme="e"></a>

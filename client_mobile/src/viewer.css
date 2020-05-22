@@ -82,6 +82,11 @@ body {
     bottom: 120px;
 }
 
+#btnRecord {
+    right: 70px;
+    bottom: 120px;
+}
+
 #btnEnd {
     right: 130px;
     bottom: 120px;
@@ -380,9 +385,12 @@ body {
   border-radius: 9px;
 }
 
-.ui-btn-inline {
-    margin-left: 8px;
-    margin-right: 8px;
+.ui-btn-left {
+   left: -10px;
+}
+
+.ui-btn-right {
+    right: -10px;
 }
 
 .ui-footer-fixed {
