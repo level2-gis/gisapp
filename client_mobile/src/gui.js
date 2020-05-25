@@ -1291,6 +1291,7 @@ Gui.initViewer = function() {
   $("#btnInfo").hide();
   $("#gotoPanel").hide();
   $("#editPanel").hide();
+  $("#recordPanel").hide();
 
   $('#btnLocation').on('tap', function() {
     Gui.tracking = !Gui.tracking;

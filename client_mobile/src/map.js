@@ -779,6 +779,9 @@ Map.toggleTracking = function (enabled) {
 
             if (typeof(Editor)=='function') {
                 mobEditor.showEditPanel(true);
+                if (mobRecord && mobRecord.layer) {
+                    mobRecord.updateRecording();
+                }
                 if (mobGoto && mobGoto.feature) {
                     mobGoto.updateGotoContent();
                 }
@@ -854,6 +857,9 @@ Map.toggleTracking = function (enabled) {
         Gui.showLocationPanel(false);
         if (typeof(Editor)=='function') {
             mobEditor.showEditPanel(false);
+            if(mobRecord) {
+                mobRecord.showRecordPanel(false);
+            }
         }
         $('#btnInfo').hide();
         Map.geolocationLayer.setVisible(false);
@@ -890,6 +896,9 @@ Map.initialCenterOnLocation = function () {
     if (typeof(Editor) == 'function') {
         if (EditorConfig.altCorrectionLayer) {
             mobEditor.getHeightCorrection();
+        }
+        if(mobRecord) {
+            mobRecord.showRecordPanel(true);
         }
     }
     // disable after first update

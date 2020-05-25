@@ -57,6 +57,14 @@ body {
     background-image: url("../img/save-icon_32.png");
 }
 
+.ui-icon-record {
+    background-image: url("../img/record.png");
+}
+
+.ui-icon-record_stop {
+    background-image: url("../img/record_stop.png");
+}
+
 /* button positions */
 
 #btnCompass {
@@ -74,28 +82,30 @@ body {
 
 #btnAdd {
   right: 10px;
-  bottom: 120px;
+  bottom: 60px;
 }
 
 #btnRemove {
     right: 70px;
-    bottom: 120px;
+    bottom: 60px;
 }
 
 #btnRecord {
-    right: 70px;
-    bottom: 120px;
+    right: 130px;
+    bottom: 0;
+}
+
+#btnRecordStop {
+    right: 130px;
+    bottom: 0;
 }
 
 #btnEnd {
     right: 130px;
-    bottom: 120px;
-}
-
-#btnInfo {
-    right: 10px;
     bottom: 60px;
 }
+
+
 
 #btnLocation {
   right: 115px;
@@ -107,9 +117,14 @@ body {
 
 #btnLayers {
   right: 5px;
-  bottom: 0px;
+  bottom: 0;
   /*-webkit-border-radius: 0 1em 1em 0;*/
   /*border-radius: 0 1em 1em 0;*/
+}
+
+#btnInfo {
+    right: 70px;
+    bottom: 0;
 }
 
 #btnProperties {
@@ -118,12 +133,12 @@ body {
 
 #btnGotoPage {
     left: 70px;
-    bottom: 0px;
+    bottom: 25px;
 }
 
 #btnGotoStop {
     left: 10px;
-    bottom: 0px;
+    bottom: 25px;
 }
 
 /* geolocation */
@@ -156,7 +171,7 @@ body {
     position: absolute;
     font-size: 1.0em;
     font-family: monospace;
-    bottom: 180px;
+    bottom: 120px;
     right: 10px;
     background: rgba(255, 255, 255,  0.5);
     padding: 4px;
@@ -167,10 +182,22 @@ body {
     position: absolute;
     font-size: 1.2em;
     font-family: monospace;
-    bottom: 60px;
+    bottom: 85px;
     left: 10px;
     background: rgba(255, 255, 93, 0.50);
     padding: 4px;
+}
+
+#recordPanel {
+    border-radius: 8px;
+    position: absolute;
+    font-size: 1.2em;
+    font-family: monospace;
+    bottom: 17px;
+    right: 180px;
+    background: rgba(237, 31, 36, 0.5);
+    padding: 4px;
+    color: rgb(214, 214, 214);
 }
 
 #gotoMarker {
@@ -282,8 +309,8 @@ body {
 
 .ol-scale-line {
   background-color: transparent;
-  left: inherit;
-  right: 65px;
+  /*left: inherit;*/
+  /*right: 65px;*/
 }
 
 .ol-scale-line-inner {
