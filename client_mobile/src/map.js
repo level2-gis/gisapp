@@ -779,7 +779,7 @@ Map.toggleTracking = function (enabled) {
 
             if (typeof(Editor)=='function') {
                 mobEditor.showEditPanel(true);
-                if (mobRecord && mobRecord.layer) {
+                if ( typeof(Record)=='function' && mobRecord.layer) {
                     mobRecord.updateRecording();
                 }
                 if (mobGoto && mobGoto.feature) {
@@ -857,7 +857,7 @@ Map.toggleTracking = function (enabled) {
         Gui.showLocationPanel(false);
         if (typeof(Editor)=='function') {
             mobEditor.showEditPanel(false);
-            if(mobRecord) {
+            if (typeof (Record) == 'function') {
                 mobRecord.showRecordPanel(false);
             }
         }
@@ -897,7 +897,7 @@ Map.initialCenterOnLocation = function () {
         if (EditorConfig.altCorrectionLayer) {
             mobEditor.getHeightCorrection();
         }
-        if(mobRecord) {
+        if (typeof (Record) == 'function') {
             mobRecord.showRecordPanel(true);
         }
     }
