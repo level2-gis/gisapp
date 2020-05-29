@@ -148,11 +148,11 @@ Map.createMap = function() {
     layers: [],
     target: 'map',
     view: new ol.View(Config.map.viewOptions),
-    interactions: ol.interaction.defaults({pinchZoom: false}).extend([
-          new ol.interaction.PinchZoom({
-              constrainResolution: true // force zooming to a integer zoom
-          })
-    ]),
+    // interactions: ol.interaction.defaults({pinchZoom: false}).extend([
+    //       new ol.interaction.PinchZoom({
+    //           constrainResolution: true // force zooming to a integer zoom
+    //       })
+    // ]),
     controls:[]
   });
 
