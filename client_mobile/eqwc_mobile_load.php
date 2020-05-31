@@ -53,7 +53,7 @@ $debug = defined('DEBUG') ? DEBUG : false;
 //eqwc language files
 array_push($lang, "admin/languages/". $def_lang .".js?v=".rand());
 
-//add into array all js files in plugins/xxx/src_mobile subfolder
+//add into array all js files in plugins/xxx/js_mobile subfolder
 if (!(empty($plugin_list))) {
     foreach ($plugin_list as $item) {
         if (is_dir($dir . $item) && \GisApp\Helpers::hasPluginAccess($item)) {
@@ -75,12 +75,12 @@ if (!(empty($plugin_list))) {
                 array_push($plugins, "plugins/" . basename($plugin_path) . "/js/config.js?v=" . rand());
             }
 
-            if (is_dir($plugin_path . '/src_mobile/')) {
-                $js_arr = array_slice(scandir($plugin_path . '/src_mobile/'), 2);
+            if (is_dir($plugin_path . '/js_mobile/')) {
+                $js_arr = array_slice(scandir($plugin_path . '/js_mobile/'), 2);
                 foreach ($js_arr as $script) {
                     //only js files
                     if (substr($script, -2) == 'js') {
-                        array_push($plugins, "plugins/" . basename($plugin_path) . "/src_mobile/" . $script . "?v=" . rand());
+                        array_push($plugins, "plugins/" . basename($plugin_path) . "/js_mobile/" . $script . "?v=" . rand());
                     }
                 }
             }
