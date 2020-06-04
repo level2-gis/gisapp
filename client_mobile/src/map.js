@@ -756,20 +756,24 @@ Map.toggleTracking = function (enabled) {
         });
 
         Map.geolocation.on('error', function (error) {
-
-            alert(error.message);
-
             //if (error.code == error.PERMISSION_DENIED) {
             //  alert(I18n.geolocation.permissionDeniedMessage);
             //}
-            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
-            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
-            Gui.tracking = false;
-            Gui.showLocationPanel(false);
-            $('#locationMarker').toggle(false);
+            if(error.code == Eqwc.geolocationErrors.TIMEOUT) {
+                //fix Firefox issue with restarting gelocation tracking
+                Map.geolocation.setTracking(false);
+                Map.geolocation.setTracking(true);
+            } else {
+                alert(error.message);
+                $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
+                $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
+                Gui.tracking = false;
+                Gui.showLocationPanel(false);
+                $('#locationMarker').toggle(false);
 
-            //switch off geolocation layer
-            Map.geolocationLayer.setVisible(false);
+                //switch off geolocation layer
+                Map.geolocationLayer.setVisible(false);
+            }
         });
 
         Map.geolocation.on('change', function () {

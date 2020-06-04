@@ -22,6 +22,12 @@ if(projectData.defaultCoordinatesCrsCode === null && Eqwc.settings.defaultCoordi
     projectData.defaultCoordinatesCrsCode = Eqwc.settings.defaultCoordinatesCrsCode;
 }
 
+Eqwc.geolocationErrors = {
+    PERMISSION_DENIED: 1,
+    POSITION_UNAVAILABLE: 2,
+    TIMEOUT: 3
+};
+
 Eqwc.common = {};
 
 Eqwc.common.createHyperlink = function(att, val, pattern) {
