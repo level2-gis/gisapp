@@ -723,8 +723,8 @@ Map.toggleTracking = function (enabled) {
                 projection: Map.map.getView().getProjection(),
                 trackingOptions: {
                     enableHighAccuracy: true,
-                    maximumAge: 20000,
-                    timeout: 21000
+                    maximumAge: 0,
+                    timeout: 3000
                 }
             });
             Map.geolocation.set('source', 'Geolocation API');
