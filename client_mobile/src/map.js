@@ -212,7 +212,8 @@ Map.setTopicLayer = function() {
   if (Map.useTiledWMS) {
     source = new ol.source.TileWMS(wmsOptions);
     source.on('tileloaderror', function(evt) {
-        Eqwc.common.redirect();
+        //Eqwc.common.redirect();
+        console.log('tile error');
     });
     Map.topicLayer = new ol.layer.Tile({
         //extent: Config.map.extent,
@@ -227,10 +228,13 @@ Map.setTopicLayer = function() {
       });
       source.on('imageloadend', function() {
         Map.progress.addLoaded();
+        $('#btnAlert').hide();
     });
       source.on('imageloaderror', function() {
           Map.progress.addLoaded();
-          Eqwc.common.redirect();
+          //Eqwc.common.redirect();
+          $('#btnAlert').show();
+          console.log('image error');
       });
     Map.topicLayer = new ol.layer.Image({
         //extent: Config.map.extent,

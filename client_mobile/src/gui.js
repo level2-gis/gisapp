@@ -1276,9 +1276,11 @@ Gui.initViewer = function() {
   // compass
   $(document).on('maprotation', function(e) {
     $('#btnCompass').find('.ui-icon').css('transform', 'rotate(' + e.rotation + 'rad)');
+    $('#btnCompass').fadeIn();
   });
   $('#btnCompass').on('tap', function() {
     Map.setRotation(0);
+    $('#btnCompass').fadeOut(); //animation instead of just hide()
   });
 
   // geolocation
@@ -1456,7 +1458,7 @@ $(document).ready(function(e) {
             loading('hide');
             //When XHR Status code is 0 there is no connection with the server
             if (request.status == 0){
-                alert("Communication with the server is lost!");
+                console.log("ajaxError: Internet connection lost!");
             }
         }
     });

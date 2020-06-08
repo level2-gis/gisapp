@@ -65,6 +65,10 @@ body {
     background-image: url("../img/record_stop.png");
 }
 
+.ui-icon-alert2 {
+    background-image: url("../img/alert.png");
+}
+
 /* button positions */
 
 #btnCompass {
@@ -78,6 +82,11 @@ body {
 }
 #btnCompass .ui-btn-inner {
   border: none;
+}
+
+#btnAlert {
+    right: 5px;
+    top: 105px;
 }
 
 #btnAdd {

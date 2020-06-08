@@ -68,12 +68,13 @@ function goMobile($lang, $scanner) {
 
         <div data-role="content">
             <div id="map">
-                <a href="#" id="btnCompass" data-role="button" data-inline="true" data-icon="compass" data-iconpos="notext"></a>
+                <a href="#" style="display:none" id="btnCompass" data-role="button" data-inline="true" data-icon="compass" data-iconpos="notext"></a>
                 <a href="#" id="btnLocation" data-role="button" data-inline="true" data-icon="location_off" data-iconpos="notext"></a>
                 <a href="#panelSearch" id="btnSearching" data-role="button" data-inline="true" data-icon="searching" data-iconpos="notext"></a>
                 <a href="#panelLayer" id="btnLayers" data-role="button" data-inline="true" data-icon="layers" data-iconpos="notext"></a>
                 <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
                 <a href="#" id="btnInfo" data-role="button" data-icon="loc_info" data-iconpos="notext"></a>
+                <a href="#" style="display:none" id="btnAlert" data-role="button" data-icon="alert2" data-iconpos="notext"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
                 <a href="#" style="display:none" id="btnRemove" data-role="button" data-icon="remove" data-iconpos="notext" data-rel="dialog"></a>
                 <a href="#" style="display:none" id="btnRecord" data-role="button" data-icon="record" data-iconpos="notext" data-rel="dialog"></a>
