@@ -1453,11 +1453,11 @@ Gui.initViewer = function() {
     });
     Map.map.addOverlay(Map.searchMarker);
 
-  // invoke custom post viewer init
-  Config.customInitViewer();
-
     //just to load&hide hidden icons to cache them
     Map.loadHiddenIcons();
+
+    // invoke custom post viewer init
+    Config.customInitViewer();
 
 };
 
