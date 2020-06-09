@@ -126,6 +126,8 @@ Map.clickMarker = null;
 Map.ignoreClick = false;
 // map click handlers (key = handler name)
 Map.singleClickHandlers = {};
+//alert messages
+Map.alertMessages = {};
 
 Map.useTiledWMS = Eqwc.settings.mobileUseTiledWMS;
 
@@ -191,59 +193,80 @@ Map.clearLayers = function() {
   Map.overlayLayers = {};
 };
 
-Map.setTopicLayer = function() {
-  // add new layer
-  var wmsParams = $.extend({}, Config.map.wmsParams, {
-    'LAYERS': Map.visibleLayers().join(','),
-    'OPACITIES': Map.layerOpacities()
-  });
-  if (Map.backgroundTopic) {
-    // use transparent layer with background
-    wmsParams['TRANSPARENT'] = true;
-  }
-  var source = null;
-  var wmsOptions = {
-    url: Map.topics[Map.topic].wms_url,
-    params: wmsParams,
-    serverType: Config.map.wmsServerType,
-    dpi: Config.map.dpi     //TODO check this
-  };
-  Map.topicLayer = null;
-  if (Map.useTiledWMS) {
-    source = new ol.source.TileWMS(wmsOptions);
-    source.on('tileloaderror', function(evt) {
-        //Eqwc.common.redirect();
-        console.log('tile error');
+Map.setTopicLayer = function () {
+    // add new layer
+    var wmsParams = $.extend({}, Config.map.wmsParams, {
+        'LAYERS': Map.visibleLayers().join(','),
+        'OPACITIES': Map.layerOpacities()
     });
-    Map.topicLayer = new ol.layer.Tile({
-        //extent: Config.map.extent,
-        source: source
-    });
-  }
-  else {
-    wmsOptions['ratio'] = 1;
-    source = new ol.source.ImageWMS(wmsOptions);
-      source.on('imageloadstart', function() {
-          Map.progress.addLoading();
-      });
-      source.on('imageloadend', function() {
-        Map.progress.addLoaded();
-        $('#btnAlert').hide();
-    });
-      source.on('imageloaderror', function() {
-          Map.progress.addLoaded();
-          //Eqwc.common.redirect();
-          $('#btnAlert').show();
-          console.log('image error');
-      });
-    Map.topicLayer = new ol.layer.Image({
-        //extent: Config.map.extent,
-        source: source
-    });
-  }
-  Map.topicLayer.name = 'topic';
+    if (Map.backgroundTopic) {
+        // use transparent layer with background
+        wmsParams['TRANSPARENT'] = true;
+    }
+    var source = null;
+    var wmsOptions = {
+        url: Map.topics[Map.topic].wms_url,
+        params: wmsParams,
+        serverType: Config.map.wmsServerType,
+        dpi: Config.map.dpi     //TODO check this
+    };
+    Map.topicLayer = null;
 
-  Map.map.addLayer(Map.topicLayer);
+    function callBack(loggedIn) {
+        if (loggedIn == false) {
+            Eqwc.common.redirect();
+        } else {
+            Map.showAlert('c');
+            Map.setAlertMsg('qgis', 'image load error');
+        }
+    }
+
+    if (Map.useTiledWMS) {
+        source = new ol.source.TileWMS(wmsOptions);
+        source.on('tileloaderror', function (evt) {
+            console.log('tile error');
+        });
+        Map.topicLayer = new ol.layer.Tile({
+            //extent: Config.map.extent,
+            source: source
+        });
+    } else {
+        wmsOptions['ratio'] = 1;
+        source = new ol.source.ImageWMS(wmsOptions);
+        source.on('imageloadstart', function () {
+            Map.progress.addLoading();
+        });
+        source.on('imageloadend', function () {
+            Map.progress.addLoaded();
+            Map.hideAlert();
+            Map.clearAlertMsg('qgis');
+        });
+        source.on('imageloaderror', function () {
+            Map.progress.addLoaded();
+            //check if user is still logged in (1 yes, 0 no) if yes stay on the page, else redirect to login
+            $.ajax({
+                url: './admin/login.php?action=status',
+                dataType: 'text',
+                timeout: 1000
+            })
+                .done(function (data, status, xhr) {
+                    if (status == 'success') {
+                        callBack(data == 1);
+                    } else {
+                        callBack(true);
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    callBack(true);
+                });
+        });
+        Map.topicLayer = new ol.layer.Image({
+            //extent: Config.map.extent,
+            source: source
+        });
+    }
+    Map.topicLayer.name = 'topic';
+    Map.map.addLayer(Map.topicLayer);
 };
 
 Map.setBackgroundLayer = function (layerName, layerId, isBase) {
@@ -1046,4 +1069,52 @@ Map.openNavigation = function() {
 
     //console.log(url+ $.param(params));
     window.open(url+ $.param(params), '_blank');
+};
+
+Map.showAlert = function(theme) {
+    $('#btnAlert').buttonMarkup({theme: theme}).show();
+};
+
+Map.hideAlert = function() {
+    $('#btnAlert').hide();
+};
+
+Map.setAlertMsg = function(key, msg) {
+    this.alertMessages[key] = msg;
+};
+
+Map.clearAlertMsg = function(key) {
+    delete this.alertMessages[key];
+};
+//loads and hides all icons that are hidden on startup
+//in case of possible network error some time later, icons will still be visible from cache
+Map.loadHiddenIcons = function() {
+
+    $('#btnLocation .ui-icon').addClass('ui-icon-location_on');
+
+    $('#btnCompass').show();
+    $('#btnCompass').hide();
+
+    this.showAlert('c');
+    this.hideAlert();
+
+    $('#btnAdd').show();
+    $('#btnAdd').hide();
+
+    $('#btnRemove').show();
+    $('#btnRemove').hide();
+
+    $('#btnRecord').show();
+    $('#btnRecord').hide();
+
+    $('#btnRecordStop').show();
+    $('#btnRecordStop').hide();
+
+    $('#btnEnd').show();
+    $('#btnEnd').hide();
+
+    $('#btnGotoPage').show();
+    $('#btnGotoPage').hide();
+
+    $('#btnLocation .ui-icon').removeClass('ui-icon-location_on');
 };

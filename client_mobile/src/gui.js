@@ -1366,6 +1366,16 @@ Gui.initViewer = function() {
     }
   });
 
+  $('#btnAlert').click(function() {
+      var res = [];
+      $.each(Map.alertMessages, function(key,value) {
+         res.push(key+': '+value);
+     });
+      if(res.length>0) {
+          alert(res.join('\n'));
+      }
+  });
+
   // properties
   $('#switchFollow').on('change', function(e) {
     Gui.toggleFollowing($(this).val() == 'on');
@@ -1445,20 +1455,31 @@ Gui.initViewer = function() {
 
   // invoke custom post viewer init
   Config.customInitViewer();
+
+    //just to load&hide hidden icons to cache them
+    Map.loadHiddenIcons();
+
 };
 
 $(document).ready(function(e) {
 
     //ajax global loading enable
     $(document).on({
-        ajaxSend: function () { loading('show'); },
-        ajaxStart: function () { loading('show'); },
-        ajaxStop: function () { loading('hide'); },
+        ajaxSend: function () {
+            loading('show');
+        },
+        ajaxStart: function () {
+            loading('show');
+        },
+        ajaxStop: function () {
+            loading('hide');
+            Map.clearAlertMsg('ajax');
+        },
         ajaxError: function (event, request, settings) {
             loading('hide');
             //When XHR Status code is 0 there is no connection with the server
-            if (request.status == 0){
-                console.log("ajaxError: Internet connection lost!");
+            if (request.status == 0) {
+                Map.setAlertMsg("ajax", "Internet connection lost!");
             }
         }
     });
