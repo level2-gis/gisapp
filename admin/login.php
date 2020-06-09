@@ -36,6 +36,12 @@ if ($action != null) {
         //logout
         $login->doLogout();
         header("Location: ../" . $pp);
+    } else if($action == 'status') {
+        $status = 0;
+        if (isset($_SESSION['user_is_logged_in'])) {
+            $status = $_SESSION['user_is_logged_in'];
+        }
+        echo $status;
     }
 } else {
     //login
