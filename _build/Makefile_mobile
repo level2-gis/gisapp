@@ -1,0 +1,34 @@
+#!/bin/bash
+
+DISTRIBUTION_NAME="eqwc_mobile"
+VERSION=$(head -c 8 ../version.txt)
+
+echo $DISTRIBUTION_NAME $VERSION
+
+# Minifies JS using Closure Compiler
+java -jar closurecompiler.jar \
+  --charset 'UTF-8' \
+  --jscomp_error=checkDebuggerStatement \
+  --jscomp_warning=checkVars \
+  --jscomp_warning=deprecated \
+  --jscomp_warning=duplicate \
+  --jscomp_warning=invalidCasts \
+  --compilation_level=SIMPLE_OPTIMIZATIONS \
+  --externs externs.js \
+  --js 'compat.js' \
+  --js '../client_common/eqwc_common.js' \
+  --js '../client_mobile/src/url_params.js' \
+  --js '../client_mobile/src/search.js' \
+  --js '../client_mobile/src/geocode.js' \
+  --js '../client_mobile/src/wsgi_search.js' \
+  --js '../client_mobile/src/config.js' \
+  --js '../client_mobile/src/map.js' \
+  --js '../client_mobile/src/map_click_handler.js' \
+  --js '../client_mobile/src/feature_info.js' \
+  --js '../client_mobile/src/topics.js' \
+  --js '../client_mobile/src/layers.js' \
+  --js '../client_mobile/src/gui.js' \
+  --js_output_file $DISTRIBUTION_NAME'.js'
+
+bash Makeheader.sh $DISTRIBUTION_NAME $VERSION > $DISTRIBUTION_NAME"_header"
+cat $DISTRIBUTION_NAME"_header" $DISTRIBUTION_NAME".js" >../client_mobile/$DISTRIBUTION_NAME".js"
