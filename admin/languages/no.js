@@ -143,3 +143,5 @@ I18n.login = {
     signOutFailed: "Innlogging feilet",
     statusFailed: "Innlogging mislyktes"
 };
+
+I18n.networkDown = 'Internet connection lost';

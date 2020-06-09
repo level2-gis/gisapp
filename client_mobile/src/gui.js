@@ -1479,7 +1479,7 @@ $(document).ready(function(e) {
             loading('hide');
             //When XHR Status code is 0 there is no connection with the server
             if (request.status == 0) {
-                Map.setAlertMsg("ajax", "Internet connection lost!");
+                Map.setAlertMsg("ajax", I18n.networkDown);
             }
         }
     });

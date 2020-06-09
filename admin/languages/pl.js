@@ -145,3 +145,5 @@ I18n.login = {
     signOutFailed: "Logowanie nieudane",
     statusFailed: "Błędny status"
 };
+
+I18n.networkDown = 'Internet connection lost';

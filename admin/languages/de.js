@@ -142,3 +142,5 @@ I18n.login = {
     signOutFailed: "Abmelden fehlgeschlagen",
     statusFailed: "Login Status fehlgeschlagen"
 };
+
+I18n.networkDown = 'Internet connection lost';
