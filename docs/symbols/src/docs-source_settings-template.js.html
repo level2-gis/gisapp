@@ -1,0 +1,314 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * @file Client configuration template file in /client_common/ folder. You have to copy this to **settings.js** to use default settings or adjust values to your needs!
+<span class='line'>  3</span>  */</span><span class="WHIT">
+<span class='line'>  4</span> 
+<span class='line'>  5</span> </span><span class="COMM">/**
+<span class='line'>  6</span>  * Global Extended QGIS Web Client object
+<span class='line'>  7</span>  * @namespace Eqwc
+<span class='line'>  8</span>  * @property {Object} Eqwc.settings    Web and Mobile client settings
+<span class='line'>  9</span>  * @property {Object} Eqwc.common      Common functions
+<span class='line'> 10</span>  * @property {Object} Eqwc.plugins     Plugin information
+<span class='line'> 11</span>  */</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Eqwc</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 14</span>      * @namespace Eqwc.settings
+<span class='line'> 15</span>      */</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">    </span><span class="NAME">settings</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">    </span><span class="NAME">common</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">    </span><span class="NAME">plugins</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 20</span> 
+<span class='line'> 21</span> </span><span class="COMM">/**
+<span class='line'> 22</span>  * QGIS Server version installed. Use only major number (2.18, 3.4,...)
+<span class='line'> 23</span>  * @type {string}
+<span class='line'> 24</span>  * @default "2.18"
+<span class='line'> 25</span>  */</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="NAME">Eqwc.settings.qgisVersion</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"2.18"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 27</span> 
+<span class='line'> 28</span> </span><span class="COMM">/**
+<span class='line'> 29</span>  * Template string for browser window title
+<span class='line'> 30</span>  * @type {string}
+<span class='line'> 31</span>  * @default "projectData.title+' '+projectData.client_display_name";
+<span class='line'> 32</span>  * @example "TR.appName+projectData.title+' '+projectData.client_display_name";
+<span class='line'> 33</span>  */</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="NAME">Eqwc.settings.title</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"projectData.title+' '+projectData.client_display_name"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> 
+<span class='line'> 36</span> </span><span class="COMM">/**
+<span class='line'> 37</span>  * Limit number of features to request from server for displaying layer attribute table. If number of returned features is equal to limit then load more button is displayed in table toolbar.
+<span class='line'> 38</span>  * @type {number}
+<span class='line'> 39</span>  * @default 2000
+<span class='line'> 40</span>  */</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="NAME">Eqwc.settings.limitAttributeFeatures</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2000</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 42</span> 
+<span class='line'> 43</span> </span><span class="COMM">/**
+<span class='line'> 44</span>  * Enable by default synchronizing attribute table with current map extent. User can manage displaying whole table (with [limitAttributeFeatures]{@link Eqwc.settings.limitAttributeFeatures}) or display only visible elements with button below table (it is updated on map zoom or move).
+<span class='line'> 45</span>  * @type {boolean}
+<span class='line'> 46</span>  * @default false
+<span class='line'> 47</span>  */</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="NAME">Eqwc.settings.syncAttributeTableWithView</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> 
+<span class='line'> 50</span> </span><span class="COMM">/**
+<span class='line'> 51</span>  * Number of results in SearchPanel and Identify result window. _FEATURE_COUNT_ value in WMS request
+<span class='line'> 52</span>  * @type {number}
+<span class='line'> 53</span>  * @default 10
+<span class='line'> 54</span>  */</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="NAME">Eqwc.settings.limitSearchMaxResults</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">10</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> 
+<span class='line'> 57</span> </span><span class="COMM">/**
+<span class='line'> 58</span>  * Tolerances for WMS GetFeatureInfo requests on QGIS Server
+<span class='line'> 59</span>  *
+<span class='line'> 60</span>  * tolerance values are in pixels at map dpi and will be scaled with the actual pixel ratio value for high resolution rendering
+<span class='line'> 61</span>  * @type {{point: number, line: number, polygon: number}}
+<span class='line'> 62</span>  * @default {{point: 4, line: 4, polygon: 2}}
+<span class='line'> 63</span>  */</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="NAME">Eqwc.settings.featureInfoTolerances</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="NAME">point</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="NAME">line</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">    </span><span class="NAME">polygon</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 69</span> 
+<span class='line'> 70</span> </span><span class="COMM">/**
+<span class='line'> 71</span>  * Enable tooltip text when mouse cursor is over features
+<span class='line'> 72</span>  * @type {boolean}
+<span class='line'> 73</span>  * @default false
+<span class='line'> 74</span>  */</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="NAME">Eqwc.settings.enableHoverPopup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 76</span> 
+<span class='line'> 77</span> </span><span class="COMM">/**
+<span class='line'> 78</span>  * Set default mode for identify option
+<span class='line'> 79</span>  * > Possible values are: **"allLayers"**, **"topMostHit"**, **"activeLayers"**
+<span class='line'> 80</span>  *
+<span class='line'> 81</span>  * > Note that you control visibility of this combo per specific project in database.
+<span class='line'> 82</span>  * @type {string}
+<span class='line'> 83</span>  * @default "allLayers"
+<span class='line'> 84</span>  */</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="NAME">Eqwc.settings.defaultIdentificationMode</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"allLayers"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 86</span> 
+<span class='line'> 87</span> </span><span class="COMM">/**
+<span class='line'> 88</span>  * Display coordinates of clicked location on top of identify window results
+<span class='line'> 89</span>  * @type {boolean}
+<span class='line'> 90</span>  * @default true
+<span class='line'> 91</span>  */</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="NAME">Eqwc.settings.showCoordinatesIdentify</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 93</span> 
+<span class='line'> 94</span> </span><span class="COMM">/**
+<span class='line'> 95</span>  * Replace layer name in GetFeatureInfo request (identify and attributes table) and in layer export. Useful to create database view for layer, where you can reorder fields or create new read only fields from geometry, like: area, length, X, Y. This data will be displayed in identify window and attributes table and used in layer export instead of data from original layer.
+<span class='line'> 96</span>  * You could use view in QGIS in the first place for ordinary layers, but if you wish that layer is editable it cannot be connected to view.
+<span class='line'> 97</span>  * > Prepare:
+<span class='line'> 98</span>  * 1. Write in this array layer name as it is in QGIS project,
+<span class='line'> 99</span>  * 2. Create corresponding view named as *your_layer_name_view* and add it to the QGIS project. View will be hidden from legend and map.
+<span class='line'>100</span>  * 3. Set view symbology to transparent or no symbol, to avoid "seeing" it in print, because it must be added to print layers in case if its table is used in print layout.
+<span class='line'>101</span>  *
+<span class='line'>102</span>  * > If layer name is **"points"**, view name must be **"points_view"**, add in array only **"points"**
+<span class='line'>103</span>  * @example "['points']";
+<span class='line'>104</span>  * @type {Array}
+<span class='line'>105</span>  */</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="NAME">Eqwc.settings.replaceIdentifyLayerWithView</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> 
+<span class='line'>108</span> </span><span class="COMM">/**
+<span class='line'>109</span>  * Set print table name from QGIS project needed to store information about title and description for each user last print.
+<span class='line'>110</span>  * > To enable: add **users_print_view** into QGIS project from gisapp database. You must add table to print layout, table will always have max 1 row for current user.
+<span class='line'>111</span>  * This table is removed from EQWC legend tree
+<span class='line'>112</span>  * @type {string}
+<span class='line'>113</span>  * @default "users_print_view"
+<span class='line'>114</span>  */</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="NAME">Eqwc.settings.QgisUsersPrintName</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"users_print_view"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>116</span> 
+<span class='line'>117</span> </span><span class="COMM">/**
+<span class='line'>118</span>  * Should first baselayer be visible on opening project
+<span class='line'>119</span>  * @type {boolean}
+<span class='line'>120</span>  * @default true
+<span class='line'>121</span>  */</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="NAME">Eqwc.settings.visibleFirstBaseLayer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>123</span> 
+<span class='line'>124</span> </span><span class="COMM">/**
+<span class='line'>125</span>  * Display NULL values
+<span class='line'>126</span>  * @type {string}
+<span class='line'>127</span>  * @default ""
+<span class='line'>128</span>  */</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="NAME">Eqwc.settings.noDataValue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>130</span> 
+<span class='line'>131</span> </span><span class="COMM">/**
+<span class='line'>132</span>  * Overwrite identify values for raster data, instead of Band 1 write desired value to be displayed as a column name
+<span class='line'>133</span>  * @type {{}}
+<span class='line'>134</span>  * @default {}
+<span class='line'>135</span>  * @example {["layername"] = ["Band 1", "Your value"]}
+<span class='line'>136</span>  * @example {["my_elevation.tif"] = ["Band 1", "Elevation"]}
+<span class='line'>137</span>  */</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="NAME">Eqwc.settings.overWriteRasterFieldName</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>139</span> 
+<span class='line'>140</span> </span><span class="COMM">/**
+<span class='line'>141</span>  * Number of Zoom levels in map. This is relevant only in cases where Map does not contain base layers!
+<span class='line'>142</span>  * @type {number}
+<span class='line'>143</span>  * @default 22
+<span class='line'>144</span>  */</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="NAME">Eqwc.settings.numZoomLevels</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">22</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>146</span> 
+<span class='line'>147</span> </span><span class="COMM">/**
+<span class='line'>148</span>  * Allow users to choose [print options]{@link Eqwc.settings.printCapabilities} (leave null) or to have fixed resolution (type number for fixed DPI value).
+<span class='line'>149</span>  * @type {null|number}
+<span class='line'>150</span>  * @default null
+<span class='line'>151</span>  * @example 200
+<span class='line'>152</span>  */</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="NAME">Eqwc.settings.fixedPrintResolution</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span> 
+<span class='line'>155</span> </span><span class="COMM">/**
+<span class='line'>156</span>  * Define print options (scales and DPIs). For fixed DPI value look [fixedPrintResolution]{@link Eqwc.settings.fixedPrintResolution}
+<span class='line'>157</span>  * @type {Object}
+<span class='line'>158</span>  */</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="NAME">Eqwc.settings.printCapabilities</span><span class="PUNC">=</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">    </span><span class="STRN">"scales"</span><span class="PUNC">:</span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:100"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"100"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:200"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"200"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:250"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"250"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:500"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"500"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:1'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"1000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:2'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"2000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:3'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"3000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:5'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"5000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:7'500"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"7500"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:10'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"10000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:12'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"12000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:15'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"15000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:20'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"20000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:25'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"25000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:30'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"30000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:50'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"50000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:75'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"75000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:100'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"100000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:250'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"250000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:500'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"500000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:750'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"750000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:1'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"1000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:2'500'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"2500000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:5'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"5000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:7'500'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"7500000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:10'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"10000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:15'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"15000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:20'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"20000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:25'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"25000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:30'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"30000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:35'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"35000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:50'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"50000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:60'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"60000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:75'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"75000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:100'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"100000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:125'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"125000000"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="STRN">"1:150'000'000"</span><span class="PUNC">,</span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="STRN">"150000000"</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">    </span><span class="STRN">"dpis"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"150 dpi"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"150"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"300 dpi"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"300"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"600 dpi"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"600"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">        </span><span class="PUNC">{</span><span class="STRN">"name"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"1200 dpi"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"1200"</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">    </span><span class="STRN">"layouts"</span><span class="PUNC">:</span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> 
+<span class='line'>208</span> </span><span class="COMM">/**
+<span class='line'>209</span>  * Styling definition for highlight Layer (GetFeatureInfo and search result visualization)
+<span class='line'>210</span>  * > [OpenLayers2 Style definition]{@link http://dev.openlayers.org/docs/files/OpenLayers/Style-js.html}
+<span class='line'>211</span>  * @type {}
+<span class='line'>212</span>  */</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="NAME">Eqwc.settings.symbolizersHighLightLayer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">    </span><span class="STRN">"Point"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">        </span><span class="NAME">pointRadius</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">        </span><span class="NAME">graphicName</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"circle"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">        </span><span class="NAME">fillColor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"none"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">        </span><span class="NAME">strokeWidth</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>219</span> </span><span class="WHIT">        </span><span class="NAME">strokeColor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"#00FFFF"</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">    </span><span class="STRN">"Line"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">        </span><span class="NAME">strokeWidth</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">        </span><span class="NAME">strokeOpacity</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">        </span><span class="NAME">strokeColor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"#00FFFF"</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">        </span><span class="COMM">//strokeDashstyle: "dash"</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">    </span><span class="STRN">"Polygon"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">        </span><span class="NAME">strokeWidth</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">        </span><span class="NAME">strokeColor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"#00FFFF"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">        </span><span class="NAME">fillColor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"none"</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>233</span> 
+<span class='line'>234</span> </span><span class="COMM">/**
+<span class='line'>235</span>  * Integrate separate gisportal code to browse projects and manage database
+<span class='line'>236</span>  * > [gisportal]{@link https://github.com/uprel/gisportal}
+<span class='line'>237</span>  * @type {boolean}
+<span class='line'>238</span>  * @default false
+<span class='line'>239</span>  */</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="NAME">Eqwc.settings.useGisPortal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>241</span> 
+<span class='line'>242</span> </span><span class="NAME">Eqwc.settings.gisPortalRoot</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'/gisportal/index.php/'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="NAME">Eqwc.settings.mailServiceUrl</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Eqwc.settings.gisPortalRoot</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'mail/send'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="NAME">Eqwc.settings.gisPortalProfile</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Eqwc.settings.gisPortalRoot</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'profile'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>245</span> 
+<span class='line'>246</span> </span><span class="COMM">/**
+<span class='line'>247</span>  * Use tiled WMS requests for QGIS project
+<span class='line'>248</span>  * > Mobile only
+<span class='line'>249</span>  * @type {boolean}
+<span class='line'>250</span>  * @default false
+<span class='line'>251</span>  */</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="NAME">Eqwc.settings.mobileUseTiledWMS</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>253</span> 
+<span class='line'>254</span> </span><span class="COMM">/**
+<span class='line'>255</span>  * Enable tracking by default (auto center map on current position when position is on)
+<span class='line'>256</span>  * > Mobile only
+<span class='line'>257</span>  * @type {boolean}
+<span class='line'>258</span>  * @default false
+<span class='line'>259</span>  */</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="NAME">Eqwc.settings.mobileEnableTracking</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>261</span> 
+<span class='line'>262</span> </span><span class="COMM">/**
+<span class='line'>263</span>  * Minimum scale (maximum zoom to scale) for map
+<span class='line'>264</span>  * > Mobile only
+<span class='line'>265</span>  * @type {number}
+<span class='line'>266</span>  * @default 50
+<span class='line'>267</span>  */</span><span class="WHIT">
+<span class='line'>268</span> </span><span class="NAME">Eqwc.settings.mobileMinScale</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">50</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>269</span> 
+<span class='line'>270</span> </span><span class="COMM">/**
+<span class='line'>271</span>  * Show accuracy information in location panel
+<span class='line'>272</span>  * > Mobile only
+<span class='line'>273</span>  * @type {boolean}
+<span class='line'>274</span>  * @default true
+<span class='line'>275</span>  */</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="NAME">Eqwc.settings.mobileShowAccuracy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>277</span> 
+<span class='line'>278</span> </span><span class="COMM">/**
+<span class='line'>279</span>  * Change that if you set alias for files field in QGIS, then enter same alias here
+<span class='line'>280</span>  * >Editor plugin
+<span class='line'>281</span>  * @type {string}
+<span class='line'>282</span>  * @default "files"
+<span class='line'>283</span>  */</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="NAME">Eqwc.settings.qgisFilesFieldAlias</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'files'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>285</span> 
+<span class='line'>286</span> </span><span class="COMM">/**
+<span class='line'>287</span>  * Unit system for displaying distance and area measurements.
+<span class='line'>288</span>  * > Possible values are: **"metric"**, **"english"**, **"geographic"**
+<span class='line'>289</span>  *
+<span class='line'>290</span>  * > **metric**: "km", "m"
+<span class='line'>291</span>  *
+<span class='line'>292</span>  * > **english**: "mi", "ft", "in" for length and "ac" for area
+<span class='line'>293</span>  *
+<span class='line'>294</span>  * > **geographic**: "dd"
+<span class='line'>295</span>  *
+<span class='line'>296</span>  * @type {string}
+<span class='line'>297</span>  * @default "metric"
+<span class='line'>298</span>  */</span><span class="WHIT">
+<span class='line'>299</span> </span><span class="NAME">Eqwc.settings.measurementsUnitSystem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'metric'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>300</span> 
+<span class='line'>301</span> </span><span class="COMM">/**
+<span class='line'>302</span>  * Maximum allowed height in pixels for layer legend. If legend height is larger, vertical scroller will be used
+<span class='line'>303</span>  * @type {number}
+<span class='line'>304</span>  * @default 200
+<span class='line'>305</span>  */</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="NAME">Eqwc.settings.layerLegendMaxHeightPx</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>307</span> </span></pre></body></html>
