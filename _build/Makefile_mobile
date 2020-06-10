@@ -18,8 +18,11 @@ java -jar closurecompiler.jar \
   --js 'compat.js' \
   --js '../client_common/eqwc_common.js' \
   --js '../client_mobile/src/url_params.js' \
+  --js '../client_mobile/src/permalink.js' \
+  --js '../client_mobile/src/login.js' \
   --js '../client_mobile/src/search.js' \
   --js '../client_mobile/src/geocode.js' \
+  --js '../client_mobile/src/qgis_permalink.js' \
   --js '../client_mobile/src/wsgi_search.js' \
   --js '../client_mobile/src/config.js' \
   --js '../client_mobile/src/map.js' \
