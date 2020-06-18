@@ -8,7 +8,7 @@ require_once("admin/class.Helpers.php");
 require_once("admin/class.Login.php");
 require_once("admin/settings.php");
 
-function goMobile($lang, $scanner) {
+function goMobile($lang) {
  ?><!DOCTYPE html>
     <html>
     <head>
@@ -45,11 +45,6 @@ function goMobile($lang, $scanner) {
             Proj4js = {defs: {}};
         </script>
 
-        <?php
-            if($scanner) {
-                echo '<script src="plugins/editing_code_scanner/js_mobile/instascan.min.js?v=1.0.0"></script>';
-            }
-        ?>
         <!-- OpenLayers 3 -->
         <script src="client_mobile/lib/ol3/ol.js?v=4.6.5a"></script>
 <!--        <script src="client_mobile/lib/ol3/ol-debug.js?v=4.6.5a"></script>-->
@@ -226,17 +221,15 @@ $login_check = new Login();
 if ($login_check->setUserProj($helpers->getMapFromUrl())) {
 
     $edit = $helpers->checkModulexist("editing") && $helpers->hasPluginAccess("editing");
-    $scanner = FALSE;
     $editVer = 0;
     if($edit) {
         $editVer = $helpers->getPluginVersion("editing");
-        $scanner = $helpers->checkModulexist("editing_code_scanner");
     }
     $google = $helpers->loadGoogle();
 
 	//OK open application
     if($mobile=='on') {
-        goMobile($def_lang, $scanner);
+        goMobile($def_lang);
     }
     else {
             ?><!DOCTYPE html>
