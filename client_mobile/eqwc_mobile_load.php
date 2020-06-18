@@ -75,12 +75,15 @@ if (!(empty($plugin_list))) {
                 array_push($plugins, "plugins/" . basename($plugin_path) . "/js/config.js?v=" . rand());
             }
 
+            //plugin version
+            $plugin_version = \GisApp\Helpers::getPluginVersion($item);
+
             if (is_dir($plugin_path . '/js_mobile/')) {
                 $js_arr = array_slice(scandir($plugin_path . '/js_mobile/'), 2);
                 foreach ($js_arr as $script) {
                     //only js files
                     if (substr($script, -2) == 'js') {
-                        array_push($plugins, "plugins/" . basename($plugin_path) . "/js_mobile/" . $script . "?v=" . rand());
+                        array_push($plugins, "plugins/" . basename($plugin_path) . "/js_mobile/" . $script . "?v=" . $plugin_version);
                     }
                 }
             }

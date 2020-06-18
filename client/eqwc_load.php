@@ -62,12 +62,18 @@ if (!(empty($plugin_list))) {
                     array_push($plugins, "plugins/" . basename($plugin_path) . "/lang/en.js?v=" . rand());
                 }
             }
+
+            //plugin version
+            $plugin_version = \GisApp\Helpers::getPluginVersion($item);
+
             $js_arr = array_slice(scandir($plugin_path . '/js/'), 2);
             foreach ($js_arr as $script) {
                 //only js files
                 if (substr($script, -2) == 'js') {
                     if ($script == 'config.js') {
                         $script .= '?v=' . rand();
+                    } else {
+                        $script .= '?v=' . $plugin_version;
                     }
                     array_push($plugins, "plugins/" . basename($plugin_path) . "/js/" . $script);
                 }

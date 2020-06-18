@@ -1,4 +1,5 @@
 /plugins/editing/
+/plugins/editing_code_scanner/
 /client_common/settings.js
 /admin/settings.php
 /.idea/
