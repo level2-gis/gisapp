@@ -231,6 +231,54 @@ Eqwc.common.redirect = function() {
     Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href = "./admin/login.php?action=logout&map="+projectData.project;
 };
 
+Eqwc.common.addMapFilter = function(layer, field, value, operator) {
+    var layerId = Eqwc.common.getLayerId(layer);
+    if(!layerId) {
+        return;
+    }
+
+    if(operator == null){
+        operator = '=';
+    }
+
+    var filter = {};
+    filter['FILTER'] = layerId+':"'+field+'" ' + operator + ' ' + value;
+
+    //mobile
+    if(Map.hasOwnProperty('mergeWmsParams')) {
+        Map.mergeWmsParams(filter);
+        $('#panelLayer').panel('close');
+    }
+};
+
+Eqwc.common.clearMapFilters = function() {
+
+    //mobile
+    if(Map.hasOwnProperty('mergeWmsParams')) {
+        Map.mergeWmsParams({'FILTER': ''});
+        $('#panelLayer').panel('close');
+    }
+};
+
+Eqwc.common.promptForMapFilterValue = function(layer,field, msg, onlyNumbers, minNumber, maxNumber) {
+    var value;
+    if(onlyNumbers) {
+        do{
+            value = prompt(msg, "");
+            //cancel
+            if (value == null || value == "") {
+                break;
+            }
+        }
+        while(isNaN(value) || parseInt(value) > maxNumber || parseInt(value) < minNumber);
+    } else {
+        value = prompt(msg, "");
+    }
+    if (!(value == null || value == "")) {
+        Eqwc.common.addMapFilter(layer,field,value);
+    }
+};
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
