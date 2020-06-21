@@ -1,5 +1,5 @@
 /**
- * @file Client configuration template file in /client_common/ folder. You have to copy this to **settings.js** to use default settings or adjust values to your needs!
+ * @file Global Extended QGIS Web Client configuration template file in `/client_common/` folder. You have to copy `settings-template.js` to `settings.js` to use default settings or adjust values explained below to your needs!
  */
 
 /**
@@ -11,6 +11,7 @@
  */
 var Eqwc = {
     /**
+     * Web and Mobile client setting
      * @namespace Eqwc.settings
      */
     settings:   {},
@@ -21,9 +22,9 @@ var Eqwc = {
 /**
  * QGIS Server version installed. Use only major number (2.18, 3.4,...)
  * @type {string}
- * @default "2.18"
+ * @default "3.4"
  */
-Eqwc.settings.qgisVersion = "2.18";
+Eqwc.settings.qgisVersion = "3.4";
 
 /**
  * Template string for browser window title
@@ -76,13 +77,23 @@ Eqwc.settings.enableHoverPopup = false;
 
 /**
  * Set default mode for identify option
- * > Possible values are: **"allLayers"**, **"topMostHit"**, **"activeLayers"**
+ * > Possible values are: `"allLayers"`, `"topMostHit"`, `"activeLayers"`
  *
- * > Note that you control visibility of this combo per specific project in database.
+ * > Note: You can control visibility of this combo for specific project in gisapp database.
  * @type {string}
  * @default "allLayers"
  */
 Eqwc.settings.defaultIdentificationMode = "allLayers";
+
+/**
+ * By default project CRS is selected for displaying coordinates. You can change it with this setting.
+ *
+ * > Note: CRS must have it's definition loaded (EPSG js file) and must be added to QGIS project properties CRS restriction part.
+ * @type {null|number}
+ * @default null
+ * @example 3794
+ */
+Eqwc.settings.defaultCoordinatesCrsCode = null;
 
 /**
  * Display coordinates of clicked location on top of identify window results
@@ -233,7 +244,7 @@ Eqwc.settings.symbolizersHighLightLayer = {
 
 /**
  * Integrate separate gisportal code to browse projects and manage database
- * > [gisportal]{@link https://github.com/uprel/gisportal}
+ * > [gisportal]{@link https://github.com/level2-gis/gisportal}
  * @type {boolean}
  * @default false
  */
@@ -285,7 +296,7 @@ Eqwc.settings.qgisFilesFieldAlias = 'files';
 
 /**
  * Unit system for displaying distance and area measurements.
- * > Possible values are: **"metric"**, **"english"**, **"geographic"**
+ * > Possible values are: `"metric"`, `"english"`, `"geographic"`
  *
  * > **metric**: "km", "m"
  *
@@ -304,3 +315,41 @@ Eqwc.settings.measurementsUnitSystem = 'metric';
  * @default 200
  */
 Eqwc.settings.layerLegendMaxHeightPx = 200;
+
+/**
+ * Possible vector layers export formats in form: `['name'], ['description']`. You can remove formats from list or rename format description (keep format name as it is!)
+ * @type {string[][]}
+ * @example [
+    ['SHP', 'ESRI Shapefile'],
+    ['DXF', 'AutoCAD DXF'],
+    ['XLSX', 'MS Office Open XLSX'],
+    ['CSV', 'Text CSV (semicolon)'],
+    ['TSV', 'Text TSV (tab)'],
+    ['KML', 'Keyhole Markup Language KML'],
+    ['GeoJSON', 'GeoJSON']
+ ]
+ */
+Eqwc.settings.vectorExportFormats = [
+    ['SHP', 'ESRI Shapefile'],
+    ['DXF', 'AutoCAD DXF'],
+    ['XLSX', 'MS Office Open XLSX'],
+    ['CSV', 'Text CSV (semicolon)'],
+    ['TSV', 'Text TSV (tab)'],
+    ['KML', 'Keyhole Markup Language KML'],
+    ['GeoJSON', 'GeoJSON']
+];
+
+/**
+ * Possible table layers (no geometry) export formats in form: `['name'], ['description']`. You can remove formats from list or rename format description (keep format name as it is!)
+ * @type {string[][]}
+ * @example [
+    ['XLSX', 'MS Office Open XLSX'],
+    ['CSV', 'Text CSV (semicolon)'],
+    ['TSV', 'Text TSV (tab)']
+ ]
+ */
+Eqwc.settings.tableExportFormats = [
+    ['XLSX', 'MS Office Open XLSX'],
+    ['CSV', 'Text CSV (semicolon)'],
+    ['TSV', 'Text TSV (tab)']
+];

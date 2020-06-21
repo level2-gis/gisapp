@@ -8,7 +8,16 @@
   },
   "docdash": {
     "static": true,
-    "sort": false
+    "sort": false,
+    "search": true,
+    "menu": {
+      "GitHub repository": {
+        "href":"https://github.com/uprel/gisapp",
+        "target":"_blank",
+        "class":"menu-item",
+        "id":"website_link"
+      }
+    }
   },
   "templates": {
     "cleverLinks": false,
