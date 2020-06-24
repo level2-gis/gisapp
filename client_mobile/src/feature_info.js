@@ -119,8 +119,13 @@ FeatureInfo.prototype.handleEvent = function (e) {
         url: url,
         dataType: 'text',
         timeout: 3000,
-        context: this
+        context: this,
+        beforeSend: function() {
+            this.loading('show');
+        }
+
     }).done(function (data, status) {
+        this.loading('hide');
         var results = null;
         if (Config.featureInfo.format === 'text/xml') {
             results = this.parseResults([data]);
@@ -134,7 +139,12 @@ FeatureInfo.prototype.handleEvent = function (e) {
         Map.toggleClickHandling(true);
     })
         .fail(function (xhr, status, error) {
-            this.resultsCallback(status,xhr.responseText);
+            this.loading('hide');
+            if(xhr.responseText) {
+                this.resultsCallback(status, xhr.responseText);
+            } else {
+                this.resultsCallback(status, status);
+            }
             Map.toggleClickHandling(true);
         });
 };
@@ -208,4 +218,10 @@ FeatureInfo.prototype.parseResults = function(featureInfos) {
   }
 
   return results.reverse();
+};
+
+FeatureInfo.prototype.loading = function(showOrHide) {
+    setTimeout(function(){
+        $.mobile.loading(showOrHide);
+    }, 1);
 };
