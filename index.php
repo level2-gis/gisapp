@@ -61,7 +61,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
 <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20200525" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20200624" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026" />
     </head>
     <body>

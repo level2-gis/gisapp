@@ -149,7 +149,7 @@ Gui.loadTopics = function(categories) {
 
       if (topic.main_layer != false) {
         //html += '<li class="topic" data-topic="' + topic.name + '">';
-        html +=   '<a href="'+Eqwc.settings.gisPortalRoot+'" target="_self"><img style="padding:5px" src="' + topic.icon + '"/></a>';
+        html +=   '<a href="'+Eqwc.settings.gisPortalRoot+'" target="_self"><img class="client-image" src="' + topic.icon + '"/></a>';
         //html +=   '<p style="white-space:pre-wrap">' + category.title + '</p>';
         //html +=   '<a href="#" data-role="button" data-inline="true">'+category.title+'</a>';
         //html += '</li>';

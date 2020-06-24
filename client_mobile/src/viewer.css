@@ -625,3 +625,10 @@ input[data-type='search']::-ms-clear { display: none; }
     opacity:      0.0;
     filter:       Alpha(Opacity=0);
 }
+
+.client-image {
+    max-height: 100px;
+    width: auto;
+    padding-top: 10px;
+    padding-left: 10px;
+}
