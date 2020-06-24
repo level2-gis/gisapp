@@ -1490,12 +1490,14 @@ $(document).ready(function(e) {
     //     }, 1);
     // }
     //
-    // //Thanks: https://github.com/jquery/jquery-mobile/issues/3414
-    // $.mobile.loader.prototype.defaultHtml = "<div class='ui-loader'>" +
-    // "<span class='ui-icon ui-icon-loading'></span>" +
-    // "<h1></h1>" +
-    // "<div class='ui-loader-curtain'></div>" +
-    // "</div>";
+
+    //this is needed to disable any new actions while map is still loading
+    //Thanks: https://github.com/jquery/jquery-mobile/issues/3414
+    $.mobile.loader.prototype.defaultHtml = "<div class='ui-loader'>" +
+    "<span class='ui-icon ui-icon-loading'></span>" +
+    "<h1></h1>" +
+    "<div class='ui-loader-curtain'></div>" +
+    "</div>";
 
 
   UrlParams.parse();
