@@ -267,6 +267,7 @@ Eqwc.settings.mobileUseTiledWMS = false;
  * > Mobile only
  * @type {boolean}
  * @default false
+ * @deprecated since release 1.9.2 (setting not needed anymore)
  */
 Eqwc.settings.mobileEnableTracking = false;
 
