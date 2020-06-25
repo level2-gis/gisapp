@@ -956,9 +956,9 @@ Gui.jumpToSearchResult = function(point) {
   Map.zoomToExtent(point.getExtent(), Config.map.minScaleDenom.search);
 
   // disable following
-  $('#switchFollow').val('off');
-  $('#switchFollow').slider('refresh');
-  Gui.toggleFollowing(false);
+  //$('#switchFollow').val('off');
+  //$('#switchFollow').slider('refresh');
+  Map.toggleFollowing(false);
 
   $('#panelSearch').panel('close');
 };
@@ -979,7 +979,7 @@ Gui.updateTranslations = function() {
 
   $('#panelProperties #buttonPropertiesMap .ui-btn-text').html(I18n.properties.header);
 
-  $('#panelProperties label[for=switchFollow]').html(I18n.properties.mapFollowing);
+  //$('#panelProperties label[for=switchFollow]').html(I18n.properties.mapFollowing);
   $('#panelProperties label[for=switchOrientation]').html(I18n.properties.mapRotation);
   $('#panelProperties label[for=switchScale]').html(I18n.properties.scaleBar);
   $('#panelProperties .ui-slider-label:contains(Ein)').html(I18n.properties.on);
@@ -1004,10 +1004,10 @@ Gui.updateTranslations = function() {
   $('#panelFeatureInfo b').html(I18n.featureInfo.header);
 };
 
-Gui.toggleFollowing = function(enabled) {
-  Gui.following = enabled;
-  Map.toggleFollowing(Gui.tracking && Gui.following);
-};
+//Gui.toggleFollowing = function(enabled) {
+//  Gui.following = enabled;
+//  Map.toggleFollowing(Gui.tracking && Gui.following);
+//};
 
 Gui.toggleOrientation = function(enabled) {
   Gui.orientation = enabled;
@@ -1227,9 +1227,9 @@ Gui.initViewer = function() {
 
 
   // default properties
-  $('#switchFollow').val(Config.defaultProperties.following ? 'on' : 'off');
-  $('#switchFollow').slider('refresh');
-  Gui.toggleFollowing(Config.defaultProperties.following);
+  //$('#switchFollow').val(Config.defaultProperties.following ? 'on' : 'off');
+  //$('#switchFollow').slider('refresh');
+  //Gui.toggleFollowing(Config.defaultProperties.following);
   $('#switchOrientation').val(Config.defaultProperties.orientation ? 'on' : 'off');
   $('#switchOrientation').slider('refresh');
   Gui.toggleOrientation(Config.defaultProperties.orientation);
@@ -1295,17 +1295,34 @@ Gui.initViewer = function() {
   $("#editPanel").hide();
   $("#recordPanel").hide();
 
-  $('#btnLocation').on('tap', function() {
-    Gui.tracking = !Gui.tracking;
-    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !Gui.tracking);
-    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
-    Map.toggleTracking(Gui.tracking);
-      if (Gui.tracking) {
-          $('#locationPanel').html(I18n.geolocation.obtaining);
-          $('#locationPanel').show();
-      }
-    Map.toggleFollowing(Gui.tracking && Gui.following);
-  });
+    $('#btnLocation').on('tap', function () {
+        if (!Gui.tracking) {
+            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', false);
+            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', true);
+
+            Map.toggleTracking(true);
+            Gui.tracking = true;
+            Map.toggleFollowing(true);
+
+            $('#locationPanel').html(I18n.geolocation.obtaining);
+            $('#locationPanel').show();
+        } else {
+            if(Gui.following) {
+                $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
+                $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
+
+                Map.toggleTracking(false);
+                Gui.tracking = false;
+            } else {
+                $('#btnLocation .ui-icon').toggleClass('ui-icon-location_out', false);
+                $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', true);
+
+                Map.centerOnLocation();
+                Map.toggleFollowing(true);
+            }
+        }
+        //Map.toggleFollowing(Gui.tracking && Gui.following);
+    });
 
   //call getfeatureinfo in location provided by geolocation
   $("#btnInfo").click(Map.featureInfoOnLocation);
@@ -1377,12 +1394,12 @@ Gui.initViewer = function() {
   });
 
   // properties
-  $('#switchFollow').on('change', function(e) {
-    Gui.toggleFollowing($(this).val() == 'on');
-  }).parent().on('swiperight',function(e,ui) {
-    // block panel close
-    e.stopPropagation();
-  });
+  // $('#switchFollow').on('change', function(e) {
+  //   Gui.toggleFollowing($(this).val() == 'on');
+  // }).parent().on('swiperight',function(e,ui) {
+  //   // block panel close
+  //   e.stopPropagation();
+  // });
   $('#switchOrientation').on('change', function(e) {
     Gui.toggleOrientation($(this).val() == 'on');
   }).parent().on('swiperight',function(e,ui) {

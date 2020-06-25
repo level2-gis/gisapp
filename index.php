@@ -61,7 +61,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
 <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20200624" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20200626" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026" />
     </head>
     <body>
@@ -100,13 +100,6 @@ function goMobile($lang, $scanner) {
                 </div>
                 <div id="panelPropertiesMap" class="scrollable">
                     <div id="properties">
-                        <div data-role="fieldcontain">
-                            <label for="switchFollow">Kartennachf&uuml;hrung</label>
-                            <select id="switchFollow" name="switchFollow" data-role="slider">
-                                <option value="off">Aus</option>
-                                <option value="on">Ein</option>
-                            </select>
-                        </div>
                         <div data-role="fieldcontain">
                             <label for="switchOrientation">Kartenausrichtung</label>
                             <select id="switchOrientation" name="switchOrientation" data-role="slider">

@@ -179,6 +179,8 @@ Map.createMap = function() {
       }
     }
   });
+
+  Map.map.on('movestart', Map.userMoves);
 };
 
 Map.clearLayers = function() {
@@ -783,15 +785,16 @@ Map.toggleTracking = function (enabled) {
         });
 
         Map.geolocation.on('error', function (error) {
-            //if (error.code == error.PERMISSION_DENIED) {
-            //  alert(I18n.geolocation.permissionDeniedMessage);
-            //}
             if(error.code == Eqwc.geolocationErrors.TIMEOUT) {
                 //fix Firefox issue with restarting gelocation tracking
                 Map.geolocation.setTracking(false);
                 Map.geolocation.setTracking(true);
             } else {
-                alert(error.message);
+                if(error.message>"") {
+                    alert(error.message);
+                } else {
+                    alert(I18n.geolocation.permissionDeniedMessage);
+                }
                 $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
                 $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
                 Gui.tracking = false;
@@ -865,6 +868,8 @@ Map.toggleTracking = function (enabled) {
             accuracyFeature.setGeometry(Map.geolocation.getAccuracyGeometry());
         });
 
+        Map.geolocation.once('change:position', Map.initialCenterOnLocation);
+
         Map.geolocationLayer = new ol.layer.Vector({
             source: new ol.source.Vector({
                 features: [accuracyFeature]
@@ -881,10 +886,7 @@ Map.toggleTracking = function (enabled) {
     Map.geolocation.setTracking(enabled);
     $('#locationMarker').toggle(enabled);
 
-    if (enabled) {
-        // always jump to first geolocation
-        Map.geolocation.once('change:position', Map.initialCenterOnLocation);
-    } else {
+    if (!enabled) {
         Gui.showLocationPanel(false);
         if (typeof(Editor)=='function') {
             mobEditor.showEditPanel(false);
@@ -897,15 +899,17 @@ Map.toggleTracking = function (enabled) {
     }
 };
 
-Map.toggleFollowing = function(enabled) {
-  if (Map.geolocation != null) {
-    if (enabled) {
-      Map.geolocation.on('change:position', Map.centerOnLocation);
+Map.toggleFollowing = function (enabled) {
+    if (Map.geolocation != null) {
+        Gui.following = enabled;
+        if (enabled) {
+            Map.geolocation.on('change:position', Map.centerOnLocation);
+        } else {
+            Map.geolocation.un('change:position', Map.centerOnLocation);
+            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
+            $('#btnLocation .ui-icon').toggleClass('ui-icon-location_out', true);
+        }
     }
-    else {
-      Map.geolocation.un('change:position', Map.centerOnLocation);
-    }
-  }
 };
 
 Map.initialCenterOnLocation = function () {
@@ -916,11 +920,14 @@ Map.initialCenterOnLocation = function () {
     if (Config.map.initialGeolocationMaxScale != null) {
         var maxRes = Map.scaleDenomToResolution(Config.map.initialGeolocationMaxScale, true);
         if (Map.map.getView().getResolution() > maxRes) {
+            view.set('appMove', true);
             view.animate({center: pos, resolution: maxRes});
         } else {
+            view.set('appMove', true);
             view.animate({center: pos});
         }
     } else {
+        view.set('appMove', true);
         view.animate({center: pos});
     }
 
@@ -945,8 +952,21 @@ Map.centerOnLocation = function() {
     var dy = Math.abs(center[1]-pos[1]);
     var extent = Map.map.getView().calculateExtent();
     if(dx > (ol.extent.getWidth(extent) / 4) || (dy > (ol.extent.getHeight(extent) / 4))) {
+        view.set('appMove', true);
         view.animate({center: pos});
         Map.clampToScale(Config.map.minScaleDenom.geolocation);
+    }
+};
+
+Map.userMoves = function() {
+
+    var view = Map.map.getView();
+    var appMove = view.get('appMove') || false;
+
+    view.unset('appMove');
+
+    if(!appMove && Map.geolocation && Gui.tracking) {
+        Map.toggleFollowing(false);
     }
 };
 

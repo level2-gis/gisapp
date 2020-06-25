@@ -106,7 +106,7 @@ Config.data.initialTopic = projectData.project;
 
 // default properties
 Config.defaultProperties = {
-  following: Eqwc.settings.mobileEnableTracking,
+  following: true,
   orientation: false,
   scalebar: true
 };

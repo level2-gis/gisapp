@@ -21,6 +21,10 @@ body {
   background-image: url("../img/positioning_on.png");
 }
 
+.ui-icon-location_out {
+    background-image: url("../img/positioning_out.png");
+}
+
 .ui-icon-searching {
   background-image: url("../img/search.png");
 }
