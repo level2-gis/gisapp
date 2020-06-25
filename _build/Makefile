@@ -33,3 +33,5 @@ java -jar closurecompiler.jar \
 
 bash Makeheader.sh $DISTRIBUTION_NAME $VERSION > $DISTRIBUTION_NAME"_header"
 cat $DISTRIBUTION_NAME"_header" $DISTRIBUTION_NAME".js" >../client/$DISTRIBUTION_NAME".js"
+rm $DISTRIBUTION_NAME"_header"
+rm $DISTRIBUTION_NAME".js"
