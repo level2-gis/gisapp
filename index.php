@@ -102,7 +102,7 @@ function goMobile($lang, $scanner) {
                     <div id="properties">
                         <div data-role="fieldcontain">
                             <label for="switchOrientation">Kartenausrichtung</label>
-                            <select id="switchOrientation" name="switchOrientation" data-role="slider">
+                            <select id="switchOrientation" name="switchOrientation" data-role="slider" disabled="disabled">
                                 <option value="off">Aus</option>
                                 <option value="on">Ein</option>
                             </select>
