@@ -314,9 +314,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
             layOl3 = new ol.layer.Tile({
                 visible: visible,
                 //name: lay.name,
-                source: new ol.source.XYZ({
-                    url: definition.url
-                })
+                source: new ol.source.XYZ(definition)
             });
 
             break;

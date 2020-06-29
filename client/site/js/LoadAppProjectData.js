@@ -37,7 +37,14 @@ function makeLayer(layDef, visible) {
 
         case 'XYZ' :
             var url = options.url.replace(/\{/g, '${');
-            layer = new OpenLayers.Layer.XYZ(title, url, options.options);
+
+            if(typeof options.tmsUrl == "undefined") {
+                layer = new OpenLayers.Layer.XYZ(title, url, options.options);
+            } else {
+                options.options.layername = options.tmsLayer;
+                options.options.type = options.tmsType;
+                layer = new OpenLayers.Layer.TMS(title, options.tmsUrl, options.options);
+            }
             break;
 
         case 'Bing' :
