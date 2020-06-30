@@ -600,6 +600,11 @@ function parseFIResult(node) {
                                         htmlText += "<td>" + attValue + "</td></tr>";
                                     }
                                     hasAttributes = true;
+
+                                    if(countRelations>0 && projectData.relations[layerName][0].display_field && attNameCase == projectData.relations[layerName][0].display_field.toUpperCase()) {
+                                        projectData.relations[layerName][0].display_value = attValue;
+                                    }
+
                                     //}
                                 }
                             }
@@ -728,11 +733,20 @@ function showRelations(layerId, id) {
 
     var layerName = projectData.layers[layerId].layername;
     var cmp = Ext.getCmp('window_' + layerName);
+    if(cmp) {
+        cmp.destroy();
+    }
+
+    var display = projectData.relations[layerName][0].display_value;
+    if(display) {
+        display = layerName + ': ' + display;
+    } else {
+        display = layerName + ': ' + id;
+    }
 
     for(var i=0;i<projectData.relations[layerName].length;i++) {
         var table = projectData.relations[layerName][i].relate_layer;
         var field = projectData.relations[layerName][i].join_field;
-
         var filter = '"' + field + '" = \'' + id + '\'';
 
         var relations = new QGIS.SearchPanel({
@@ -744,13 +758,14 @@ function showRelations(layerId, id) {
             gridColumns: getLayerAttributes(table).columns,
             gridLocation: 'popup',
             gridEditable: false,
-            gridTitle: table + ': ' + id,
+            gridTitle: table,
             gridResults: Eqwc.settings.limitAttributeFeatures,
             gridResultsPageSize: 20,
             selectionLayer: layerName,
             formItems: [],
             doZoomToExtent: false,
-            maskElement: (cmp && cmp.el) ? cmp.el : null
+            maskElement: null,
+            windowTitle: display
         });
 
         //Ext.getCmp('BottomPanel').setTitle(layer.gridTitle,'x-cols-icon');

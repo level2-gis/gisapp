@@ -15,9 +15,9 @@ function customBeforeMapInit() {
     for (var j=0; j < tablesOnStart.length;j++) {
         var myLayerName = tablesOnStart[j];
         var layerId = wmsLoader.layerTitleNameMapping[myLayerName];
-        var editable = projectData.layers[layerId].wfs;
 
-        if (wmsLoader.projectSettings.capability.layerDrawingOrder.indexOf(layerId)>=0) {
+        if (layerId) {
+            var editable = projectData.layers[layerId].wfs;
             var layer = new QGIS.SearchPanel({
                 useWmsRequest: true,
                 queryLayer: myLayerName,

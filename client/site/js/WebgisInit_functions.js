@@ -1678,6 +1678,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             //closeAction: 'hide'
                         }).show();
                     win = Ext.getCmp('window_'+searchPanelInstance.selectionLayer);
+                    win.setTitle(searchPanelInstance.windowTitle);
                 } else {
                     win.toFront();
                 }
