@@ -164,7 +164,11 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
                 $contentType = "text/xml";
                 break;
             case "GetLegendGraphics":
-                $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS'] . $sep . Helpers::normalize($query_arr['STYLES']));
+                if(empty($query_arr['STYLES'])) {
+                    $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS']);
+                } else {
+                    $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS'] . $sep . Helpers::normalize($query_arr['STYLES']));
+                }
                 $contentType = "image/png";
                 break;
             case "DescribeFeatureType":
