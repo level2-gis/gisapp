@@ -273,8 +273,13 @@ Gui.loadLayers = function (data) {
                 //html += '<label>';
                 //html += '<input type="' + type + '" ';
 
+                var layerId = layer.layername;
+                if(projectData.use_ids) {
+                    layerId = layer.id;
+                }
+
                 //group layer + legend
-                html += '<div data-role="collapsible" data-theme="c" id="'+layer.id+'"';
+                html += '<div data-role="collapsible" data-theme="c" id="'+layerId+'"';
                 html += ' data-iconpos="right" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-groupcheckbox="true"';
                 html += '>';
                 html += '<h3>' + node.name + '</h3>';
@@ -287,7 +292,7 @@ Gui.loadLayers = function (data) {
                     html += 'data-role="none" ';
                 }
                 html += 'name="' + layer.layername + '" ';
-                html += 'data-layer="' + layer.id + '" ';
+                html += 'data-layer="' + layerId + '" ';
                 if (layer.visini) {
                     html += 'checked ';
                 }
@@ -297,7 +302,7 @@ Gui.loadLayers = function (data) {
                 html += '</div>';
 
                 layers.push({
-                    id: layer.id,
+                    id: layerId,
                     layername: layer.layername,
                     title: layer.toclayertitle,
                     wms_sort: layer.wms_sort,

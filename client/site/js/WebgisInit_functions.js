@@ -2914,6 +2914,9 @@ function getVisibleExtraLayersForPrint() {
 function layerStyles(layerIds) {
     var styles = [];
     for (var i=0; i<layerIds.length; i++) {
+        if(typeof layerIds[i] == 'undefined') {
+            continue;
+        }
         var layer = wmsLoader.layerProperties[layerIds[i]];
         if(layer && layer.currentStyle > '') {
             styles.push(layer.currentStyle);
