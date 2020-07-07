@@ -13,7 +13,6 @@
 use GisApp\Helpers;
 
 require_once("class.Helpers.php");
-require_once("class.Login.php");
 require_once("settings.php");
 
 /**
@@ -21,7 +20,7 @@ require_once("settings.php");
  * @param $map
  * @param $query_arr
  * @param $destinationFormat
- * @return array
+ * @return string
  * @throws Exception
  */
 function prepareFile($layername, $map, $query_arr, $destinationFormat)
