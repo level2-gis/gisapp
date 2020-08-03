@@ -1074,6 +1074,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             'QUERY_LAYERS': layerId,
             'FEATURE_COUNT': this.gridResults,
             'INFO_FORMAT': 'text/xml',
+            'WITH_GEOMETRY': false,
             'CRS': authid
             //'FILTER': filter
         };

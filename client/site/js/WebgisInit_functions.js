@@ -194,22 +194,14 @@ function postLoading() {
             FORMAT: format
         });
         if (identificationMode != 'activeLayers') {
-            WMSGetFInfo.vendorParams = {
-                'QUERY_LAYERS': selectedQueryableLayers.join(',')
-            };
+            WMSGetFInfo.vendorParams['QUERY_LAYERS'] = selectedQueryableLayers.join(',');
             if (Eqwc.settings.enableHoverPopup) {
-                WMSGetFInfoHover.vendorParams = {
-                    'QUERY_LAYERS': selectedQueryableLayers.join(',')
-                };
+                WMSGetFInfoHover.vendorParams['QUERY_LAYERS'] = selectedQueryableLayers.join(',');
             }
         } else {
-            WMSGetFInfo.vendorParams = {
-                'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
-            };
+            WMSGetFInfo.vendorParams['QUERY_LAYERS'] = selectedActiveQueryableLayers.join(',');
             if (Eqwc.settings.enableHoverPopup) {
-                WMSGetFInfoHover.vendorParams = {
-                    'QUERY_LAYERS': selectedActiveQueryableLayers.join(',')
-                };
+                WMSGetFInfoHover.vendorParams['QUERY_LAYERS'] = selectedActiveQueryableLayers.join(',');
             }
         }
     };
@@ -876,7 +868,8 @@ function postLoading() {
         maxFeatures: Eqwc.settings.limitSearchMaxResults,
         vendorParams: {
             QUERY_LAYERS: selectedQueryableLayers.join(","),
-            WITH_MAPTIP: true
+            WITH_MAPTIP: true,
+            WITH_GEOMETRY: true
         }
     });
     WMSGetFInfo.events.register("getfeatureinfo", this, showFeatureInfo);

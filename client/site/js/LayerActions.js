@@ -860,6 +860,11 @@ function getActionColumns(layerId) {
 
     var lay = projectData.layers[layerId];
 
+    //if qgis version >3.4 we need add geometry to fetureinfo enabled to use feature boundingbox
+    if(!projectData.add_geom && Eqwc.common.compareQgisVersionWithInteger(304) == 'higher') {
+        return null;
+    }
+
     if(lay && lay.geom_type == 'No geometry') {
         return null;
     }

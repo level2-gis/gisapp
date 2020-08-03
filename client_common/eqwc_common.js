@@ -279,6 +279,23 @@ Eqwc.common.promptForMapFilterValue = function(layer,field, msg, onlyNumbers, mi
     }
 };
 
+Eqwc.common.compareQgisVersionWithInteger= function(num) {
+    var version = Eqwc.settings.qgisVersion;
+    if (isNaN(parseFloat(version))) {
+        return 'error';
+    }
+
+    var major = parseInt(version) * 100;
+    var minor = parseInt(version.split('.')[1]);
+    if (major + minor > num) {
+        return 'higher';
+    } else if (major + minor == num) {
+        return 'equal';
+    } else if (major + minor < num) {
+        return 'lower';
+    }
+};
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
