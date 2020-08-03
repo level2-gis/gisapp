@@ -181,6 +181,7 @@ projectData.setLayerLegend = function (layer,node) {
             LAYERTITLESPACE: 0,
             TRANSPARENT: true,
             LAYERS: layername,
+            RULELABEL: "AUTO",
             STYLES: style,
             DPI: screenDpi,
             NODE: node.id

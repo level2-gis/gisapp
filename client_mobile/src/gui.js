@@ -365,6 +365,7 @@ Gui.loadLayers = function (data) {
                         "&LAYERTITLESPACE=0" +
                         "&TRANSPARENT=TRUE" +
                         "&LAYERS=" + encodeURIComponent(lay) +
+                        "&RULELABEL=AUTO" +
                         "&DPI=" + encodeURIComponent(Config.map.dpi);
 
                     var leg = '<img data-layer="'+lay+'" src="' + legendUrl + '"</img>';
