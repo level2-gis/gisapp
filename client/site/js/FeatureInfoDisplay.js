@@ -492,11 +492,11 @@ function parseFIResult(node) {
                 if (layerChildNode.hasChildNodes() && layerChildNode.nodeName === "Feature") {
                     var attributeNode = layerChildNode.firstChild;
 
-                    htmlText += '<table><tbody>';
+                    htmlText += '<table><tbody><tr><td colspan=2>';
                     //case vector data
 
-                    //add geometry actions
-                    var addActions = projectData.use_ids;
+                    //add geometry actions if layer is WFS published or geometry is added to response
+                    var addActions = projectData.use_ids ? (projectData.layers[layerId].wfs || projectData.add_geom)  : false;
 
                     if (projectData.user == 'guest') {
                         addActions = false;
@@ -509,26 +509,25 @@ function parseFIResult(node) {
                         if (projectData.layers[layerId].wfs && Eqwc.plugins["editing"] !== undefined) {
                             edit = '<a class="i-edit" ext:qtip="' + TR.editData + '" href="javascript:;" onclick="identifyAction(\'edit\',\'' + fid + '\');"></a>';
                         }
-                        htmlText += "<tr><td colspan='2'>" + select + edit + clear;
-
-                        if (countRelations > 0) {
-                            var add = '';
-                            var show = '<a class="i-table" ext:qtip="' + TR.relations + '" href="javascript:;" onclick="showRelations(\'' + layerId + '\',\'' + id + '\');"></a>';
-                            if (countRelations == 1 && Eqwc.plugins["editing"] !== undefined) {
-                                var table = projectData.relations[layerName][0].relate_layer;
-                                var tableId = Eqwc.common.getLayerId(table);
-                                var field = projectData.relations[layerName][0].join_field;
-                                var rid = table + "." + id;
-                                if (projectData.layers[tableId].wfs) {
-                                    add = '<a class="i-add" ext:qtip="' + TR.tableAddRecord + '" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
-                                }
-                            }
-                            if (show > '' || add > '') {
-                                htmlText += show + add;
+                        htmlText +=  select + edit + clear;
+                    }
+                    if (countRelations > 0) {
+                        var add = '';
+                        var show = '<a class="i-table" ext:qtip="' + TR.relations + '" href="javascript:;" onclick="showRelations(\'' + layerId + '\',\'' + id + '\');"></a>';
+                        if (countRelations == 1 && Eqwc.plugins["editing"] !== undefined) {
+                            var table = projectData.relations[layerName][0].relate_layer;
+                            var tableId = Eqwc.common.getLayerId(table);
+                            var field = projectData.relations[layerName][0].join_field;
+                            var rid = table + "." + id;
+                            if (projectData.layers[tableId].wfs) {
+                                add = '<a class="i-add" ext:qtip="' + TR.tableAddRecord + '" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
                             }
                         }
-                        htmlText += "</td></tr>";
+                        if (show > '' || add > '') {
+                            htmlText += show + add;
+                        }
                     }
+                    htmlText += "</td></tr>";
 
                     while (attributeNode) {
                         if (attributeNode.nodeName == "Attribute") {
