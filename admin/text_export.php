@@ -13,7 +13,6 @@
 use GisApp\Helpers;
 
 require_once("class.Helpers.php");
-require_once("class.Login.php");
 require_once("settings.php");
 
 function sendText($type, $layer_name, $project_path, $query, $format)
