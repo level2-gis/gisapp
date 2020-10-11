@@ -1096,7 +1096,7 @@ function postLoading() {
                     hasReverseAxisOrder: false, // PostGIS returns bbox' coordinates always x/y
                     width: Math.round(geoExtMap.getWidth()/3),
                     searchtables: searchtables,
-                    emptyText: (projectData.wsgi && projectData.wsgi.emptytext) ? projectData.wsgi.emptytext : searchFieldDefaultTextString["en"],
+                    emptyText: (projectData.wsgi && projectData.wsgi.emptytext) ? projectData.wsgi.emptytext : searchFieldDefaultTextString[lang],
                     url: searchBoxQueryURL,
                     geomUrl: searchBoxGetGeomURL,
                     srs: projectData.crs.split(':')[1]        //this is the map coordinate system and that's what we need to get from server
