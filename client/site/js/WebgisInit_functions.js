@@ -2645,12 +2645,12 @@ function feedbackHandler(btn) {
         var form = feedbackWin.items.get(0).getForm();
         var message = form.findField('msg').getValue();
         var link = createPermalink();
-        data.push('USER: '+projectData.user);
-        data.push('MESSAGE: '+message);
-        data.push('LINK: '+link);
+        data.push(I18n.login.user+': '+projectData.user);
+        data.push(message);
+        data.push(projectData.project + ': <a href="'+link+'">LINK<a/>');
         feedbackWin.hide();
         form.reset();
-        sendMail(projectData.userFeedbackMailto, 'EQWC '+projectData.project+" "+ TR.feedback, data.join('\r\n'), silent);
+        sendMail(projectData.userFeedbackMailto, 'EQWC '+projectData.project+" "+ TR.feedback, data.join('<br>'), silent);
     }
 }
 
@@ -2668,10 +2668,13 @@ function sendMail(to, subject, body, silent) {
             params: data,
             method: 'POST',
             success: function (response) {
+                if (!silent) {
+                    Ext.Msg.alert(TR.feedbackSuccessTitle, TR.feedbackSuccessMsg);
+                }
             },
             failure: function (response) {
                 if (!silent) {
-                    Ext.Msg.alert('Error sending feedback', response.statusText);
+                    Ext.Msg.alert(TR.feedbackErrorTitle, TR.feedbackErrorMsg + '<br>' + response.statusText);
                 }
             }
         });
