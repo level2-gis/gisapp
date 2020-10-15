@@ -821,6 +821,14 @@ function identifyAction(type, id, extra) {
 
                     feat.data[extra] = id.split('.')[1];
 
+                    //set field readonly or hide
+                    if(projectData.relations.hideJoinField) {
+                        editor.attributesForm.getForm().findField(extra).setVisible(false);
+                    } else {
+                        editor.attributesForm.getForm().findField(extra).setReadOnly(true);
+                    }
+                    editor.attributesForm.relationField = extra;
+
                     editor.editLayer.addFeatures([feat]);
                     editor.attributesForm.loadRecord(feat);
                 }
