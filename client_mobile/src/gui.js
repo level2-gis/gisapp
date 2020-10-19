@@ -256,9 +256,9 @@ Gui.loadLayers = function (data) {
                     return;
                 }
 
-                //skip if layer is table (no geometry)
-                if(layer.geom_type == 'No geometry') {
-                    return;
+                //skip if layer is table (no geometry) and not published as WFS
+                if(layer.geom_type == 'No geometry' && !layer.wfs) {
+                   return;
                 }
 
                 //skip if layer with same name exists in backgroundLayers
@@ -279,10 +279,20 @@ Gui.loadLayers = function (data) {
                 }
 
                 //group layer + legend
-                html += '<div data-role="collapsible" data-theme="c" id="'+layerId+'"';
-                html += ' data-iconpos="right" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-groupcheckbox="true"';
-                html += '>';
-                html += '<h3>' + node.name + '</h3>';
+                if (layer.geom_type == 'No geometry') {
+                    if(typeof(Editor) == 'function') {
+                        html += '<a href="javascript:Eqwc.common.callEditor(\''+layerId+'\',null, \'add\');" style="text-align: left;" data-role="button" mini"true" data-theme="c" id="' + layerId + '"';
+                        html += ' data-icon="plus" data-iconpos="right" data-groupcheckbox="false"';
+                        html += '>';
+                        html += node.name + '</a>';
+                    }
+                } else {
+                    html += '<div data-role="collapsible" data-theme="c" id="' + layerId + '"';
+                    html += ' data-iconpos="right" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-groupcheckbox="true"';
+                    html += '>';
+                    html += '<h3>' + node.name + '</h3>';
+                }
+
 
                 // add layer, but hidden, checkbox in group above will control layer on/off
                 html += '<label style="display:none">';
