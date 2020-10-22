@@ -61,7 +61,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
 <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20200706" />
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20201022" />
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026" />
     </head>
     <body>
@@ -69,20 +69,20 @@ function goMobile($lang, $scanner) {
 
         <div data-role="content">
             <div id="map">
-                <a href="#" style="display:none" id="btnCompass" data-role="button" data-inline="true" data-icon="compass" data-iconpos="notext"></a>
-                <a href="#" id="btnLocation" data-role="button" data-inline="true" data-icon="location_off" data-iconpos="notext"></a>
-                <a href="#panelSearch" id="btnSearching" data-role="button" data-inline="true" data-icon="searching" data-iconpos="notext"></a>
-                <a href="#panelLayer" id="btnLayers" data-role="button" data-inline="true" data-icon="layers" data-iconpos="notext"></a>
-                <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
-                <a href="#" id="btnInfo" data-role="button" data-icon="loc_info" data-iconpos="notext"></a>
-                <a href="#" style="display:none" id="btnAlert" data-role="button" data-icon="alert2" data-iconpos="notext"></a>
-                <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled"></a>
-                <a href="#" style="display:none" id="btnRemove" data-role="button" data-icon="remove" data-iconpos="notext" data-rel="dialog"></a>
-                <a href="#" style="display:none" id="btnRecord" data-role="button" data-icon="record" data-iconpos="notext" data-rel="dialog"></a>
-                <a href="#" style="display:none" id="btnRecordStop" data-role="button" data-icon="record_stop" data-iconpos="notext" data-rel="dialog"></a>
-                <a href="#" style="display:none" id="btnEnd" data-role="button" data-icon="save" data-iconpos="notext" data-rel="dialog"></a>
-                <a href="#" style="display:none" id="btnGotoPage" data-role="button" data-icon="goto_more" data-iconpos="notext" data-rel="dialog" data-theme="e"></a>
-                <a href="#" style="display:none" id="btnGotoStop" data-role="button" data-icon="goto_stop" data-iconpos="notext" data-rel="dialog" data-theme="e"></a>
+                <a href="#" style="display:none" id="btnCompass" data-role="button" data-inline="true" data-icon="compass" data-iconpos="notext" class="mapicon"></a>
+                <a href="#" id="btnLocation" data-role="button" data-inline="true" data-icon="location_off" data-iconpos="notext" class="mapicon"></a>
+                <a href="#panelSearch" id="btnSearching" data-role="button" data-inline="true" data-icon="searching" data-iconpos="notext" class="mapicon"></a>
+                <a href="#panelLayer" id="btnLayers" data-role="button" data-inline="true" data-icon="layers" data-iconpos="notext" class="mapicon"></a>
+                <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext" class="mapicon"></a>
+                <a href="#" id="btnInfo" data-role="button" data-icon="loc_info" data-iconpos="notext" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnAlert" data-role="button" data-icon="alert2" data-iconpos="notext" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext" data-rel="dialog" class="ui-disabled mapicon"></a>
+                <a href="#" style="display:none" id="btnRemove" data-role="button" data-icon="remove" data-iconpos="notext" data-rel="dialog" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnRecord" data-role="button" data-icon="record" data-iconpos="notext" data-rel="dialog" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnRecordStop" data-role="button" data-icon="record_stop" data-iconpos="notext" data-rel="dialog" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnEnd" data-role="button" data-icon="save" data-iconpos="notext" data-rel="dialog" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnGotoPage" data-role="button" data-icon="goto_more" data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnGotoStop" data-role="button" data-icon="goto_stop" data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
             </div>
             <div id="locationPanel" class="ui-popup-container">LocationPanel</div>
             <div id="gotoPanel" class="ui-popup-container">GotoPanel</div>

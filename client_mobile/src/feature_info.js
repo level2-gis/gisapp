@@ -81,6 +81,51 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layersArr) {
         });
 };
 
+FeatureInfo.prototype.filter = function (filter, layers) {
+
+    //disable further clicks, until success
+    Map.toggleClickHandling(false);
+
+    var params = {
+        'SERVICE': 'WMS',
+        'VERSION': ol.DEFAULT_WMS_VERSION,
+        'REQUEST': 'GetFeatureInfo',
+        'FORMAT': 'image/png',
+        'INFO_FORMAT': Config.featureInfo.format,
+        'QUERY_LAYERS': layers,
+        'LAYERS': layers,
+        'FILTER': filter,
+        'FEATURE_COUNT': Eqwc.settings.limitAttributeFeatures
+    };
+
+    var url = Map.topics[Map.topic].wms_url;
+
+    $.ajax({
+        url: url,
+        data: params,
+        dataType: 'text',
+        timeout: 5000,
+        context: this
+    })
+        .done(function (data, status, xhr) {
+            var results = null;
+            if (Config.featureInfo.format === 'text/xml') {
+                results = this.parseResults([data]);
+            } else {
+                results = [data];
+            }
+
+            this.resultsCallback(status, results);
+            //allow clicking again
+            Map.toggleClickHandling(true);
+        })
+        .fail(function (xhr, status, error) {
+            this.resultsCallback(status, error);
+            Map.toggleClickHandling(true);
+        });
+};
+
+
 
 
 /**

@@ -373,14 +373,14 @@ body {
   padding: 10px;
 }
 
-.ui-btn-icon-notext {
-  width: 44px;
-  height: 44px;
-  position: absolute;
-  z-index: 1;
+.mapicon {
+    width: 44px;
+    height: 44px;
+    position: absolute;
+    z-index: 1;
 }
 
-.ui-btn-icon-notext .ui-btn-inner .ui-icon {
+.mapicon .ui-btn-inner .ui-icon {
   background-color: transparent;
   background-size: 36px 36px;
   width: 36px;

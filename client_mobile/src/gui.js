@@ -321,7 +321,8 @@ Gui.loadLayers = function (data) {
                     maxscale: layer.maxscale,
                     hidden_attributes: layer.hidden_attributes,
                     hidden_values: layer.hidden_values,
-                    identify: !!layer.identify
+                    identify: !!layer.identify,
+                    geom_type: layer.geom_type
                 });
             }
         }
@@ -420,7 +421,8 @@ Gui.loadLayers = function (data) {
             hidden_attributes: layer.hidden_attributes,
             hidden_values: layer.hidden_values,
             transparency: 0,
-            identify: layer.identify
+            identify: layer.identify,
+            geom_type: layer.geom_type
         };
     }
 
@@ -809,11 +811,14 @@ Gui.showXMLFeatureInfoResults = function (results) {
     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
     filesAlias = filesAlias.toUpperCase();
 
-    html += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">'+TR.navigation+'</a>';
+    //check if we don't have single no geometry layer
+    if(!(results.length == 1 && Map.layers[results[0].layer].geom_type == 'No geometry')) {
+        html += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
 
-    //add button
-    if (typeof(Editor) == 'function' && mobEditor.layer) {
-        html += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">'+TR.editAdd+'</a>';
+        //add button
+        if (typeof (Editor) == 'function' && mobEditor.layer) {
+            html += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
+        }
     }
 
     for (var i = 0; i < results.length; i++) {
@@ -858,22 +863,39 @@ Gui.showXMLFeatureInfoResults = function (results) {
             html += '<h3>' + title + '</h3>';
 
             //add edit and goto button in case of editor plugin and layer is available for editing
-            if(typeof(Editor) == 'function' && Config.data.wfslayers[layer.id]) {
-                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'edit\');" data-theme="b" data-inline="true" data-mini="true" data-role="button">'+TR.editEdit+'</a>';
-            }
-            if(typeof(Editor) == 'function' && Config.data.gotolayers[layer.id]) {
-                html += '<a href="javascript:Eqwc.common.callEditor(\''+layer.id+'\','+feature.id+', \'goto\');" data-theme="e" data-inline="true" data-mini="true" data-role="button">'+I18n.editor.goto+'</a>';
+            var hasControlGroup = false;
+            if (typeof (Editor) == 'function' && layer.geom_type != 'No geometry') {
+                hasControlGroup = true;
+                html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
+                if (Config.data.wfslayers[layer.id]) {
+                    html += '<a href="javascript:Eqwc.common.callEditor(\'' + layer.id + '\',' + feature.id + ', \'edit\');" data-theme="b" data-role="button">' + TR.editEdit + '</a>';
+                }
+                if (Config.data.gotolayers[layer.id]) {
+                    html += '<a href="javascript:Eqwc.common.callEditor(\'' + layer.id + '\',' + feature.id + ', \'goto\');" data-theme="e" data-role="button">' + I18n.editor.goto + '</a>';
+                }
             }
 
-            if (countRelations == 1) {
+            if (countRelations > 0) {
                 var table = projectData.relations[layerTitle][0].relate_layer;
                 var tableId = Eqwc.common.getLayerId(table);
                 var field = projectData.relations[layerTitle][0].join_field;
+                var filter = table+':"'+field+'" = \''+feature.id+'\'';
 
-                if(typeof(Editor) == 'function' && Config.data.wfslayers[tableId]) {
-                    //feature.id can be string, so need to quote here
-                    html += '<a href="javascript:Eqwc.common.callEditor(\''+tableId+'\',\''+feature.id+'\', \'addRelation\', \''+field+'\');" data-theme="a" data-inline="true" data-mini="true" data-role="button">'+TR.editAdd+'</a>';
+                if(!hasControlGroup) {
+                    hasControlGroup = true;
+                    html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
                 }
+
+                html += '<a href="javascript:Gui.wmsSearch(\''+tableId+'\',\''+feature.id+'\', \''+field+'\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b">'+TR.relations+'</a>';
+
+                if(countRelations == 1 && typeof(Editor) == 'function' && Config.data.wfslayers[tableId]) {
+                    //feature.id can be string, so need to quote here
+                    html += '<a href="javascript:Eqwc.common.callEditor(\''+tableId+'\',\''+feature.id+'\', \'addRelation\', \''+field+'\');" data-role="button" data-iconpos="notext" data-icon="plus" data-theme="a">'+TR.editAdd+'</a>';
+                }
+            }
+
+            if(hasControlGroup) {
+                html += '</div>';
             }
 
             html += '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
@@ -1202,6 +1224,12 @@ Gui.fillMapCrs = function() {
     });
 
     $('#mapCrs').val(projectData.crs).change();
+};
+
+Gui.wmsSearch = function(table,feature,field) {
+    var filter = table+':"'+field+'" = \'' + feature + '\'';
+    var fi = new FeatureInfo(Gui.showFeatureInfoResults);
+    fi.filter(filter, table);
 };
 
 Gui.initViewer = function() {
