@@ -812,7 +812,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
     filesAlias = filesAlias.toUpperCase();
 
     //check if we don't have single no geometry layer
-    if(!(results.length == 1 && Map.layers[results[0].layer].geom_type == 'No geometry')) {
+    if(!(results.length == 1 && projectData.layers[results[0].layer].geom_type == 'No geometry')) {
         html += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
 
         //add button
@@ -853,6 +853,10 @@ Gui.showXMLFeatureInfoResults = function (results) {
         var hiddenValues = [];
         if (layer != undefined && layer.hidden_values != undefined) {
             hiddenValues = layer.hidden_values;
+        }
+
+        if (layer == undefined) {
+            layer = projectData.layers[result.layer];
         }
 
         for (var j = 0; j < result.features.length; j++) {
