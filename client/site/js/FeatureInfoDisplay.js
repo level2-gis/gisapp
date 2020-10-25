@@ -593,7 +593,9 @@ function parseFIResult(node) {
                                                 attValue = '<div class="tip-target" id="'+target_el+'">'+newVal+'</div>';
                                             }
                                         } else {
-                                            attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
+                                            if (attNameCase != 'MAPTIP') {
+                                                attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
+                                            }
                                         }
                                     }
 
