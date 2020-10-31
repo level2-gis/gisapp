@@ -519,7 +519,7 @@ function parseFIResult(node) {
                             var tableId = Eqwc.common.getLayerId(table);
                             var field = projectData.relations[layerName][0].join_field;
                             var rid = table + "." + id;
-                            if (projectData.layers[tableId].wfs) {
+                            if (projectData.layers[tableId].wfs && projectData.layers[tableId].geom_type == 'No geometry') {
                                 add = '<a class="i-add" ext:qtip="' + TR.tableAddRecord + '" href="javascript:;" onclick="identifyAction(\'addRelation\',\'' + rid + '\',\'' + field + '\');"></a>';
                             }
                         }

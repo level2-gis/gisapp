@@ -296,6 +296,24 @@ Eqwc.common.compareQgisVersionWithInteger= function(num) {
     }
 };
 
+Eqwc.common.findParentRelation = function(name) {
+    var main,res;
+    var cnt = Object.keys(projectData.relations).length;
+    if(projectData.relations.hasOwnProperty("hideJoinField")) {
+        cnt--;
+    }
+    for (var i = 0; i < cnt; i++) {
+        main = Object.keys(projectData.relations)[i];
+        res = projectData.relations[main].filter(function(item) {
+            return item.relate_layer == name;
+        })[0];
+        if(res) {
+            return main;
+        }
+    }
+    return false;
+};
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);

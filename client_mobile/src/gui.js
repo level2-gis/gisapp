@@ -257,8 +257,15 @@ Gui.loadLayers = function (data) {
                 }
 
                 //skip if layer is table (no geometry) and not published as WFS
-                if(layer.geom_type == 'No geometry' && !layer.wfs) {
-                   return;
+                if (layer.geom_type == 'No geometry') {
+                    if (!layer.wfs) {
+                        return;
+                    }
+                    //also skip if layer is WFS published is in relation and setting hideJoinField = true
+                    //that means no manual inserting possible, only through relations
+                    if(Eqwc.common.findParentRelation(layer.layername) && projectData.relations.hideJoinField) {
+                        return;
+                    }
                 }
 
                 //skip if layer with same name exists in backgroundLayers
@@ -827,16 +834,19 @@ Gui.showXMLFeatureInfoResults = function (results) {
         var countRelations = 0;
 
         //replace back layer
+        var source = Config.getLayerName(result.layer);
+        var layerName = Eqwc.common.getIdentifyLayerNameRevert(source);
+        var layerId = Eqwc.common.getLayerId(layerName);
         if (layer == undefined) {
-            var source = Config.getLayerName(result.layer);
-            var layerName = Eqwc.common.getIdentifyLayerNameRevert(source);
-            var layerId = Eqwc.common.getLayerId(layerName);
             layer = Map.layers[layerId];
         }
 
         var layerTitle = result.layer;
         if (layer != undefined) {
             layerTitle = layer.title;
+        } else {
+            layer = projectData.layers[layerId];
+            layerTitle = layer.layername;
         }
 
         if(projectData.relations && projectData.relations[layerTitle]) {
@@ -892,7 +902,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
 
                 html += '<a href="javascript:Gui.wmsSearch(\''+tableId+'\',\''+feature.id+'\', \''+field+'\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b">'+TR.relations+'</a>';
 
-                if(countRelations == 1 && typeof(Editor) == 'function' && Config.data.wfslayers[tableId]) {
+                if(countRelations == 1 && typeof(Editor) == 'function' && Config.data.wfslayers[tableId] && projectData.layers[tableId].geom_type == 'No geometry') {
                     //feature.id can be string, so need to quote here
                     html += '<a href="javascript:Eqwc.common.callEditor(\''+tableId+'\',\''+feature.id+'\', \'addRelation\', \''+field+'\');" data-role="button" data-iconpos="notext" data-icon="plus" data-theme="a">'+TR.editAdd+'</a>';
                 }

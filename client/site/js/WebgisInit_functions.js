@@ -1884,12 +1884,21 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 });
             } else {
                 if (searchPanelInstance.gridEditable && (typeof(prepareEdit) == 'function')) {
-                    toolBar.push({
-                        iconCls: 'x-add-icon',
-                        tooltip: TR.tableAddRecord,
-                        handler: addRecord,
-                        scope: searchPanelInstance
-                    });
+                    if(Eqwc.common.findParentRelation(this.gridTitle) == false) {
+                        toolBar.push({
+                            iconCls: 'x-add-icon',
+                            tooltip: TR.tableAddRecord,
+                            handler: addRecord,
+                            scope: searchPanelInstance
+                        });
+                    } else if (projectData.relations.hideJoinField == false) {
+                        toolBar.push({
+                            iconCls: 'x-add-icon',
+                            tooltip: TR.tableAddRecord,
+                            handler: addRecord,
+                            scope: searchPanelInstance
+                        });
+                    }
                 }
             }
 
