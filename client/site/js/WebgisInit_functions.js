@@ -2663,12 +2663,17 @@ function feedbackHandler(btn) {
     }
 }
 
-function sendMail(to, subject, body, silent) {
+function sendMail(to, subject, body, silent, template) {
 
     var data = {};
     data.mailto = to;
     data.subject = subject;
     data.body = body;
+    data.template = '';
+
+    if(template) {
+        data.template = template;
+    }
 
     if (Eqwc.settings.mailServiceUrl > '') {
 
