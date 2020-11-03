@@ -2,8 +2,8 @@
  *
  * eqwc.js -- build of Extended QGIS Web Client
  *
- * version: 1.9.5c
- * buildDate: Sat Oct 31 10:54:40 CET 2020
+ * version: 1.9.6
+ * buildDate: Tue Nov  3 10:58:37 CET 2020
  *
  * Copyright (2014-2020), Level2, All rights reserved.
  * More information at https://level2.si
@@ -300,7 +300,7 @@ function openPermaLink(a){"undefined"!=typeof PermaLinkWin&&PermaLinkWin.close()
 function openFeedbackWin(){var a=new Ext.form.FormPanel({baseCls:"x-plain",labelWidth:55,url:"save-form.php",layout:{type:"vbox",align:"stretch"},defaults:{xtype:"textfield"},items:[{xtype:"textarea",fieldLabel:"Message text",hideLabel:!0,name:"msg",flex:1},{xtype:"label",text:TR.feedbackDescription,hideLabel:!0}]});"undefined"!=typeof feedbackWin?feedbackWin.show():feedbackWin=(new Ext.Window({title:TR.feedbackTitle,width:450,height:300,minWidth:300,minHeight:200,layout:"fit",closeAction:"hide",
 plain:!0,buttonAlign:"center",items:a,buttons:[{itemId:"send",text:TR.send,handler:feedbackHandler},{itemId:"cancel",text:TR.cancel,handler:feedbackHandler}]})).show()}
 function feedbackHandler(a){a=a.itemId;"cancel"==a&&feedbackWin.hide();if("send"==a){a=[];var b=feedbackWin.items.get(0).getForm(),c=b.findField("msg").getValue(),d=createPermalink();a.push(I18n.login.user+": "+projectData.user);a.push(c);a.push(projectData.project+': <a href="'+d+'">LINK<a/>');feedbackWin.hide();b.reset();sendMail(projectData.userFeedbackMailto,"EQWC "+projectData.project+" "+TR.feedback,a.join("<br>"),!1)}}
-function sendMail(a,b,c,d){var e={};e.mailto=a;e.subject=b;e.body=c;""<Eqwc.settings.mailServiceUrl&&Ext.Ajax.request({url:Eqwc.settings.mailServiceUrl,params:e,method:"POST",success:function(a){d||Ext.Msg.alert(TR.feedbackSuccessTitle,TR.feedbackSuccessMsg)},failure:function(a){d||Ext.Msg.alert(TR.feedbackErrorTitle,TR.feedbackErrorMsg+"<br>"+a.statusText)}})}function receiveShortPermalinkFromDB(a,b){a=eval("("+a.responseText+")");openPermaLink(a.shortUrl)}
+function sendMail(a,b,c,d,e){var f={};f.mailto=a;f.subject=b;f.body=c;f.template="";e&&(f.template=e);""<Eqwc.settings.mailServiceUrl&&Ext.Ajax.request({url:Eqwc.settings.mailServiceUrl,params:f,method:"POST",success:function(a){d||Ext.Msg.alert(TR.feedbackSuccessTitle,TR.feedbackSuccessMsg)},failure:function(a){d||Ext.Msg.alert(TR.feedbackErrorTitle,TR.feedbackErrorMsg+"<br>"+a.statusText)}})}function receiveShortPermalinkFromDB(a,b){a=eval("("+a.responseText+")");openPermaLink(a.shortUrl)}
 function imageFormatForLayers(a){var b=origFormat;if(0<layerImageFormats.length&&origFormat.match(/8bit/))for(var c=0;c<layerImageFormats.length;c++){for(var d=layerImageFormats[c],e=0;e<d.layers.length;e++)if(-1!=a.indexOf(d.layers[e])){b=d.format;break}if(b!=origFormat)break}return b}
 function setGrayNameWhenOutsideScale(){if(grayLayerNameWhenOutsideScale){var a=[];layerTree.root.firstChild.cascade(function(b){b.isLeaf()&&a.push([b.text,b.id])});for(var b=0;b<wmsLoader.projectSettings.capability.layers.length;b++)if(MaxScale=Math.round(wmsLoader.projectSettings.capability.layers[b].maxScale),1>MaxScale&&(MaxScale=1),MinScale=Math.round(wmsLoader.projectSettings.capability.layers[b].minScale),1>MinScale&&(MinScale=15E7),wmsLoader.projectSettings.capability.layers[b].maxScale>geoExtMap.map.getScale()||
 wmsLoader.projectSettings.capability.layers[b].minScale<geoExtMap.map.getScale())for(var c=0;c<a.length;c++)a[c][0]==wmsLoader.projectSettings.capability.layers[b].title&&(layerTree.root.findChild("id",a[c][1],!0).setCls("outsidescale"),strTOCTooltip=tooltipLayerTreeLayerOutsideScale[lang]+" 1:"+MaxScale+" - 1:"+MinScale,layerTree.root.findChild("id",a[c][1],!0).setTooltip(strTOCTooltip),layerTree.root.findChild("id",a[c][1],!0).isOutsideScale=!0,layerTree.root.findChild("id",a[c][1],!0).MinScale=
