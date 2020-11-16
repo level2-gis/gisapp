@@ -605,6 +605,12 @@ class Helpers
         if (($valid === true) && ($project === $sess)) {
             return TRUE;
         }
+
+        $sess_map = isset($_SESSION['map']) ? $_SESSION['map'] : null;
+        if (($valid === true) && ($project === $sess_map)) {
+            return TRUE;
+        }
+
         return FALSE;
     }
 
