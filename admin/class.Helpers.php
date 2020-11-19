@@ -279,6 +279,8 @@ class Helpers
             $prop->version = (string)$qgs["message"]["version"];
             $prop->crs_list = array_filter((array)($qgs["message"]->properties->WMSCrsList->value));
             $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
+
+            $excluded = (array)$qgs["message"]->properties->WMSRestrictedLayers->value;
             try {
 
                 $this->LayersToClientArray($qgs["message"]->xpath('layer-tree-group')[0],null, null);
@@ -298,7 +300,17 @@ class Helpers
                             $lay->sql = (string)$lay_info["message"]["sql"];
                             $lay->key = (string)$lay_info["message"]["key"];
                             $lay->identify = (int)$lay_info["message"]["identify"];
+
+                            //set no geometry layers to false
+                            if($lay->geom_type == 'No geometry') {
+                                $lay->visini = false;
+                            }
                         }
+                    }
+
+                    //continue if layer is excluded
+                    if(in_array($lay->layername, $excluded)) {
+                        continue;
                     }
 
                     //enable wfs just for postgres and spatialite regardless project setting
