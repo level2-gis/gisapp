@@ -136,6 +136,7 @@ projectData.extent = '<?php echo implode(',',$qgs->extent) ?>';
 projectData.layers = eval(<?php echo json_encode($qgs->layers) ?>);
 projectData.use_ids = <?php echo json_encode($qgs->use_ids) ?>;
 projectData.add_geom = <?php echo json_encode($qgs->add_geom_to_fi) ?>;
+projectData.bookmarks = '<?php echo json_encode($qgs->bookmarks) ?>';
 
 projectData.uploadDir = '<?php echo $upload ?>'+projectData.client_name+'/'+projectData.project+'/';
 

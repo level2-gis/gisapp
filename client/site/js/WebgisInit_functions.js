@@ -102,6 +102,8 @@ function loadWMSConfig(topicName) {
 
 function postLoading() {
 
+    addBookmarks();
+
     //DescriptionPanel
     var descPanel = Ext.getCmp('DescriptionPanel');
     if (descPanel.el.dom.innerText.length>15) {
@@ -2939,4 +2941,67 @@ function layerStyles(layerIds) {
         }
     }
     return styles;
+}
+
+function addBookmarks() {
+    if (Ext.decode(projectData.bookmarks).length == 0) {
+        return;
+    }
+
+    // shared reader
+    var reader = new Ext.data.ArrayReader({}, [
+        {name: 'name'},
+        {name: 'group'},
+        {name: 'extent'},
+        {name: 'id'},
+        {name: 'crs'}
+    ]);
+
+    var store = new Ext.data.GroupingStore({
+        reader: reader,
+        data: Ext.decode(projectData.bookmarks),
+        sortInfo:{field: 'name', direction: "ASC"},
+        groupField:'group'
+    });
+
+    var grid = new Ext.grid.GridPanel({
+        title: TR.bookmarks,
+        store: store,
+        columns: [
+            {id:'name',header: TR.bookmarkName, sortable: true, dataIndex: 'name'},
+            {header: TR.bookmarkGroup, hidden: true, sortable: true, dataIndex: 'group', emptyGroupText: TR.bookmarkEmptyGroupText},
+        ],
+        view: new Ext.grid.GroupingView({
+            forceFit:true,
+            groupTextTpl: '{text} ({[values.rs.length]})'
+        }),
+        listeners: {
+            rowclick: showBookmark
+        }
+    });
+
+    var panel = Ext.getCmp('collapsiblePanels');
+    panel.add(grid);
+    panel.doLayout();
+
+}
+
+function showBookmark(grid, index) {
+    var row = grid.getStore().getAt(index);
+    var extentWkt = row.data.extent;
+    var crs = row.data.crs;
+    var wkt = new OpenLayers.Format.WKT;
+    var feature = wkt.read(extentWkt);
+    feature.geometry.calculateBounds();
+
+    if(crs != projectData.crs) {
+        if(OpenLayers.Projection.defaults[crs] == undefined) {
+            console.log('Cant transform, missing projection details for: '+crs);
+        } else {
+            feature.geometry.transform(crs, projectData.crs);
+            feature.geometry.calculateBounds();
+        }
+    }
+
+    geoExtMap.map.zoomToExtent(feature.geometry.bounds);
 }

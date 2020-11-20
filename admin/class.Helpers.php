@@ -263,6 +263,7 @@ class Helpers
             $prop->version = "";
             $prop->crs_list = [];
             $prop->description = "";
+            $prop->bookmarks = [];
             $prop->message = $qgs["message"];
             //return false;
         } else {
@@ -279,6 +280,7 @@ class Helpers
             $prop->version = (string)$qgs["message"]["version"];
             $prop->crs_list = array_filter((array)($qgs["message"]->properties->WMSCrsList->value));
             $prop->description = (string)$qgs["message"]->properties->WMSServiceAbstract;
+            $prop->bookmarks = $this->_readBokmarks($qgs["message"]->Bookmarks, (string)$qgs["message"]["version"]);
 
             $excluded = (array)$qgs["message"]->properties->WMSRestrictedLayers->value;
             try {
@@ -682,6 +684,45 @@ class Helpers
 
             default :
                 return FALSE;
+        }
+    }
+
+    private function _readBokmarks($sxe = null, $strVersion = '') {
+        if (!$sxe instanceOf SimpleXMLElement)
+            return array();
+
+        $extract = array();
+
+        $check = ($this->_majorVersion($strVersion) == 3 && $this->_minorVersion($strVersion) >= 10) ? true : false;
+
+        if($check) {
+            foreach ($sxe->children() as $key => $value) {
+                $tmp = array(
+                    (string)$value->attributes()['name'],
+                    (string)$value->attributes()['group'],
+                    (string)$value->attributes()['extent'],
+                    (string)$value->attributes()['id'],
+                    (string)$value->spatialrefsys->authid
+                );
+                array_push($extract, $tmp);
+            }
+        }
+
+        return $extract;
+    }
+
+    private function _majorVersion($str = '') {
+        try {
+            return (int)explode(".", explode("-", $str)[0])[0];
+        } catch (Exception $e) {
+            return 0;
+        }
+    }
+    private function _minorVersion($str = '') {
+        try {
+            return (int)explode(".", explode("-", $str)[0])[1];
+        } catch (Exception $e) {
+            return 0;
         }
     }
 }

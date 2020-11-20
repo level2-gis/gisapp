@@ -73,7 +73,11 @@ var TR = {
     tableAddRecord: "Add new record",
     style: "Style",
     navigation: "Navigation",
-    relations: "Relations"
+    relations: "Relations",
+    bookmarks: "Bookmarks",
+    bookmarkName: "Name",
+    bookmarkGroup: "Group",
+    bookmarkEmptyGroupText: "none"
 };
 
 /**

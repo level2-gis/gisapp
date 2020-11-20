@@ -74,7 +74,11 @@ var TR = {
     tableAddRecord: "Dodaj nov zapis",
     style: "Stil",
     navigation: "Navigacija",
-    relations: "Relacije"
+    relations: "Relacije",
+    bookmarks: "Zaznamki",
+    bookmarkName: "naziv",
+    bookmarkGroup: "Skupina",
+    bookmarkEmptyGroupText: "brez"
 };
 
 /**
