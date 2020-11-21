@@ -5,7 +5,8 @@
  * visibleLayers=<comma separated layer names>
  */
 
-function QgisPermalink() {}
+function QgisPermalink() {
+}
 
 // inherit from Permalink
 QgisPermalink.prototype = new Permalink();
@@ -18,20 +19,20 @@ QgisPermalink.prototype = new Permalink();
  * }
  * callback(): init viewer
  */
-QgisPermalink.prototype.read = function(urlParams, callback) {
-  // default permalink parameters
-  Permalink.prototype.read.call(this, urlParams);
+QgisPermalink.prototype.read = function (urlParams, callback) {
+    // default permalink parameters
+    Permalink.prototype.read.call(this, urlParams);
 
-  if (urlParams.startExtent != undefined) {
-    this.startExtent = $.map(urlParams.startExtent.split(','), function(value, index) {
-      return parseFloat(value);
-    });
-  }
+    if (urlParams.startExtent != undefined) {
+        this.startExtent = $.map(urlParams.startExtent.split(','), function (value, index) {
+            return parseFloat(value);
+        });
+    }
 
-  if (urlParams.visibleLayers != undefined) {
-    this.activeLayers = urlParams.visibleLayers.split(',');
-  }
+    if (urlParams.visibleLayers != undefined) {
+        this.activeLayers = urlParams.visibleLayers.split(',');
+    }
 
-  // init viewer
-  callback();
+    // init viewer
+    callback();
 };

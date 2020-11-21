@@ -16,7 +16,7 @@ var Topics = {};
  *   }
  * ]
  */
-Topics.loadTopics = function(url, callback) {
+Topics.loadTopics = function (url, callback) {
 
     var gbtopics = [{
         "name": projectData.project,
@@ -25,49 +25,46 @@ Topics.loadTopics = function(url, callback) {
         "categorytitle": projectData.client_display_name,
         "categorysort": 0,
         "categories_topics_sort": 0,
-        "wms_url": "/proxy/"+projectData.project,
+        "wms_url": "/proxy/" + projectData.project,
         "background_layer": false,
         "minscale": Eqwc.settings.mobileMinScale ? Eqwc.settings.mobileMinScale : 100
     }];
 
-        // group by category
-        categories = {};
-        for (var i=0;i<gbtopics.length; i++) {
-            var topic = gbtopics[i];
+    // group by category
+    categories = {};
+    for (var i = 0; i < gbtopics.length; i++) {
+        var topic = gbtopics[i];
 
-            if (categories[topic.categorytitle] === undefined) {
-                categories[topic.categorytitle] = [];
-            }
-            categories[topic.categorytitle].push(topic);
+        if (categories[topic.categorytitle] === undefined) {
+            categories[topic.categorytitle] = [];
         }
+        categories[topic.categorytitle].push(topic);
+    }
 
-        var sortedCategories = [];
-        for (var key in categories) {
-            if (categories.hasOwnProperty(key)) {
-                // sort by categories_topics_sort and title
-                var topics = categories[key].sort(function(a, b) {
-                    var res = a.categories_topics_sort - b.categories_topics_sort;
-                    if (res === 0) {
-                        res = a.title.localeCompare(b.title);
-                    }
-                    else if (a.categories_topics_sort === null || b.categories_topics_sort === null) {
-                        // null values have lowest priority
-                        res = -res;
-                    }
-                    return res;
-                });
-                sortedCategories.push({
-                    title: key,
-                    topics: topics
-                });
-            }
+    var sortedCategories = [];
+    for (var key in categories) {
+        if (categories.hasOwnProperty(key)) {
+            // sort by categories_topics_sort and title
+            var topics = categories[key].sort(function (a, b) {
+                var res = a.categories_topics_sort - b.categories_topics_sort;
+                if (res === 0) {
+                    res = a.title.localeCompare(b.title);
+                } else if (a.categories_topics_sort === null || b.categories_topics_sort === null) {
+                    // null values have lowest priority
+                    res = -res;
+                }
+                return res;
+            });
+            sortedCategories.push({
+                title: key,
+                topics: topics
+            });
         }
+    }
 
-        callback(sortedCategories);
+    callback(sortedCategories);
 
 };
-
-
 
 
 //Topics.loadTopics = function(url, callback) {

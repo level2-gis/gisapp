@@ -3,32 +3,33 @@
  */
 
 function MapClickHandler() {
-  this.active = false;
+    this.active = false;
 }
 
 MapClickHandler.prototype = {
-  /**
-   * activate or deactivate handler
-   * 
-   * active: <boolean>
-   */
-  toggle: function(active) {
-    this.active = active;
-  },
+    /**
+     * activate or deactivate handler
+     *
+     * active: <boolean>
+     */
+    toggle: function (active) {
+        this.active = active;
+    },
 
-  /**
-   * return active status
-   */
-  isActive: function() {
-    return this.active;
-  },
+    /**
+     * return active status
+     */
+    isActive: function () {
+        return this.active;
+    },
 
-  /**
-   * handle map click event
-   *
-   * e: <ol.MapBrowserEvent>
-   */
-  handleEvent: function(e) {}
+    /**
+     * handle map click event
+     *
+     * e: <ol.MapBrowserEvent>
+     */
+    handleEvent: function (e) {
+    }
 };
 
 

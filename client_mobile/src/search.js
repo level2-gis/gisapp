@@ -2,7 +2,8 @@
  * Search base class
  */
 
-function Search() {}
+function Search() {
+}
 
 Search.prototype = {
     /**
@@ -21,7 +22,8 @@ Search.prototype = {
      *   }
      * ]
      */
-    submit: function(searchParams, callback) {},
+    submit: function (searchParams, callback) {
+    },
 
     /**
      * create and add a highlight layer for the selected search result
@@ -29,5 +31,6 @@ Search.prototype = {
      * highlight: data for highlighting
      * callback(<OL3 layer>): add highlight layer to map
      */
-    highlight: function(highlight, callback) {}
+    highlight: function (highlight, callback) {
+    }
 };

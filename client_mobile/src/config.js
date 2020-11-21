@@ -4,7 +4,7 @@
 var Config = {};
 
 
-Config.parseExtentToArray = function(str){
+Config.parseExtentToArray = function (str) {
     var ext2 = [];
     var extent = str.split(',');
     ext2.push(parseInt(extent[0]));
@@ -16,18 +16,18 @@ Config.parseExtentToArray = function(str){
 
 Config.extractStringFromObject = function (objName, string) {
 
-    if(!string) {
+    if (!string) {
         return null;
     }
 
-    if (string.indexOf(objName)==-1) {
+    if (string.indexOf(objName) == -1) {
         return string;
     }
 
     var ret = '';
-    var start = string.indexOf('(')+1;
+    var start = string.indexOf('(') + 1;
     var end = string.indexOf(')');
-    ret = '['+string.substring(start, end)+']';
+    ret = '[' + string.substring(start, end) + ']';
 
     return ret;
 };
@@ -35,8 +35,7 @@ Config.extractStringFromObject = function (objName, string) {
 Config.getLayerName = function (lid) {
     if (projectData.layers[lid]) {
         return projectData.use_ids ? projectData.layers[lid].layername : lid;
-    }
-    else {
+    } else {
         return lid;
     }
 };
@@ -68,9 +67,9 @@ Config.debug = false;
 
 // GUI
 Config.gui = {
-  hideShareButton: true,
-  hideLoginButton: false,
-  useLayertreeGroupCheckboxes: true
+    hideShareButton: true,
+    hideLoginButton: false,
+    useLayertreeGroupCheckboxes: true
 };
 
 
@@ -106,9 +105,9 @@ Config.data.initialTopic = projectData.project;
 
 // default properties
 Config.defaultProperties = {
-  following: true,
-  orientation: false,
-  scalebar: true
+    following: true,
+    orientation: false,
+    scalebar: true
 };
 
 
@@ -131,9 +130,9 @@ Config.featureInfo.wmsMaxFeatures = Eqwc.settings.limitSearchMaxResults ? Eqwc.s
  * the actual pixel ratio value for high resolution rendering
  */
 Config.featureInfo.tolerances = {
-  point: (Eqwc.settings.featureInfoTolerances && Eqwc.settings.featureInfoTolerances.point) ? Eqwc.settings.featureInfoTolerances.point : 4,
-  line: (Eqwc.settings.featureInfoTolerances && Eqwc.settings.featureInfoTolerances.line) ? Eqwc.settings.featureInfoTolerances.line : 4,
-  polygon: (Eqwc.settings.featureInfoTolerances && Eqwc.settings.featureInfoTolerances.polygon) ? Eqwc.settings.featureInfoTolerances.polygon : 2
+    point: (Eqwc.settings.featureInfoTolerances && Eqwc.settings.featureInfoTolerances.point) ? Eqwc.settings.featureInfoTolerances.point : 4,
+    line: (Eqwc.settings.featureInfoTolerances && Eqwc.settings.featureInfoTolerances.line) ? Eqwc.settings.featureInfoTolerances.line : 4,
+    polygon: (Eqwc.settings.featureInfoTolerances && Eqwc.settings.featureInfoTolerances.polygon) ? Eqwc.settings.featureInfoTolerances.polygon : 2
 };
 
 /**
@@ -181,20 +180,20 @@ Config.map.extent = Config.parseExtentToArray(projectData.extent);
 //Config.map.scaleDenoms = [2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100];
 
 Config.map.init = {
-  center: ol.extent.getCenter(Config.map.extent),
-  zoom: 6
+    center: ol.extent.getCenter(Config.map.extent),
+    zoom: 6
 };
 
-if(projectData.crs == '') {
+if (projectData.crs == '') {
     alert('Map CRS must be set in QGIS!');
-    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot : window.location.href="/";
+    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot : window.location.href = "/";
 }
 Config.map.projectionList = [];
 Config.map.projectionList.push([projectData.crs, projectData.crs_description]);
 
 // ol.proj.Projection
 // add definition if doesn't exist
-if(proj4.defs[projectData.crs] === undefined) {
+if (proj4.defs[projectData.crs] === undefined) {
     proj4.defs(projectData.crs, projectData.proj4);
 
     var projDef = CustomProj[projectData.crs];
@@ -205,19 +204,18 @@ if(proj4.defs[projectData.crs] === undefined) {
         units: projDef.units,
         axisOrientation: projDef.yx === false ? 'enu' : 'neu'
     });
-}
-else {
+} else {
     Config.map.projection = ol.proj.get(projectData.crs);
 }
 
 //add projection definition objects for other values in crs_list and fill Config.map.projectionList
-for (var j=0; j<projectData.crs_list.length; j++) {
+for (var j = 0; j < projectData.crs_list.length; j++) {
     var code = projectData.crs_list[j];
     var title = code;
-    if(proj4.defs[code] === undefined) {
+    if (proj4.defs[code] === undefined) {
         proj4.defs(code, Proj4js.defs[code]);
     }
-    if(proj4.defs[code] !== undefined) {
+    if (proj4.defs[code] !== undefined) {
         title = proj4.defs[code].title ? proj4.defs[code].title : code;
         if (code != projectData.crs) {
             Config.map.projectionList.push([code, title]);
@@ -237,11 +235,11 @@ for (var j=0; j<projectData.crs_list.length; j++) {
 
 // ol.View options
 Config.map.viewOptions = {
-  projection: Config.map.projection,
-  //resolutions: Config.map.scaleDenomsToResolutions(Config.map.scaleDenoms),
-  //center: Config.map.init.center,
-  extent: projectData.restrictToStartExtent ? Config.map.extent : undefined
-  //zoom: Config.map.init.zoom,
+    projection: Config.map.projection,
+    //resolutions: Config.map.scaleDenomsToResolutions(Config.map.scaleDenoms),
+    //center: Config.map.init.center,
+    extent: projectData.restrictToStartExtent ? Config.map.extent : undefined
+    //zoom: Config.map.init.zoom,
 };
 
 Config.data.baselayers = [];
@@ -268,8 +266,8 @@ Config.data.gotolayers = {};
 Config.map.wmsServerType = 'qgis';
 
 Config.map.wmsParams = {
-  'FORMAT': 'image/png; mode=8bit',
-  'TRANSPARENT': (projectData.baseLayers() == null && projectData.extraLayers() == null) ? false : true
+    'FORMAT': 'image/png; mode=8bit',
+    'TRANSPARENT': (projectData.baseLayers() == null && projectData.extraLayers() == null) ? false : true
 };
 
 Config.map.useTiledBackgroundWMS = true;
@@ -278,9 +276,9 @@ Config.map.useTiledOverlayWMS = false;
 // limit max zoom to this scale (e.g. minScaleDenom=500 for 1:500)
 //UROS don't see point of this
 Config.map.minScaleDenom = {
-  map: 5000, // if topic.minscale is not set
-  geolocation: null, // on location following
-  search: 5000 // jump to search results
+    map: 5000, // if topic.minscale is not set
+    geolocation: null, // on location following
+    search: 5000 // jump to search results
 };
 
 // limit min zoom to this scale on the initial geolocation update (null to disable)
@@ -301,35 +299,33 @@ if (sCon == null && projectData.wsgi) {
  */
 
 // create query URL from search params
-Config.mapfishSearchUrl = function(searchParams) {
-  // DEBUG: sample static file for demonstration purposes
-  return "data/mapfish_search_response.json";
-/*
-  return "/search/fullsearch.json?" + $.param({
-    begriff: searchParams
-  });
-*/
+Config.mapfishSearchUrl = function (searchParams) {
+    // DEBUG: sample static file for demonstration purposes
+    return "data/mapfish_search_response.json";
+    /*
+      return "/search/fullsearch.json?" + $.param({
+        begriff: searchParams
+      });
+    */
 };
 
 // return category, feature name, highlighting data and bbox=[<minx>, <miny>, <maxx>, <maxy>]
-Config.mapfishParseFeature = function(feature) {
-  return {
-    category: feature.kategorie,
-    name: feature.begriff,
-    highlight: {
-      fid: feature.fid,
-      layer: "FullSearch" + feature.kategorie
-    },
-    bbox: [feature.bbox_xmin, feature.bbox_ymin, feature.bbox_xmax, feature.bbox_ymax]
-  };
+Config.mapfishParseFeature = function (feature) {
+    return {
+        category: feature.kategorie,
+        name: feature.begriff,
+        highlight: {
+            fid: feature.fid,
+            layer: "FullSearch" + feature.kategorie
+        },
+        bbox: [feature.bbox_xmin, feature.bbox_ymin, feature.bbox_xmax, feature.bbox_ymax]
+    };
 };
 
 // WMS URL for highlighting the selected search result
 Config.mapfishHighlightWmsUrl = "/wms/FullSearch";
 
 //Config.search = new MapfishSearch(Config.mapfishSearchUrl, Config.mapfishParseFeature, Config.mapfishHighlightWmsUrl);
-
-
 
 
 // permalink configuration
@@ -341,10 +337,10 @@ Config.permalink = new Permalink();
  */
 
 // create locate URL from locate and locations params
-Config.mapfishLocateUrl = function(locate, locations) {
-  return "/locate/" + locate + "?" + $.param({
-    locations: locations
-  });
+Config.mapfishLocateUrl = function (locate, locations) {
+    return "/locate/" + locate + "?" + $.param({
+        locations: locations
+    });
 };
 
 //Config.permalink = new MapfishPermalink(Config.mapfishLocateUrl);
@@ -360,8 +356,8 @@ Config.mapfishLocateUrl = function(locate, locations) {
  * Printing from browser
  */
 Config.print = {
-  hires: false, // enable high resolution printing
-  dpi: 300 // target print resolution
+    hires: false, // enable high resolution printing
+    dpi: 300 // target print resolution
 };
 
 
@@ -370,6 +366,6 @@ Config.print = {
  *
  * e.g. setup custom click handlers here
  */
-Config.customInitViewer = function() {
+Config.customInitViewer = function () {
 
 };

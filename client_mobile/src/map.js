@@ -19,7 +19,7 @@ function Progress() {
 /**
  * Increment the count of loading tiles.
  */
-Progress.prototype.addLoading = function() {
+Progress.prototype.addLoading = function () {
     if (this.loading === 0) {
         this.show();
     }
@@ -31,11 +31,11 @@ Progress.prototype.addLoading = function() {
 /**
  * Increment the count of loaded tiles.
  */
-Progress.prototype.addLoaded = function() {
+Progress.prototype.addLoaded = function () {
     var this_ = this;
     //setTimeout(function() {
-        ++this_.loaded;
-        this_.update();
+    ++this_.loaded;
+    this_.update();
     //}, 100);
 };
 
@@ -43,7 +43,7 @@ Progress.prototype.addLoaded = function() {
 /**
  * Update the progress.
  */
-Progress.prototype.update = function() {
+Progress.prototype.update = function () {
 
     if (this.loading === this.loaded) {
         this.loading = 0;
@@ -62,12 +62,12 @@ Progress.prototype.update = function() {
 /**
  * Show the progress.
  */
-Progress.prototype.show = function(par) {
+Progress.prototype.show = function (par) {
     //do not show it over layer panel and don't show it if location and following are on
-    if($("#panelLayer").hasClass("ui-panel-open") === false) {
-       if(Map.geolocation===null || !Map.geolocation.getTracking() || !Gui.following) {
-           $.mobile.loading('show', {textVisible: true, text: par, theme: 'c'});
-       }
+    if ($("#panelLayer").hasClass("ui-panel-open") === false) {
+        if (Map.geolocation === null || !Map.geolocation.getTracking() || !Gui.following) {
+            $.mobile.loading('show', {textVisible: true, text: par, theme: 'c'});
+        }
     }
 };
 
@@ -75,12 +75,11 @@ Progress.prototype.show = function(par) {
 /**
  * Hide the progress.
  */
-Progress.prototype.hide = function() {
+Progress.prototype.hide = function () {
     if (this.loading === this.loaded) {
         $.mobile.loading('hide');
     }
 };
-
 
 
 var Map = {};
@@ -132,67 +131,67 @@ Map.alertMessages = {};
 Map.useTiledWMS = Eqwc.settings.mobileUseTiledWMS;
 
 Map.userCrs = null;  //later holds value from Map CRS selection combo
-Map.userCrsTitle = function() {
+Map.userCrsTitle = function () {
     var list = Config.map.projectionList;
-    var crs = list.filter(function(item) {
+    var crs = list.filter(function (item) {
         return item[0] == Map.userCrs;
     });
     return crs[0][1];
 };
 
-Map.createMap = function() {
-  // override from URL params
-  if (Config.permalink.useTiledWMS != null) {
-    Map.useTiledWMS = Config.permalink.useTiledWMS;
-  }
-
-  Map.map = new ol.Map({
-    layers: [],
-    target: 'map',
-    view: new ol.View(Config.map.viewOptions),
-    controls:[]
-  });
-
-  Map.map.getView().fit(Config.map.extent, Map.map.getSize());
-
-  Map.map.getView().on('change:rotation', function() {
-    $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
-  });
-
-  Map.setMinScaleDenom(Config.map.minScaleDenom.map);
-  Map.map.getView().on('change:resolution', function() {
-    // limit max zoom
-    if (Map.map.getView().getResolution() < Map.minResolution) {
-      Map.map.getView().setResolution(Map.minResolution);
+Map.createMap = function () {
+    // override from URL params
+    if (Config.permalink.useTiledWMS != null) {
+        Map.useTiledWMS = Config.permalink.useTiledWMS;
     }
-  });
 
-  Map.map.on('singleclick', function(e) {
-    if (!Map.ignoreClick) {
-      Map.lastClickPos = e.coordinate;
+    Map.map = new ol.Map({
+        layers: [],
+        target: 'map',
+        view: new ol.View(Config.map.viewOptions),
+        controls: []
+    });
 
-      for (var name in Map.singleClickHandlers) {
-        var handler = Map.singleClickHandlers[name];
-        if (handler.isActive()) {
-          handler.handleEvent(e);
+    Map.map.getView().fit(Config.map.extent, Map.map.getSize());
+
+    Map.map.getView().on('change:rotation', function () {
+        $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
+    });
+
+    Map.setMinScaleDenom(Config.map.minScaleDenom.map);
+    Map.map.getView().on('change:resolution', function () {
+        // limit max zoom
+        if (Map.map.getView().getResolution() < Map.minResolution) {
+            Map.map.getView().setResolution(Map.minResolution);
         }
-      }
-    }
-  });
+    });
 
-  Map.map.on('movestart', Map.userMoves);
+    Map.map.on('singleclick', function (e) {
+        if (!Map.ignoreClick) {
+            Map.lastClickPos = e.coordinate;
+
+            for (var name in Map.singleClickHandlers) {
+                var handler = Map.singleClickHandlers[name];
+                if (handler.isActive()) {
+                    handler.handleEvent(e);
+                }
+            }
+        }
+    });
+
+    Map.map.on('movestart', Map.userMoves);
 };
 
-Map.clearLayers = function() {
-  Map.map.getLayers().clear();
-  Map.topicLayer = null;
-  Map.backgroundLayer = null;
-  Map.backgroundTopic = null;
-  Map.backgroundLayers = {};
-  Map.selectionLayer = null;
-  Map.redliningLayer = null;
-  Map.highlightLayer = null;
-  Map.overlayLayers = {};
+Map.clearLayers = function () {
+    Map.map.getLayers().clear();
+    Map.topicLayer = null;
+    Map.backgroundLayer = null;
+    Map.backgroundTopic = null;
+    Map.backgroundLayers = {};
+    Map.selectionLayer = null;
+    Map.redliningLayer = null;
+    Map.highlightLayer = null;
+    Map.overlayLayers = {};
 };
 
 Map.setTopicLayer = function () {
@@ -392,8 +391,8 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
             layOl3 = new ol.layer.Tile({
                 visible: visibility,
-		opacity: definition.opacity, 
-		extent: projectData.restrictToStartExtent ? projectData.extent.split(',') : undefined,
+                opacity: definition.opacity,
+                extent: projectData.restrictToStartExtent ? projectData.extent.split(',') : undefined,
                 source: new ol.source.WMTS({
                     url: definition.url,
                     layer: definition.layer,
@@ -450,125 +449,124 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 //  }
 //};
 
-Map.clearOverlayLayers = function() {
-  for (var layer in Map.overlayLayers) {
-    // remove overlay layer
-    Map.map.removeLayer(layer);
-  }
-  Map.overlayLayers = {};
-};
-
-Map.addOverlayLayer = function(overlayTopic, overlayLayers) {
-  var wmsParams = $.extend({}, Config.map.wmsParams, {
-    'LAYERS': overlayLayers.join(','),
-    'TRANSPARENT': true
-  });
-  var wmsOptions = {
-    url: Map.topics[overlayTopic].wms_url,
-    params: wmsParams,
-    extent: Config.map.extent,
-    serverType: Config.map.wmsServerType,
-    dpi: Config.map.dpi
-  };
-  var overlayLayer = null;
-  if (Config.map.useTiledOverlayWMS) {
-    overlayLayer = new ol.layer.Tile({
-      source: new ol.source.TileWMS(wmsOptions)
-    });
-  }
-  else {
-    overlayLayer = new ol.layer.Image({
-      source: new ol.source.ImageWMS(wmsOptions)
-    });
-  }
-  overlayLayer.name = 'overlay_' + overlayTopic;
-
-  if (Map.overlayLayers[overlayTopic] != undefined) {
-    // remove any existing layer for this overlay topic
-    Map.map.removeLayer(Map.overlayLayers[overlayTopic]);
-  }
-  Map.overlayLayers[overlayTopic] = overlayLayer;
-  Map.map.addLayer(overlayLayer);
-};
-
-Map.toggleOverlayLayer = function(overlayTopic, visible) {
-  if (Map.overlayLayers[overlayTopic] != undefined) {
-    Map.overlayLayers[overlayTopic].setVisible(visible);
-  }
-};
-
-Map.setSelectionLayer = function(layer) {
-  if (Map.selectionLayer != null) {
-    // remove selection layer
-    Map.map.removeLayer(Map.selectionLayer);
-    Map.selectionLayer = null;
-  }
-
-  if (layer != null) {
-    // add new selection layer on top
-    Map.selectionLayer = layer;
-    Map.map.addLayer(Map.selectionLayer);
-  }
-};
-
-Map.toggleSelectionLayer = function(visible) {
-  if (Map.selectionLayer != null) {
-    Map.selectionLayer.setVisible(visible);
-  }
-};
-
-Map.setRedliningLayer = function(layer) {
-  if (Map.redliningLayer != null) {
-    // remove redlining layer
-    Map.map.removeLayer(Map.redliningLayer);
-    Map.redliningLayer = null;
-  }
-
-  if (layer != null) {
-    // add new redlining layer on top
-    Map.redliningLayer = layer;
-    Map.map.addLayer(Map.redliningLayer);
-  }
-};
-
-Map.toggleRedliningLayer = function(visible) {
-  if (Map.redliningLayer != null) {
-    Map.redliningLayer.setVisible(visible);
-  }
-};
-
-Map.setHighlightLayer = function(layer) {
-  if (Map.highlightLayer != null) {
-    // remove highlight layer
-    Map.map.removeLayer(Map.highlightLayer);
-    Map.highlightLayer = null;
-  }
-
-  if (layer != null) {
-    // add new highlight layer on top
-    Map.highlightLayer = layer;
-    Map.map.addLayer(Map.highlightLayer);
-  }
-};
-
-Map.setLayerVisible = function(layername, visible, updateMap) {
-  Map.layers[layername].visible = visible;
-  if (updateMap) {
-    Map.mergeWmsParams({
-      'LAYERS': Map.visibleLayers().join(',')
-    });
-  }
-};
-
-Map.visibleLayers = function() {
-  // collect visible layers
-  var visibleLayers = [];
-  for (var key in Map.layers) {
-    if (Map.layers[key].visible) {
-      projectData.use_ids ? visibleLayers.push(Map.layers[key].id) : visibleLayers.push(Map.layers[key].title);
+Map.clearOverlayLayers = function () {
+    for (var layer in Map.overlayLayers) {
+        // remove overlay layer
+        Map.map.removeLayer(layer);
     }
-  }
-  return visibleLayers;
+    Map.overlayLayers = {};
+};
+
+Map.addOverlayLayer = function (overlayTopic, overlayLayers) {
+    var wmsParams = $.extend({}, Config.map.wmsParams, {
+        'LAYERS': overlayLayers.join(','),
+        'TRANSPARENT': true
+    });
+    var wmsOptions = {
+        url: Map.topics[overlayTopic].wms_url,
+        params: wmsParams,
+        extent: Config.map.extent,
+        serverType: Config.map.wmsServerType,
+        dpi: Config.map.dpi
+    };
+    var overlayLayer = null;
+    if (Config.map.useTiledOverlayWMS) {
+        overlayLayer = new ol.layer.Tile({
+            source: new ol.source.TileWMS(wmsOptions)
+        });
+    } else {
+        overlayLayer = new ol.layer.Image({
+            source: new ol.source.ImageWMS(wmsOptions)
+        });
+    }
+    overlayLayer.name = 'overlay_' + overlayTopic;
+
+    if (Map.overlayLayers[overlayTopic] != undefined) {
+        // remove any existing layer for this overlay topic
+        Map.map.removeLayer(Map.overlayLayers[overlayTopic]);
+    }
+    Map.overlayLayers[overlayTopic] = overlayLayer;
+    Map.map.addLayer(overlayLayer);
+};
+
+Map.toggleOverlayLayer = function (overlayTopic, visible) {
+    if (Map.overlayLayers[overlayTopic] != undefined) {
+        Map.overlayLayers[overlayTopic].setVisible(visible);
+    }
+};
+
+Map.setSelectionLayer = function (layer) {
+    if (Map.selectionLayer != null) {
+        // remove selection layer
+        Map.map.removeLayer(Map.selectionLayer);
+        Map.selectionLayer = null;
+    }
+
+    if (layer != null) {
+        // add new selection layer on top
+        Map.selectionLayer = layer;
+        Map.map.addLayer(Map.selectionLayer);
+    }
+};
+
+Map.toggleSelectionLayer = function (visible) {
+    if (Map.selectionLayer != null) {
+        Map.selectionLayer.setVisible(visible);
+    }
+};
+
+Map.setRedliningLayer = function (layer) {
+    if (Map.redliningLayer != null) {
+        // remove redlining layer
+        Map.map.removeLayer(Map.redliningLayer);
+        Map.redliningLayer = null;
+    }
+
+    if (layer != null) {
+        // add new redlining layer on top
+        Map.redliningLayer = layer;
+        Map.map.addLayer(Map.redliningLayer);
+    }
+};
+
+Map.toggleRedliningLayer = function (visible) {
+    if (Map.redliningLayer != null) {
+        Map.redliningLayer.setVisible(visible);
+    }
+};
+
+Map.setHighlightLayer = function (layer) {
+    if (Map.highlightLayer != null) {
+        // remove highlight layer
+        Map.map.removeLayer(Map.highlightLayer);
+        Map.highlightLayer = null;
+    }
+
+    if (layer != null) {
+        // add new highlight layer on top
+        Map.highlightLayer = layer;
+        Map.map.addLayer(Map.highlightLayer);
+    }
+};
+
+Map.setLayerVisible = function (layername, visible, updateMap) {
+    Map.layers[layername].visible = visible;
+    if (updateMap) {
+        Map.mergeWmsParams({
+            'LAYERS': Map.visibleLayers().join(',')
+        });
+    }
+};
+
+Map.visibleLayers = function () {
+    // collect visible layers
+    var visibleLayers = [];
+    for (var key in Map.layers) {
+        if (Map.layers[key].visible) {
+            projectData.use_ids ? visibleLayers.push(Map.layers[key].id) : visibleLayers.push(Map.layers[key].title);
+        }
+    }
+    return visibleLayers;
 };
 
 Map.featureInfoLayers = function () {
@@ -601,7 +599,7 @@ Map.featureInfoLayers = function () {
             var sourceLay = checkArr[i];
             var sourceLayId = Eqwc.common.getLayerId(sourceLay);
             var replaceLayId = sourceLayId;
-            if(sourceLayId) {
+            if (sourceLayId) {
                 var replaceLay = Eqwc.common.getIdentifyLayerName(sourceLayId);
                 replaceLayId = Eqwc.common.getLayerId(replaceLay);
             }
@@ -615,129 +613,127 @@ Map.featureInfoLayers = function () {
 };
 
 // coordinate: [x, y]
-Map.getGetFeatureInfoUrl = function(coordinate, params) {
-  var view = Map.map.getView();
-  return Map.topicLayer.getSource().getGetFeatureInfoUrl(
-    coordinate,
-    view.getResolution(),
-    view.getProjection(),
-    params
-  );
+Map.getGetFeatureInfoUrl = function (coordinate, params) {
+    var view = Map.map.getView();
+    return Map.topicLayer.getSource().getGetFeatureInfoUrl(
+        coordinate,
+        view.getResolution(),
+        view.getProjection(),
+        params
+    );
 };
 
 // transparency between 0 and 100
-Map.setLayerTransparency = function(layername, transparency, updateMap) {
-  Map.layers[layername].transparency = transparency;
-  if (updateMap) {
-    Map.mergeWmsParams({
-      'OPACITIES': Map.layerOpacities()
-    });
-  }
-};
-
-Map.layerOpacities = function() {
-  var layerOpacities = [];
-  var opacitiesActive = false;
-  for (var key in Map.layers) {
-    if (Map.layers[key].visible) {
-      // scale transparency[0..100] to opacity[255..0]
-      var opacity = Math.round((100 - Map.layers[key].transparency) / 100 * 255);
-      layerOpacities.push(opacity);
-      opacitiesActive = opacitiesActive || (opacity != 255);
+Map.setLayerTransparency = function (layername, transparency, updateMap) {
+    Map.layers[layername].transparency = transparency;
+    if (updateMap) {
+        Map.mergeWmsParams({
+            'OPACITIES': Map.layerOpacities()
+        });
     }
-  }
-  if (opacitiesActive) {
-    return layerOpacities.join(',');
-  }
-  else {
-    // remove OPACITIES param
-    return null;
-  }
 };
 
-Map.refresh = function() {
-  var visibleLayers = Map.visibleLayers();
-  if (visibleLayers.length > 0) {
-    Map.mergeWmsParams({
-      'LAYERS': visibleLayers.join(','),
-      'OPACITIES': Map.layerOpacities()
-    });
-  }
-  // hide map layer if there are no visible layers
-  Map.topicLayer.setVisible(visibleLayers.length > 0);
+Map.layerOpacities = function () {
+    var layerOpacities = [];
+    var opacitiesActive = false;
+    for (var key in Map.layers) {
+        if (Map.layers[key].visible) {
+            // scale transparency[0..100] to opacity[255..0]
+            var opacity = Math.round((100 - Map.layers[key].transparency) / 100 * 255);
+            layerOpacities.push(opacity);
+            opacitiesActive = opacitiesActive || (opacity != 255);
+        }
+    }
+    if (opacitiesActive) {
+        return layerOpacities.join(',');
+    } else {
+        // remove OPACITIES param
+        return null;
+    }
+};
+
+Map.refresh = function () {
+    var visibleLayers = Map.visibleLayers();
+    if (visibleLayers.length > 0) {
+        Map.mergeWmsParams({
+            'LAYERS': visibleLayers.join(','),
+            'OPACITIES': Map.layerOpacities()
+        });
+    }
+    // hide map layer if there are no visible layers
+    Map.topicLayer.setVisible(visibleLayers.length > 0);
 };
 
 // force redraw
-Map.redraw = function() {
-  Map.mergeWmsParams({t: new Date().getTime()});
+Map.redraw = function () {
+    Map.mergeWmsParams({t: new Date().getTime()});
 };
 
-Map.mergeWmsParams = function(params) {
-  var source = Map.topicLayer.getSource();
-  var newParams = $.extend({}, source.getParams(), params);
-  source.updateParams(newParams);
+Map.mergeWmsParams = function (params) {
+    var source = Map.topicLayer.getSource();
+    var newParams = $.extend({}, source.getParams(), params);
+    source.updateParams(newParams);
 };
 
 // set map rotation in rad
-Map.setRotation = function(rotation) {
-  Map.map.getView().setRotation(rotation);
+Map.setRotation = function (rotation) {
+    Map.map.getView().setRotation(rotation);
 };
 
 // get resolution for a scale
 // set closest to get closest view resolution
-Map.scaleDenomToResolution = function(scaleDenom, closest) {
-  // resolution = scaleDenom / (metersPerUnit * dotsPerMeter)
-  var res = scaleDenom / (Map.map.getView().getProjection().getMetersPerUnit() * (Config.map.dpi / 0.0254));
-  if (closest) {
-    return Map.map.getView().constrainResolution(res);
-  }
-  else {
-    return res;
-  }
+Map.scaleDenomToResolution = function (scaleDenom, closest) {
+    // resolution = scaleDenom / (metersPerUnit * dotsPerMeter)
+    var res = scaleDenom / (Map.map.getView().getProjection().getMetersPerUnit() * (Config.map.dpi / 0.0254));
+    if (closest) {
+        return Map.map.getView().constrainResolution(res);
+    } else {
+        return res;
+    }
 };
 
 // set max zoom of map
-Map.setMinScaleDenom = function(scaleDenom) {
-  Map.minResolution = Map.scaleDenomToResolution(scaleDenom, true);
-  Map.clampToScale(scaleDenom);
+Map.setMinScaleDenom = function (scaleDenom) {
+    Map.minResolution = Map.scaleDenomToResolution(scaleDenom, true);
+    Map.clampToScale(scaleDenom);
 };
 
 // adjust max zoom
-Map.clampToScale = function(scaleDenom) {
-  var minRes = Map.scaleDenomToResolution(scaleDenom, true);
-  if (Map.map.getView().getResolution() < minRes) {
-    Map.map.getView().setResolution(minRes);
-  }
+Map.clampToScale = function (scaleDenom) {
+    var minRes = Map.scaleDenomToResolution(scaleDenom, true);
+    if (Map.map.getView().getResolution() < minRes) {
+        Map.map.getView().setResolution(minRes);
+    }
 };
 
 // zoom to extent and clamp to max zoom level
 // extent as [<minx>, <miny>, <maxx>, maxy>]
-Map.zoomToExtent = function(extent, minScaleDenom) {
-  Map.map.getView().fit(extent, Map.map.getSize());
-  if (minScaleDenom != null) {
-    Map.clampToScale(minScaleDenom);
-  }
+Map.zoomToExtent = function (extent, minScaleDenom) {
+    Map.map.getView().fit(extent, Map.map.getSize());
+    if (minScaleDenom != null) {
+        Map.clampToScale(minScaleDenom);
+    }
 };
 
 // center map
 // center as [<x>, <y>]
-Map.setCenter = function(center) {
-  Map.map.getView().setCenter(center);
+Map.setCenter = function (center) {
+    Map.map.getView().setCenter(center);
 };
 
 // zoom to scale
-Map.setScale = function(scaleDenom) {
-  var res = Map.scaleDenomToResolution(scaleDenom, true);
-  Map.map.getView().setResolution(res);
+Map.setScale = function (scaleDenom) {
+    var res = Map.scaleDenomToResolution(scaleDenom, true);
+    Map.map.getView().setResolution(res);
 };
 
 // zoom to zoom level
-Map.setZoom = function(zoom) {
-  Map.map.getView().setZoom(zoom);
+Map.setZoom = function (zoom) {
+    Map.map.getView().setZoom(zoom);
 };
 
 //This part is called from native Android app
-Map.updateAndroidLocation = function(data) {
+Map.updateAndroidLocation = function (data) {
     //assuming Map.geolocation instanceof AndroidLocation
     Map.geolocation.setLocation(data, Gui.tracking);
 };
@@ -745,7 +741,7 @@ Map.updateAndroidLocation = function(data) {
 Map.toggleTracking = function (enabled) {
     if (Map.geolocation == null) {
         // create geolocation
-        if(typeof Android == 'undefined') {
+        if (typeof Android == 'undefined') {
             Map.geolocation = new ol.Geolocation({
                 projection: Map.map.getView().getProjection(),
                 trackingOptions: {
@@ -768,9 +764,9 @@ Map.toggleTracking = function (enabled) {
         //adjust antennatype offset if set
         var antOffset = 0;
         var antType = '';
-        if (typeof(Editor)=='function') {
+        if (typeof (Editor) == 'function') {
             antOffset = mobEditor.getAntennaOffset();
-            antenna+=antOffset;
+            antenna += antOffset;
             antType = mobEditor.getAntennaType();
         }
 
@@ -783,12 +779,12 @@ Map.toggleTracking = function (enabled) {
         });
 
         Map.geolocation.on('error', function (error) {
-            if(error.code == Eqwc.geolocationErrors.TIMEOUT) {
+            if (error.code == Eqwc.geolocationErrors.TIMEOUT) {
                 //fix Firefox issue with restarting gelocation tracking
                 Map.geolocation.setTracking(false);
                 Map.geolocation.setTracking(true);
             } else {
-                if(error.message>"") {
+                if (error.message > "") {
                     alert(error.message);
                 } else {
                     alert(I18n.geolocation.permissionDeniedMessage);
@@ -809,9 +805,9 @@ Map.toggleTracking = function (enabled) {
             marker.setPosition(coordinates);
             Gui.showLocationPanel(true);
 
-            if (typeof(Editor)=='function') {
+            if (typeof (Editor) == 'function') {
                 mobEditor.showEditPanel(true);
-                if ( typeof(Record)=='function' && mobRecord.layer) {
+                if (typeof (Record) == 'function' && mobRecord.layer) {
                     mobRecord.updateRecording();
                 }
                 if (mobGoto && mobGoto.feature) {
@@ -842,7 +838,7 @@ Map.toggleTracking = function (enabled) {
         Map.geolocation.on('change:accuracy', function () {
             var acc = Map.geolocation.getAccuracy();
             var el = $('#locationMarker');
-            if(typeof(Editor) == 'function') {
+            if (typeof (Editor) == 'function') {
                 if (acc < EditorConfig.accuracyLimit) {
                     el.addClass('locationMarkerGood').removeClass('locationMarkerNormal');
                     accuracyFeature.setStyle(new ol.style.Style({
@@ -886,7 +882,7 @@ Map.toggleTracking = function (enabled) {
 
     if (!enabled) {
         Gui.showLocationPanel(false);
-        if (typeof(Editor)=='function') {
+        if (typeof (Editor) == 'function') {
             mobEditor.showEditPanel(false);
             if (typeof (Record) == 'function') {
                 mobRecord.showRecordPanel(false);
@@ -929,7 +925,7 @@ Map.initialCenterOnLocation = function () {
         view.animate({center: pos});
     }
 
-    if (typeof(Editor) == 'function') {
+    if (typeof (Editor) == 'function') {
         if (EditorConfig.altCorrectionLayer) {
             mobEditor.getHeightCorrection();
         }
@@ -941,130 +937,129 @@ Map.initialCenterOnLocation = function () {
     Map.geolocation.un('change:position', Map.initialCenterOnLocation);
 };
 
-Map.centerOnLocation = function() {
+Map.centerOnLocation = function () {
     //we do not recenter every position update
     var view = Map.map.getView();
     var center = view.getCenter();
     var pos = Map.geolocation.getPosition();
-    var dx = Math.abs(center[0]-pos[0]);
-    var dy = Math.abs(center[1]-pos[1]);
+    var dx = Math.abs(center[0] - pos[0]);
+    var dy = Math.abs(center[1] - pos[1]);
     var extent = Map.map.getView().calculateExtent();
-    if(dx > (ol.extent.getWidth(extent) / 4) || (dy > (ol.extent.getHeight(extent) / 4))) {
+    if (dx > (ol.extent.getWidth(extent) / 4) || (dy > (ol.extent.getHeight(extent) / 4))) {
         view.set('appMove', true);
         view.animate({center: pos});
         Map.clampToScale(Config.map.minScaleDenom.geolocation);
     }
 };
 
-Map.userMoves = function() {
+Map.userMoves = function () {
 
     var view = Map.map.getView();
     var appMove = view.get('appMove') || false;
 
     view.unset('appMove');
 
-    if(!appMove && Map.geolocation && Gui.tracking) {
+    if (!appMove && Map.geolocation && Gui.tracking) {
         Map.toggleFollowing(false);
     }
 };
 
-Map.setWindowOrientation = function(orientation) {
-  Map.windowOrientation = orientation;
-  if (Map.deviceOrientation != null && Map.deviceOrientation.getTracking() && Map.deviceOrientation.getHeading() != undefined) {
-    Map.setRotation(Map.adjustedHeading(-Map.deviceOrientation.getHeading()));
-  }
+Map.setWindowOrientation = function (orientation) {
+    Map.windowOrientation = orientation;
+    if (Map.deviceOrientation != null && Map.deviceOrientation.getTracking() && Map.deviceOrientation.getHeading() != undefined) {
+        Map.setRotation(Map.adjustedHeading(-Map.deviceOrientation.getHeading()));
+    }
 };
 
-Map.adjustedHeading = function(heading) {
-  if (Map.windowOrientation != undefined) {
-    // include window orientation (0, 90, -90 or 180)
-    heading -= Map.windowOrientation * Math.PI / 180.0;
-  }
-  return heading;
+Map.adjustedHeading = function (heading) {
+    if (Map.windowOrientation != undefined) {
+        // include window orientation (0, 90, -90 or 180)
+        heading -= Map.windowOrientation * Math.PI / 180.0;
+    }
+    return heading;
 };
 
-Map.toggleOrientation = function(enabled) {
-  if (Map.deviceOrientation == null) {
-    Map.deviceOrientation = new ol.DeviceOrientation();
+Map.toggleOrientation = function (enabled) {
+    if (Map.deviceOrientation == null) {
+        Map.deviceOrientation = new ol.DeviceOrientation();
 
-    Map.deviceOrientation.on('change:heading', function(event) {
-      var heading = Map.adjustedHeading(-event.target.getHeading());
-      if (Math.abs(Map.map.getView().getRotation() - heading) > 0.0175) {
-        Map.setRotation(heading);
-      }
-    });
-  }
+        Map.deviceOrientation.on('change:heading', function (event) {
+            var heading = Map.adjustedHeading(-event.target.getHeading());
+            if (Math.abs(Map.map.getView().getRotation() - heading) > 0.0175) {
+                Map.setRotation(heading);
+            }
+        });
+    }
 
-  Map.deviceOrientation.setTracking(enabled);
+    Map.deviceOrientation.setTracking(enabled);
 };
 
-Map.toggleClickMarker = function(enabled) {
-  if (Map.clickMarker == null) {
-    Map.clickMarker = new ol.Overlay({
-      element: ($('<div id="clickMarker"></div>'))[0],
-      positioning: 'center-center',
-      stopEvent: false
-    });
-    Map.map.addOverlay(Map.clickMarker);
-  }
-  Map.clickMarker.setPosition(enabled ? Map.lastClickPos : undefined);
+Map.toggleClickMarker = function (enabled) {
+    if (Map.clickMarker == null) {
+        Map.clickMarker = new ol.Overlay({
+            element: ($('<div id="clickMarker"></div>'))[0],
+            positioning: 'center-center',
+            stopEvent: false
+        });
+        Map.map.addOverlay(Map.clickMarker);
+    }
+    Map.clickMarker.setPosition(enabled ? Map.lastClickPos : undefined);
 };
 
-Map.toggleScalebar = function(enabled) {
-  if (Map.scaleLine == null) {
+Map.toggleScalebar = function (enabled) {
+    if (Map.scaleLine == null) {
 
-      var units = Eqwc.settings.measurementsUnitSystem ? Eqwc.settings.measurementsUnitSystem : 'metric';
-      if(units.toLowerCase()=='english') {
-          units='us';
-      } else if (units.toLowerCase()=='geographic') {
-          units='degrees';
-      }
+        var units = Eqwc.settings.measurementsUnitSystem ? Eqwc.settings.measurementsUnitSystem : 'metric';
+        if (units.toLowerCase() == 'english') {
+            units = 'us';
+        } else if (units.toLowerCase() == 'geographic') {
+            units = 'degrees';
+        }
 
-      Map.scaleLine = new ol.control.ScaleLine({
-      units: units
-    });
-  }
-  if (enabled && Map.scaleLine.getMap() == null) {
-    Map.map.addControl(Map.scaleLine);
-  }
-  else {
-    Map.map.removeControl(Map.scaleLine);
-  }
+        Map.scaleLine = new ol.control.ScaleLine({
+            units: units
+        });
+    }
+    if (enabled && Map.scaleLine.getMap() == null) {
+        Map.map.addControl(Map.scaleLine);
+    } else {
+        Map.map.removeControl(Map.scaleLine);
+    }
 };
 
 // do not forward click events to click handlers if disabled
-Map.toggleClickHandling = function(enabled) {
-  Map.ignoreClick = !enabled;
+Map.toggleClickHandling = function (enabled) {
+    Map.ignoreClick = !enabled;
 };
 
 // register a MapClickHandler under a name
-Map.registerClickHandler = function(name, handler) {
-  Map.singleClickHandlers[name] = handler;
+Map.registerClickHandler = function (name, handler) {
+    Map.singleClickHandlers[name] = handler;
 };
 
 // unregister a MapClickHandler by name
-Map.unregisterClickHandler = function(name) {
-  if (Map.singleClickHandlers[name]) {
-    Map.singleClickHandlers[name].toggle(false);
-    delete Map.singleClickHandlers[name];
-  }
+Map.unregisterClickHandler = function (name) {
+    if (Map.singleClickHandlers[name]) {
+        Map.singleClickHandlers[name].toggle(false);
+        delete Map.singleClickHandlers[name];
+    }
 };
 
 // activate a MapClickHandler by name (null to deactivate all)
-Map.activateClickHandler = function(name) {
-  // deactivate other handlers
-  for (var key in Map.singleClickHandlers) {
-    var handler = Map.singleClickHandlers[key];
-    handler.toggle(false);
-  }
+Map.activateClickHandler = function (name) {
+    // deactivate other handlers
+    for (var key in Map.singleClickHandlers) {
+        var handler = Map.singleClickHandlers[key];
+        handler.toggle(false);
+    }
 
-  // activate requested handler
-  if (name != null && Map.singleClickHandlers[name]) {
-    Map.singleClickHandlers[name].toggle(true);
-  }
+    // activate requested handler
+    if (name != null && Map.singleClickHandlers[name]) {
+        Map.singleClickHandlers[name].toggle(true);
+    }
 };
 
-Map.featureInfoOnLocation = function() {
+Map.featureInfoOnLocation = function () {
     if (!Map.ignoreClick) {
         var location = Map.geolocation.getPosition();
         var fi = new FeatureInfo(Gui.showFeatureInfoResults);
@@ -1073,10 +1068,10 @@ Map.featureInfoOnLocation = function() {
     }
 };
 
-Map.openNavigation = function() {
+Map.openNavigation = function () {
 
     var destination = new ol.geom.Point(Map.lastClickPos);
-    var destWgs = destination.transform(projectData.crs,'EPSG:4326');
+    var destWgs = destination.transform(projectData.crs, 'EPSG:4326');
     var url = "https://www.google.com/maps/dir/?api=1&";
     var params = {};
     params.destination = destWgs.getCoordinates().reverse().toString();
@@ -1086,27 +1081,27 @@ Map.openNavigation = function() {
     //}
 
     //console.log(url+ $.param(params));
-    window.open(url+ $.param(params), '_blank');
+    window.open(url + $.param(params), '_blank');
 };
 
-Map.showAlert = function(theme) {
+Map.showAlert = function (theme) {
     $('#btnAlert').buttonMarkup({theme: theme}).show();
 };
 
-Map.hideAlert = function() {
+Map.hideAlert = function () {
     $('#btnAlert').hide();
 };
 
-Map.setAlertMsg = function(key, msg) {
+Map.setAlertMsg = function (key, msg) {
     this.alertMessages[key] = msg;
 };
 
-Map.clearAlertMsg = function(key) {
+Map.clearAlertMsg = function (key) {
     delete this.alertMessages[key];
 };
 //loads and hides all icons that are hidden on startup
 //in case of possible network error some time later, icons will still be visible from cache
-Map.loadHiddenIcons = function() {
+Map.loadHiddenIcons = function () {
 
     $('#btnLocation .ui-icon').addClass('ui-icon-location_on');
 

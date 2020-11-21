@@ -6,8 +6,8 @@
  */
 
 function FeatureInfo(resultsCallback) {
-  // resultsCallback(results)
-  this.resultsCallback = resultsCallback;
+    // resultsCallback(results)
+    this.resultsCallback = resultsCallback;
 }
 
 // inherit from MapClickHandler
@@ -18,9 +18,9 @@ FeatureInfo.prototype = new MapClickHandler();
  *
  * location: array
  */
-FeatureInfo.prototype.callOnLocation = function(location, useWMS, layersArr) {
+FeatureInfo.prototype.callOnLocation = function (location, useWMS, layersArr) {
     var url = null;
-    var layers = (layersArr===null) ? Map.featureInfoLayers() : layersArr;
+    var layers = (layersArr === null) ? Map.featureInfoLayers() : layersArr;
 
     //disable further clicks, until success
     Map.toggleClickHandling(false);
@@ -41,8 +41,7 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layersArr) {
         }
 
         url = Map.getGetFeatureInfoUrl(location, params);
-    }
-    else {
+    } else {
         //GetFeatureInfo for hidden QGIS project, currently needed in Editor plugin
         var view = Map.map.getView();
         url = hiddenProject.getSource().getGetFeatureInfoUrl(
@@ -66,17 +65,16 @@ FeatureInfo.prototype.callOnLocation = function(location, useWMS, layersArr) {
             var results = null;
             if (Config.featureInfo.format === 'text/xml') {
                 results = this.parseResults([data]);
-            }
-            else {
+            } else {
                 results = [data];
             }
 
-            this.resultsCallback(status,results);
+            this.resultsCallback(status, results);
             //allow clicking again
             Map.toggleClickHandling(true);
         })
         .fail(function (xhr, status, error) {
-            this.resultsCallback(status,error);
+            this.resultsCallback(status, error);
             Map.toggleClickHandling(true);
         });
 };
@@ -126,8 +124,6 @@ FeatureInfo.prototype.filter = function (filter, layers) {
 };
 
 
-
-
 /**
  * send feature info request on map click
  *
@@ -156,8 +152,7 @@ FeatureInfo.prototype.handleEvent = function (e) {
             });
         }
         url = Map.getGetFeatureInfoUrl(e.coordinate, params);
-    }
-    else {
+    } else {
         url = Config.featureInfo.url(Map.topic, e.coordinate, layers);
     }
     $.ajax({
@@ -165,7 +160,7 @@ FeatureInfo.prototype.handleEvent = function (e) {
         dataType: 'text',
         timeout: 3000,
         context: this,
-        beforeSend: function() {
+        beforeSend: function () {
             this.loading('show');
         }
 
@@ -174,18 +169,17 @@ FeatureInfo.prototype.handleEvent = function (e) {
         var results = null;
         if (Config.featureInfo.format === 'text/xml') {
             results = this.parseResults([data]);
-        }
-        else {
+        } else {
             results = [data];
         }
 
-        this.resultsCallback(status,results);
+        this.resultsCallback(status, results);
         //allow clicking again
         Map.toggleClickHandling(true);
     })
         .fail(function (xhr, status, error) {
             this.loading('hide');
-            if(xhr.responseText) {
+            if (xhr.responseText) {
                 this.resultsCallback(status, xhr.responseText);
             } else {
                 this.resultsCallback(status, status);
@@ -212,61 +206,60 @@ FeatureInfo.prototype.handleEvent = function (e) {
  *   }
  * ]
  */
-FeatureInfo.prototype.parseResults = function(featureInfos) {
-  var results = [];
-  for (var i=0; i<featureInfos.length; i++) {
-    var xml = $.parseXML(featureInfos[i]);
-    $(xml).find('Layer').each(function() {
-      var features = [];
-      var lay = $(this).attr('name');
-      if ($(this).find('Feature').length > 0) {
-        // vector features
-        $(this).find('Feature').each(function() {
-          var attributes = [];
-          $(this).find('Attribute').each(function() {
-            // filter geometry
-            if ($(this).attr('name') != 'geometry') {
-              attributes.push({
-                name: $(this).attr('name'),
-                value: $(this).attr('value').replace(/null/ig, Eqwc.settings.noDataValue)
-              });
+FeatureInfo.prototype.parseResults = function (featureInfos) {
+    var results = [];
+    for (var i = 0; i < featureInfos.length; i++) {
+        var xml = $.parseXML(featureInfos[i]);
+        $(xml).find('Layer').each(function () {
+            var features = [];
+            var lay = $(this).attr('name');
+            if ($(this).find('Feature').length > 0) {
+                // vector features
+                $(this).find('Feature').each(function () {
+                    var attributes = [];
+                    $(this).find('Attribute').each(function () {
+                        // filter geometry
+                        if ($(this).attr('name') != 'geometry') {
+                            attributes.push({
+                                name: $(this).attr('name'),
+                                value: $(this).attr('value').replace(/null/ig, Eqwc.settings.noDataValue)
+                            });
+                        }
+                    });
+                    features.push({
+                        id: $(this).attr('id'),
+                        attributes: attributes
+                    });
+                });
+            } else if ($(this).find('Attribute').length > 0) {
+                // raster layer
+                var attributes = [];
+                $(this).find('Attribute').each(function () {
+                    attributes.push({
+                        name: Eqwc.common.getRasterFieldName(Config.getLayerName(lay), $(this).attr('name')),
+                        value: $(this).attr('value').replace(/null/ig, Eqwc.settings.noDataValue)
+                    });
+                });
+                features.push({
+                    id: null,
+                    attributes: attributes
+                });
             }
-          });
-          features.push({
-            id: $(this).attr('id'),
-            attributes: attributes
-          });
-        });
-      }
-      else if ($(this).find('Attribute').length > 0) {
-        // raster layer
-        var attributes = [];
-        $(this).find('Attribute').each(function() {
-          attributes.push({
-            name: Eqwc.common.getRasterFieldName(Config.getLayerName(lay), $(this).attr('name')),
-            value: $(this).attr('value').replace(/null/ig, Eqwc.settings.noDataValue)
-          });
-        });
-        features.push({
-          id: null,
-          attributes: attributes
-        });
-      }
 
-      if (features.length > 0) {
-        results.push({
-          layer: lay,
-          features: features
+            if (features.length > 0) {
+                results.push({
+                    layer: lay,
+                    features: features
+                });
+            }
         });
-      }
-    });
-  }
+    }
 
-  return results.reverse();
+    return results.reverse();
 };
 
-FeatureInfo.prototype.loading = function(showOrHide) {
-    setTimeout(function(){
+FeatureInfo.prototype.loading = function (showOrHide) {
+    setTimeout(function () {
         $.mobile.loading(showOrHide);
     }, 1);
 };

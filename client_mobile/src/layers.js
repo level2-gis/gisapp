@@ -27,104 +27,105 @@ Layers.markerPrefix = "____";
  *   ]
  * }
  */
-Layers.loadLayers = function(url, callback) {
+Layers.loadLayers = function (url, callback) {
 
     var wmslayers = projectData.layers;
 
-        // sort by reverse toc_sort
-        //var wmslayers = data.wmslayers.sort(function(a, b) {
-        //    return b.toc_sort - a.toc_sort;
-        //});
+    // sort by reverse toc_sort
+    //var wmslayers = data.wmslayers.sort(function(a, b) {
+    //    return b.toc_sort - a.toc_sort;
+    //});
 
-        // group by groupname
-        groups = {};
-        for (var id in wmslayers) {
-            var layer = wmslayers[id];
+    // group by groupname
+    groups = {};
+    for (var id in wmslayers) {
+        var layer = wmslayers[id];
 
-            if (layer.wfs) {
-                Config.data.wfslayers[id] = layer.layername;
-            }
-            if(layer.goto) {
-                Config.data.gotolayers[id] = layer.layername;
-            }
-
-            if (layer.groupname === null) {
-                // mark layers without group
-                layer.groupname = Layers.markerPrefix + layer.layername;
-            }
-
-            if (layer.parent && groups[layer.parent] === undefined) {
-                groups[layer.parent] = [];
-            }
-
-            if (groups[layer.groupname] === undefined) {
-                groups[layer.groupname] = [];
-            }
-
-            groups[layer.groupname].push(layer);
+        if (layer.wfs) {
+            Config.data.wfslayers[id] = layer.layername;
+        }
+        if (layer.goto) {
+            Config.data.gotolayers[id] = layer.layername;
         }
 
-        var sortedGroups = [];
-        for (var key in groups) {
-            if (groups.hasOwnProperty(key)) {
-                sortedGroups.push({
-                    title: key,
-                    parent: groups[key].length > 0 ? groups[key][0].parent : null,
-                    layers: groups[key]
+        if (layer.groupname === null) {
+            // mark layers without group
+            layer.groupname = Layers.markerPrefix + layer.layername;
+        }
+
+        if (layer.parent && groups[layer.parent] === undefined) {
+            groups[layer.parent] = [];
+        }
+
+        if (groups[layer.groupname] === undefined) {
+            groups[layer.groupname] = [];
+        }
+
+        groups[layer.groupname].push(layer);
+    }
+
+    var sortedGroups = [];
+    for (var key in groups) {
+        if (groups.hasOwnProperty(key)) {
+            sortedGroups.push({
+                title: key,
+                parent: groups[key].length > 0 ? groups[key][0].parent : null,
+                layers: groups[key]
+            });
+        }
+    }
+
+    // generate layertree if not in JSON
+    // var layertree = data.layertree;
+    //if (layertree === undefined) {
+    var layertree = [];
+
+    var markerPrefix = new RegExp(Layers.markerPrefix);
+
+    for (var i = 0; i < sortedGroups.length; i++) {
+        var group = sortedGroups[i];
+
+        var layers = null;
+        if (group.title.match(markerPrefix)) {
+            // layer without group
+            layers = layertree;
+        } else {
+            // add group
+            var subtree = {
+                name: group.title,
+                parent: group.parent,
+                layers: []
+            };
+            if (subtree.parent) {
+                //find index of parent
+                //this searches only first level array, if parent is itself subroup its not found!!
+                //if this will be a problem go for data.layertree json solution from server
+                var indx = layertree.findIndex(function (el) {
+                    return el.name == group.parent;
                 });
+                if (indx > -1) {
+                    layertree[indx].layers.push(subtree);
+                }
+            } else {
+                layertree.push(subtree);
             }
+
+            layers = subtree.layers;
         }
 
-        // generate layertree if not in JSON
-        // var layertree = data.layertree;
-        //if (layertree === undefined) {
-            var layertree = [];
+        // add layers
+        for (var j = 0; j < group.layers.length; j++) {
+            layers.push({
+                name: group.layers[j].layername,
+                layers: []
+            });
+        }
+    }
+    //}
 
-            var markerPrefix = new RegExp(Layers.markerPrefix);
-
-            for (var i=0;i<sortedGroups.length; i++) {
-                var group = sortedGroups[i];
-
-                var layers = null;
-                if (group.title.match(markerPrefix)) {
-                    // layer without group
-                    layers = layertree;
-                }
-                else {
-                    // add group
-                    var subtree = {
-                        name: group.title,
-                        parent: group.parent,
-                        layers: []
-                    };
-                    if(subtree.parent) {
-                        //find index of parent
-                        //this searches only first level array, if parent is itself subroup its not found!!
-                        //if this will be a problem go for data.layertree json solution from server
-                        var indx = layertree.findIndex(function(el) {return el.name==group.parent;});
-                        if(indx > -1) {
-                            layertree[indx].layers.push(subtree);
-                        }
-                    } else {
-                        layertree.push(subtree);
-                    }
-
-                    layers = subtree.layers;
-                }
-
-                // add layers
-                for (var j=0;j<group.layers.length; j++) {
-                    layers.push({
-                        name: group.layers[j].layername,
-                        layers: []
-                    });
-                }
-            }
-        //}
-
-        callback({
-            groups: sortedGroups,
-            layertree: layertree
-        });
+    callback({
+        groups: sortedGroups,
+        layertree: layertree
+    });
 
 };

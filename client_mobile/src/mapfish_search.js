@@ -3,14 +3,14 @@
  */
 
 function MapfishSearch(urlCallback, parseFeatureCallback, highlightWmsUrl) {
-  // create query URL from search params
-  this.urlCallback = urlCallback;
+    // create query URL from search params
+    this.urlCallback = urlCallback;
 
-  // get feature name and bbox
-  this.parseFeatureCallback = parseFeatureCallback;
+    // get feature name and bbox
+    this.parseFeatureCallback = parseFeatureCallback;
 
-  // WMS URL for highlighting the selected search result
-  this.highlightWmsUrl = highlightWmsUrl;
+    // WMS URL for highlighting the selected search result
+    this.highlightWmsUrl = highlightWmsUrl;
 }
 
 // inherit from Search
@@ -19,20 +19,20 @@ MapfishSearch.prototype = new Search();
 /**
  * submit search query
  */
-MapfishSearch.prototype.submit = function(searchParams, callback) {
-  var request = $.ajax({
-    url: this.urlCallback(searchParams),
-    dataType: 'json',
-    context: this
-  });
+MapfishSearch.prototype.submit = function (searchParams, callback) {
+    var request = $.ajax({
+        url: this.urlCallback(searchParams),
+        dataType: 'json',
+        context: this
+    });
 
-  request.done(function(data, status) {
-    this.parseResults(data, status, callback);
-  });
+    request.done(function (data, status) {
+        this.parseResults(data, status, callback);
+    });
 
-  request.fail(function(jqXHR, status) {
-    alert(I18n.search.failed + "\n" + jqXHR.status + ": " + jqXHR.statusText);
-  });
+    request.fail(function (jqXHR, status) {
+        alert(I18n.search.failed + "\n" + jqXHR.status + ": " + jqXHR.statusText);
+    });
 };
 
 /**
@@ -55,28 +55,28 @@ MapfishSearch.prototype.submit = function(searchParams, callback) {
  *   }
  * ]
  */
-MapfishSearch.prototype.parseResults = function(data, status, callback) {
-  // group by category
-  var categories = {};
-  for (var i=0; i<data.features.length; i++) {
-    var feature = this.parseFeatureCallback(data.features[i]);
-    var category = feature.category;
-    if (categories[category] === undefined) {
-      // add category
-      categories[category] = [];
+MapfishSearch.prototype.parseResults = function (data, status, callback) {
+    // group by category
+    var categories = {};
+    for (var i = 0; i < data.features.length; i++) {
+        var feature = this.parseFeatureCallback(data.features[i]);
+        var category = feature.category;
+        if (categories[category] === undefined) {
+            // add category
+            categories[category] = [];
+        }
+        // add feature to category
+        categories[category].push(feature);
     }
-    // add feature to category
-    categories[category].push(feature);
-  }
 
-  // convert to search results
-  var results = $.map(categories, function(features, category) {
-    return {
-      category: category,
-      results: features
-    };
-  });
-  callback(results);
+    // convert to search results
+    var results = $.map(categories, function (features, category) {
+        return {
+            category: category,
+            results: features
+        };
+    });
+    callback(results);
 };
 
 /**
@@ -90,26 +90,26 @@ MapfishSearch.prototype.parseResults = function(data, status, callback) {
  * }
  * callback(<OL3 layer>): add highlight layer to map
  */
-MapfishSearch.prototype.highlight = function(highlight, callback) {
-  // create highlight layer
-  var layer = new ol.layer.Image({
-    source: new ol.source.ImageWMS({
-      url: this.highlightWmsUrl,
-      params: $.extend({}, Config.map.wmsParams, {
-        LAYERS: '',
-        'SELECTION[LAYER]': highlight.layer,
-        'SELECTION[PROPERTY]': 'fid',
-        'SELECTION[VALUES]': highlight.fid,
-        TRANSPARENT: true
-      }),
-      extent: Config.map.extent,
-      serverType: Config.map.wmsServerType,
-      dpi: Config.map.dpi,
-      ratio: 1
-    })
-  });
-  layer.name = 'highlight';
+MapfishSearch.prototype.highlight = function (highlight, callback) {
+    // create highlight layer
+    var layer = new ol.layer.Image({
+        source: new ol.source.ImageWMS({
+            url: this.highlightWmsUrl,
+            params: $.extend({}, Config.map.wmsParams, {
+                LAYERS: '',
+                'SELECTION[LAYER]': highlight.layer,
+                'SELECTION[PROPERTY]': 'fid',
+                'SELECTION[VALUES]': highlight.fid,
+                TRANSPARENT: true
+            }),
+            extent: Config.map.extent,
+            serverType: Config.map.wmsServerType,
+            dpi: Config.map.dpi,
+            ratio: 1
+        })
+    });
+    layer.name = 'highlight';
 
-  // add to map
-  callback(layer);
+    // add to map
+    callback(layer);
 };
