@@ -2,7 +2,7 @@
  * jQuery Mobile GUI
  *
  * events:
- *   topiclayersloaded({topic: <topic>}) 
+ *   topiclayersloaded({topic: <topic>})
  */
 
 var Gui = {};
@@ -24,33 +24,33 @@ Gui.draggedLayerIndex = null;
 // flag if layer order has been changed manually
 Gui.layerOrderChanged = false;
 
-Gui.updateLayout = function() {
-  // use full content size for map
-  $('#map').height(window.innerHeight);
-  $('#map').width(window.innerWidth);
+Gui.updateLayout = function () {
+    // use full content size for map
+    $('#map').height(window.innerHeight);
+    $('#map').width(window.innerWidth);
 
-  // limit panels to screen height
-  $('#panelTopics').height(window.innerHeight - 60);
-  $('#panelLayerAll').height(window.innerHeight - 60);
-  $('#panelLayerOrder').height(window.innerHeight - 60);
-  $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 40);
-  $('#panelSearch .ui-listview').height(window.innerHeight);
-  $('#panelPropertiesMap').height(window.innerHeight - 60);
-  $('#panelPropertiesEditor').height(window.innerHeight - 60);
+    // limit panels to screen height
+    $('#panelTopics').height(window.innerHeight - 60);
+    $('#panelLayerAll').height(window.innerHeight - 60);
+    $('#panelLayerOrder').height(window.innerHeight - 60);
+    $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 40);
+    $('#panelSearch .ui-listview').height(window.innerHeight);
+    $('#panelPropertiesMap').height(window.innerHeight - 60);
+    $('#panelPropertiesEditor').height(window.innerHeight - 60);
 };
 
 // show selected panel
-Gui.panelSelect = function(panel) {
-  $('#panelTopics').toggle(panel === 'panelTopics');
-  $('#panelLayerAll').toggle(panel === 'panelLayerAll');
-  $('#panelLayerOrder').toggle(panel === 'panelLayerOrder');
-  // mark panel button
-  $('#buttonTopics').toggleClass('selected', panel === 'panelTopics');
-  $('#buttonLayerAll').toggleClass('selected', panel === 'panelLayerAll');
-  $('#buttonLayerOrder').toggleClass('selected', panel === 'panelLayerOrder');
+Gui.panelSelect = function (panel) {
+    $('#panelTopics').toggle(panel === 'panelTopics');
+    $('#panelLayerAll').toggle(panel === 'panelLayerAll');
+    $('#panelLayerOrder').toggle(panel === 'panelLayerOrder');
+    // mark panel button
+    $('#buttonTopics').toggleClass('selected', panel === 'panelTopics');
+    $('#buttonLayerAll').toggleClass('selected', panel === 'panelLayerAll');
+    $('#buttonLayerOrder').toggleClass('selected', panel === 'panelLayerOrder');
 };
 
-Gui.propertiesSelect = function(panel) {
+Gui.propertiesSelect = function (panel) {
     $('#panelPropertiesMap').toggle(panel === 'panelPropertiesMap');
     $('#panelPropertiesEditor').toggle(panel === 'panelPropertiesEditor');
     // mark panel button
@@ -77,7 +77,7 @@ Gui.showLocationPanel = function (show) {
         var coordinates = Map.geolocation.getPosition();
         var pos = new ol.geom.Point(coordinates);
 
-        if(Map.userCrs != projectData.crs) {
+        if (Map.userCrs != projectData.crs) {
             pos.transform(projectData.crs, Map.userCrs);
         }
 
@@ -97,7 +97,7 @@ Gui.showLocationPanel = function (show) {
         ];
 
         if (Eqwc.settings.mobileShowAccuracy) {
-            if (typeof(Editor) == 'function') {
+            if (typeof (Editor) == 'function') {
                 if (accuracy < EditorConfig.accuracyLimit) {
                     html.push(I18n.geolocation.accuracy + ': ' + accuracy.toPrecision(3) + ' m');
                 } else {
@@ -109,18 +109,18 @@ Gui.showLocationPanel = function (show) {
         }
 
         if (altitude) {
-            html.push(I18n.geolocation.altitude+': ' + altitude.toFixed(2)+ ' m');
-            if(extra.altCorrection>0) {
+            html.push(I18n.geolocation.altitude + ': ' + altitude.toFixed(2) + ' m');
+            if (extra.altCorrection > 0) {
                 html.push(extra.altCorrectionSource);
             }
             //if(extra.source == 'Android API') {
-                html.push('AH: ' + parseFloat(extra.antenna-extra.antennaOffset)+ ' m ' + extra.antennaType);
+            html.push('AH: ' + parseFloat(extra.antenna - extra.antennaOffset) + ' m ' + extra.antennaType);
             //}
         }
 
-        if (heading && speed>1) {
-            html.push(I18n.geolocation.heading+': ' + Math.round(radToDeg(heading)) + '&deg;');
-            html.push(I18n.geolocation.speed+': ' + (speed * 3.6).toFixed(1) + ' km/h');
+        if (heading && speed > 1) {
+            html.push(I18n.geolocation.heading + ': ' + Math.round(radToDeg(heading)) + '&deg;');
+            html.push(I18n.geolocation.speed + ': ' + (speed * 3.6).toFixed(1) + ' km/h');
         }
 
 
@@ -128,100 +128,100 @@ Gui.showLocationPanel = function (show) {
         $('#locationPanel').show();
     } else {
         $('#locationPanel').hide();
-        if (typeof(Editor) == 'function' && mobGoto) {
+        if (typeof (Editor) == 'function' && mobGoto) {
             mobGoto.showGotoPanel(false);
         }
     }
 };
 
 // fill topics list
-Gui.loadTopics = function(categories) {
-  var html = "";
-  var coll = "";
-  Map.topics = {};
-  for (var i=0; i<categories.length; i++) {
-    var category = categories[i];
+Gui.loadTopics = function (categories) {
+    var html = "";
+    var coll = "";
+    Map.topics = {};
+    for (var i = 0; i < categories.length; i++) {
+        var category = categories[i];
 
-    //html += '<li data-role="list-provider">' + category.title + '</li>';
+        //html += '<li data-role="list-provider">' + category.title + '</li>';
 
-    for (var j=0;j<category.topics.length; j++) {
-      var topic = category.topics[j];
+        for (var j = 0; j < category.topics.length; j++) {
+            var topic = category.topics[j];
 
-      if (topic.main_layer != false) {
-        //html += '<li class="topic" data-topic="' + topic.name + '">';
-        html +=   '<a href="'+Eqwc.settings.gisPortalRoot+'" target="_self"><img class="client-image" src="' + topic.icon + '"/></a>';
-        //html +=   '<p style="white-space:pre-wrap">' + category.title + '</p>';
-        //html +=   '<a href="#" data-role="button" data-inline="true">'+category.title+'</a>';
-        //html += '</li>';
-      }
+            if (topic.main_layer != false) {
+                //html += '<li class="topic" data-topic="' + topic.name + '">';
+                html += '<a href="' + Eqwc.settings.gisPortalRoot + '" target="_self"><img class="client-image" src="' + topic.icon + '"/></a>';
+                //html +=   '<p style="white-space:pre-wrap">' + category.title + '</p>';
+                //html +=   '<a href="#" data-role="button" data-inline="true">'+category.title+'</a>';
+                //html += '</li>';
+            }
 
-      Map.topics[topic.name] = {
-        title: topic.title,
-        wms_url: topic.wms_url,
-        background_layer: topic.background_layer,
-        overlay_layer: topic.overlay_layer,
-        minscale: topic.minscale,
-        bg_topic: topic.bg_topic,
-        overlay_topics: topic.overlay_topics
-      };
+            Map.topics[topic.name] = {
+                title: topic.title,
+                wms_url: topic.wms_url,
+                background_layer: topic.background_layer,
+                overlay_layer: topic.overlay_layer,
+                minscale: topic.minscale,
+                bg_topic: topic.bg_topic,
+                overlay_topics: topic.overlay_topics
+            };
+        }
+
+        coll += '<div id="topicList" data-role="collapsible">';
+        coll += '<h4>' + topic.title + '</h4>';
+        coll += '<p>' + projectData.project + '</p>';
+        coll += '<p>' + projectData.crs + '</p>';
+        if (projectData.description != '{}') {
+            coll += '<p>' + projectData.description + '</p>';
+        }
+
+        coll += '</div>';
     }
-
-      coll += '<div id="topicList" data-role="collapsible">';
-      coll += '<h4>' + topic.title + '</h4>';
-      coll += '<p>'+projectData.project+'</p>';
-      coll += '<p>'+projectData.crs+'</p>';
-      if(projectData.description!='{}') {
-          coll += '<p>' + projectData.description + '</p>';
-      }
-
-      coll += '</div>';
-  }
 
     var panel = $('#topicMain');
 
     //var collaps =  $('#topicList');
     panel.prepend(coll);
     panel.prepend(html);
-    panel.find('div[data-role=collapsible]').collapsible({theme:'c',refresh:true});
+    panel.find('div[data-role=collapsible]').collapsible({theme: 'c', refresh: true});
 
     // select initial topic
     Gui.selectTopic(Config.permalink.initialTopic || Config.data.initialTopic);
 };
 
-Gui.selectTopic = function(topic) {
-  Map.clearLayers();
-  Map.topic = topic;
-  Map.setMinScaleDenom(Map.topics[Map.topic].minscale || Config.map.minScaleDenom.map);
+Gui.selectTopic = function (topic) {
+    Map.clearLayers();
+    Map.topic = topic;
+    Map.setMinScaleDenom(Map.topics[Map.topic].minscale || Config.map.minScaleDenom.map);
 
-  // background topic
-  Map.backgroundTopic = Map.topics[Map.topic].bg_topic || null;
-  if (Gui.initialLoad) {
-    // background topic from permalink
-    if (Config.permalink.initialBackgroundTopic) {
-      Map.backgroundTopic = Config.permalink.initialBackgroundTopic;
+    // background topic
+    Map.backgroundTopic = Map.topics[Map.topic].bg_topic || null;
+    if (Gui.initialLoad) {
+        // background topic from permalink
+        if (Config.permalink.initialBackgroundTopic) {
+            Map.backgroundTopic = Config.permalink.initialBackgroundTopic;
+        }
     }
-  }
-  if (Map.topics[Map.backgroundTopic] == undefined || !Map.topics[Map.backgroundTopic].background_layer) {
-    // invalid background topic
-    Map.backgroundTopic = null;
-  }
+    if (Map.topics[Map.backgroundTopic] == undefined || !Map.topics[Map.backgroundTopic].background_layer) {
+        // invalid background topic
+        Map.backgroundTopic = null;
+    }
 
-  // load layers
-  Layers.loadLayers(null, Gui.loadLayers);
+    // load layers
+    Layers.loadLayers(null, Gui.loadLayers);
 
-  //Layers.loadLayers(null, Gui.loadExtraLayers);
+    //Layers.loadLayers(null, Gui.loadExtraLayers);
     Gui.loadExtraLayers();
     Gui.loadBackgroundLayers();
 
-  //if (Map.backgroundTopic != null) {
+    //if (Map.backgroundTopic != null) {
     // load background layers
     //Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
     //Layers.loadLayers(null, Gui.loadBackgroundLayers);
-  //}
+    //}
 
-  // mark topic button
-  //$('#topicList li.topic').removeClass('selected');
-  //$('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
+    // mark topic button
+    //$('#topicList li.topic').removeClass('selected');
+    //$('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
 };
 
 // update layers list
@@ -238,8 +238,7 @@ Gui.loadLayers = function (data) {
             }
             html += '>';
             html += '<h3>' + node.name + '</h3>';
-        }
-        else {
+        } else {
             // find layer parent group
             var groupTitle = parent || Layers.markerPrefix + node.name;
             var group = $.grep(data.groups, function (el) {
@@ -263,7 +262,7 @@ Gui.loadLayers = function (data) {
                     }
                     //also skip if layer is WFS published is in relation and setting hideJoinField = true
                     //that means no manual inserting possible, only through relations
-                    if(Eqwc.common.findParentRelation(layer.layername) && projectData.relations.hideJoinField) {
+                    if (Eqwc.common.findParentRelation(layer.layername) && projectData.relations.hideJoinField) {
                         return;
                     }
                 }
@@ -281,14 +280,14 @@ Gui.loadLayers = function (data) {
                 //html += '<input type="' + type + '" ';
 
                 var layerId = layer.layername;
-                if(projectData.use_ids) {
+                if (projectData.use_ids) {
                     layerId = layer.id;
                 }
 
                 //group layer + legend
                 if (layer.geom_type == 'No geometry') {
-                    if(typeof(Editor) == 'function') {
-                        html += '<a href="javascript:Eqwc.common.callEditor(\''+layerId+'\',null, \'add\');" style="text-align: left;" data-role="button" mini"true" data-theme="c" id="' + layerId + '"';
+                    if (typeof (Editor) == 'function') {
+                        html += '<a href="javascript:Eqwc.common.callEditor(\'' + layerId + '\',null, \'add\');" style="text-align: left;" data-role="button" mini"true" data-theme="c" id="' + layerId + '"';
                         html += ' data-icon="plus" data-iconpos="right" data-groupcheckbox="false"';
                         html += '>';
                         html += node.name + '</a>';
@@ -354,7 +353,7 @@ Gui.loadLayers = function (data) {
 
     // enhance checkboxes of group children when expanding for the first time
     function enhanceCheckbox() {
-        if(this.id == '') {
+        if (this.id == '') {
             var labels = $(this).children('.ui-collapsible-content').children('label');
             labels.find(':checkbox[data-role="none"]').attr('data-role', null);
             labels.trigger('create');
@@ -363,8 +362,8 @@ Gui.loadLayers = function (data) {
             var lay = this.id;
             var layer = projectData.layers[lay];
 
-            if(layer) {
-                if(layer.provider !== 'gdal' && layer.provider !== 'wms') {
+            if (layer) {
+                if (layer.provider !== 'gdal' && layer.provider !== 'wms') {
 
                     var legendUrl = Map.topics[Map.topic].wms_url +
                         "?SERVICE=WMS" +
@@ -386,7 +385,7 @@ Gui.loadLayers = function (data) {
                         "&RULELABEL=AUTO" +
                         "&DPI=" + encodeURIComponent(Config.map.dpi);
 
-                    var leg = '<img data-layer="'+lay+'" src="' + legendUrl + '"</img>';
+                    var leg = '<img data-layer="' + lay + '" src="' + legendUrl + '"</img>';
 
                     //var legend
                     $(this).children('.ui-collapsible-content').append(leg);
@@ -395,6 +394,7 @@ Gui.loadLayers = function (data) {
         }
         $(this).unbind('expand', enhanceCheckbox);
     }
+
     var groups = $('#panelLayerAll').find('.ui-collapsible');
     groups.bind('expand', enhanceCheckbox);
 
@@ -464,7 +464,7 @@ Gui.loadLayers = function (data) {
 };
 
 // add background layer
-Gui.loadBackgroundLayers = function(data) {
+Gui.loadBackgroundLayers = function (data) {
 
     if (Config.data.baselayers.length == 0) {
         return;
@@ -473,20 +473,20 @@ Gui.loadBackgroundLayers = function(data) {
     var html = '<div data-role="collapsible" data-theme="c"';
 
     html += '>';
-    html +=   '<h3>' + I18n.layers.background + '</h3>';
+    html += '<h3>' + I18n.layers.background + '</h3>';
 
-    for (var i=0;i<Config.data.baselayers.length;i++) {
+    for (var i = 0; i < Config.data.baselayers.length; i++) {
         var el = Config.data.baselayers[i];
-        var selected ='';
+        var selected = '';
 
         // add background layer button
         //select first in array in case of setting
-        if(i==0 && Eqwc.settings.visibleFirstBaseLayer) {
+        if (i == 0 && Eqwc.settings.visibleFirstBaseLayer) {
             selected = ' checked="checked"';
         }
-        html += '<label><input type="checkbox" name="_background_" id="' + el.name + '" data-background="true"' +selected+ '>' + el.title + '</label>'
+        html += '<label><input type="checkbox" name="_background_" id="' + el.name + '" data-background="true"' + selected + '>' + el.title + '</label>'
         //create ol3 layer object, first time only, visibility false
-        Map.setBackgroundLayer(el.name,i, true);
+        Map.setBackgroundLayer(el.name, i, true);
 
     }
 
@@ -498,7 +498,7 @@ Gui.loadBackgroundLayers = function(data) {
     $('#panelLayerAll').trigger('create');
 
     // background toggle
-    $('#panelLayerAll :checkbox[data-background=true]').on('change', function(e) {
+    $('#panelLayerAll :checkbox[data-background=true]').on('change', function (e) {
 
         var selected = $(this).attr("id");
         var layer = Map.backgroundLayers[selected];
@@ -506,9 +506,9 @@ Gui.loadBackgroundLayers = function(data) {
 
         layer.setVisible(isChecked);
         //uncheck others
-        $('#panelLayerAll :checkbox[data-background=true]').not($(this)).prop("checked",false).checkboxradio("refresh");
+        $('#panelLayerAll :checkbox[data-background=true]').not($(this)).prop("checked", false).checkboxradio("refresh");
 
-        for (var i=0; i<Config.data.baselayers.length; i++) {
+        for (var i = 0; i < Config.data.baselayers.length; i++) {
             var lay = Config.data.baselayers[i].name;
             if (lay !== selected) {
                 Map.backgroundLayers[lay].setVisible(false);
@@ -517,7 +517,7 @@ Gui.loadBackgroundLayers = function(data) {
     });
 };
 
-Gui.loadExtraLayers = function(data) {
+Gui.loadExtraLayers = function (data) {
 
     if (Config.data.extralayers == undefined) {
         return;
@@ -528,20 +528,20 @@ Gui.loadExtraLayers = function(data) {
     //    html += ' data-groupcheckbox="true"';
     //}
     html += '>';
-    html +=   '<h3>' + I18n.layers.overlays + '</h3>';
+    html += '<h3>' + I18n.layers.overlays + '</h3>';
 
-    for (var i=0;i<Config.data.extralayers.length;i++) {
+    for (var i = 0; i < Config.data.extralayers.length; i++) {
         var el = Config.data.extralayers[i];
-        var selected ='';
+        var selected = '';
 
         var definition = $.parseJSON(el.definition);
 
-        if(definition.visibility) {
+        if (definition.visibility) {
             selected = ' checked="checked"';
         }
-        html += '<label><input type="checkbox" name="_extra_" id="' + el.name + '" data-extra="true"' +selected+ '>' + el.title + '</label>'
+        html += '<label><input type="checkbox" name="_extra_" id="' + el.name + '" data-extra="true"' + selected + '>' + el.title + '</label>'
         //create ol3 layer object, first time only, visibility false
-        Map.setBackgroundLayer(el.name,i, false);
+        Map.setBackgroundLayer(el.name, i, false);
 
     }
 
@@ -551,7 +551,7 @@ Gui.loadExtraLayers = function(data) {
     $('#panelLayerAll').trigger('create');
 
     // selection toggle
-    $('#panelLayerAll :checkbox[data-extra=true]').bind('change', function(e) {
+    $('#panelLayerAll :checkbox[data-extra=true]').bind('change', function (e) {
         var selected = $(this).attr("id");
         var layer = Map.backgroundLayers[selected];
         var isChecked = $(this).is(':checked');
@@ -562,250 +562,243 @@ Gui.loadExtraLayers = function(data) {
 
 
 // add layer group for overlay topics
-Gui.setupOverlayTopics = function(overlayTopics) {
-  // filter overlayable topics
-  overlayTopics = $.grep(overlayTopics, function(topic, index) {
-    return Map.topics[topic] != undefined && Map.topics[topic].overlay_layer;
-  });
-
-  // remove overlays
-  Map.clearOverlayLayers();
-  $('#overlayTopics').remove();
-
-  if (overlayTopics.length > 0) {
-    // add overlay group to layer tree
-    var html = '<div id="overlayTopics" data-role="collapsible" data-theme="c" data-groupcheckbox="false">';
-    html +=      '<h3>' + I18n.layers.overlays + '</h3>';
-
-    // add overlay layers to group (from bottom to top)
-    for (var i=overlayTopics.length - 1; i>=0; i--) {
-      var overlayTopic = overlayTopics[i];
-      html += '<label>';
-      html +=   '<input type="checkbox" ';
-      html +=     'name="overlayTopic_' + overlayTopic + '" ';
-      html +=     'data-overlay_topic="' + overlayTopic + '" ';
-      html +=     'checked';
-      html +=   '>' + Map.topics[overlayTopic].title;
-      html += '</label>';
-    }
-
-    html += '</div>';
-
-    $('#panelLayerAll').append(html);
-    $('#panelLayerAll').trigger('create');
-
-    // add overlay layers (last on top)
-    for (var i=0; i<overlayTopics.length; i++) {
-      Gui.addOverlayTopicLayer(overlayTopics[i]);
-    }
-
-    // overlay toggle
-    $('#panelLayerAll :checkbox[data-overlay_topic]').bind('change', function(e) {
-      Map.toggleOverlayLayer($(this).data('overlay_topic'), $(this).is(':checked'));
+Gui.setupOverlayTopics = function (overlayTopics) {
+    // filter overlayable topics
+    overlayTopics = $.grep(overlayTopics, function (topic, index) {
+        return Map.topics[topic] != undefined && Map.topics[topic].overlay_layer;
     });
-  }
+
+    // remove overlays
+    Map.clearOverlayLayers();
+    $('#overlayTopics').remove();
+
+    if (overlayTopics.length > 0) {
+        // add overlay group to layer tree
+        var html = '<div id="overlayTopics" data-role="collapsible" data-theme="c" data-groupcheckbox="false">';
+        html += '<h3>' + I18n.layers.overlays + '</h3>';
+
+        // add overlay layers to group (from bottom to top)
+        for (var i = overlayTopics.length - 1; i >= 0; i--) {
+            var overlayTopic = overlayTopics[i];
+            html += '<label>';
+            html += '<input type="checkbox" ';
+            html += 'name="overlayTopic_' + overlayTopic + '" ';
+            html += 'data-overlay_topic="' + overlayTopic + '" ';
+            html += 'checked';
+            html += '>' + Map.topics[overlayTopic].title;
+            html += '</label>';
+        }
+
+        html += '</div>';
+
+        $('#panelLayerAll').append(html);
+        $('#panelLayerAll').trigger('create');
+
+        // add overlay layers (last on top)
+        for (var i = 0; i < overlayTopics.length; i++) {
+            Gui.addOverlayTopicLayer(overlayTopics[i]);
+        }
+
+        // overlay toggle
+        $('#panelLayerAll :checkbox[data-overlay_topic]').bind('change', function (e) {
+            Map.toggleOverlayLayer($(this).data('overlay_topic'), $(this).is(':checked'));
+        });
+    }
 };
 
 // add overlay layer
-Gui.addOverlayTopicLayer = function(topic) {
-  // load overlay topic layers
-  Layers.loadLayers(Config.data.layersUrl(topic), function(data) {
-    // collect visible layers
-    var groups = data.groups;
-    var layers = [];
-    for (var i=0; i<groups.length; i++) {
-      var group = groups[i];
-      for (var j=0;j<group.layers.length; j++) {
-        var layer = group.layers[j];
-        if (layer.visini) {
-          layers.push({
-            layername: layer.layername,
-            wms_sort: layer.wms_sort
-          });
+Gui.addOverlayTopicLayer = function (topic) {
+    // load overlay topic layers
+    Layers.loadLayers(Config.data.layersUrl(topic), function (data) {
+        // collect visible layers
+        var groups = data.groups;
+        var layers = [];
+        for (var i = 0; i < groups.length; i++) {
+            var group = groups[i];
+            for (var j = 0; j < group.layers.length; j++) {
+                var layer = group.layers[j];
+                if (layer.visini) {
+                    layers.push({
+                        layername: layer.layername,
+                        wms_sort: layer.wms_sort
+                    });
+                }
+            }
         }
-      }
-    }
-    // sort by wms_sort
-    layers = layers.sort(function(a, b) {
-      return a.wms_sort - b.wms_sort;
+        // sort by wms_sort
+        layers = layers.sort(function (a, b) {
+            return a.wms_sort - b.wms_sort;
+        });
+        var sortedLayers = [];
+        for (var i = 0; i < layers.length; i++) {
+            sortedLayers.push(layers[i].layername);
+        }
+        // add overlay layer
+        Map.addOverlayLayer(topic, sortedLayers);
     });
-    var sortedLayers = [];
-    for (var i=0; i<layers.length; i++) {
-      sortedLayers.push(layers[i].layername);
-    }
-    // add overlay layer
-    Map.addOverlayLayer(topic, sortedLayers);
-  });
 };
 
 // add selection overlay layer
-Gui.setSelectionLayer = function(layer) {
-  if (layer != null) {
-    // add layer button
-    var html = '<label><input type="checkbox" name="_selection_" data-selection="true" checked>' + I18n.layers.selection + '</label>';
-    $('#panelLayerAll').append(html);
-    $('#panelLayerAll').trigger('create');
+Gui.setSelectionLayer = function (layer) {
+    if (layer != null) {
+        // add layer button
+        var html = '<label><input type="checkbox" name="_selection_" data-selection="true" checked>' + I18n.layers.selection + '</label>';
+        $('#panelLayerAll').append(html);
+        $('#panelLayerAll').trigger('create');
 
-    // selection toggle
-    $('#panelLayerAll :checkbox[data-selection=true]').bind('change', function(e) {
-      Map.toggleSelectionLayer($(this).is(':checked'));
-    });
-  }
-  else {
-    // remove layer button
-    $('#panelLayerAll :checkbox[data-selection=true]').parent('.ui-checkbox:first').remove();
-  }
+        // selection toggle
+        $('#panelLayerAll :checkbox[data-selection=true]').bind('change', function (e) {
+            Map.toggleSelectionLayer($(this).is(':checked'));
+        });
+    } else {
+        // remove layer button
+        $('#panelLayerAll :checkbox[data-selection=true]').parent('.ui-checkbox:first').remove();
+    }
 
-  Map.setSelectionLayer(layer);
+    Map.setSelectionLayer(layer);
 };
 
 // add redlining overlay layer
-Gui.setRedliningLayer = function(layer) {
-  if (layer != null) {
-    // add layer button
-    var html = '<label><input type="checkbox" name="_redlining_" data-redlining="true" checked>' + I18n.layers.redlining + '</label>';
-    $('#panelLayerAll').append(html);
-    $('#panelLayerAll').trigger('create');
+Gui.setRedliningLayer = function (layer) {
+    if (layer != null) {
+        // add layer button
+        var html = '<label><input type="checkbox" name="_redlining_" data-redlining="true" checked>' + I18n.layers.redlining + '</label>';
+        $('#panelLayerAll').append(html);
+        $('#panelLayerAll').trigger('create');
 
-    // redlining toggle
-    $('#panelLayerAll :checkbox[data-redlining=true]').bind('change', function(e) {
-      Map.toggleRedliningLayer($(this).is(':checked'));
-    });
-  }
-  else {
-    // remove layer button
-    $('#panelLayerAll :checkbox[data-redlining=true]').parent('.ui-checkbox:first').remove();
-  }
+        // redlining toggle
+        $('#panelLayerAll :checkbox[data-redlining=true]').bind('change', function (e) {
+            Map.toggleRedliningLayer($(this).is(':checked'));
+        });
+    } else {
+        // remove layer button
+        $('#panelLayerAll :checkbox[data-redlining=true]').parent('.ui-checkbox:first').remove();
+    }
 
-  Map.setRedliningLayer(layer);
+    Map.setRedliningLayer(layer);
 };
 
 // fill layer order panel from visible layers
-Gui.resetLayerOrder = function() {
-  var html = '';
-  for (var layer in Map.layers) {
-    if (Map.layers[layer].visible) {
-      // NOTE: fill in reverse order, with layers drawn from bottom to top
-      html = '<li data-layer="' + layer + '" data-wms_sort="' + Map.layers[layer].wms_sort + '">' + Map.layers[layer].title + '</li>' + html;
+Gui.resetLayerOrder = function () {
+    var html = '';
+    for (var layer in Map.layers) {
+        if (Map.layers[layer].visible) {
+            // NOTE: fill in reverse order, with layers drawn from bottom to top
+            html = '<li data-layer="' + layer + '" data-wms_sort="' + Map.layers[layer].wms_sort + '">' + Map.layers[layer].title + '</li>' + html;
+        }
     }
-  }
-  $('#listOrder').html(html);
-  $('#listOrder').listview('refresh');
+    $('#listOrder').html(html);
+    $('#listOrder').listview('refresh');
 
-  Gui.selectLayer(null);
+    Gui.selectLayer(null);
 };
 
 // add/remove layer in layer order panel
-Gui.updateLayerOrder = function(layer, layerAdded) {
-  if (layerAdded) {
-    var html = '<li data-layer="' + layer + '" data-wms_sort="' + Map.layers[layer].wms_sort + '">' + Map.layers[layer].title + '</li>';
+Gui.updateLayerOrder = function (layer, layerAdded) {
+    if (layerAdded) {
+        var html = '<li data-layer="' + layer + '" data-wms_sort="' + Map.layers[layer].wms_sort + '">' + Map.layers[layer].title + '</li>';
 
-    if (Gui.layerOrderChanged) {
-      // add layer on top if layer order has been changed manually
-      $('#listOrder').prepend(html);
-    }
-    else {
-      // insert layer at wms_sort position
-      // find list element with lower sort order
-      var el = $('#listOrder li').filter(function() {
-        return $(this).data('wms_sort') < Map.layers[layer].wms_sort;
-      }).first();
-      if (el.length > 0) {
-        el.before(html);
-      }
-      else {
-        // find list element with higher sort order
-        el = $('#listOrder li').filter(function() {
-          return $(this).data('wms_sort') > Map.layers[layer].wms_sort;
-        }).last();
-        if (el.length > 0) {
-          el.after(html);
+        if (Gui.layerOrderChanged) {
+            // add layer on top if layer order has been changed manually
+            $('#listOrder').prepend(html);
+        } else {
+            // insert layer at wms_sort position
+            // find list element with lower sort order
+            var el = $('#listOrder li').filter(function () {
+                return $(this).data('wms_sort') < Map.layers[layer].wms_sort;
+            }).first();
+            if (el.length > 0) {
+                el.before(html);
+            } else {
+                // find list element with higher sort order
+                el = $('#listOrder li').filter(function () {
+                    return $(this).data('wms_sort') > Map.layers[layer].wms_sort;
+                }).last();
+                if (el.length > 0) {
+                    el.after(html);
+                } else {
+                    // add layer on top
+                    $('#listOrder').prepend(html);
+                }
+            }
         }
-        else {
-          // add layer on top
-          $('#listOrder').prepend(html);
-        }
-      }
+    } else {
+        // remove layer
+        $('#listOrder li[data-layer="' + layer + '"]').remove();
     }
-  }
-  else {
-    // remove layer
-    $('#listOrder li[data-layer="' + layer + '"]').remove();
-  }
-  $('#listOrder').listview('refresh');
+    $('#listOrder').listview('refresh');
 
-  Gui.onLayerOrderChanged(null, null);
+    Gui.onLayerOrderChanged(null, null);
 };
 
-Gui.onLayerDrag = function(event, ui) {
-  // keep track of original position in layer order
-  Gui.draggedLayerIndex = $('#listOrder li').index(ui.item);
+Gui.onLayerDrag = function (event, ui) {
+    // keep track of original position in layer order
+    Gui.draggedLayerIndex = $('#listOrder li').index(ui.item);
 };
 
 // update layer order in map
-Gui.onLayerOrderChanged = function(event, ui) {
-  if (ui != null) {
-    if ($('#listOrder li').index(ui.item) != Gui.draggedLayerIndex) {
-      // layer order has been changed manually
-      Gui.layerOrderChanged = true;
+Gui.onLayerOrderChanged = function (event, ui) {
+    if (ui != null) {
+        if ($('#listOrder li').index(ui.item) != Gui.draggedLayerIndex) {
+            // layer order has been changed manually
+            Gui.layerOrderChanged = true;
+        }
     }
-  }
 
-  // unselect layer
-  Gui.selectLayer(null);
+    // unselect layer
+    Gui.selectLayer(null);
 
-  // get layer order from GUI
-  var orderedLayers = {};
-  $($('#listOrder li').get().reverse()).each(function(index) {
-    var layer = $(this).data('layer');
-    orderedLayers[layer] = Map.layers[layer];
-  });
+    // get layer order from GUI
+    var orderedLayers = {};
+    $($('#listOrder li').get().reverse()).each(function (index) {
+        var layer = $(this).data('layer');
+        orderedLayers[layer] = Map.layers[layer];
+    });
 
-  // append inactive layers
-  for (var layer in Map.layers) {
-    if (orderedLayers[layer] === undefined) {
-      orderedLayers[layer] = Map.layers[layer];
+    // append inactive layers
+    for (var layer in Map.layers) {
+        if (orderedLayers[layer] === undefined) {
+            orderedLayers[layer] = Map.layers[layer];
+        }
     }
-  }
 
-  // update map
-  Map.layers = orderedLayers;
-  setTimeout(function() {
-    Map.refresh();
-  }, 1000);
+    // update map
+    Map.layers = orderedLayers;
+    setTimeout(function () {
+        Map.refresh();
+    }, 1000);
 };
 
 // select layer in layer order panel
-Gui.selectLayer = function(layer) {
-  // unselect all layer buttons
-  $('#listOrder li').removeClass('selected');
+Gui.selectLayer = function (layer) {
+    // unselect all layer buttons
+    $('#listOrder li').removeClass('selected');
 
-  Gui.selectedLayer = layer;
-  if (Gui.selectedLayer != null) {
-    // mark layer button
-    $('#listOrder li[data-layer="' + layer + '"]').addClass('selected');
-	//$('img[data-layer="'+layer+'"]').show();
-    // update slider
-    $('#sliderTransparency').val(Map.layers[layer].transparency).slider("refresh");
-    $('#sliderTransparency').slider("enable");
-  }
-  else {
-    $('#sliderTransparency').val(0).slider("refresh");
-    $('#sliderTransparency').slider("disable");
-  }
+    Gui.selectedLayer = layer;
+    if (Gui.selectedLayer != null) {
+        // mark layer button
+        $('#listOrder li[data-layer="' + layer + '"]').addClass('selected');
+        //$('img[data-layer="'+layer+'"]').show();
+        // update slider
+        $('#sliderTransparency').val(Map.layers[layer].transparency).slider("refresh");
+        $('#sliderTransparency').slider("enable");
+    } else {
+        $('#sliderTransparency').val(0).slider("refresh");
+        $('#sliderTransparency').slider("disable");
+    }
 };
 
 // show feature info results
-Gui.showFeatureInfoResults = function(status, data) {
+Gui.showFeatureInfoResults = function (status, data) {
 
-    if(status == 'success') {
+    if (status == 'success') {
         if (Config.featureInfo.format === 'text/xml') {
             Gui.showXMLFeatureInfoResults(data);
         } else {
             $('#featureInfoResults').html(data.join(''));
         }
     } else {
-        $('#featureInfoResults').html("<span style='color:red'>"+data+"</span>");
+        $('#featureInfoResults').html("<span style='color:red'>" + data + "</span>");
     }
 
     $('#panelFeatureInfo').panel('open');
@@ -819,7 +812,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
     filesAlias = filesAlias.toUpperCase();
 
     //check if we don't have single no geometry layer
-    if(!(results.length == 1 && projectData.layers[results[0].layer].geom_type == 'No geometry')) {
+    if (!(results.length == 1 && projectData.layers[results[0].layer].geom_type == 'No geometry')) {
         html += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
 
         //add button
@@ -849,12 +842,12 @@ Gui.showXMLFeatureInfoResults = function (results) {
             layerTitle = layer.layername;
         }
 
-        if(projectData.relations && projectData.relations[layerTitle]) {
+        if (projectData.relations && projectData.relations[layerTitle]) {
             countRelations = projectData.relations[layerTitle].length;
         }
 
         html += '<div data-role="collapsible" data-collapsed="false" data-theme="c">';
-        html += '<h3>' + layerTitle + ' ('+result.features.length+')</h3>';
+        html += '<h3>' + layerTitle + ' (' + result.features.length + ')</h3>';
 
         var hiddenAttributes = [];
         if (layer != undefined && layer.hidden_attributes != undefined) {
@@ -893,22 +886,22 @@ Gui.showXMLFeatureInfoResults = function (results) {
                 var table = projectData.relations[layerTitle][0].relate_layer;
                 var tableId = Eqwc.common.getLayerId(table);
                 var field = projectData.relations[layerTitle][0].join_field;
-                var filter = table+':"'+field+'" = \''+feature.id+'\'';
+                var filter = table + ':"' + field + '" = \'' + feature.id + '\'';
 
-                if(!hasControlGroup) {
+                if (!hasControlGroup) {
                     hasControlGroup = true;
                     html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
                 }
 
-                html += '<a href="javascript:Gui.wmsSearch(\''+tableId+'\',\''+feature.id+'\', \''+field+'\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b">'+TR.relations+'</a>';
+                html += '<a href="javascript:Gui.wmsSearch(\'' + tableId + '\',\'' + feature.id + '\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b">' + TR.relations + '</a>';
 
-                if(countRelations == 1 && typeof(Editor) == 'function' && Config.data.wfslayers[tableId] && projectData.layers[tableId].geom_type == 'No geometry') {
+                if (countRelations == 1 && typeof (Editor) == 'function' && Config.data.wfslayers[tableId] && projectData.layers[tableId].geom_type == 'No geometry') {
                     //feature.id can be string, so need to quote here
-                    html += '<a href="javascript:Eqwc.common.callEditor(\''+tableId+'\',\''+feature.id+'\', \'addRelation\', \''+field+'\');" data-role="button" data-iconpos="notext" data-icon="plus" data-theme="a">'+TR.editAdd+'</a>';
+                    html += '<a href="javascript:Eqwc.common.callEditor(\'' + tableId + '\',\'' + feature.id + '\', \'addRelation\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="plus" data-theme="a">' + TR.editAdd + '</a>';
                 }
             }
 
-            if(hasControlGroup) {
+            if (hasControlGroup) {
                 html += '</div>';
             }
 
@@ -920,31 +913,31 @@ Gui.showXMLFeatureInfoResults = function (results) {
 
                 // skip hidden attributes and hidden values
                 //if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
-                    html += '<li>';
+                html += '<li>';
 
-                    if (name == filesAlias) {
-                        if (attribute.value > '') {
-                            var attArr = $.parseJSON(attribute.value);
-                            var newArr = [];
-                            if  (attArr === null) {
-                                attribute.value = Eqwc.settings.noDataValue;
-                            }   else {
-                                for (var l = 0; l < attArr.length; l++) {
-                                    newArr.push(Eqwc.common.manageFile(attArr[l], true));
-                                }
-                                attribute.value = newArr.join('</br>');
+                if (name == filesAlias) {
+                    if (attribute.value > '') {
+                        var attArr = $.parseJSON(attribute.value);
+                        var newArr = [];
+                        if (attArr === null) {
+                            attribute.value = Eqwc.settings.noDataValue;
+                        } else {
+                            for (var l = 0; l < attArr.length; l++) {
+                                newArr.push(Eqwc.common.manageFile(attArr[l], true));
                             }
+                            attribute.value = newArr.join('</br>');
                         }
-                    } else {
-                        attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
                     }
+                } else {
+                    attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
+                }
 
-                    // add attribute name and value
-                    //hide field name in this cases, hardcoded
-                    if (name !== 'MAPTIP' && name !== filesAlias) {
-                        html += '<span class="name">' + attribute.name + ': </span>';
-                    }
-                    html += '<span class="value">' + attribute.value + '</span>';
+                // add attribute name and value
+                //hide field name in this cases, hardcoded
+                if (name !== 'MAPTIP' && name !== filesAlias) {
+                    html += '<span class="name">' + attribute.name + ': </span>';
+                }
+                html += '<span class="value">' + attribute.value + '</span>';
                 //}
                 html += '</li>';
 
@@ -957,7 +950,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
         html += '</div>';
     }
     if (results.length == 0) {
-        html += '</br>'+I18n.featureInfo.noFeatureFound;
+        html += '</br>' + I18n.featureInfo.noFeatureFound;
     }
 
     $('#featureInfoResults').html(html);
@@ -1001,59 +994,59 @@ Gui.showSearchResults = function (results) {
 };
 
 // bbox as [<minx>, <miny>, <maxx>, <maxy>]
-Gui.jumpToSearchResult = function(point) {
+Gui.jumpToSearchResult = function (point) {
 
-  Map.searchMarker.setPosition(point.getCoordinates());
+    Map.searchMarker.setPosition(point.getCoordinates());
 
-  Map.zoomToExtent(point.getExtent(), Config.map.minScaleDenom.search);
+    Map.zoomToExtent(point.getExtent(), Config.map.minScaleDenom.search);
 
-  // disable following
-  //$('#switchFollow').val('off');
-  //$('#switchFollow').slider('refresh');
-  Map.toggleFollowing(false);
+    // disable following
+    //$('#switchFollow').val('off');
+    //$('#switchFollow').slider('refresh');
+    Map.toggleFollowing(false);
 
-  $('#panelSearch').panel('close');
+    $('#panelSearch').panel('close');
 };
 
 // binds the reorder functionality to the visible layer list
-$(document).bind('pageinit', function() {
-  $('#listOrder').sortable();
-  $('#listOrder').bind('sortstart', Gui.onLayerDrag);
-  $('#listOrder').bind('sortstop', Gui.onLayerOrderChanged);
+$(document).bind('pageinit', function () {
+    $('#listOrder').sortable();
+    $('#listOrder').bind('sortstart', Gui.onLayerDrag);
+    $('#listOrder').bind('sortstop', Gui.onLayerOrderChanged);
 });
 
-Gui.updateTranslations = function() {
-  var titleBarText = projectData.title;
-  document.title = Eqwc.settings.gisPortalTitle ? titleBarText + ' | ' + Eqwc.settings.gisPortalTitle : titleBarText;
+Gui.updateTranslations = function () {
+    var titleBarText = projectData.title;
+    document.title = Eqwc.settings.gisPortalTitle ? titleBarText + ' | ' + Eqwc.settings.gisPortalTitle : titleBarText;
 
-  $('#panelSearch b').html(I18n.search.header);
-  $('#panelSearch #searchResults b').html(I18n.search.results);
+    $('#panelSearch b').html(I18n.search.header);
+    $('#panelSearch #searchResults b').html(I18n.search.results);
 
-  $('#panelProperties #buttonPropertiesMap .ui-btn-text').html(I18n.properties.header);
+    $('#panelProperties #buttonPropertiesMap .ui-btn-text').html(I18n.properties.header);
 
-  //$('#panelProperties label[for=switchFollow]').html(I18n.properties.mapFollowing);
-  $('#panelProperties label[for=switchOrientation]').html(I18n.properties.mapRotation);
-  $('#panelProperties label[for=switchScale]').html(I18n.properties.scaleBar);
-  $('#panelProperties .ui-slider-label:contains(Ein)').html(I18n.properties.on);
-  $('#panelProperties .ui-slider-label:contains(Aus)').html(I18n.properties.off);
-  $('#panelProperties #buttonLogo .ui-btn-text').html(I18n.properties.about);
-  $('#dlgAbout h1').html(I18n.about.header);
-  $('#panelProperties #buttonShare .ui-btn-text').html(I18n.properties.share);
-  $('#panelProperties #buttonLogin .ui-btn-text').html(I18n.properties.login);
-  $('#panelProperties #buttonLoginSSL .ui-btn-text').html(I18n.properties.login);
-  $('#dlgLogin h1').html(I18n.login.header);
-  $('#dlgLogin label[for=user]').html(I18n.login.user);
-  $('#dlgLogin label[for=password]').html(I18n.login.password);
-  $('#dlgLogin #buttonSignIn .ui-btn-text').html(I18n.login.signIn);
-  $('#dlgLogin #buttonLoginCancel .ui-btn-text').html(I18n.login.cancel);
-  $('#panelProperties #buttonSignOut .ui-btn-text').html(I18n.login.signOut);
+    //$('#panelProperties label[for=switchFollow]').html(I18n.properties.mapFollowing);
+    $('#panelProperties label[for=switchOrientation]').html(I18n.properties.mapRotation);
+    $('#panelProperties label[for=switchScale]').html(I18n.properties.scaleBar);
+    $('#panelProperties .ui-slider-label:contains(Ein)').html(I18n.properties.on);
+    $('#panelProperties .ui-slider-label:contains(Aus)').html(I18n.properties.off);
+    $('#panelProperties #buttonLogo .ui-btn-text').html(I18n.properties.about);
+    $('#dlgAbout h1').html(I18n.about.header);
+    $('#panelProperties #buttonShare .ui-btn-text').html(I18n.properties.share);
+    $('#panelProperties #buttonLogin .ui-btn-text').html(I18n.properties.login);
+    $('#panelProperties #buttonLoginSSL .ui-btn-text').html(I18n.properties.login);
+    $('#dlgLogin h1').html(I18n.login.header);
+    $('#dlgLogin label[for=user]').html(I18n.login.user);
+    $('#dlgLogin label[for=password]').html(I18n.login.password);
+    $('#dlgLogin #buttonSignIn .ui-btn-text').html(I18n.login.signIn);
+    $('#dlgLogin #buttonLoginCancel .ui-btn-text').html(I18n.login.cancel);
+    $('#panelProperties #buttonSignOut .ui-btn-text').html(I18n.login.signOut);
 
-  $('#panelLayer #buttonTopics .ui-btn-text').html(I18n.layers.project);
-  $('#panelLayer #buttonLayerAll .ui-btn-text').html(I18n.layers.layers);
-  $('#panelLayer #buttonLayerOrder .ui-btn-text').html(I18n.layers.layerOrder);
-  $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
+    $('#panelLayer #buttonTopics .ui-btn-text').html(I18n.layers.project);
+    $('#panelLayer #buttonLayerAll .ui-btn-text').html(I18n.layers.layers);
+    $('#panelLayer #buttonLayerOrder .ui-btn-text').html(I18n.layers.layerOrder);
+    $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
 
-  $('#panelFeatureInfo b').html(I18n.featureInfo.header);
+    $('#panelFeatureInfo b').html(I18n.featureInfo.header);
 };
 
 //Gui.toggleFollowing = function(enabled) {
@@ -1061,168 +1054,164 @@ Gui.updateTranslations = function() {
 //  Map.toggleFollowing(Gui.tracking && Gui.following);
 //};
 
-Gui.toggleOrientation = function(enabled) {
-  Gui.orientation = enabled;
-  Map.toggleOrientation(Gui.orientation);
+Gui.toggleOrientation = function (enabled) {
+    Gui.orientation = enabled;
+    Map.toggleOrientation(Gui.orientation);
 };
 
-Gui.applyPermalink = function() {
-  // map extent
-  if (Config.permalink.startExtent != null) {
-    Map.zoomToExtent(Config.permalink.startExtent, null);
-  }
-  else {
-    if (Config.permalink.startCenter != null) {
-      Map.setCenter(Config.permalink.startCenter);
-    }
-    if (Config.permalink.startScale != null) {
-      Map.setScale(Config.permalink.startScale);
-    }
-    else if (Config.permalink.startZoom != null) {
-      Map.setZoom(Config.permalink.startZoom);
-    }
-  }
-
-  var toggleLayer = function(layer, active) {
-    // override layer visibility
-    Map.layers[layer].visible = active;
-
-    // update layer tree
-    var checkbox = $('#panelLayerAll :checkbox[data-layer="' + layer + '"]');
-    if (checkbox.is(':checked') != active) {
-      checkbox.prop('checked', active).checkboxradio('refresh').trigger('change');
-    }
-  };
-
-  if (Config.permalink.activeLayers != null) {
-    // active layers and layer order
-    var layers = [];
-    var layerOrderChanged = false;
-    var lastIndex = -1;
-    for (var layer in Map.layers) {
-      var index = $.inArray(layer, Config.permalink.activeLayers);
-      var active = (index != -1);
-
-      toggleLayer(layer, active);
-
-      if (active) {
-        layers.push({
-          layername: layer,
-          sort: index
-        });
-        // check if layer order differs from original
-        if (!layerOrderChanged) {
-          layerOrderChanged = (index < lastIndex);
-          lastIndex = index;
+Gui.applyPermalink = function () {
+    // map extent
+    if (Config.permalink.startExtent != null) {
+        Map.zoomToExtent(Config.permalink.startExtent, null);
+    } else {
+        if (Config.permalink.startCenter != null) {
+            Map.setCenter(Config.permalink.startCenter);
         }
-      }
+        if (Config.permalink.startScale != null) {
+            Map.setScale(Config.permalink.startScale);
+        } else if (Config.permalink.startZoom != null) {
+            Map.setZoom(Config.permalink.startZoom);
+        }
     }
-    layers = layers.sort(function(a, b) {
-      return a.sort - b.sort;
-    });
 
-    // update layer order in map
-    var orderedLayers = {};
-    for (var i=0; i<layers.length; i++) {
-      var layer = layers[i].layername;
-      // append active layers
-      orderedLayers[layer] = Map.layers[layer];
-    }
-    // append inactive layers
-    for (var layer in Map.layers) {
-      if (orderedLayers[layer] === undefined) {
-        orderedLayers[layer] = Map.layers[layer];
-      }
-    }
-    Map.layers = orderedLayers;
-    Gui.layerOrderChanged = layerOrderChanged;
-  }
-  else if (Config.permalink.inactiveLayers != null) {
-    // keep layer visibilities from topic and additionally turn off inactiveLayers
-    for (var layer in Map.layers) {
-      var index = $.inArray(layer, Config.permalink.inactiveLayers);
-      if (index != -1) {
-        // turn off layer
-        toggleLayer(layer, false);
-      }
-    }
-  }
+    var toggleLayer = function (layer, active) {
+        // override layer visibility
+        Map.layers[layer].visible = active;
 
-  // opacities
-  if (Config.permalink.opacities != null) {
-    for (var layer in Config.permalink.opacities) {
-      if (Map.layers[layer] != undefined) {
-        // scale opacity[255..0] to transparency[0..100]
-        var transparency = Math.round((255 - Config.permalink.opacities[layer]) / 255 * 100);
-        Map.layers[layer].transparency = transparency;
-      }
-    }
-  }
+        // update layer tree
+        var checkbox = $('#panelLayerAll :checkbox[data-layer="' + layer + '"]');
+        if (checkbox.is(':checked') != active) {
+            checkbox.prop('checked', active).checkboxradio('refresh').trigger('change');
+        }
+    };
 
-  // login
-  if (Config.permalink.openLogin) {
-    if (Config.sslLogin && UrlParams.useSSL && !Gui.signedIn) {
-      // open login form
-      $('#panelProperties').panel('open');
-      $('#dlgLogin').popup('open');
+    if (Config.permalink.activeLayers != null) {
+        // active layers and layer order
+        var layers = [];
+        var layerOrderChanged = false;
+        var lastIndex = -1;
+        for (var layer in Map.layers) {
+            var index = $.inArray(layer, Config.permalink.activeLayers);
+            var active = (index != -1);
+
+            toggleLayer(layer, active);
+
+            if (active) {
+                layers.push({
+                    layername: layer,
+                    sort: index
+                });
+                // check if layer order differs from original
+                if (!layerOrderChanged) {
+                    layerOrderChanged = (index < lastIndex);
+                    lastIndex = index;
+                }
+            }
+        }
+        layers = layers.sort(function (a, b) {
+            return a.sort - b.sort;
+        });
+
+        // update layer order in map
+        var orderedLayers = {};
+        for (var i = 0; i < layers.length; i++) {
+            var layer = layers[i].layername;
+            // append active layers
+            orderedLayers[layer] = Map.layers[layer];
+        }
+        // append inactive layers
+        for (var layer in Map.layers) {
+            if (orderedLayers[layer] === undefined) {
+                orderedLayers[layer] = Map.layers[layer];
+            }
+        }
+        Map.layers = orderedLayers;
+        Gui.layerOrderChanged = layerOrderChanged;
+    } else if (Config.permalink.inactiveLayers != null) {
+        // keep layer visibilities from topic and additionally turn off inactiveLayers
+        for (var layer in Map.layers) {
+            var index = $.inArray(layer, Config.permalink.inactiveLayers);
+            if (index != -1) {
+                // turn off layer
+                toggleLayer(layer, false);
+            }
+        }
     }
-  }
+
+    // opacities
+    if (Config.permalink.opacities != null) {
+        for (var layer in Config.permalink.opacities) {
+            if (Map.layers[layer] != undefined) {
+                // scale opacity[255..0] to transparency[0..100]
+                var transparency = Math.round((255 - Config.permalink.opacities[layer]) / 255 * 100);
+                Map.layers[layer].transparency = transparency;
+            }
+        }
+    }
+
+    // login
+    if (Config.permalink.openLogin) {
+        if (Config.sslLogin && UrlParams.useSSL && !Gui.signedIn) {
+            // open login form
+            $('#panelProperties').panel('open');
+            $('#dlgLogin').popup('open');
+        }
+    }
 };
 
-Gui.loginStatus = function(result) {
+Gui.loginStatus = function (result) {
 
     result.success = true;
     result.user = projectData.user;
 
     if (result.success) {
-    $('#dlgLogin').popup('close');
-    if (Eqwc.settings.useGisPortal) {
-        $('#buttonSignOut .ui-btn-text').html(result.user);
-    } else {
-        $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+        $('#dlgLogin').popup('close');
+        if (Eqwc.settings.useGisPortal) {
+            $('#buttonSignOut .ui-btn-text').html(result.user);
+        } else {
+            $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+        }
+        $('#panelProperties').panel('close');
     }
-    $('#panelProperties').panel('close');
-  }
-  Gui.toggleLogin(result.success);
+    Gui.toggleLogin(result.success);
 };
 
-Gui.login = function(result) {
-  if (result.success) {
+Gui.login = function (result) {
+    if (result.success) {
+        // reload topics
+        Topics.loadTopics(null, Gui.loadTopics);
+
+        $('#dlgLogin').popup('close');
+        if (Eqwc.settings.useGisPortal) {
+            $('#buttonSignOut .ui-btn-text').html(result.user);
+        } else {
+            $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+        }
+        Gui.toggleLogin(true);
+        $('#panelProperties').panel('close');
+    } else {
+        alert(I18n.login.signInFailed);
+    }
+};
+
+Gui.logout = function () {
     // reload topics
-    Topics.loadTopics(null, Gui.loadTopics);
+    //Topics.loadTopics(null, Gui.loadTopics);
 
-    $('#dlgLogin').popup('close');
-    if (Eqwc.settings.useGisPortal) {
-        $('#buttonSignOut .ui-btn-text').html(result.user);
-    } else {
-        $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
-    }
-    Gui.toggleLogin(true);
+    //Gui.toggleLogin(false);
     $('#panelProperties').panel('close');
-  }
-  else {
-    alert(I18n.login.signInFailed);
-  }
+
+    //change to profile view if gisportal
+    window.location.href = Eqwc.settings.useGisPortal ? Eqwc.settings.gisPortalProfile : "./admin/login.php?action=logout";
 };
 
-Gui.logout = function() {
-  // reload topics
-  //Topics.loadTopics(null, Gui.loadTopics);
-
-  //Gui.toggleLogin(false);
-  $('#panelProperties').panel('close');
-
-  //change to profile view if gisportal
-  window.location.href = Eqwc.settings.useGisPortal ? Eqwc.settings.gisPortalProfile : "./admin/login.php?action=logout";
+Gui.toggleLogin = function (signedIn) {
+    Gui.signedIn = signedIn;
+    $('#buttonLogin').toggle(!signedIn);
+    $('#buttonSignOut').toggle(signedIn);
 };
 
-Gui.toggleLogin = function(signedIn) {
-  Gui.signedIn = signedIn;
-  $('#buttonLogin').toggle(!signedIn);
-  $('#buttonSignOut').toggle(signedIn);
-};
-
-Gui.fillMapCrs = function() {
+Gui.fillMapCrs = function () {
     $.each(Config.map.projectionList, function (i, item) {
         $('#mapCrs').append($('<option>', {
             value: item[0],
@@ -1232,7 +1221,7 @@ Gui.fillMapCrs = function() {
 
     $('#mapCrs').on('change', function () {
         Map.userCrs = this.value;
-        if($('#locationPanel').is(":visible") && Map.geolocation) {
+        if ($('#locationPanel').is(":visible") && Map.geolocation) {
             Gui.showLocationPanel(true);
         }
     });
@@ -1240,118 +1229,118 @@ Gui.fillMapCrs = function() {
     $('#mapCrs').val(projectData.crs).change();
 };
 
-Gui.wmsSearch = function(table,feature,field) {
-    var filter = table+':"'+field+'" = \'' + feature + '\'';
+Gui.wmsSearch = function (table, feature, field) {
+    var filter = table + ':"' + field + '" = \'' + feature + '\'';
     var fi = new FeatureInfo(Gui.showFeatureInfoResults);
     fi.filter(filter, table);
 };
 
-Gui.initViewer = function() {
-  Gui.updateTranslations();
-  Gui.fillMapCrs();
+Gui.initViewer = function () {
+    Gui.updateTranslations();
+    Gui.fillMapCrs();
 
-  Gui.updateLayout();
-  $(window).on('resize', function() {
     Gui.updateLayout();
-  });
-  Map.setWindowOrientation(window.orientation);
-  $(window).on('orientationchange', function(e) {
+    $(window).on('resize', function () {
+        Gui.updateLayout();
+    });
     Map.setWindowOrientation(window.orientation);
-  });
+    $(window).on('orientationchange', function (e) {
+        Map.setWindowOrientation(window.orientation);
+    });
 
-  // map
-  Map.createMap();
-  Gui.updateLayout();
+    // map
+    Map.createMap();
+    Gui.updateLayout();
 
-  // layer panel navigation
-  $('#buttonTopics').on('tap', function() {
-    Gui.panelSelect('panelTopics');
-  });
-  $('#buttonLayerAll').on('tap', function() {
+    // layer panel navigation
+    $('#buttonTopics').on('tap', function () {
+        Gui.panelSelect('panelTopics');
+    });
+    $('#buttonLayerAll').on('tap', function () {
+        Gui.panelSelect('panelLayerAll');
+    });
+    $('#buttonLayerOrder').on('tap', function () {
+        Gui.panelSelect('panelLayerOrder');
+    });
+
+    //tab properties
+    $('#buttonPropertiesMap').on('tap', function () {
+        Gui.propertiesSelect('panelPropertiesMap');
+    });
+
+    $('#buttonPropertiesEditor').on('tap', function () {
+        Gui.propertiesSelect('panelPropertiesEditor');
+    });
+
+
+    // default properties
+    //$('#switchFollow').val(Config.defaultProperties.following ? 'on' : 'off');
+    //$('#switchFollow').slider('refresh');
+    //Gui.toggleFollowing(Config.defaultProperties.following);
+    $('#switchOrientation').val(Config.defaultProperties.orientation ? 'on' : 'off');
+    $('#switchOrientation').slider('refresh');
+    Gui.toggleOrientation(Config.defaultProperties.orientation);
+    $('#switchScale').val(Config.defaultProperties.scalebar ? 'on' : 'off');
+    $('#switchScale').slider('refresh');
+    Map.toggleScalebar(Config.defaultProperties.scalebar);
+
+    // topics
+    Topics.loadTopics(null, Gui.loadTopics);
+    // topic selection
+    $('#topicList').delegate('li.topic', 'vclick', function (e) {
+        Gui.selectTopic($(this).data('topic'));
+        $('#panelLayer').panel('close');
+    });
+
+    // layer change
+    $('#panelLayerAll').delegate(':checkbox[data-layer]', 'change', function (e) {
+        var layer = projectData.use_ids ? $(this).data('layer') : projectData.layers[$(this).data('layer')].layername;
+        var layerVisible = (Map.visibleLayers().indexOf(layer) != -1);
+        if (layerVisible != $(this).is(':checked')) {
+            Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
+            Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
+        }
+        //if ($(this).is(':checked')) {
+        //	$('img[data-layer="'+$(this).data('layer')+'"]').show();
+        //} else
+        //$('img[data-layer="'+$(this).data('layer')+'"]').hide();
+    });
     Gui.panelSelect('panelLayerAll');
-  });
-  $('#buttonLayerOrder').on('tap', function() {
-    Gui.panelSelect('panelLayerOrder');
-  });
-
-  //tab properties
-  $('#buttonPropertiesMap').on('tap', function() {
     Gui.propertiesSelect('panelPropertiesMap');
-  });
 
-  $('#buttonPropertiesEditor').on('tap', function() {
-    Gui.propertiesSelect('panelPropertiesEditor');
-  });
+    // selection in layer order
+    $('#listOrder').delegate('li', 'vclick', function () {
+        Gui.selectLayer($(this).data('layer'));
+    });
+    // layer transparency
+    $('#sliderTransparency').on('slidestop', function () {
+        Map.setLayerTransparency(Gui.selectedLayer, $(this).val(), true);
+    }).parent().on('swipeleft', function (e, ui) {
+        // block panel close
+        e.stopPropagation();
+    });
 
+    // compass
+    $(document).on('maprotation', function (e) {
+        $('#btnCompass').find('.ui-icon').css('transform', 'rotate(' + e.rotation + 'rad)');
+        $('#btnCompass').fadeIn();
+    });
+    $('#btnCompass').on('tap', function () {
+        Map.setRotation(0);
+        $('#btnCompass').fadeOut(); //animation instead of just hide()
+    });
 
-  // default properties
-  //$('#switchFollow').val(Config.defaultProperties.following ? 'on' : 'off');
-  //$('#switchFollow').slider('refresh');
-  //Gui.toggleFollowing(Config.defaultProperties.following);
-  $('#switchOrientation').val(Config.defaultProperties.orientation ? 'on' : 'off');
-  $('#switchOrientation').slider('refresh');
-  Gui.toggleOrientation(Config.defaultProperties.orientation);
-  $('#switchScale').val(Config.defaultProperties.scalebar ? 'on' : 'off');
-  $('#switchScale').slider('refresh');
-  Map.toggleScalebar(Config.defaultProperties.scalebar);
-
-  // topics
-  Topics.loadTopics(null, Gui.loadTopics);
-  // topic selection
-  $('#topicList').delegate('li.topic', 'vclick', function(e) {
-    Gui.selectTopic($(this).data('topic'));
-    $('#panelLayer').panel('close');
-  });
-
-  // layer change
-  $('#panelLayerAll').delegate(':checkbox[data-layer]', 'change', function(e) {
-    var layer = projectData.use_ids ? $(this).data('layer') : projectData.layers[$(this).data('layer')].layername;
-    var layerVisible = (Map.visibleLayers().indexOf(layer) != -1);
-    if (layerVisible != $(this).is(':checked')) {
-      Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
-      Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
+    // geolocation
+    if (!projectData.geolocation) {
+        $("#btnLocation").hide();
     }
-    //if ($(this).is(':checked')) {
-	//	$('img[data-layer="'+$(this).data('layer')+'"]').show();
-	//} else
-	//$('img[data-layer="'+$(this).data('layer')+'"]').hide();
-  });
-  Gui.panelSelect('panelLayerAll');
-  Gui.propertiesSelect('panelPropertiesMap');
 
-  // selection in layer order
-  $('#listOrder').delegate('li', 'vclick', function() {
-    Gui.selectLayer($(this).data('layer'));
-  });
-  // layer transparency
-  $('#sliderTransparency').on('slidestop', function() {
-    Map.setLayerTransparency(Gui.selectedLayer, $(this).val(), true);
-  }).parent().on('swipeleft',function(e,ui) {
-    // block panel close
-    e.stopPropagation();
-  });
-
-  // compass
-  $(document).on('maprotation', function(e) {
-    $('#btnCompass').find('.ui-icon').css('transform', 'rotate(' + e.rotation + 'rad)');
-    $('#btnCompass').fadeIn();
-  });
-  $('#btnCompass').on('tap', function() {
-    Map.setRotation(0);
-    $('#btnCompass').fadeOut(); //animation instead of just hide()
-  });
-
-  // geolocation
-  if (!projectData.geolocation) {
-    $("#btnLocation").hide();
-  }
-
-  //hide location panel and info button until location activated
-  $('#locationPanel').hide();
-  $("#btnInfo").hide();
-  $("#gotoPanel").hide();
-  $("#editPanel").hide();
-  $("#recordPanel").hide();
+    //hide location panel and info button until location activated
+    $('#locationPanel').hide();
+    $("#btnInfo").hide();
+    $("#gotoPanel").hide();
+    $("#editPanel").hide();
+    $("#recordPanel").hide();
 
     $('#btnLocation').on('tap', function () {
         if (!Gui.tracking) {
@@ -1365,7 +1354,7 @@ Gui.initViewer = function() {
             $('#locationPanel').html(I18n.geolocation.obtaining);
             $('#locationPanel').show();
         } else {
-            if(Gui.following) {
+            if (Gui.following) {
                 $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', false);
                 $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', true);
 
@@ -1382,143 +1371,142 @@ Gui.initViewer = function() {
         //Map.toggleFollowing(Gui.tracking && Gui.following);
     });
 
-  //call getfeatureinfo in location provided by geolocation
-  $("#btnInfo").click(Map.featureInfoOnLocation);
+    //call getfeatureinfo in location provided by geolocation
+    $("#btnInfo").click(Map.featureInfoOnLocation);
 
-  // feature info
-  var featureInfo = new FeatureInfo(Gui.showFeatureInfoResults);
-  Map.registerClickHandler('featureInfo', featureInfo);
-  Map.activateClickHandler('featureInfo');
+    // feature info
+    var featureInfo = new FeatureInfo(Gui.showFeatureInfoResults);
+    Map.registerClickHandler('featureInfo', featureInfo);
+    Map.activateClickHandler('featureInfo');
 
-  $('#panelFeatureInfo').on('panelclose', function() {
-    Map.toggleClickMarker(false);
-  });
-  $('#featureInfoResults').parent().on('swipeleft',function(e,ui) {
-    // block panel close
-    e.stopPropagation();
-  });
+    $('#panelFeatureInfo').on('panelclose', function () {
+        Map.toggleClickMarker(false);
+    });
+    $('#featureInfoResults').parent().on('swipeleft', function (e, ui) {
+        // block panel close
+        e.stopPropagation();
+    });
 
-  // search
-  if (!Config.search) {
-      $("#btnSearching").addClass('ui-disabled');
-  }
-  var resetSearchResults = function() {
-    // reset search panel
-    $('#searchResults').hide();
-    // reset highlight
-    Map.setHighlightLayer(null);
-    //reset marker
-    Map.searchMarker.setPosition(undefined);
-
-  };
-  $('#searchInput').bind('change', function(e) {
-    if ($(this).val() == "") {
-      // clear search
-      resetSearchResults();
+    // search
+    if (!Config.search) {
+        $("#btnSearching").addClass('ui-disabled');
     }
-  });
-  $('#searchForm').bind('submit', function(e) {
-    resetSearchResults();
+    var resetSearchResults = function () {
+        // reset search panel
+        $('#searchResults').hide();
+        // reset highlight
+        Map.setHighlightLayer(null);
+        //reset marker
+        Map.searchMarker.setPosition(undefined);
 
-    var searchString = $('#searchInput').val();
-    if (searchString != "") {
-      // submit search
-      Config.search.submit(searchString, Gui.showSearchResults);
-      // close virtual keyboard
-      $('#searchInput').blur();
+    };
+    $('#searchInput').bind('change', function (e) {
+        if ($(this).val() == "") {
+            // clear search
+            resetSearchResults();
+        }
+    });
+    $('#searchForm').bind('submit', function (e) {
+        resetSearchResults();
+
+        var searchString = $('#searchInput').val();
+        if (searchString != "") {
+            // submit search
+            Config.search.submit(searchString, Gui.showSearchResults);
+            // close virtual keyboard
+            $('#searchInput').blur();
+        }
+
+        // block form submit
+        e.preventDefault();
+        e.stopPropagation();
+    });
+    $('#searchResultsList').delegate('li', 'vclick', function () {
+        if ($(this).data('point') != null) {
+            Gui.jumpToSearchResult($(this).data('point'));
+        }
+        if ($(this).data('highlight') != undefined) {
+            Config.search.highlight($(this).data('highlight'), Map.setHighlightLayer);
+        }
+    });
+
+    $('#btnAlert').click(function () {
+        var res = [];
+        $.each(Map.alertMessages, function (key, value) {
+            res.push(key + ': ' + value);
+        });
+        if (res.length > 0) {
+            alert(res.join('\n'));
+        }
+    });
+
+    // properties
+    // $('#switchFollow').on('change', function(e) {
+    //   Gui.toggleFollowing($(this).val() == 'on');
+    // }).parent().on('swiperight',function(e,ui) {
+    //   // block panel close
+    //   e.stopPropagation();
+    // });
+    $('#switchOrientation').on('change', function (e) {
+        Gui.toggleOrientation($(this).val() == 'on');
+    }).parent().on('swiperight', function (e, ui) {
+        // block panel close
+        e.stopPropagation();
+    });
+    $('#switchScale').on('change', function (e) {
+        Map.toggleScalebar($(this).val() == 'on');
+    }).parent().on('swiperight', function (e, ui) {
+        // block panel close
+        e.stopPropagation();
+    });
+
+    // about popup
+    $('#aboutContent').html(I18n.about.content);
+
+    // toggle buttons
+    $('#buttonShare').toggle(!Config.gui.hideShareButton);
+    $('#buttonLogin').toggle(!Config.gui.hideLoginButton);
+    $('#buttonLoginSSL').hide();
+    $('#buttonSignOut').hide();
+
+    // login
+    if (!Config.gui.hideLoginButton) {
+        if (Config.sslLogin && !UrlParams.useSSL) {
+            // link to secure login
+            var url = UrlParams.baseUrl.replace(/^http:/, "https:");
+            var params = $.extend(
+                {
+                    openLogin: true
+                },
+                UrlParams.params
+            );
+            url += "?" + $.param(params);
+            $('#buttonLoginSSL').attr('href', url);
+            $('#buttonLoginSSL').show();
+            $('#buttonLogin').hide();
+        } else {
+            // login
+            $('#buttonSignIn').on('tap', function () {
+                Config.login.signIn($('#user').val(), $('#password').val(), Gui.login);
+            });
+            $('#buttonLoginCancel').on('tap', function () {
+                $('#dlgLogin').popup('close');
+            });
+            $('#buttonSignOut').on('tap', function () {
+                Config.login.signOut(Gui.logout);
+            });
+            // initial login status
+            Config.login.status(Gui.loginStatus);
+        }
     }
 
-    // block form submit
-    e.preventDefault();
-    e.stopPropagation();
-  });
-  $('#searchResultsList').delegate('li', 'vclick', function() {
-    if ($(this).data('point') != null) {
-      Gui.jumpToSearchResult($(this).data('point'));
-    }
-    if ($(this).data('highlight') != undefined) {
-      Config.search.highlight($(this).data('highlight'), Map.setHighlightLayer);
-    }
-  });
-
-  $('#btnAlert').click(function() {
-      var res = [];
-      $.each(Map.alertMessages, function(key,value) {
-         res.push(key+': '+value);
-     });
-      if(res.length>0) {
-          alert(res.join('\n'));
-      }
-  });
-
-  // properties
-  // $('#switchFollow').on('change', function(e) {
-  //   Gui.toggleFollowing($(this).val() == 'on');
-  // }).parent().on('swiperight',function(e,ui) {
-  //   // block panel close
-  //   e.stopPropagation();
-  // });
-  $('#switchOrientation').on('change', function(e) {
-    Gui.toggleOrientation($(this).val() == 'on');
-  }).parent().on('swiperight',function(e,ui) {
-    // block panel close
-    e.stopPropagation();
-  });
-  $('#switchScale').on('change', function(e) {
-    Map.toggleScalebar($(this).val() == 'on');
-  }).parent().on('swiperight',function(e,ui) {
-    // block panel close
-    e.stopPropagation();
-  });
-
-  // about popup
-  $('#aboutContent').html(I18n.about.content);
-
-  // toggle buttons
-  $('#buttonShare').toggle(!Config.gui.hideShareButton);
-  $('#buttonLogin').toggle(!Config.gui.hideLoginButton);
-  $('#buttonLoginSSL').hide();
-  $('#buttonSignOut').hide();
-
-  // login
-  if (!Config.gui.hideLoginButton) {
-    if (Config.sslLogin && !UrlParams.useSSL) {
-      // link to secure login
-      var url = UrlParams.baseUrl.replace(/^http:/, "https:");
-      var params = $.extend(
-        {
-          openLogin: true
-        },
-        UrlParams.params
-      );
-      url += "?" + $.param(params);
-      $('#buttonLoginSSL').attr('href', url);
-      $('#buttonLoginSSL').show();
-      $('#buttonLogin').hide();
-    }
-    else {
-      // login
-      $('#buttonSignIn').on('tap', function() {
-        Config.login.signIn($('#user').val(), $('#password').val(), Gui.login);
-      });
-      $('#buttonLoginCancel').on('tap', function() {
-        $('#dlgLogin').popup('close');
-      });
-      $('#buttonSignOut').on('tap', function() {
-        Config.login.signOut(Gui.logout);
-      });
-      // initial login status
-      Config.login.status(Gui.loginStatus);
-    }
-  }
-
-  // workaround for erroneus map click despite open panels on iOS
-  $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelopen', function() {
-    Map.toggleClickHandling(false);
-  });
-  $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function() {
-    Map.toggleClickHandling(true);
-  });
+    // workaround for erroneus map click despite open panels on iOS
+    $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelopen', function () {
+        Map.toggleClickHandling(false);
+    });
+    $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function () {
+        Map.toggleClickHandling(true);
+    });
 
     //this is marker to display location of search result (geocoding)
     Map.searchMarker = new ol.Overlay({
@@ -1536,7 +1524,7 @@ Gui.initViewer = function() {
 
 };
 
-$(document).ready(function(e) {
+$(document).ready(function (e) {
 
     //ajax global loading enable
     // $(document).on({
@@ -1569,12 +1557,12 @@ $(document).ready(function(e) {
     //this is needed to disable any new actions while map is still loading
     //Thanks: https://github.com/jquery/jquery-mobile/issues/3414
     $.mobile.loader.prototype.defaultHtml = "<div class='ui-loader'>" +
-    "<span class='ui-icon ui-icon-loading'></span>" +
-    "<h1></h1>" +
-    "<div class='ui-loader-curtain'></div>" +
-    "</div>";
+        "<span class='ui-icon ui-icon-loading'></span>" +
+        "<h1></h1>" +
+        "<div class='ui-loader-curtain'></div>" +
+        "</div>";
 
 
-  UrlParams.parse();
-  Config.permalink.read(UrlParams.params, Gui.initViewer);
+    UrlParams.parse();
+    Config.permalink.read(UrlParams.params, Gui.initViewer);
 });
