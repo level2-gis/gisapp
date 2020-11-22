@@ -1235,6 +1235,85 @@ Gui.wmsSearch = function (table, feature, field) {
     fi.filter(filter, table);
 };
 
+Gui.showBookmark = function () {
+    var idx = this.id.split('_')[1];
+    var bm = JSON.parse(projectData.bookmarks)[idx];
+
+    var extentWkt = bm[2];
+    var crs = bm[4];
+
+    var wkt = new ol.format.WKT;
+    var feature = wkt.readGeometry(extentWkt, {dataProjection: crs, featureProjection: projectData.crs})
+
+    Map.zoomToExtent(feature.getExtent());
+};
+
+Gui.loadBookmarks = function () {
+
+    function makeGroup(name) {
+        ($('<div>')
+            .attr({
+                'data-role': 'collapsible'
+            })
+            .html('<h4>' + name + '</h4><ul id="bmGroup_' + name + '" data-role="listview" data-inset="true"></ul>'))
+            .appendTo('#bookmarkList');
+
+        $('#makecollapsible').collapsibleset().trigger('create');
+
+        groups.push(name);
+    }
+
+    function addToGroup(content) {
+        var bmName = content[0];
+        var bmGroup = content[1];
+
+        //can't use guid for id, get index instead
+        var bmId = "bmId_" + JSON.parse(projectData.bookmarks).findIndex(element => element[3] == content[3]);
+        var groupDiv = $('#bmGroup_' + bmGroup);
+
+        groupDiv.append('<li id="' + bmId + '"><a href="#">' + bmName + '</a></li>').listview('refresh');
+        $('#' + bmId).click(Gui.showBookmark);
+    }
+
+    var panel = $('#topicMain');
+    var bm = JSON.parse(projectData.bookmarks);
+
+    if (bm.length == 0) {
+        return;
+    }
+
+    var groups = [];
+
+    var main = "";
+    main += '<div data-role="collapsible">';
+    main += '<h4>' + TR.bookmarks + '</h4>';
+    main += '<form id="makecollapsible"></form>';
+    main += '</div>';
+    panel.append(main).trigger('create');
+
+    $('#makecollapsible')
+        .append($('<div>')
+            .attr({
+                'data-role': 'collapsible-set',
+                'id': 'bookmarkList'
+            }));
+    $('#makecollapsible').collapsibleset().trigger('create');
+
+    $.each(bm, function (key, value) {
+        var bmGroup = value[1];
+
+        if (bmGroup == "") {
+            bmGroup = TR.bookmarkEmptyGroupText;
+            value[1] = bmGroup;
+        }
+
+        if (groups.indexOf(bmGroup) == -1) {
+            makeGroup(bmGroup);
+        }
+        addToGroup(value);
+    });
+};
+
 Gui.initViewer = function () {
     Gui.updateTranslations();
     Gui.fillMapCrs();
@@ -1291,6 +1370,9 @@ Gui.initViewer = function () {
         Gui.selectTopic($(this).data('topic'));
         $('#panelLayer').panel('close');
     });
+
+    //bookmarks
+    Gui.loadBookmarks();
 
     // layer change
     $('#panelLayerAll').delegate(':checkbox[data-layer]', 'change', function (e) {
