@@ -1242,7 +1242,7 @@ Gui.showBookmark = function () {
     var extentWkt = bm[2];
     var crs = bm[4];
 
-    var wkt = new ol.format.WKT;
+    var wkt = new ol.format.WKT();
     var feature = wkt.readGeometry(extentWkt, {dataProjection: crs, featureProjection: projectData.crs})
 
     Map.zoomToExtent(feature.getExtent());
