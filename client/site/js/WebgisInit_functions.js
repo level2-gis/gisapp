@@ -1356,19 +1356,19 @@ function postLoading() {
         if (printLayoutsDefined == true) {
             //create new window to hold printing toolbar
             printWindow = new Ext.Window({
-                    title: printSettingsToolbarTitleString[lang],
-                    height: projectData.user=='guest' ? 100: 160,
-                    width: 390,
-                    layout: "fit",
-                    renderTo: "geoExtMapPanel",
-                    resizable: false,
-                    closable: false,
-                    x: 8,
-                    y: 8,
-                    items: [{
-                        xtype: 'form',
-                        padding: '3',
-                        items: [
+                title: printSettingsToolbarTitleString[lang],
+                height: projectData.user == 'guest' ? 100 : 160,
+                width: 470,
+                layout: "fit",
+                renderTo: "geoExtMapPanel",
+                resizable: false,
+                closable: false,
+                x: 8,
+                y: 8,
+                items: [{
+                    xtype: 'form',
+                    padding: '3',
+                    items: [
                             {
                                 id: 'printTitle',
                                 xtype: 'textfield',
@@ -1400,7 +1400,7 @@ function postLoading() {
                             items: [{
                                 xtype: 'combo',
                                 id: 'PrintLayoutsCombobox',
-                                width: 100,
+                                width: 180,
                                 mode: 'local',
                                 triggerAction: 'all',
                                 readonly: true,
