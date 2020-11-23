@@ -2969,7 +2969,13 @@ function addBookmarks() {
         store: store,
         columns: [
             {id:'name',header: TR.bookmarkName, sortable: true, dataIndex: 'name'},
-            {header: TR.bookmarkGroup, hidden: true, sortable: true, dataIndex: 'group', emptyGroupText: TR.bookmarkEmptyGroupText},
+            {
+                header: TR.bookmarkGroup,
+                hidden: true,
+                sortable: true,
+                dataIndex: 'group',
+                emptyGroupText: TR.bookmarkEmptyGroupText
+            }
         ],
         view: new Ext.grid.GroupingView({
             forceFit:true,

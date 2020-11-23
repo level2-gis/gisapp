@@ -1268,7 +1268,9 @@ Gui.loadBookmarks = function () {
         var bmGroup = content[1];
 
         //can't use guid for id, get index instead
-        var bmId = "bmId_" + JSON.parse(projectData.bookmarks).findIndex(element => element[3] == content[3]);
+        var bmId = "bmId_" + JSON.parse(projectData.bookmarks).findIndex(function (element) {
+            return element[3] == content[3];
+        });
         var groupDiv = $('#bmGroup_' + bmGroup);
 
         groupDiv.append('<li id="' + bmId + '"><a href="#">' + bmName + '</a></li>').listview('refresh');
