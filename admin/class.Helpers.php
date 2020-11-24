@@ -83,9 +83,17 @@ class Helpers
         }
     }
 
+    public static function getDbVersionFromSession()
+    {
+        if (isset($_SESSION['db_version'])) {
+            return (integer)$_SESSION['db_version'];
+        }
+        return 0;
+    }
+
     public static function validateExportParams($params)
     {
-        if (isset($params['map0_extent']) && $params['map0_extent']!='') {
+        if (isset($params['map0_extent']) && $params['map0_extent'] != '') {
             $extent = explode(",", $params['map0_extent']);
             $xmin = $extent[0];
             $ymin = $extent[1];

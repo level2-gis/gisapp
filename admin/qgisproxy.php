@@ -18,7 +18,8 @@ require_once("class.DbLoader.php");
 require_once("settings.php");
 
 
-function handleGetPrint($data, $project, $user) {
+function handleGetPrint($data, $project, $user)
+{
 
     if ($data["description"] == null) {
         $data["description"] = "";
@@ -29,11 +30,13 @@ function handleGetPrint($data, $project, $user) {
     }
 
     try {
+        $db_version = Helpers::getDbVersionFromSession();
+
         //connection to database
         $conn = new PDO(DB_CONN_STRING, DB_USER, DB_PWD);
-        $db = new \GisApp\DbLoader($user,$project,$conn);
+        $db = new \GisApp\DbLoader($user, $project, $conn);
 
-        $db->writeUserPrintData($data["title"],$data["description"]);
+        $db->writeUserPrintData($data["title"], $data["description"], $db_version);
 
         return true;
 

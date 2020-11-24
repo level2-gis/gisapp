@@ -360,7 +360,8 @@ class Login
             }
 
             //write project data in db for use in gis portal
-            $project_update = $gisApp->writeProjectData($project_qgs);
+            $db_version = $helpers->getDbVersionFromSession();
+            $project_update = $gisApp->writeProjectData($project_qgs, $db_version);
             if ($project_update == false) {
                 $this->feedback = $gisApp->feedback;
                 return false;

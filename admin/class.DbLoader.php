@@ -68,12 +68,20 @@ class DbLoader
         return json_encode(array('path' => GISAPPURL));
     }
 
-    public function writeProjectData($newData) {
+    public function writeProjectData($newData, $dbVer)
+    {
         //query 1: always overwrite CRS field with QGIS project value
+        //optional write QGIS version if dbVer is correct
         $sql = 'UPDATE projects SET crs = :crs WHERE name = :project';
+        if ($dbVer >= 23) {
+            $sql = 'UPDATE projects SET crs = :crs, version = :version WHERE name = :project';
+        }
         $query = $this->db_connection->prepare($sql);
         $query->bindValue(':crs', $newData->crs);
         $query->bindValue(':project', $this->project);
+        if ($dbVer >= 23) {
+            $query->bindValue(':version', trim(explode("-", $newData->version)[0]));
+        }
         $success = $query->execute();
         if (!($success)) {
             $this->feedback = $query->errorInfo()[2];
@@ -97,20 +105,27 @@ class DbLoader
         return true;
     }
 
-    public function writeUserPrintData($title,$description) {
+    public function writeUserPrintData($title, $description, $dbVer)
+    {
         $sql = 'DELETE FROM users_print WHERE user_name = :user';
         $query = $this->db_connection->prepare($sql);
         $query->bindValue(':user', $this->user);
         $succes = $query->execute();
-        if (!$succes){
+        if (!$succes) {
             return false;
         }
 
         $sql = 'INSERT INTO users_print(user_name, title, description) VALUES (:user, :title, :description)';
+        if ($dbVer >= 23) {
+            $sql = 'INSERT INTO users_print(user_name, title, description, project) VALUES (:user, :title, :description, :project)';
+        }
         $query = $this->db_connection->prepare($sql);
         $query->bindValue(':user', $this->user);
         $query->bindValue(':title', $title);
         $query->bindValue(':description', $description);
+        if ($dbVer >= 23) {
+            $query->bindValue(':project', $this->project);
+        }
         $succes = $query->execute();
 
         return $succes;
