@@ -2978,8 +2978,9 @@ function addBookmarks() {
             }
         ],
         view: new Ext.grid.GroupingView({
-            forceFit:true,
-            groupTextTpl: '{text} ({[values.rs.length]})'
+            forceFit: true,
+            groupTextTpl: '{text} ({[values.rs.length]})',
+            showGroupName: false
         }),
         listeners: {
             rowclick: showBookmark

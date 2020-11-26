@@ -1250,20 +1250,20 @@ Gui.showBookmark = function () {
 
 Gui.loadBookmarks = function () {
 
-    function makeGroup(name) {
+    function makeGroup(name, id) {
         ($('<div>')
             .attr({
                 'data-role': 'collapsible'
             })
-            .html('<h4>' + name + '</h4><ul id="bmGroup_' + name + '" data-role="listview" data-inset="true"></ul>'))
+            .html('<h4>' + name + '</h4><ul id="bmGroup_' + id + '" data-role="listview" data-inset="true"></ul>'))
             .appendTo('#bookmarkList');
 
         $('#makecollapsible').collapsibleset().trigger('create');
 
-        groups.push(name);
+        groups.push(id);
     }
 
-    function addToGroup(content) {
+    function addToGroup(content, groupId) {
         var bmName = content[0];
         var bmGroup = content[1];
 
@@ -1271,7 +1271,7 @@ Gui.loadBookmarks = function () {
         var bmId = "bmId_" + JSON.parse(projectData.bookmarks).findIndex(function (element) {
             return element[3] == content[3];
         });
-        var groupDiv = $('#bmGroup_' + bmGroup);
+        var groupDiv = $('#bmGroup_' + groupId);
 
         groupDiv.append('<li id="' + bmId + '"><a href="#">' + bmName + '</a></li>').listview('refresh');
         $('#' + bmId).click(Gui.showBookmark);
@@ -1309,10 +1309,12 @@ Gui.loadBookmarks = function () {
             value[1] = bmGroup;
         }
 
-        if (groups.indexOf(bmGroup) == -1) {
-            makeGroup(bmGroup);
+        var bmGroupId = bmGroup.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+
+        if (groups.indexOf(bmGroupId) == -1) {
+            makeGroup(bmGroup, bmGroupId);
         }
-        addToGroup(value);
+        addToGroup(value, bmGroupId);
     });
 };
 
