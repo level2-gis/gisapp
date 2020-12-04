@@ -296,12 +296,19 @@ Ext.override(Ext.tree.TreePanel, {
   getChecked : function(a, startNode){
     startNode = startNode || this.root;
     var r = [];
-    var f = function(){
-      if(this.ui.getChecked()){
+    var f = function () {
+      if (this.ui.getChecked()) {
         r.push(!a ? this : (a == 'id' ? this.id : this.attributes[a]));
       }
     };
     startNode.cascade(f);
     return r;
+  }
+});
+
+//disable keyboard navigation in legend tree because it interferes with Openlayers map navigation keyboards
+Ext.override(Ext.tree.DefaultSelectionModel, {
+  onKeyDown: function () {
+    return;
   }
 });
