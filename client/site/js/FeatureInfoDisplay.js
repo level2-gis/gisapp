@@ -362,6 +362,12 @@ function onBeforeGetFeatureInfoClick(evt) {
 
     evt.object.layers[0].setVisibility(thematicLayer.getVisibility());
 
+    var queryLayers = selectedQueryableLayers.join(',');
+    if (identificationMode == 'activeLayers' && selectedQueryableLayers.indexOf(Eqwc.currentSelectedLayerId) > -1) {
+        queryLayers = Eqwc.currentSelectedLayerId;
+    }
+    WMSGetFInfo.vendorParams['QUERY_LAYERS'] = queryLayers;
+
     activateGetFeatureInfo(false);
 }
 
