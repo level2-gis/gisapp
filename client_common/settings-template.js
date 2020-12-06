@@ -125,3 +125,4 @@ Eqwc.settings.tableExportFormats = [
     ['CSV', 'Text CSV (semicolon)'],
     ['TSV', 'Text TSV (tab)']
 ];
+Eqwc.settings.bookmarkPanelHeight = 200;

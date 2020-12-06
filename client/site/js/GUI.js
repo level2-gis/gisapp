@@ -185,7 +185,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						frame: false,
 						items: [{
 							xtype: 'treepanel',
-                            lines: false,   //rather disable lines since they are missing now with legend inside layer tree
+							lines: false,   //rather disable lines since they are missing now with legend inside layer tree
 							border: false,
 							frame: false,
 							title: '', //layerTreeTitleString[lang],
@@ -199,28 +199,29 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							cls: 'x-tree-noicon',
 							id: 'LayerTree',
 							root: {
-                                text: 'Root',
+								text: 'Root',
 								expanded: true,
 								singleClickExpand: true
 							},
 							loader: {}
-						}
-                         //   ,
-						//{
-						//	region: 'south',
-						//	xtype: 'qgis_layerorderpanel',
-						//	id: 'LayerOrderTab',
-                         //   title: layerOrderPanelTitleString[lang],
-						//	split: true,
-						//	collapsible: true,
-						//	collapsed: true,
-						//	titleCollapse: false,
-						//	autoScroll: true,
-						//	height: 200,
-						//	border: false,
-						//	frame: false
-						//}
-                        ] // map items
+						},
+							{
+								region: 'south',
+								xtype: 'panel',
+								id: 'BookmarkPanel',
+								layout: 'fit',
+								hidden: true,
+								title: TR.bookmarks,
+								split: true,
+								collapsible: true,
+								collapsed: false,
+								titleCollapse: true,
+								autoScroll: true,
+								height: Eqwc.settings.bookmarkPanelHeight ? Eqwc.settings.bookmarkPanelHeight : 200,
+								border: false,
+								frame: false
+							}
+						] // map items
 					}] // accordion items
 				}] // left panel items
 			}, {

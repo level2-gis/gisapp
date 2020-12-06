@@ -2948,6 +2948,10 @@ function addBookmarks() {
         return;
     }
 
+    if (Eqwc.settings.bookmarkPanelHeight == 0) {
+        return;
+    }
+
     // shared reader
     var reader = new Ext.data.ArrayReader({}, [
         {name: 'name'},
@@ -2965,10 +2969,10 @@ function addBookmarks() {
     });
 
     var grid = new Ext.grid.GridPanel({
-        title: TR.bookmarks,
+        //title: TR.bookmarks,
         store: store,
         columns: [
-            {id:'name',header: TR.bookmarkName, sortable: true, dataIndex: 'name'},
+            {id: 'name', header: TR.bookmarkName, sortable: true, dataIndex: 'name'},
             {
                 header: TR.bookmarkGroup,
                 hidden: true,
@@ -2987,10 +2991,10 @@ function addBookmarks() {
         }
     });
 
-    var panel = Ext.getCmp('collapsiblePanels');
+    var panel = Ext.getCmp('BookmarkPanel');
+    panel.setVisible(true);
     panel.add(grid);
     panel.doLayout();
-
 }
 
 function showBookmark(grid, index) {
