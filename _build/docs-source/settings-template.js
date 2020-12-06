@@ -344,9 +344,9 @@ Eqwc.settings.vectorExportFormats = [
  * Possible table layers (no geometry) export formats in form: `['name'], ['description']`. You can remove formats from list or rename format description (keep format name as it is!)
  * @type {string[][]}
  * @example [
-    ['XLSX', 'MS Office Open XLSX'],
-    ['CSV', 'Text CSV (semicolon)'],
-    ['TSV', 'Text TSV (tab)']
+ ['XLSX', 'MS Office Open XLSX'],
+ ['CSV', 'Text CSV (semicolon)'],
+ ['TSV', 'Text TSV (tab)']
  ]
  */
 Eqwc.settings.tableExportFormats = [
@@ -354,3 +354,9 @@ Eqwc.settings.tableExportFormats = [
     ['CSV', 'Text CSV (semicolon)'],
     ['TSV', 'Text TSV (tab)']
 ];
+
+/**
+ * Height for initial bookmarks panel in px. User can resize it later. Only visible if there are any bookmarks stored in QGIS project. Set value to 0 to hide bookmark panel.
+ * @type {number}
+ */
+Eqwc.settings.bookmarkPanelHeight = 200;
