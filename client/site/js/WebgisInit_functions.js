@@ -97,6 +97,20 @@ function loadWMSConfig(topicName) {
     });
 
     layerTree.setRootNode(root);
+    layerTree.on('click', function (node) {
+        var layerId = wmsLoader.layerTitleNameMapping[node.text];   //current click
+        if (layerId == undefined) {
+            return;
+        }
+        var prop = projectData.layers[layerId];
+        if (prop == undefined) {
+            return;
+        }
+        //save currently selected layer
+        if (node.leaf && prop.geom_type) {
+            Eqwc.currentSelectedLayerId = layerId;
+        }
+    });
 
 }
 
@@ -153,30 +167,6 @@ function postLoading() {
         selectedLayers = layersInDrawingOrder(selectedLayers);
         selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
 
-        //special case if only active layers are queried for feature infos
-        if (identificationMode == 'activeLayers') {
-            //only collect selected layers that are active
-            var selectedActiveLayers = [];
-            var selectedActiveQueryableLayers = [];
-            //need to find active layer
-            var activeNode = node; //layerTree.getSelectionModel().getSelectedNode();
-            activeNode.cascade(
-                function (n) {
-                    if (n.isLeaf() && n.attributes.checked) {
-                        var layerId = wmsLoader.layerTitleNameMapping[n.text];
-                        if (layerId != undefined) {
-                            selectedActiveLayers.push(layerId);
-                            if (wmsLoader.layerProperties[layerId].queryable) {
-                                selectedActiveQueryableLayers.push(layerId);
-                            }
-                        }
-                    }
-                }
-            );
-            selectedActiveLayers = layersInDrawingOrder(selectedActiveLayers);
-            selectedActiveQueryableLayers = layersInDrawingOrder(selectedActiveQueryableLayers);
-        }
-
         if (selectedQueryableLayers.length == 0) {
             thematicLayer.setVisibility(false);
         } else {
@@ -195,17 +185,6 @@ function postLoading() {
             STYLES: styles,
             FORMAT: format
         });
-        if (identificationMode != 'activeLayers') {
-            WMSGetFInfo.vendorParams['QUERY_LAYERS'] = selectedQueryableLayers.join(',');
-            if (Eqwc.settings.enableHoverPopup) {
-                WMSGetFInfoHover.vendorParams['QUERY_LAYERS'] = selectedQueryableLayers.join(',');
-            }
-        } else {
-            WMSGetFInfo.vendorParams['QUERY_LAYERS'] = selectedActiveQueryableLayers.join(',');
-            if (Eqwc.settings.enableHoverPopup) {
-                WMSGetFInfoHover.vendorParams['QUERY_LAYERS'] = selectedActiveQueryableLayers.join(',');
-            }
-        }
     };
 
     var baseChangeFunction = function (node, checked) {
