@@ -1,5 +1,6 @@
 /plugins/editing/
 /plugins/editing_code_scanner/
+/client/wsgi/qwc_connect.py
 /client_common/settings.js
 /admin/settings.php
 /.idea/
