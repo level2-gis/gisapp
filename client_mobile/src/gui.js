@@ -193,31 +193,11 @@ Gui.selectTopic = function (topic) {
     Map.topic = topic;
     Map.setMinScaleDenom(Map.topics[Map.topic].minscale || Config.map.minScaleDenom.map);
 
-    // background topic
-    Map.backgroundTopic = Map.topics[Map.topic].bg_topic || null;
-    if (Gui.initialLoad) {
-        // background topic from permalink
-        if (Config.permalink.initialBackgroundTopic) {
-            Map.backgroundTopic = Config.permalink.initialBackgroundTopic;
-        }
-    }
-    if (Map.topics[Map.backgroundTopic] == undefined || !Map.topics[Map.backgroundTopic].background_layer) {
-        // invalid background topic
-        Map.backgroundTopic = null;
-    }
-
     // load layers
     Layers.loadLayers(null, Gui.loadLayers);
 
-    //Layers.loadLayers(null, Gui.loadExtraLayers);
     Gui.loadExtraLayers();
     Gui.loadBackgroundLayers();
-
-    //if (Map.backgroundTopic != null) {
-    // load background layers
-    //Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
-    //Layers.loadLayers(null, Gui.loadBackgroundLayers);
-    //}
 
     // mark topic button
     //$('#topicList li.topic').removeClass('selected');
@@ -490,8 +470,6 @@ Gui.loadBackgroundLayers = function (data) {
 
     }
 
-    //if (Map.backgroundTopic) {
-
     html += '</div>';
 
     $('#panelLayerAll').append(html);
@@ -504,17 +482,22 @@ Gui.loadBackgroundLayers = function (data) {
         var layer = Map.backgroundLayers[selected];
         var isChecked = $(this).is(':checked');
 
-        layer.setVisible(isChecked);
-        //uncheck others
-        $('#panelLayerAll :checkbox[data-background=true]').not($(this)).prop("checked", false).checkboxradio("refresh");
+        Gui.toggleBackgroundLayer(layer, isChecked);
 
-        for (var i = 0; i < Config.data.baselayers.length; i++) {
-            var lay = Config.data.baselayers[i].name;
-            if (lay !== selected) {
-                Map.backgroundLayers[lay].setVisible(false);
-            }
-        }
     });
+
+    //apply permalink initialbackgroundtopic
+    if (Config.permalink.initialBackgroundTopic != null) {
+        //get name from title
+        var name = Config.getBaseLayerName(Config.permalink.initialBackgroundTopic);
+        if (name) {
+            var el = 'input#' + name;
+            $(el).prop('checked', true).checkboxradio('refresh')
+
+            Gui.toggleBackgroundLayer(Map.backgroundLayers[name], true);
+        }
+    }
+
 };
 
 Gui.loadExtraLayers = function (data) {
@@ -1081,7 +1064,8 @@ Gui.applyPermalink = function () {
         // update layer tree
         var checkbox = $('#panelLayerAll :checkbox[data-layer="' + layer + '"]');
         if (checkbox.is(':checked') != active) {
-            checkbox.prop('checked', active).checkboxradio('refresh').trigger('change');
+            //checkbox.prop('checked', active).checkboxradio('refresh').trigger('change');
+            checkbox.prop('checked', active);
         }
     };
 
@@ -1149,14 +1133,14 @@ Gui.applyPermalink = function () {
         }
     }
 
-    // login
-    if (Config.permalink.openLogin) {
-        if (Config.sslLogin && UrlParams.useSSL && !Gui.signedIn) {
-            // open login form
-            $('#panelProperties').panel('open');
-            $('#dlgLogin').popup('open');
-        }
-    }
+    // // login
+    // if (Config.permalink.openLogin) {
+    //     if (Config.sslLogin && UrlParams.useSSL && !Gui.signedIn) {
+    //         // open login form
+    //         $('#panelProperties').panel('open');
+    //         $('#dlgLogin').popup('open');
+    //     }
+    // }
 };
 
 Gui.loginStatus = function (result) {
@@ -1316,6 +1300,23 @@ Gui.loadBookmarks = function () {
         }
         addToGroup(value, bmGroupId);
     });
+};
+
+Gui.toggleBackgroundLayer = function (layer, checked) {
+
+    layer.setVisible(checked);
+
+    var el = 'input#' + layer.name;
+
+    //uncheck others
+    $('#panelLayerAll :checkbox[data-background=true]').not($(el)).prop("checked", false).checkboxradio("refresh");
+
+    for (var i = 0; i < Config.data.baselayers.length; i++) {
+        var lay = Config.data.baselayers[i].name;
+        if (lay !== layer.name) {
+            Map.backgroundLayers[lay].setVisible(false);
+        }
+    }
 };
 
 Gui.initViewer = function () {

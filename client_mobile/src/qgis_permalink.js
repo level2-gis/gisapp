@@ -1,8 +1,9 @@
 /**
- * QGIS Web-Client permalink
+ * Extended QGIS Web-Client permalink
  *
  * startExtent=<minx>,<miny>,<maxx>,<maxy>
  * visibleLayers=<comma separated layer names>
+ * visibleBackGroundLayer=name
  */
 
 function QgisPermalink() {
@@ -23,14 +24,18 @@ QgisPermalink.prototype.read = function (urlParams, callback) {
     // default permalink parameters
     Permalink.prototype.read.call(this, urlParams);
 
-    if (urlParams.startExtent != undefined) {
+    if (urlParams.startExtent > '') {
         this.startExtent = $.map(urlParams.startExtent.split(','), function (value, index) {
             return parseFloat(value);
         });
     }
 
-    if (urlParams.visibleLayers != undefined) {
+    if (urlParams.visibleLayers > '') {
         this.activeLayers = urlParams.visibleLayers.split(',');
+    }
+
+    if (urlParams.visibleBackgroundLayer > '') {
+        this.initialBackgroundTopic = urlParams.visibleBackgroundLayer;
     }
 
     // init viewer

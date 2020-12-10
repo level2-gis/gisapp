@@ -303,7 +303,7 @@ function postLoading() {
         }
 
         //we need to get a flat list of visible layers so we can set the layerOrderPanel
-        getVisibleFlatLayers(layerTree.root.firstChild);
+        //getVisibleFlatLayers(layerTree.root.firstChild);
 
         // add abstracts to project node and group nodes
         addAbstractToLayerGroups();
@@ -1952,36 +1952,36 @@ function showSearchPanelResults(searchPanelInstance, features) {
     return true;
 }
 
-function getVisibleLayers(visibleLayers, currentNode){
-    while (currentNode != null){
-        if (currentNode.attributes.checked) {
-            visibleLayers.push(wmsLoader.layerTitleNameMapping[currentNode.text]);
-        } else if (currentNode.attributes.checked == null) {
-            // this node is partly checked, so it is a layer group with some layers visible
-            // dive into this group for layer visibility
-            for (var i = 0; i < currentNode.childNodes.length; i++) {
-                visibleLayers = getVisibleLayers(visibleLayers, currentNode.childNodes[i]);
-            }
-        }
-        currentNode = currentNode.nextSibling;
-    }
-    return visibleLayers;
-}
+// function getVisibleLayers(visibleLayers, currentNode){
+//     while (currentNode != null){
+//         if (currentNode.attributes.checked) {
+//             visibleLayers.push(wmsLoader.layerTitleNameMapping[currentNode.text]);
+//         } else if (currentNode.attributes.checked == null) {
+//             // this node is partly checked, so it is a layer group with some layers visible
+//             // dive into this group for layer visibility
+//             for (var i = 0; i < currentNode.childNodes.length; i++) {
+//                 visibleLayers = getVisibleLayers(visibleLayers, currentNode.childNodes[i]);
+//             }
+//         }
+//         currentNode = currentNode.nextSibling;
+//     }
+//     return visibleLayers;
+// }
 
-function getVisibleFlatLayers(currentNode) {
-    visibleLayers = [];
-    currentNode.cascade(function(node) {
-        if (node.isLeaf() && node.attributes.checked) {
-            visibleLayers.push(wmsLoader.layerTitleNameMapping[node.text]);
-        }
-    });
-}
+// function getVisibleFlatLayers(currentNode) {
+//     visibleLayers = [];
+//     currentNode.cascade(function(node) {
+//         if (node.isLeaf() && node.attributes.checked) {
+//             visibleLayers.push(wmsLoader.layerTitleNameMapping[node.text]);
+//         }
+//     });
+// }
 
 function getVisibleBackgroundLayer() {
     var visibleBackgroundLayer = null;
 
     if (enableBGMaps) {
-        layerTree.root.lastChild.cascade(function(node) {
+        layerTree.root.lastChild.cascade(function (node) {
             if (node.isLeaf() && node.attributes.checked) {
                 visibleBackgroundLayer = node.text;
             }
@@ -1990,25 +1990,24 @@ function getVisibleBackgroundLayer() {
     return visibleBackgroundLayer;
 }
 
-
-function uniqueLayersInLegend(origArr) {
-    var newArr = [],
-        origLen = origArr.length,
-        found,
-        x, y;
-
-    for ( x = 0; x < origLen; x++ ) {
-        found = undefined;
-        for ( y = 0; y < newArr.length; y++ ) {
-            if ( origArr[x] === newArr[y] ) {
-                found = true;
-                break;
-            }
-        }
-        if ( !found) newArr.push( origArr[x] );
-    }
-    return newArr;
-}
+// function uniqueLayersInLegend(origArr) {
+//     var newArr = [],
+//         origLen = origArr.length,
+//         found,
+//         x, y;
+//
+//     for ( x = 0; x < origLen; x++ ) {
+//         found = undefined;
+//         for ( y = 0; y < newArr.length; y++ ) {
+//             if ( origArr[x] === newArr[y] ) {
+//                 found = true;
+//                 break;
+//             }
+//         }
+//         if ( !found) newArr.push( origArr[x] );
+//     }
+//     return newArr;
+// }
 
 function mapToolbarHandler(btn, evt) {
     removeMeasurePopup();
@@ -2253,19 +2252,20 @@ function scrollToHelpItem(targetId) {
 }
 
 //function that creates a permalink
-function createPermalink(){
+function createPermalink() {
     var visibleLayers = [];
     var permalink;
     var permalinkParams = {};
-    visibleLayers = getVisibleLayers(visibleLayers, layerTree.root.firstChild);
-    visibleLayers = uniqueLayersInLegend(visibleLayers);
+    //visibleLayers = getVisibleLayers(visibleLayers, layerTree.root.firstChild);
+    //visibleLayers = uniqueLayersInLegend(visibleLayers);
+    var visibleLayers = thematicLayer.params.LAYERS;
     var visibleBackgroundLayer = getVisibleBackgroundLayer();
     var startExtentArray = geoExtMap.map.getExtent().toArray();
     var startExtent = startExtentArray[0] + "," + startExtentArray[1] + "," + startExtentArray[2] + "," + startExtentArray[3];
 
-    if (!norewrite){
+    if (!norewrite) {
         var servername = location.href.split(/\/+/)[1];
-        permalink = location.protocol+"//"+servername;
+        permalink = location.protocol + "//" + servername;
         if (projectData.gis_projects) {
             permalink += projectData.gis_projects.path;
         }
@@ -2540,14 +2540,18 @@ function openPermaLink(permalink) {
 
     PermaLinkWin = new Ext.Window({
         title: sendPermalinkLinkFromString[lang],    //+titleBarText+layerTree.root.firstChild.text,
-        width: 200,
-        layout: 'fit',
+        width: 300,
+        height: 200,
+        layout: {
+            type: 'vbox',
+            align: 'stretch'  // Child items are stretched to full width
+        },
         items: [{
             xtype: 'textarea',
-            grow: true,
+            readOnly: true,
             value: permalink,
-            anchor: '100%',
-            selectOnFocus: true
+            selectOnFocus: true,
+            flex: 1
         }]
     }).show();
 }

@@ -27,12 +27,7 @@ $eqwc_debug = [
     "client_mobile/src/login.js?v=".$version,
     "client_mobile/src/search.js?v=".$version,
     "client_mobile/src/geocode.js?v=".$version,
-    //NOTE: remove unused classes
-    //"client_mobile/src/mapfish_permalink.js"
     "client_mobile/src/qgis_permalink.js?v=".$version,
-    //"client_mobile/src/mapfish_login.js"
-    //"client_mobile/src/mapfish_search.js"
-    //"client_mobile/src/swiss_search.js"
     "client_mobile/src/wsgi_search.js?v=".$version,
     "client_mobile/src/config.js?v=".$version,
     "client_mobile/src/map.js?v=".$version,
@@ -41,7 +36,6 @@ $eqwc_debug = [
     "client_mobile/src/topics.js?v=".$version,
     "client_mobile/src/layers.js?v=".$version,
     "client_mobile/src/gui.js?v=".$version
-    //"client_mobile/src/high_resolution_printing.js"
     ];
 $eqwc_mini = "client_mobile/eqwc_mobile.js?v=".$version;
 $dir = dirname(dirname(__FILE__)) . "/plugins/";

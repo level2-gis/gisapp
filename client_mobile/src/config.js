@@ -40,6 +40,16 @@ Config.getLayerName = function (lid) {
     }
 };
 
+Config.getBaseLayerName = function (title) {
+    var bl = projectData.baseLayers();
+    for (var i in bl) {
+        if (bl[i].title == title) {
+            return bl[i].name;
+        }
+    }
+    return false;
+};
+
 Config.baseLayerExists = function (name) {
     var bl = projectData.baseLayers();
     for (var i in bl) {
