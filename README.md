@@ -17,12 +17,13 @@ Database administration and project browsing is done with - **[gisportal](https:
 * PDF printing improved with user title, description and inclusion of base layers 
 * using external API services for geocoding, reverse geocoding and getting point elevation data
 * [plugins](https://github.com/uprel/gisapp/wiki/8.-Plugins) support, currently available: Google StreetView, SimpleAction and [**Editor**](http://level2.si/product/editor-for-extended-qgis-web-client/)
-* layer and group context menu with Zoom to layer extent, Open attribute data, Data Export and Properties
+* layer and group context menu with Zoom to layer extent, Choose layer style, Open attribute data, Data Export and Properties
 * layer table synchronized with current map view
 * geolocation button (you have to install SSL certificate to use this - [Read more](http://level2.si/2017/07/geolocation-using-chrome/))
 * legend in layer tree
+* display spatial bookmarks stored in QGS file
 * separating project settings and code
-* user Interface changes and many minor improvements
+* user Interface changes and many other improvements
 
 **[More info](http://level2.si/solutions/gis-clients/)**
 
