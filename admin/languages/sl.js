@@ -78,7 +78,7 @@ var TR = {
     bookmarks: "Zaznamki",
     bookmarkName: "naziv",
     bookmarkGroup: "Skupina",
-    bookmarkEmptyGroupText: "brez"
+    bookmarkEmptyGroupText: "brez skupine"
 };
 
 /**
