@@ -368,14 +368,14 @@ class Login
             }
 
             //description
-            $project_description = $helpers->getProjectConfigs($projectPath['message'] . '.html');
+            $project_description = $helpers->getProjectConfigs(dirname($projectPath['message']) . DIRECTORY_SEPARATOR . $project . '.html');
             if (!($project_description['status'])) {
                 $this->feedback = $project_description['message'];
                 return false;
             }
 
             //search configs
-            $project_settings = $helpers->getProjectConfigs($projectPath['message'] . '.json');
+            $project_settings = $helpers->getProjectConfigs(dirname($projectPath['message']) . DIRECTORY_SEPARATOR . $project . '.json');
             if (!($project_settings['status'])) {
                 $this->feedback = $project_settings['message'];
                 return false;
