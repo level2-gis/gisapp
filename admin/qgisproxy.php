@@ -293,16 +293,21 @@ try {
         throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
     }
 
-    //get project path from cache
+    //get project path from cache or session
     $sep = "_x_";
     $projectPath = $helpers->readFromCache($map . $sep . "PROJECT_PATH");
+    if (empty($projectPath)) {
+        if (isset($_SESSION["project_path"])) {
+            $projectPath = $_SESSION["project_path"];
+        }
+    }
 
     $user = null;
     if (isset($_SESSION["user_name"])) {
         $user = $_SESSION["user_name"];
     }
 
-    $query_arr["map"] = $projectPath . '.qgs';
+    $query_arr["map"] = $projectPath;
 
     $client = new Client();
 

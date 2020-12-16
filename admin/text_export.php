@@ -32,7 +32,7 @@ function sendText($type, $layer_name, $project_path, $query, $format)
     $srid = substr(strrchr($query['SRS'], ':'), 1);
 
     // Get project
-    $project = Helpers::getQgsProject($project_path . '.qgs');
+    $project = Helpers::getQgsProject($project_path);
     if (!($project["status"])) {
         throw new Exception ($project["message"]);
     }

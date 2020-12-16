@@ -231,27 +231,29 @@ class Helpers
 
     public function getQgsFullProjectPath($project, $client, $project_path) {
 
+        $project .= '.qgs';
+
         //first check for database project_path wih complete filename if exists
         //this overrides default PROJECT_PATH from settings.php
-        $error = PROJECT_PATH . $project . '.qgs';
+        $error = PROJECT_PATH . $project;
         if ($project_path !== null) {
             $error = $project_path;
         }
         if ((file_exists($project_path) && is_file($project_path))) {
-            return self::msg(true, dirname($project_path) . DIRECTORY_SEPARATOR . $project);
-        }else if (file_exists(PROJECT_PATH . $project . '.qgs')) {
+            return self::msg(true, $project_path);
+        } else if (file_exists(PROJECT_PATH . $project)) {
             return self::msg(true, PROJECT_PATH . $project);
-        } else if (file_exists(PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project . '.qgs')) {
+        } else if (file_exists(PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project)) {
             return self::msg(true, PROJECT_PATH . $client . DIRECTORY_SEPARATOR . $project);
         } else {
-            return self::msg(false, $error.' NOT FOUND OR NO PERMISSION!');
+            return self::msg(false, $error . ' NOT FOUND OR NO PERMISSION!');
         }
     }
 
 
     public function getQgsProjectProperties($map)
     {
-        $map .= '.qgs';
+        //$map .= '.qgs';
 
         $qgs = self::getQgsProject($map);
         $time = self::getQgsTimeStamp($map);

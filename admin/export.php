@@ -34,7 +34,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     //$fsize = -1;
 
     // Get project
-    $project = Helpers::getQgsProject($map . '.qgs');
+    $project = Helpers::getQgsProject($map);
     if (!($project["status"])) {
         throw new Exception ($project["message"]);
     }
