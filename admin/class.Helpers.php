@@ -155,9 +155,9 @@ class Helpers
         return strtr(strtolower($string), $table);
     }
 
-    private function msg($status, $data)
+    private static function msg($status, $data)
     {
-        //TODO Status shuold be renamed to success to be more understadable
+        //TODO Status should be renamed to success to be more understadable
         return ["status" => $status, "message" => $data];
     }
 
@@ -589,7 +589,7 @@ class Helpers
     public static function getEqwcVersion() {
         $version = '0';
         if (file_exists('../version.txt')) {
-            $version = trim(file_get_contents('../version.txt',null,null,null,9));
+            $version = trim(file_get_contents('../version.txt', null, null, null, 8));
         }
         return $version;
     }
