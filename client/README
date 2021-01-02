@@ -3,8 +3,7 @@ Installation  and Configuration Guide
 Thursday May 22, 2014
 
 
-Last Updated: Monday September 25, 2018
-Last Change : Monday September 25, 2018
+Last Change : January 2, 2021
 
 
   1. For the terminally lazy
@@ -745,10 +744,13 @@ You need to configure apache with the following lines (e.g. in file
 ::
 
   #mod_wsgi
-  #Have to comment this
-  #WSGIDaemonProcess gis processes=5 threads=15 display-name=%{GROUP}
-  WSGIScriptAlias /wsgi/ /var/www/html/gisapp/client/wsgi/
-  WSGIScriptAliasMatch ^/wsgi/([^/]+) /var/www/html/gisapp/client/wsgi/$1.wsgi
+  #Instead of WSGIScriptAlias which can reveal source code and connection details in browser, do this
+  #WSGIScriptAlias /wsgi/ /var/www/html/gisapp/client/wsgi/
+  Alias /wsgi/ /var/www/html/gisapp/client/wsgi/
+  <Directory /var/www/html/gisapp/client/wsgi>
+    SetHandler wsgi-script
+    Options +ExecCGI
+  </Directory>
 
 
 6.2.2. Adaption of the wsgi scripts to your settings and needs
