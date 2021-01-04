@@ -2,8 +2,8 @@
  *
  * eqwc_mobile.js -- build of Extended QGIS Web Client
  *
- * version: 1.9.8
- * buildDate: Thu Dec 10 13:50:56 CET 2020
+ * version: 1.9.9
+ * buildDate: Mon Jan  4 07:47:34 CET 2021
  *
  * Copyright (2014-2020), Level2, All rights reserved.
  * More information at https://level2.si
