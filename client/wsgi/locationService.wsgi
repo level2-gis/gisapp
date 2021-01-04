@@ -40,7 +40,7 @@ def application(environ, start_response):
     x = float(coordArray[0])
     y = float(coordArray[1])
 
-    sql += "SELECT json_build_object('dmr',get_dmr) FROM get_dmr(" + str(x) + "," + str(y) + ")"
+    sql += "SELECT json_build_object('elevation',get_dmr) FROM get_dmr(" + str(x) + "," + str(y) + ")"
 
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(sql, data)

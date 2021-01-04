@@ -1726,7 +1726,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
         this.listeners = config.listeners;
 
         // Call our superclass constructor to complete construction process.
-        QGIS.LocationService.superclass.constructor.call(this, config)
+        QGIS.LocationService.superclass.constructor.call(this, config);
     },
 
     locationToString: function () {
@@ -1748,36 +1748,47 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
             case "elevation" :
                 switch
                     (config.provider.toLowerCase()) {
-                    case "mapbox" :
-                        serviceData.url = "https://api.mapbox.com/v4/surface/mapbox.mapbox-terrain-v1.json";
-                        serviceData.resultNode = "results";
-                        serviceData.resultField = "ele";
-                        serviceData.displayTemplate = '<tr><td>{ele}m '+TR.fiElevation + '</td></tr>'
-                        serviceData.params = {
-                            layer: "contour",
-                            fields: "ele",
-                            points: this.locationToWgs().toShortString(),
-                            access_token: config.key
-                        };
-                        break;
-                    //MApZen service shutdown on 2018/02/01
-                    case "mapzen" :
-                        serviceData.url = "https://elevation.mapzen.com/height";
+                    case "wsgi" :
+                        serviceData.url = config.url ? config.url : "/wsgi/locationService.wsgi";
                         serviceData.resultNode = "";
-                        serviceData.resultField = "height";
-                        //serviceData.displayTemplate = "{height}m";
-                        serviceData.displayTemplate = '<tr><td>{height}m '+TR.fiElevation + '</td></tr>'
+                        serviceData.resultField = "elevation";
+                        serviceData.displayTemplate = config.template ? config.template : '<tr><td>{elevation}m ' + TR.fiElevation + '</td></tr>';
                         serviceData.params = {
-                            json: Ext.util.JSON.encode({
-                                range: false,
-                                shape: [{
-                                    lat: this.locationToWgs().lat,
-                                    lon: this.locationToWgs().lon
-                                }]
-                            }),
-                            api_key: config.key
+                            coords: this.locationToString()
                         };
                         break;
+
+                    //this service is not running anymore
+                    // case "mapbox" :
+                    //     serviceData.url = "https://api.mapbox.com/v4/surface/mapbox.mapbox-terrain-v1.json";
+                    //     serviceData.resultNode = "results";
+                    //     serviceData.resultField = "ele";
+                    //     serviceData.displayTemplate = '<tr><td>{ele}m '+TR.fiElevation + '</td></tr>'
+                    //     serviceData.params = {
+                    //         layer: "contour",
+                    //         fields: "ele",
+                    //         points: this.locationToWgs().toShortString(),
+                    //         access_token: config.key
+                    //     };
+                    //     break;
+                    //MApZen service shutdown on 2018/02/01
+                    // case "mapzen" :
+                    //     serviceData.url = "https://elevation.mapzen.com/height";
+                    //     serviceData.resultNode = "";
+                    //     serviceData.resultField = "height";
+                    //     //serviceData.displayTemplate = "{height}m";
+                    //     serviceData.displayTemplate = '<tr><td>{height}m '+TR.fiElevation + '</td></tr>'
+                    //     serviceData.params = {
+                    //         json: Ext.util.JSON.encode({
+                    //             range: false,
+                    //             shape: [{
+                    //                 lat: this.locationToWgs().lat,
+                    //                 lon: this.locationToWgs().lon
+                    //             }]
+                    //         }),
+                    //         api_key: config.key
+                    //     };
+                    //     break;
                 }
                 break;
             case "address" :
@@ -1822,11 +1833,19 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
             params: serviceData.params,
             method: 'GET',
             scope: this,
+            disableCaching: false,
+            timeout: 5000,
             success: function (response) {
                 var result = Ext.util.JSON.decode(response.responseText);
 
-                if (result[serviceData.resultNode].length > 0) {
-                    this.fireEvent(config.name, result[serviceData.resultNode][0],this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
+                if (serviceData.resultNode == "") {
+                    if (result.length > 0) {
+                        this.fireEvent(config.name, result[0], this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
+                    }
+                } else {
+                    if (result[serviceData.resultNode].length > 0) {
+                        this.fireEvent(config.name, result[serviceData.resultNode][0], this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
+                    }
                 }
             },
             failure: function (response) {

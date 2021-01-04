@@ -66,7 +66,9 @@ function showFeatureInfo(evt) {
                 locationObj.getService({
                     name: projectData.locationServices[l].name,
                     key: projectData.locationServices[l].key,
-                    provider: projectData.locationServices[l].provider
+                    provider: projectData.locationServices[l].provider,
+                    url: projectData.locationServices[l].url ? projectData.locationServices[l].url : null,
+                    template: projectData.locationServices[l].template ? projectData.locationServices[l].template : null
                 });
 
                 popupItems.push({
