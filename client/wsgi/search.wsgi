@@ -151,8 +151,8 @@ def application(environ, start_response):
     rowData.append({"displaytext":row['displaytext'],"searchtable":row['searchtable'],"bbox":row['bbox'],"showlayer":row['showlayer'],"selectable":"1"})
 
   resultString = '{"results": '+json.dumps(rowData)+'}'
-  resultString = string.replace(resultString,'"bbox": "[','"bbox": [')
-  resultString = string.replace(resultString,']",','],')
+  resultString = str.replace(resultString,'"bbox": "[','"bbox": [')
+  resultString = str.replace(resultString,']",','],')
 
   #we need to add the name of the callback function if the parameter was specified
   if "cb" in request.params:
