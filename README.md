@@ -55,6 +55,7 @@ Available languages:
 * Italian
 * Norwegian
 * Polish
+* Romanian
 * Russian
 * Slovenian
 * Slovak
