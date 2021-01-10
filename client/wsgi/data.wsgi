@@ -38,7 +38,6 @@ def application(environ, start_response):
   filt = [];
 
   sql = ""
-  errorText = ''
   data = ()
 
   try:
@@ -108,7 +107,7 @@ def application(environ, start_response):
 
   except:
     exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-    errorText += 'error: could not execute query, check Apache error log for more info'
+    errorText = b'error: could not execute query, check Apache error log for more info'
     # write exception to the error.log
     print("WSGI ERROR: " + str(exceptionValue), file=sys.stderr)
     response_headers = [('Content-type', 'text/plain; charset=utf-8'),
