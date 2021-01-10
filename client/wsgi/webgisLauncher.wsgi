@@ -7,6 +7,7 @@
 #http://servername/wsgi/webgisLauncher.wsgi?uuid=...
 #http://webgis.uster.ch/wsgi/webgisLauncher.wsgi?uuid=130eb8ce-e0b5-49e2-bc57-0c0a28ce289c
 
+#NOTE: not used by EQWC!
 
 import string #string manipulation support
 from webob import Request

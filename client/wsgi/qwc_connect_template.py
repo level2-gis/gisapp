@@ -1,7 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Script to connect to a PostgreSQL database.
+# Script to connect to a PostgreSQL database. Connection object to be used in all wasgi scripts
+# Template file to work with Python 2 and 3, copy to qwc_connect.py and adjust connection details
 
+from __future__ import print_function
+import sys
 import psycopg2 #PostgreSQL DB Connection
 
 # configure your DB connection here
@@ -11,11 +14,13 @@ def getConnection(environ, start_response):
   #SQL database connection
   try:
     conn = psycopg2.connect(DB_CONN_STRING)
+    conn.set_client_encoding('UTF8')
     return conn
   except:
-    errorText = 'error: database connection failed!'
+    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+    errorText = str(exceptionValue)
     # write the error message to the error.log
-    print >> environ['wsgi.errors'], "%s" % errorText
+    print(errorText, file=sys.stderr)
     response_headers = [('Content-type', 'text/plain'),
                         ('Content-Length', str(len(errorText)))]
     start_response('500 INTERNAL SERVER ERROR', response_headers)

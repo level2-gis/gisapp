@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from __future__ import print_function
+
 import re #regular expression support
 import string #string manipulation support
 from webob import Request
@@ -54,9 +56,9 @@ def application(environ, start_response):
 
   except:
     exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-    errorText += 'error: could not execute query: '+str(exceptionValue)
-    # write the error message to the error.log
-    print >> environ['wsgi.errors'], "%s" % errorText+": "+str(exceptionValue)
+    errorText += 'error: could not execute query, check Apache error log for more info'
+    # write exception to the error.log
+    print("WSGI ERROR: " + str(exceptionValue), file=sys.stderr)
     response_headers = [('Content-type', 'text/plain; charset=utf-8'),
                         ('Content-Length', str(len(errorText)))]
     start_response('500 INTERNAL SERVER ERROR', response_headers)
@@ -64,7 +66,9 @@ def application(environ, start_response):
     return [errorText]
 
   finally:
-    conn.close()    
+    if "conn" in locals():
+      if conn:
+        conn.close()
 
   response = Response(resultString,"200 OK",[("Content-type","text/plain; charset=utf-8"),("Content-length", str(len(resultString)) )])
   return response(environ, start_response)

@@ -5,6 +5,7 @@
 # adapt potentially your schema and table in the two queries (SELECT and INSERT) below
 #http://servername/wsgi/createShortPermalink.wsgi?longPermalink=...
 
+#NOTE: not used by EQWC!
 
 import string #string manipulation support
 from webob import Request

@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 #http://localhost/wsgi/getSearchGeom.wsgi?searchtable=av_user.suchtabelle&displaytext=Oberlandautobahn (Strasse, Uster)
 
+from __future__ import print_function
+
 import re #regular expression support
 import string #string manipulation support
 from webob import Request
@@ -20,49 +22,55 @@ import qwc_connect
 
 def application(environ, start_response):
   request = Request(environ)
-  searchtable = request.params["searchtable"]
-  displaytext = request.params["displaytext"]
-  showlayer = request.params["showlayer"]
-  srs = request.params["srs"]
 
-  #sanitize
-  if re.search(r"[^A-Za-z,._]", searchtable):
-    print >> environ['wsgi.errors'], "offending input: %s" % searchtable
-    sql = ""
-  else:
-    sql = "SELECT COALESCE(ST_AsText(ST_Transform(the_geom,"+srs+")), \'nogeom\') AS geom FROM "+searchtable+" WHERE showlayer = '"+showlayer+"' AND displaytext = %(displaytext)s;"
-  
-  result = "nogeom"
-  
-  if searchtable != "" and searchtable != "null":
-    errorText = ''
+  searchtable = ""
+  sql = ""
+  errorText = ''
+
+  try:
+
+    srs = request.params["srs"]
+    displaytext = request.params["displaytext"]
+    showlayer = request.params["showlayer"]
+
+    if "searchtable" in request.params:
+      searchtable = request.params["searchtable"]
+      if len(searchtable) > 0:
+        #sanitize
+        if re.search(r"[^A-Za-z,._]", searchtable):
+          raise NameError('Illegal characters in searchtable')
+        else:
+          sql = "SELECT COALESCE(ST_AsText(ST_Transform(the_geom,"+srs+")), \'nogeom\') AS geom FROM "+searchtable+" WHERE showlayer = '"+showlayer+"' AND displaytext = %(displaytext)s;"
+    else:
+      raise NameError('Missing required parameter searchtables')
+
+    result = "nogeom"
+
     conn = qwc_connect.getConnection(environ, start_response)
-  
     if conn == None:
-      return [""]
+      raise NameError('No connection')
 
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute(sql,{'displaytext':displaytext})
 
-    try:
-      cur.execute(sql,{'displaytext':displaytext})
-    except:
-      exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-      conn.close()
-      errorText += 'error: could not execute query'
-      # write the error message to the error.log
-      print >> environ['wsgi.errors'], "%s" % errorText+": "+str(exceptionValue)
-      response_headers = [('Content-type', 'text/plain; charset=utf-8'),
-                          ('Content-Length', str(len(errorText)))]
-      start_response('500 INTERNAL SERVER ERROR', response_headers)
-
-      return [errorText]
-
-    #result = sql;
-    #result += ";" + errorText;
     row = cur.fetchone()
     result = row['geom']
-    conn.close()
+
+  except:
+    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+    errorText += 'error: could not execute query, check Apache error log for more info'
+    # write exception to the error.log
+    print("WSGI ERROR: " + str(exceptionValue), file=sys.stderr)
+    response_headers = [('Content-type', 'text/plain; charset=utf-8'),
+                        ('Content-Length', str(len(errorText)))]
+    start_response('500 INTERNAL SERVER ERROR', response_headers)
+
+    return [errorText]
+
+  finally:
+    if "conn" in locals():
+      if conn:
+        conn.close()
 
   response = Response(result,"200 OK",[("Content-type","text/plain; charset=utf-8"),("Content-length", str(len(result)) )])
-
   return response(environ, start_response)
