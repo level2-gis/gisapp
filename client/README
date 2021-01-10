@@ -3,7 +3,7 @@ Installation  and Configuration Guide
 Thursday May 22, 2014
 
 
-Last Change : January 2, 2021
+Last Change : January 10, 2021
 
 
   1. For the terminally lazy
@@ -76,10 +76,10 @@ The QGIS server compilation and installation will be covered in the QGIS manual.
 
 For searching:
 
-- python-wsgi for searching (Ubuntu: libapache2-mod-wsgi)
-- psycopg2 PostgreSQL db driver (Ubuntu: python-psycopg2)
+- python-wsgi for searching (Ubuntu: libapache2-mod-wsgi-py3)
+- psycopg2 PostgreSQL db driver (Ubuntu: python3-psycopg2)
 - webob - Python module providing WSGI request and response objects (Ubuntu:
-  python-webob)
+  python3-webob)
 
 The client part needs to be git cloned with the following command:
 git clone https://github.com/qgis/qgis-web-client.git
@@ -729,14 +729,14 @@ Permalinks: the permalinks script is not yet implemented in PHP.
   ================
 
 
-6.2.1. Configuration of mod_wsgi
-    ================================
+6.2.1. Configuration of mod_wsgi for Python 3
+    =========================================
 
 You need to enable mod_wsgi as root. (Ubuntu: a2enmod wsgi).
-If you get error module not exist, installation is missing (Ubuntu: apt-get install libapache2-mod-wsgi)
+If you get error module not exist, installation is missing (Ubuntu: apt-get install libapache2-mod-wsgi-py3)
 
 Install also this:
-(Ubuntu: apt-get install python-webob python-psycopg2)
+(Ubuntu: apt-get install python3-webob python3-psycopg2)
 
 You need to configure apache with the following lines (e.g. in file
 ``/etc/apache2/sites-available/default``):
