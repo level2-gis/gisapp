@@ -98,7 +98,7 @@ function sendText($type, $layer_name, $project_path, $query, $format)
         $sql .= "FROM " . $lay_info['message']['table'];
         if(!empty($box)) {
             $sql .= " WHERE " . $box;
-            if($lay_filt>'') {
+            if($lay_filt<>'()') {
                 $sql.=" AND ".$lay_filt;
             }
             if($filter>'') {
