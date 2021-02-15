@@ -11,13 +11,13 @@
  <g>
   <title>Layer 1</title>
   <line y2="20" x2="10" y1="0" x1="10" stroke-width="6" stroke-opacity="0.6" stroke-linejoin="null"
-        stroke-linecap="null" stroke="white" fill="none" id="svg_1"/>
+        stroke-linecap="null" stroke="green" fill="none" id="svg_1"/>
   <line y2="20" x2="10" y1="0" x1="10" stroke-width="3" stroke-opacity="null" stroke-linejoin="null"
         stroke-linecap="null" stroke="#00FF00" fill="none" id="svg_2"/>
-  <line y2="10" x2="8" y1="10" x1="0" stroke-width="6" stroke-opacity="0.6" stroke-linejoin="null" stroke-linecap="null"
-        stroke="white" fill-opacity="null" fill="none" id="svg_3"/>
-  <line y2="10" x2="20" y1="10" x1="12" stroke-width="6" stroke-opacity="0.6" stroke-linejoin="null"
-        stroke-linecap="null" stroke="white" fill-opacity="null" fill="none" id="svg_4"/>
+  <line y2="10" x2="7" y1="10" x1="0" stroke-width="6" stroke-opacity="0.6" stroke-linejoin="null" stroke-linecap="null"
+        stroke="green" fill-opacity="null" fill="none" id="svg_3"/>
+  <line y2="10" x2="20" y1="10" x1="13" stroke-width="6" stroke-opacity="0.6" stroke-linejoin="null"
+        stroke-linecap="null" stroke="green" fill-opacity="null" fill="none" id="svg_4"/>
   <line y2="10" x2="20" y1="10" x1="0" stroke-width="3" stroke-opacity="null" stroke-linejoin="null"
         stroke-linecap="null" stroke="#00FF00" fill-opacity="null" fill="none" id="svg_5"/>
  </g>
