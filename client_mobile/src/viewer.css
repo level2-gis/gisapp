@@ -157,13 +157,13 @@ body {
 /* geolocation */
 
 .locationMarkerNormal {
-    background-image: url("../img/location-cross.svg");
+    background-image: url("../img/location-cross.svg?v=2");
     width: 20px;
     height: 20px;
 }
 
 .locationMarkerGood {
-    background-image: url("../img/location-cross-good.svg");
+    background-image: url("../img/location-cross-good.svg?v=2");
     width: 20px;
     height: 20px;
 }

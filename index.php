@@ -61,7 +61,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
 <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20210215"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20210216"/>
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
     </head>
     <body>
@@ -273,7 +273,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20200530"></script>
 
 <!--                FOR DEBUGGING-->
-<!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
+                <!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
                 <!--                <script type="text/javascript" src="../ol2/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
 
