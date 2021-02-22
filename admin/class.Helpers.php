@@ -598,7 +598,7 @@ class Helpers
         $version = '0';
         $dir = dirname(dirname(__FILE__)) . "/plugins/";
         if (file_exists($dir . $name . '/changelog.txt')) {
-                $version = trim(file_get_contents($dir . $name . '/changelog.txt',null,null,null,5));
+                $version = trim(file_get_contents($dir . $name . '/changelog.txt', null, null, null, 6));
         }
         return $version;
     }
