@@ -2260,8 +2260,7 @@ function createPermalink() {
     //visibleLayers = uniqueLayersInLegend(visibleLayers);
     var visibleLayers = thematicLayer.params.LAYERS;
     var visibleBackgroundLayer = getVisibleBackgroundLayer();
-    var startExtentArray = geoExtMap.map.getExtent().toArray();
-    var startExtent = startExtentArray[0] + "," + startExtentArray[1] + "," + startExtentArray[2] + "," + startExtentArray[3];
+    var startExtent = geoExtMap.map.getExtent().toBBOX(1, OpenLayers.Projection.defaults[authid].yx);
 
     if (!norewrite) {
         var servername = location.href.split(/\/+/)[1];
