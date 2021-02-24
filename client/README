@@ -831,7 +831,6 @@ SELECT UpdateGeometrySRID('admin', 'geom', 4326);
                           --"03_parcels", where 03 is the order of the search categories, the number
                           --should be unique across all search tables
     the_geom geometry,    --the actual geometry
-    geometry_type text,   --the geometry type as returned by ST_GeometryType(the_geom)
     searchstring_tsvector tsvector, -- be sure to fill this with to_tsvector()
     showlayer varchar(256), -- holds the layer name to be set visible if user chooses a respective result
     CONSTRAINT searchtable_pkey PRIMARY KEY (displaytext)
