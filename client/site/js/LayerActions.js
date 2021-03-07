@@ -237,12 +237,15 @@ function exportWindowHandler(btn) {
             myLayerName = Eqwc.common.getIdentifyLayerName(layerId);
         }
 
-        if(useFilter) {
+        if (useFilter) {
             filter = wmsLoader.layerProperties[layerId].currentFilter;
         }
 
-        exportData(myLayerName, myFormat, exportExtent, fieldValues.crs, filter);
-
+        if (myFormat == 'QGIS_DXF') {
+            exportUsingQgis(myLayerName, myFormat, exportExtent, fieldValues.crs, filter);
+        } else {
+            exportData(myLayerName, myFormat, exportExtent, fieldValues.crs, filter);
+        }
         win.close();
         win.destroy();
     }
@@ -520,21 +523,39 @@ function showRecordSelected(args) {
         //currently disabled
         //thematicLayer.mergeNewParams({
         //    "SELECTION": layerId + ":" + args["id"]
-        //});
+    //});
 
-        if (args["doZoomToExtent"]) {
-            geoExtMap.map.zoomToExtent(args["bbox"]);
-        }
-        else {
-            geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
-        }
+    if (args["doZoomToExtent"]) {
+        geoExtMap.map.zoomToExtent(args["bbox"]);
+    } else {
+        geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
+    }
 }
 
-function exportData(layername,format, useBbox, crs, filter) {
+function exportUsingQgis(layername, format, useBbox, crs) {
+
+    var layerId = wmsLoader.layerTitleNameMapping[layername];
+    //var layerCrs = projectData.layers[layerId].crs;
+
+    var params = {};
+    Object.assign(params, thematicLayer.params);
+
+    params.LAYERS = layerId;
+    params.FORMAT = "application/dxf";
+    params.FILE_NAME = layername + ".dxf";
+    params.FORMAT_OPTIONS = "MODE:SYMBOLLAYERSYMBOLOGY;CODEC:UTF-8";
+    params.CRS = crs;
+    if (useBbox) {
+        params.BBOX = geoExtMap.map.getExtent().toBBOX(1, OpenLayers.Projection.defaults[authid].yx);
+    }
+    Eqwc.common.download(thematicLayer.url + Ext.urlEncode(params), params.FILE_NAME);
+}
+
+function exportData(layername, format, useBbox, crs, filter) {
 
     function joinObj(obj, attr) {
         var out = [];
-        for (var i=0; i<obj.length; i++) {
+        for (var i = 0; i < obj.length; i++) {
             out.push(obj[i][attr]);
         }
         return out.join(",");
