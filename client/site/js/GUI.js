@@ -123,10 +123,11 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 				boxMaxWidth: 400,
 				layout: 'vbox',
 				region: 'west',
-				floatable: false,
+				//floatable: false,
 				minWidth: 200,
+				maxWidth: 400,
 				split: true,
-				collapseMode: 'standard',
+				//collapseMode: 'mini',
 				id: 'LeftPanel',
 				items: [{
 					xtype: 'button',
@@ -421,7 +422,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                 split: true,
                 collapsible: true,
                 collapsed: true,
-                hidden: true,
+				//hidden: true,
                 width: 300
             },
             {

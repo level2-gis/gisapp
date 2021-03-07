@@ -590,7 +590,7 @@ function postLoading() {
             ),
             map: MapOptions,
             id: "geoExtMapPanel",
-            width: MapPanelRef.getInnerWidth(),
+            //width: MapPanelRef.getInnerWidth(),
             height: MapPanelRef.getInnerHeight(),
             renderTo: MapPanelRef.body,
             plugins: [printExtent]
@@ -662,7 +662,17 @@ function postLoading() {
         //}
         //add listener to adapt map on panel resize (only needed because of IE)
         MapPanelRef.on('resize', function (panel, w, h) {
-            geoExtMap.setSize(panel.getInnerWidth(),panel.getInnerHeight());
+            //only update size if we are enlarging window
+            var oldH = geoExtMap.map.getSize().h; //geoExtMap.getHeight();
+            var oldW = geoExtMap.map.getSize().w; //geoExtMap.getWidth();
+            var newW = panel.getInnerWidth();
+            var newH = panel.getInnerHeight();
+            if (oldW < newW) {
+                geoExtMap.map.updateSize();
+            }
+            if (oldH < newH) {
+                geoExtMap.setHeight(newH);
+            }
         });
 
         // selection from permalink
@@ -1190,6 +1200,14 @@ function postLoading() {
                 item.width = adjWidth;
             });
             myPanel.doLayout();
+
+            geoExtMap.map.updateSize();
+        });
+        leftPanel.addListener('collapse', function (myPanel) {
+            geoExtMap.map.updateSize();
+        });
+        leftPanel.addListener('expand', function (myPanel) {
+            geoExtMap.map.updateSize();
         });
 
         //measure-controls (distance and area)
