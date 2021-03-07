@@ -270,9 +270,9 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js?v=20180215"></script>
 
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-1.1.0-compressed.js"></script>
-                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20200530"></script>
+                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20210307"></script>
 
-<!--                FOR DEBUGGING-->
+                <!--                FOR DEBUGGING-->
                 <!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
                 <!--                <script type="text/javascript" src="../ol2/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 

@@ -1877,13 +1877,240 @@ var root=this.writeNode(name,features);this.setAttributeNS(root,this.namespaces[
 if(point.z!=undefined){parts[i]+=","+point.z;}}
 return this.createElementNSPlus("gml:coordinates",{attributes:{decimal:".",cs:",",ts:" "},value:(numPoints==1)?parts[0]:parts.join(" ")});},"LineString":function(geometry){var node=this.createElementNSPlus("gml:LineString");this.writeNode("coordinates",geometry.components,node);return node;},"Polygon":function(geometry){var node=this.createElementNSPlus("gml:Polygon");this.writeNode("outerBoundaryIs",geometry.components[0],node);for(var i=1;i<geometry.components.length;++i){this.writeNode("innerBoundaryIs",geometry.components[i],node);}
 return node;},"outerBoundaryIs":function(ring){var node=this.createElementNSPlus("gml:outerBoundaryIs");this.writeNode("LinearRing",ring,node);return node;},"innerBoundaryIs":function(ring){var node=this.createElementNSPlus("gml:innerBoundaryIs");this.writeNode("LinearRing",ring,node);return node;},"LinearRing":function(ring){var node=this.createElementNSPlus("gml:LinearRing");this.writeNode("coordinates",ring.components,node);return node;},"Box":function(bounds){var node=this.createElementNSPlus("gml:Box");this.writeNode("coordinates",[{x:bounds.left,y:bounds.bottom},{x:bounds.right,y:bounds.top}],node);if(this.srsName){node.setAttribute("srsName",this.srsName);}
-return node;}},OpenLayers.Format.GML.Base.prototype.writers["gml"]),"feature":OpenLayers.Format.GML.Base.prototype.writers["feature"],"wfs":OpenLayers.Format.GML.Base.prototype.writers["wfs"]},CLASS_NAME:"OpenLayers.Format.GML.v2"});OpenLayers.Format.Filter.v1_0_0=OpenLayers.Class(OpenLayers.Format.GML.v2,OpenLayers.Format.Filter.v1,{VERSION:"1.0.0",schemaLocation:"http://www.opengis.net/ogc/filter/1.0.0/filter.xsd",initialize:function(options){OpenLayers.Format.GML.v2.prototype.initialize.apply(this,[options]);},readers:{"ogc":OpenLayers.Util.applyDefaults({"PropertyIsEqualTo":function(node,obj){var filter=new OpenLayers.Filter.Comparison({type:OpenLayers.Filter.Comparison.EQUAL_TO});this.readChildNodes(node,filter);obj.filters.push(filter);},"PropertyIsNotEqualTo":function(node,obj){var filter=new OpenLayers.Filter.Comparison({type:OpenLayers.Filter.Comparison.NOT_EQUAL_TO});this.readChildNodes(node,filter);obj.filters.push(filter);},"PropertyIsLike":function(node,obj){var filter=new OpenLayers.Filter.Comparison({type:OpenLayers.Filter.Comparison.LIKE});this.readChildNodes(node,filter);var wildCard=node.getAttribute("wildCard");var singleChar=node.getAttribute("singleChar");var esc=node.getAttribute("escape");filter.value2regex(wildCard,singleChar,esc);obj.filters.push(filter);}},OpenLayers.Format.Filter.v1.prototype.readers["ogc"]),"gml":OpenLayers.Format.GML.v2.prototype.readers["gml"],"feature":OpenLayers.Format.GML.v2.prototype.readers["feature"]},writers:{"ogc":OpenLayers.Util.applyDefaults({"PropertyIsEqualTo":function(filter){var node=this.createElementNSPlus("ogc:PropertyIsEqualTo");this.writeNode("PropertyName",filter,node);this.writeOgcExpression(filter.value,node);return node;},"PropertyIsNotEqualTo":function(filter){var node=this.createElementNSPlus("ogc:PropertyIsNotEqualTo");this.writeNode("PropertyName",filter,node);this.writeOgcExpression(filter.value,node);return node;},"PropertyIsLike":function(filter){var node=this.createElementNSPlus("ogc:PropertyIsLike",{attributes:{wildCard:"*",singleChar:".",escape:"!"}});this.writeNode("PropertyName",filter,node);this.writeNode("Literal",filter.regex2value(),node);return node;},"BBOX":function(filter){var node=this.createElementNSPlus("ogc:BBOX");filter.property&&this.writeNode("PropertyName",filter,node);var box=this.writeNode("gml:Box",filter.value,node);if(filter.projection){box.setAttribute("srsName",filter.projection);}
-return node;}},OpenLayers.Format.Filter.v1.prototype.writers["ogc"]),"gml":OpenLayers.Format.GML.v2.prototype.writers["gml"],"feature":OpenLayers.Format.GML.v2.prototype.writers["feature"]},writeSpatial:function(filter,name){var node=this.createElementNSPlus("ogc:"+name);this.writeNode("PropertyName",filter,node);if(filter.value instanceof OpenLayers.Filter.Function){this.writeNode("Function",filter.value,node);}else{var child;if(filter.value instanceof OpenLayers.Geometry){child=this.writeNode("feature:_geometry",filter.value).firstChild;}else{child=this.writeNode("gml:Box",filter.value);}
-if(filter.projection){child.setAttribute("srsName",filter.projection);}
-node.appendChild(child);}
-return node;},CLASS_NAME:"OpenLayers.Format.Filter.v1_0_0"});OpenLayers.Format.WFST.v1_0_0=OpenLayers.Class(OpenLayers.Format.Filter.v1_0_0,OpenLayers.Format.WFST.v1,{version:"1.0.0",srsNameInQuery:false,schemaLocations:{"wfs":"http://schemas.opengis.net/wfs/1.0.0/WFS-transaction.xsd"},initialize:function(options){OpenLayers.Format.Filter.v1_0_0.prototype.initialize.apply(this,[options]);OpenLayers.Format.WFST.v1.prototype.initialize.apply(this,[options]);},readNode:function(node,obj,first){return OpenLayers.Format.GML.v2.prototype.readNode.apply(this,arguments);},readers:{"wfs":OpenLayers.Util.applyDefaults({"WFS_TransactionResponse":function(node,obj){obj.insertIds=[];obj.success=false;this.readChildNodes(node,obj);},"InsertResult":function(node,container){var obj={fids:[]};this.readChildNodes(node,obj);container.insertIds=container.insertIds.concat(obj.fids);},"TransactionResult":function(node,obj){this.readChildNodes(node,obj);},"Status":function(node,obj){this.readChildNodes(node,obj);},"SUCCESS":function(node,obj){obj.success=true;}},OpenLayers.Format.WFST.v1.prototype.readers["wfs"]),"gml":OpenLayers.Format.GML.v2.prototype.readers["gml"],"feature":OpenLayers.Format.GML.v2.prototype.readers["feature"],"ogc":OpenLayers.Format.Filter.v1_0_0.prototype.readers["ogc"]},writers:{"wfs":OpenLayers.Util.applyDefaults({"Query":function(options){options=OpenLayers.Util.extend({featureNS:this.featureNS,featurePrefix:this.featurePrefix,featureType:this.featureType,srsName:this.srsName,srsNameInQuery:this.srsNameInQuery},options);var prefix=options.featurePrefix;var node=this.createElementNSPlus("wfs:Query",{attributes:{typeName:(options.featureNS?prefix+":":"")+
-options.featureType}});if(options.srsNameInQuery&&options.srsName){node.setAttribute("srsName",options.srsName);}
-if(options.featureNS){this.setAttributeNS(node,this.namespaces.xmlns,"xmlns:"+prefix,options.featureNS);}
-if(options.propertyNames){for(var i=0,len=options.propertyNames.length;i<len;i++){this.writeNode("ogc:PropertyName",{property:options.propertyNames[i]},node);}}
-if(options.filter){this.setFilterProperty(options.filter);this.writeNode("ogc:Filter",options.filter,node);}
-return node;}},OpenLayers.Format.WFST.v1.prototype.writers["wfs"]),"gml":OpenLayers.Format.GML.v2.prototype.writers["gml"],"feature":OpenLayers.Format.GML.v2.prototype.writers["feature"],"ogc":OpenLayers.Format.Filter.v1_0_0.prototype.writers["ogc"]},CLASS_NAME:"OpenLayers.Format.WFST.v1_0_0"});OpenLayers.Protocol.WFS.v1_0_0=OpenLayers.Class(OpenLayers.Protocol.WFS.v1,{version:"1.0.0",CLASS_NAME:"OpenLayers.Protocol.WFS.v1_0_0"});
+return node;
+            }
+        }, OpenLayers.Format.GML.Base.prototype.writers["gml"]),
+        "feature": OpenLayers.Format.GML.Base.prototype.writers["feature"],
+        "wfs": OpenLayers.Format.GML.Base.prototype.writers["wfs"]
+    },
+    CLASS_NAME: "OpenLayers.Format.GML.v2"
+});
+OpenLayers.Format.Filter.v1_0_0 = OpenLayers.Class(OpenLayers.Format.GML.v2, OpenLayers.Format.Filter.v1, {
+    VERSION: "1.0.0",
+    schemaLocation: "http://www.opengis.net/ogc/filter/1.0.0/filter.xsd",
+    initialize: function (options) {
+        OpenLayers.Format.GML.v2.prototype.initialize.apply(this, [options]);
+    },
+    readers: {
+        "ogc": OpenLayers.Util.applyDefaults({
+            "PropertyIsEqualTo": function (node, obj) {
+                var filter = new OpenLayers.Filter.Comparison({type: OpenLayers.Filter.Comparison.EQUAL_TO});
+                this.readChildNodes(node, filter);
+                obj.filters.push(filter);
+            }, "PropertyIsNotEqualTo": function (node, obj) {
+                var filter = new OpenLayers.Filter.Comparison({type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO});
+                this.readChildNodes(node, filter);
+                obj.filters.push(filter);
+            }, "PropertyIsLike": function (node, obj) {
+                var filter = new OpenLayers.Filter.Comparison({type: OpenLayers.Filter.Comparison.LIKE});
+                this.readChildNodes(node, filter);
+                var wildCard = node.getAttribute("wildCard");
+                var singleChar = node.getAttribute("singleChar");
+                var esc = node.getAttribute("escape");
+                filter.value2regex(wildCard, singleChar, esc);
+                obj.filters.push(filter);
+            }
+        }, OpenLayers.Format.Filter.v1.prototype.readers["ogc"]),
+        "gml": OpenLayers.Format.GML.v2.prototype.readers["gml"],
+        "feature": OpenLayers.Format.GML.v2.prototype.readers["feature"]
+    },
+    writers: {
+        "ogc": OpenLayers.Util.applyDefaults({
+            "PropertyIsEqualTo": function (filter) {
+                var node = this.createElementNSPlus("ogc:PropertyIsEqualTo");
+                this.writeNode("PropertyName", filter, node);
+                this.writeOgcExpression(filter.value, node);
+                return node;
+            }, "PropertyIsNotEqualTo": function (filter) {
+                var node = this.createElementNSPlus("ogc:PropertyIsNotEqualTo");
+                this.writeNode("PropertyName", filter, node);
+                this.writeOgcExpression(filter.value, node);
+                return node;
+            }, "PropertyIsLike": function (filter) {
+                var node = this.createElementNSPlus("ogc:PropertyIsLike", {
+                    attributes: {
+                        wildCard: "*",
+                        singleChar: ".",
+                        escape: "!"
+                    }
+                });
+                this.writeNode("PropertyName", filter, node);
+                this.writeNode("Literal", filter.regex2value(), node);
+                return node;
+            }, "BBOX": function (filter) {
+                var node = this.createElementNSPlus("ogc:BBOX");
+                filter.property && this.writeNode("PropertyName", filter, node);
+                var box = this.writeNode("gml:Box", filter.value, node);
+                if (filter.projection) {
+                    box.setAttribute("srsName", filter.projection);
+                }
+                return node;
+            }
+        }, OpenLayers.Format.Filter.v1.prototype.writers["ogc"]),
+        "gml": OpenLayers.Format.GML.v2.prototype.writers["gml"],
+        "feature": OpenLayers.Format.GML.v2.prototype.writers["feature"]
+    },
+    writeSpatial: function (filter, name) {
+        var node = this.createElementNSPlus("ogc:" + name);
+        this.writeNode("PropertyName", filter, node);
+        if (filter.value instanceof OpenLayers.Filter.Function) {
+            this.writeNode("Function", filter.value, node);
+        } else {
+            var child;
+            if (filter.value instanceof OpenLayers.Geometry) {
+                child = this.writeNode("feature:_geometry", filter.value).firstChild;
+            } else {
+                child = this.writeNode("gml:Box", filter.value);
+            }
+            if (filter.projection) {
+                child.setAttribute("srsName", filter.projection);
+            }
+            node.appendChild(child);
+        }
+        return node;
+    },
+    CLASS_NAME: "OpenLayers.Format.Filter.v1_0_0"
+});
+OpenLayers.Format.WFST.v1_0_0 = OpenLayers.Class(OpenLayers.Format.Filter.v1_0_0, OpenLayers.Format.WFST.v1, {
+    version: "1.0.0",
+    srsNameInQuery: false,
+    schemaLocations: {"wfs": "http://schemas.opengis.net/wfs/1.0.0/WFS-transaction.xsd"},
+    initialize: function (options) {
+        OpenLayers.Format.Filter.v1_0_0.prototype.initialize.apply(this, [options]);
+        OpenLayers.Format.WFST.v1.prototype.initialize.apply(this, [options]);
+    },
+    readNode: function (node, obj, first) {
+        return OpenLayers.Format.GML.v2.prototype.readNode.apply(this, arguments);
+    },
+    readers: {
+        "wfs": OpenLayers.Util.applyDefaults({
+            "WFS_TransactionResponse": function (node, obj) {
+                obj.insertIds = [];
+                obj.success = false;
+                this.readChildNodes(node, obj);
+            }, "InsertResult": function (node, container) {
+                var obj = {fids: []};
+                this.readChildNodes(node, obj);
+                container.insertIds = container.insertIds.concat(obj.fids);
+            }, "TransactionResult": function (node, obj) {
+                this.readChildNodes(node, obj);
+            }, "Status": function (node, obj) {
+                this.readChildNodes(node, obj);
+            }, "SUCCESS": function (node, obj) {
+                obj.success = true;
+            }
+        }, OpenLayers.Format.WFST.v1.prototype.readers["wfs"]),
+        "gml": OpenLayers.Format.GML.v2.prototype.readers["gml"],
+        "feature": OpenLayers.Format.GML.v2.prototype.readers["feature"],
+        "ogc": OpenLayers.Format.Filter.v1_0_0.prototype.readers["ogc"]
+    },
+    writers: {
+        "wfs": OpenLayers.Util.applyDefaults({
+            "Query": function (options) {
+                options = OpenLayers.Util.extend({
+                    featureNS: this.featureNS,
+                    featurePrefix: this.featurePrefix,
+                    featureType: this.featureType,
+                    srsName: this.srsName,
+                    srsNameInQuery: this.srsNameInQuery
+                }, options);
+                var prefix = options.featurePrefix;
+                var node = this.createElementNSPlus("wfs:Query", {
+                    attributes: {
+                        typeName: (options.featureNS ? prefix + ":" : "") +
+                            options.featureType
+                    }
+                });
+                if (options.srsNameInQuery && options.srsName) {
+                    node.setAttribute("srsName", options.srsName);
+                }
+                if (options.featureNS) {
+                    this.setAttributeNS(node, this.namespaces.xmlns, "xmlns:" + prefix, options.featureNS);
+                }
+                if (options.propertyNames) {
+                    for (var i = 0, len = options.propertyNames.length; i < len; i++) {
+                        this.writeNode("ogc:PropertyName", {property: options.propertyNames[i]}, node);
+                    }
+                }
+                if (options.filter) {
+                    this.setFilterProperty(options.filter);
+                    this.writeNode("ogc:Filter", options.filter, node);
+                }
+                return node;
+            }
+        }, OpenLayers.Format.WFST.v1.prototype.writers["wfs"]),
+        "gml": OpenLayers.Format.GML.v2.prototype.writers["gml"],
+        "feature": OpenLayers.Format.GML.v2.prototype.writers["feature"],
+        "ogc": OpenLayers.Format.Filter.v1_0_0.prototype.writers["ogc"]
+    },
+    CLASS_NAME: "OpenLayers.Format.WFST.v1_0_0"
+});
+OpenLayers.Protocol.WFS.v1_0_0 = OpenLayers.Class(OpenLayers.Protocol.WFS.v1, {
+    version: "1.0.0",
+    CLASS_NAME: "OpenLayers.Protocol.WFS.v1_0_0"
+});
+
+//fix for Openlayers2 preventdefault chrome issue
+//https://stackoverflow.com/questions/55955171/preventing-unable-to-preventdefault-inside-passive-event-listener-error-within
+const eventListenerOptionsSupported = () => {
+    let supported = false;
+
+    try {
+        const opts = Object.defineProperty({}, 'passive', {
+            get() {
+                supported = true;
+            }
+        });
+
+        window.addEventListener('test', null, opts);
+        window.removeEventListener('test', null, opts);
+    } catch (e) {
+    }
+
+    return supported;
+}
+
+const defaultOptions = {
+    passive: false,
+    capture: false
+};
+const supportedPassiveTypes = [
+    'scroll', 'wheel',
+    'touchstart', 'touchmove', 'touchenter', 'touchend', 'touchleave',
+    'mouseout', 'mouseleave', 'mouseup', 'mousedown', 'mousemove', 'mouseenter', 'mousewheel', 'mouseover'
+];
+const getDefaultPassiveOption = (passive, eventName) => {
+    if (passive !== undefined) return passive;
+
+    return supportedPassiveTypes.indexOf(eventName) === -1 ? false : defaultOptions.passive;
+};
+
+const getWritableOptions = (options) => {
+    const passiveDescriptor = Object.getOwnPropertyDescriptor(options, 'passive');
+
+    return passiveDescriptor && passiveDescriptor.writable !== true && passiveDescriptor.set === undefined
+        ? Object.assign({}, options)
+        : options;
+};
+
+const overwriteAddEvent = (superMethod) => {
+    EventTarget.prototype.addEventListener = function (type, listener, options) {
+        const usesListenerOptions = typeof options === 'object' && options !== null;
+        const useCapture = usesListenerOptions ? options.capture : options;
+
+        options = usesListenerOptions ? getWritableOptions(options) : {};
+        options.passive = getDefaultPassiveOption(options.passive, type);
+        options.capture = useCapture === undefined ? defaultOptions.capture : useCapture;
+
+        superMethod.call(this, type, listener, options);
+    };
+
+    EventTarget.prototype.addEventListener._original = superMethod;
+};
+
+const supportsPassive = eventListenerOptionsSupported();
+
+if (supportsPassive) {
+    const addEvent = EventTarget.prototype.addEventListener;
+    overwriteAddEvent(addEvent);
+}
