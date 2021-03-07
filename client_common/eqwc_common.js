@@ -304,17 +304,30 @@ Eqwc.common.findParentRelation = function(name) {
     }
     for (var i = 0; i < cnt; i++) {
         main = Object.keys(projectData.relations)[i];
-        res = projectData.relations[main].filter(function(item) {
+        res = projectData.relations[main].filter(function (item) {
             return item.relate_layer == name;
         })[0];
-        if(res) {
+        if (res) {
             return main;
         }
     }
     return false;
 };
 
-String.prototype.replaceAll = function(search, replacement) {
+//todo fix for dxf export
+// Eqwc.common.download = function(url, filename) {
+//     fetch(url).then(function(t) {
+//         return t.blob().then((b)=>{
+//                 var a = document.createElement("a");
+//                 a.href = URL.createObjectURL(b);
+//                 a.setAttribute("download", filename);
+//                 a.click();
+//             }
+//         );
+//     });
+// };
+
+String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };

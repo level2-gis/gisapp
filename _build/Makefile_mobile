@@ -8,6 +8,7 @@ echo $DISTRIBUTION_NAME $VERSION
 # Minifies JS using Closure Compiler
 java -jar closurecompiler.jar \
   --charset 'UTF-8' \
+  --language_in 'ECMASCRIPT5' \
   --jscomp_error=checkDebuggerStatement \
   --jscomp_warning=checkVars \
   --jscomp_warning=deprecated \
