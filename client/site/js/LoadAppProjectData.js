@@ -56,20 +56,36 @@ function makeLayer(layDef, visible) {
             break;
 
         case 'WMTS' :
+            var matrixIds;
             var visibility = visible;
             //if extra layer take visibility from options if exists
             if (!visible && options.visibility != undefined) {
                 visibility = options.visibility;
             }
+
+            if (options.origins) {
+                matrixIds = {};
+                if (typeof eval(options.matrixIds) == 'object') {
+                    eval(options.matrixIds).forEach(function (value, index, arr) {
+                        matrixIds[index] = {
+                            identifier: value,
+                            topLeftCorner: new OpenLayers.LonLat.fromArray(eval(options.origins)[index])
+                        };
+                    });
+                }
+            } else {
+                matrixIds = eval(options.matrixIds);
+            }
+
             var layer = new OpenLayers.Layer.WMTS({
                 name: title,
                 visibility: visibility,
-		opacity:options.opacity, 
-		url: options.url,
+                opacity: options.opacity,
+                url: options.url,
                 layer: options.layer,
                 requestEncoding: options.requestEncoding,
                 matrixSet: options.matrixSet,
-                matrixIds: eval(options.matrixIds),
+                matrixIds: matrixIds,
                 format: options.format,
                 style: options.style,
                 displayOutsideMaxExtent: false,
