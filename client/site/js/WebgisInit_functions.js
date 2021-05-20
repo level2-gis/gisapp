@@ -1868,6 +1868,12 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 handler: function () {
                     searchPanelInstance.resultsGrid.filters.clearFilters();
                 }
+            }, {
+                iconCls: 'x-clear-icon',
+                tooltip: TR.clearSelection,
+                //scale: 'medium',
+                //disabled: true,
+                handler: clearTableSelection
             }];
 
             if(searchPanelInstance.hasGeom) {
@@ -1902,13 +1908,6 @@ function showSearchPanelResults(searchPanelInstance, features) {
             }
 
             toolBar.push(
-                //{
-                //    iconCls: 'x-clear-icon',
-                //    tooltip: TR.clearSelection,
-                //    //scale: 'medium',
-                //    //disabled: true,
-                //    handler: clearTableSelection
-                //},
                 {
                     itemId: 'loadmore',
                     iconCls: 'x-exclamation-icon',
