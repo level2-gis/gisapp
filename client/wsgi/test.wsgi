@@ -14,7 +14,7 @@ def application(environ, start_response):
   resultString += u'Python sys.prefix = %s\n' % repr(sys.prefix)
 
   try:
-    from qgis.core import QgsApplication
+    from qgis.core import QgsApplication, Qgis
   except:
     resultString += str(sys.exc_info())
   else:
