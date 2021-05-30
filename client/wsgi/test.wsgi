@@ -6,7 +6,7 @@ from webob import Response
 
 #os.environ['PYTHONPATH'] = '/usr/share/qgis/python'
 #os.environ['LD_LIBRARY_PATH'] = '/usr/lib/qgis'
-#os.environ['DISPLAY'] = ':0'
+os.environ['DISPLAY'] = ':99'
 
 def application(environ, start_response):
 
