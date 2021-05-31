@@ -6,6 +6,7 @@ from webob import Response
 
 #os.environ['PYTHONPATH'] = '/usr/share/qgis/python'
 #os.environ['LD_LIBRARY_PATH'] = '/usr/lib/qgis'
+#need to setup xvfb - https://docs.qgis.org/3.16/en/docs/server_manual/getting_started.html#xvfb
 os.environ['DISPLAY'] = ':99'
 
 def application(environ, start_response):
