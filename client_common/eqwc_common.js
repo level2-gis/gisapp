@@ -31,7 +31,7 @@ Eqwc.geolocationErrors = {
 Eqwc.common = {};
 
 Eqwc.common.createHyperlink = function(att, val, pattern) {
-    if(att == null || att == '') {
+    if(att == null || att == '' || typeof att == 'number') {
         return att;
     }
 

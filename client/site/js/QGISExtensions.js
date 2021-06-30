@@ -498,22 +498,26 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 }
                 delete this.customParams.filterToAdd;
             } else {
-                if(thematicLayer.params.FILTER) {
-                    printUrl += '&FILTER='+encodeURIComponent(thematicLayer.params.FILTER);
+                if (thematicLayer.params.FILTER) {
+                    printUrl += '&FILTER=' + encodeURIComponent(thematicLayer.params.FILTER);
                 }
             }
 
             printUrl += '&' + Ext.urlEncode(this.customParams);
 
             if (thematicLayer.params.OPACITIES) {
-                printUrl += '&OPACITIES='+encodeURIComponent(thematicLayer.params.OPACITIES);
+                printUrl += '&OPACITIES=' + encodeURIComponent(thematicLayer.params.OPACITIES);
             }
 
-            if (extraDefinition.length>0) {
+            if (thematicLayer.params.SELECTION) {
+                printUrl += '&SELECTION=' + encodeURIComponent(thematicLayer.params.SELECTION);
+            }
+
+            if (extraDefinition.length > 0) {
                 printUrl += '&' + extraDefinition.join('&');
             }
 
-            if (baseDefinition>'') {
+            if (baseDefinition > '') {
                 printUrl += '&' + baseDefinition;
             }
 
@@ -996,7 +1000,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         //} catch (e) {
         //    // Logging?
         //}
-        this.fireEvent("featureselectioncleared");
+        //this.fireEvent("featureselectioncleared");
         this.fireEvent("searchformsubmitted");
 
         //loading mask

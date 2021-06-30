@@ -515,15 +515,31 @@ function zoomHandler(grid, rowIndex, colIndex, item, e) {
 
 function showRecordSelected(args) {
 
-        //var layer = args["layer"] == null ? args["fid"].split('.')[0] : args["layer"];
-        //var layerId = wmsLoader.layerTitleNameMapping[layer];
+    var layer = args["layer"] == null ? args["fid"].split('.')[0] : args["layer"];
+    var layerId = wmsLoader.layerTitleNameMapping[layer];
 
-        // select feature in layer
-        //this is yellow selection, problem is that we get double request to server, one for selection + another to zoom mao
-        //currently disabled
-        //thematicLayer.mergeNewParams({
-        //    "SELECTION": layerId + ":" + args["id"]
-    //});
+    // select feature in layer, selection color is handled by server from qgis project properties
+    if (layerId) {
+        thematicLayer.mergeNewParams({
+            "SELECTION": layerId + ":" + args["id"]
+        });
+    }
+
+    if (visibleLayers.indexOf(layerId) == -1) {
+        var found = false;
+        layerTree.root.cascade(function (n) {
+            if (n.text == layer) {
+                found = n;
+                return false;
+            }
+        });
+        if (found) {
+            // Bring it up!
+            found.getUI().toggleCheck(true);
+            // Spread the word ...
+            layerTree.fireEvent("leafschange");
+        }
+    }
 
     if (args["doZoomToExtent"]) {
         geoExtMap.map.zoomToExtent(args["bbox"]);

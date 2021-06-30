@@ -362,10 +362,11 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
             var matrixIds = [];
             var resolutions = [];
-            var serverResolutions = eval(definition.serverResolutions);
+            var serverResolutions = JSON.parse(definition.serverResolutions);
             var projectionExtent = Config.map.projection.getExtent();
             var size = ol.extent.getWidth(projectionExtent) / 256;
             var num = serverResolutions !== undefined ? serverResolutions.length : eval(definition.numZoomLevels);
+            var origins;
 
             //FIX for removing extent from OL2 definition
             var extent = Config.extractStringFromObject("OpenLayers", definition.maxExtent);
@@ -377,6 +378,10 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
             if (definition.matrixIds !== undefined) {
                 matrixIds = eval(definition.matrixIds);
+            }
+
+            if (definition.origins !== undefined) {
+                origins = JSON.parse(definition.origins);
             }
 
             if (serverResolutions !== undefined) {
@@ -402,9 +407,10 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
                     projection: Config.map.projection,
                     format: definition.format,
                     tileGrid: new ol.tilegrid.WMTS({
-                        extent: eval(extent),
+                        extent: JSON.parse(extent),
                         resolutions: resolutions,
-                        matrixIds: matrixIds
+                        matrixIds: matrixIds,
+                        origins: origins
                     })
                 })
             });
