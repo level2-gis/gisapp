@@ -289,8 +289,11 @@ try {
     //session check
     session_start();
 
-    if (!($helpers->isValidUserProj($map))) {
-        throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
+    //don't check for valid project for wms_* projects used to proxy external layers. This fixes SSL handshake failed
+    if (strpos($map) != 0) {
+        if (!($helpers->isValidUserProj($map))) {
+            throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
+        }
     }
 
     //get project path from cache or session
