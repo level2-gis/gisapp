@@ -290,7 +290,7 @@ try {
     session_start();
 
     //don't check for valid project for wms_* projects used to proxy external layers. This fixes SSL handshake failed
-    if (strpos($map) != 0) {
+    if (strpos($map, "wms_") != 0) {
         if (!($helpers->isValidUserProj($map))) {
             throw new Exception\ClientException("Session time out or unathorized access!", new Request('GET', QGISSERVERURL));
         }
