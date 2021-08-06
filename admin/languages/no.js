@@ -78,7 +78,8 @@ var TR = {
     bookmarks: "Bookmarks",
     bookmarkName: "Name",
     bookmarkGroup: "Group",
-    bookmarkEmptyGroupText: "no group"
+    bookmarkEmptyGroupText: "no group",
+    link: "LINK"
 };
 
 /**::

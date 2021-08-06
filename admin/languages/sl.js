@@ -45,7 +45,7 @@ var TR = {
     fiElevation: 'nadmorska višina',
     cancel: 'Prekini',
     send: 'Pošlji',
-    feedback: 'Sporoči',
+    feedback: 'Sporočilo uporabnika',
     feedbackTitle: 'Pošlji svoje sporočilo',
     feedbackDescription: 'Tvoje ime, projekt in trenutna povezava do karte se bodo dodali v sporočilo!',
     feedbackErrorTitle: "Napaka",
@@ -78,7 +78,8 @@ var TR = {
     bookmarks: "Zaznamki",
     bookmarkName: "naziv",
     bookmarkGroup: "Skupina",
-    bookmarkEmptyGroupText: "brez skupine"
+    bookmarkEmptyGroupText: "brez skupine",
+    link: "POVEZAVA"
 };
 
 /**
@@ -144,7 +145,7 @@ I18n.geolocation = {
 
 I18n.login = {
     header: "Login",
-    user: "User",
+    user: "uporabnik",
     password: "Password",
     signIn: "Login",
     cancel: "Cancel",

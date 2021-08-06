@@ -2660,12 +2660,13 @@ function feedbackHandler(btn) {
         var form = feedbackWin.items.get(0).getForm();
         var message = form.findField('msg').getValue();
         var link = createPermalink();
-        data.push(I18n.login.user+': '+projectData.user);
-        data.push(message);
-        data.push(projectData.project + ': <a href="'+link+'">LINK<a/>');
+        data.push(message.replaceAll('\n', '<br>'));
+        data.push(" ");
+        data.push(I18n.login.user + ': ' + projectData.user);
+        data.push('<a href="' + link + '">' + TR.link + '<a/>');
         feedbackWin.hide();
         form.reset();
-        sendMail(projectData.userFeedbackMailto, 'EQWC '+projectData.project+" "+ TR.feedback, data.join('<br>'), silent);
+        sendMail(projectData.userFeedbackMailto, projectData.title + " - " + TR.feedback, data.join('<br>'), silent);
     }
 }
 
