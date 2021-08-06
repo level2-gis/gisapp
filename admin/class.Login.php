@@ -352,6 +352,24 @@ class Login
                 return false;
             }
 
+            //search configs
+            $project_settings = $helpers->getProjectConfigs(dirname($projectPath['message']) . DIRECTORY_SEPARATOR . $project . '.json');
+            if (!($project_settings['status'])) {
+                $this->feedback = $project_settings['message'];
+                return false;
+            }
+
+            //mask
+            //TODO use optional user filter for mask
+            $mask = json_decode($project_settings['message'])->mask;
+            if (!empty($mask)) {
+                $_SESSION['mask_layer'] = $mask->layerid;
+                $_SESSION['mask_filter'] = $mask->filter;
+            } else {
+                unset($_SESSION['mask_layer']);
+                unset($_SESSION['mask_filter']);
+            }
+
             //get QGIS project properties
             $project_qgs = $helpers->getQgsProjectProperties($projectPath['message']);
             if (property_exists($project_qgs, "message")) {
@@ -371,13 +389,6 @@ class Login
             $project_description = $helpers->getProjectConfigs(dirname($projectPath['message']) . DIRECTORY_SEPARATOR . $project . '.html');
             if (!($project_description['status'])) {
                 $this->feedback = $project_description['message'];
-                return false;
-            }
-
-            //search configs
-            $project_settings = $helpers->getProjectConfigs(dirname($projectPath['message']) . DIRECTORY_SEPARATOR . $project . '.json');
-            if (!($project_settings['status'])) {
-                $this->feedback = $project_settings['message'];
                 return false;
             }
 

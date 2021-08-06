@@ -66,8 +66,13 @@ function loadWMSConfig(topicName) {
                 attr.checked = undefined;
             }
 
+            //layer must be in projectData.layers, if not hide it!
+            if (projectData.layers[attr.layer.metadata.prefix] === undefined && attr.leaf) {
+                attr.hidden = true;
+            }
+
             //dont' create node for hidden elements
-            if(!attr.hidden) {
+            if (!attr.hidden) {
                 return QGIS.WMSCapabilitiesLoader.prototype.createNode.apply(this, [attr]);
             }
         },

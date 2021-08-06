@@ -161,7 +161,18 @@ class Helpers
         return ["status" => $status, "message" => $data];
     }
 
-    private function getQgsProjectExtent($xml) {
+    public static function getMaskLayerIdFromSession()
+    {
+        return isset($_SESSION['mask_layer']) ? $_SESSION['mask_layer'] : null;
+    }
+
+    public static function getMaskFilterFromSession()
+    {
+        return isset($_SESSION['mask_filter']) ? $_SESSION['mask_filter'] : null;
+    }
+
+    private function getQgsProjectExtent($xml)
+    {
         $ret = (array)($xml->properties->WMSExtent->value);
         if (empty($ret)) {
             $ret = [
@@ -314,8 +325,13 @@ class Helpers
                             $lay->identify = (int)$lay_info["message"]["identify"];
 
                             //set no geometry layers to false
-                            if($lay->geom_type == 'No geometry') {
+                            if ($lay->geom_type == 'No geometry') {
                                 $lay->visini = false;
+                            }
+
+                            //exclude mask layer
+                            if ($lay->id == self::getMaskLayerIdFromSession()) {
+                                continue;
                             }
                         }
                     }

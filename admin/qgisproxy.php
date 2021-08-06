@@ -162,12 +162,19 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
 
     if ($query_arr["REQUEST"] != null) {
         switch ($query_arr["REQUEST"]) {
+            case "GetMap":
+                if (!empty(Helpers::getMaskLayerIdFromSession())) {
+                    $query_arr["LAYERS"] = $query_arr["LAYERS"] . "," . Helpers::getMaskLayerIdFromSession();
+                    $query_arr["FILTER"] = empty($query_arr["FILTER"]) ? Helpers::getMaskLayerIdFromSession() . ":" . Helpers::getMaskFilterFromSession() : $query_arr["FILTER"] . ';' . Helpers::getMaskLayerIdFromSession() . ":" . Helpers::getMaskFilterFromSession();
+                }
+                break;
+
             case "GetProjectSettings":
                 $cacheKey = $map . $sep . "XML" . $sep . $query_arr["REQUEST"];
                 $contentType = "text/xml";
                 break;
             case "GetLegendGraphics":
-                if(empty($query_arr['STYLES'])) {
+                if (empty($query_arr['STYLES'])) {
                     $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS']);
                 } else {
                     $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS'] . $sep . Helpers::normalize($query_arr['STYLES']));
@@ -183,6 +190,11 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
                 break;
             case "GetPrint":
                 handleGetPrint($query_arr, $map, $user);
+
+                if (!empty(Helpers::getMaskLayerIdFromSession())) {
+                    $query_arr["LAYERS"] = $query_arr["LAYERS"] . "," . Helpers::getMaskLayerIdFromSession();
+                    $query_arr["FILTER"] = empty($query_arr["FILTER"]) ? Helpers::getMaskLayerIdFromSession() . ":" . Helpers::getMaskFilterFromSession() : $query_arr["FILTER"] . ';' . Helpers::getMaskLayerIdFromSession() . ":" . Helpers::getMaskFilterFromSession();
+                }
                 break;
 //            case "GetFeatureInfo":
 //                //skip for now
