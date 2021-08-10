@@ -171,6 +171,11 @@ class Helpers
         return isset($_SESSION['mask_filter']) ? $_SESSION['mask_filter'] : null;
     }
 
+    public static function getMaskWktFromSession()
+    {
+        return isset($_SESSION['mask_wkt']) ? $_SESSION['mask_wkt'] : null;
+    }
+
     private function getQgsProjectExtent($xml)
     {
         $ret = (array)($xml->properties->WMSExtent->value);

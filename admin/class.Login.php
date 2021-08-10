@@ -360,14 +360,15 @@ class Login
             }
 
             //mask
-            //TODO use optional user filter for mask
             $mask = json_decode($project_settings['message'])->mask;
             if (!empty($mask)) {
                 $_SESSION['mask_layer'] = $mask->layerid;
-                $_SESSION['mask_filter'] = $mask->filter;
+                $_SESSION['mask_filter'] = empty($check['mask_filter']) ? $mask->filter : $check['mask_filter'];
+                $_SESSION['mask_wkt'] = empty($check['mask_wkt']) ? $mask->wkt : $check['mask_wkt'];
             } else {
                 unset($_SESSION['mask_layer']);
                 unset($_SESSION['mask_filter']);
+                unset($_SESSION['mask_wkt']);
             }
 
             //get QGIS project properties

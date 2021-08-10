@@ -36,7 +36,9 @@ class DbLoader
             $result_row = $query->fetchObject();
             if ($result_row) {
                 $role = isset($result_row->role) ? $result_row->role : null;
-                return ['check' => $result_row->check_user_project, 'role' => $role];
+                $mask_filter = isset($result_row->mask_filter) ? $result_row->mask_filter : null;
+                $mask_wkt = isset($result_row->mask_wkt) ? $result_row->mask_wkt : null;
+                return ['check' => $result_row->check_user_project, 'role' => $role, 'mask_filter' => $mask_filter, 'mask_wkt' => $mask_wkt];
             } else
                 return ['check' => 'TR.loginFailMessage'];
         }
