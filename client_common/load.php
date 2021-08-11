@@ -6,6 +6,7 @@ session_start();
 $user = "" . $_SESSION['user_name'];
 $project = "" . $_SESSION['project'];
 $upload = "" . $_SESSION['upload_dir'];
+$mask_wkt = isset($_SESSION['mask_wkt']) ? true : false;
 
 $data = json_decode($_SESSION['data']);
 $settings = json_decode($_SESSION['settings']);
@@ -132,17 +133,18 @@ projectData.crs_description = '<?php echo $qgs->crs_description ?>';
 projectData.crs_list = eval(<?php echo json_encode($qgs->crs_list) ?>);
 projectData.proj4 = '<?php echo $qgs->proj4 ?>';
 projectData.title = '<?php echo $data->project_display_name ?>';
-projectData.extent = '<?php echo implode(',',$qgs->extent) ?>';
+projectData.extent = '<?php echo implode(',', $qgs->extent) ?>';
 projectData.layers = eval(<?php echo json_encode($qgs->layers) ?>);
 projectData.use_ids = <?php echo json_encode($qgs->use_ids) ?>;
+projectData.use_mask_wkt = <?php echo json_encode($mask_wkt) ?>;
 projectData.add_geom = <?php echo json_encode($qgs->add_geom_to_fi) ?>;
 projectData.bookmarks = '<?php echo json_encode($qgs->bookmarks) ?>';
 
 projectData.uploadDir = '<?php echo $upload ?>'+projectData.client_name+'/'+projectData.project+'/';
 
 projectData.baseLayers = function () {
-    var bl = eval(<?php echo json_encode($data->base_layers) ?>);
-    return bl;
+var bl = eval(<?php echo json_encode($data->base_layers) ?>);
+return bl;
 };
 
 projectData.extraLayers = function () {

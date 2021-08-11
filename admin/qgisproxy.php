@@ -65,6 +65,8 @@ function doPostRequest($query_arr, $client)
 
             $request_params = $data;
 
+        } else {
+            $request_params = $query_arr;
         }
 
     }
@@ -110,7 +112,6 @@ function doPostRequest($query_arr, $client)
 
 
     $response = $client->send($new_request, [
-        'query' => $query_arr,
         'body' => $request_params,
         'http_errors' => true,
         //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
@@ -323,12 +324,18 @@ try {
 
     $client = new Client();
 
+    if (!empty(Helpers::getMaskWktFromSession()) && $query_arr["REQUEST"] == 'GetFeatureInfo') {
+        $query_arr["FILTER_GEOM"] = Helpers::getMaskWktFromSession();
+        unset($query_arr["FILTER"]);
+        doPostRequest($query_arr, $client, $http_ver);
+        return;
+    }
+
     if ($request_method == 'GET') {
 
         doGetRequest($query_arr, $map, $client, $http_ver, $user);
 
-    }
-    elseif ($request_method == 'POST') {
+    } elseif ($request_method == 'POST') {
 
         //check if user is guest
         if ($user != null && $user == 'guest') {

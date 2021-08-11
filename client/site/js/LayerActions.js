@@ -704,7 +704,7 @@ function openAttTable() {
         layer = new QGIS.SearchPanel({
             hasGeom: hasGeom,
             useWmsRequest: true,
-            useBbox: (Eqwc.settings.syncAttributeTableWithView && hasGeom) ? Eqwc.settings.syncAttributeTableWithView : false,
+            useBbox: (Eqwc.settings.syncAttributeTableWithView && hasGeom && !projectData.use_mask_wkt) ? true : false,
             wmsFilter: filter,
             queryLayer: myQueryLayerName,
             gridColumns: getLayerAttributes(myQueryLayerName).columns,

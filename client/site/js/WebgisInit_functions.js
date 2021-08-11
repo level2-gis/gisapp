@@ -1881,7 +1881,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 handler: clearTableSelection
             }];
 
-            if(searchPanelInstance.hasGeom) {
+            if (searchPanelInstance.useBbox) {
                 toolBar.push({
                     iconCls: 'x-extent-icon',
                     tooltip: TR.tableUseExtent,
@@ -1892,23 +1892,22 @@ function showSearchPanelResults(searchPanelInstance, features) {
                     toggleHandler: switchBbox,
                     scope: searchPanelInstance
                 });
-            } else {
-                if (searchPanelInstance.gridEditable && (typeof(prepareEdit) == 'function')) {
-                    if(Eqwc.common.findParentRelation(this.gridTitle) == false) {
-                        toolBar.push({
-                            iconCls: 'x-add-icon',
-                            tooltip: TR.tableAddRecord,
-                            handler: addRecord,
-                            scope: searchPanelInstance
-                        });
-                    } else if (projectData.relations.hideJoinField == false) {
-                        toolBar.push({
-                            iconCls: 'x-add-icon',
-                            tooltip: TR.tableAddRecord,
-                            handler: addRecord,
-                            scope: searchPanelInstance
-                        });
-                    }
+            }
+            if (!searchPanelInstance.hasGeom && searchPanelInstance.gridEditable && (typeof (prepareEdit) == 'function')) {
+                if (Eqwc.common.findParentRelation(this.gridTitle) == false) {
+                    toolBar.push({
+                        iconCls: 'x-add-icon',
+                        tooltip: TR.tableAddRecord,
+                        handler: addRecord,
+                        scope: searchPanelInstance
+                    });
+                } else if (projectData.relations.hideJoinField == false) {
+                    toolBar.push({
+                        iconCls: 'x-add-icon',
+                        tooltip: TR.tableAddRecord,
+                        handler: addRecord,
+                        scope: searchPanelInstance
+                    });
                 }
             }
 
