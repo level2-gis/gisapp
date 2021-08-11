@@ -1088,8 +1088,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                 var xx = geoExtMap.map.getExtent().toGeometry();
                 params.FILTER_GEOM = xx.toString();
             } else {
+                var bounds = geoExtMap.map.calculateBounds();
                 params.FILTER = filter;
-                params.BBOX=geoExtMap.map.calculateBounds().left+","+geoExtMap.map.calculateBounds().bottom+","+geoExtMap.map.calculateBounds().right+","+geoExtMap.map.calculateBounds().top;
+                params.BBOX = bounds.left + "," + bounds.bottom + "," + bounds.right + "," + bounds.top;
             }
 
         } else {
