@@ -67,6 +67,7 @@ function doPostRequest($query_arr, $client)
 
         } else {
             $request_params = $query_arr;
+            $query_arr = null;
         }
 
     }
@@ -110,13 +111,23 @@ function doPostRequest($query_arr, $client)
     //standard synhrone request
     $new_request = new Request('POST', QGISSERVERURL);
 
-
-    $response = $client->send($new_request, [
-        'body' => $request_params,
-        'http_errors' => true,
-        //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
-        'verify' => false
-    ]);
+    //in case of mask_wkt we get post request in form of array for WMS GetFeatureInfo
+    if (is_array($request_params)) {
+        $response = $client->send($new_request, [
+            'form_params' => $request_params,
+            'http_errors' => true,
+            //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+            'verify' => false
+        ]);
+    } else {
+        $response = $client->send($new_request, [
+            'query' => $query_arr,
+            'body' => $request_params,
+            'http_errors' => true,
+            //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
+            'verify' => false
+        ]);
+    }
 
     $contentType = $response->getHeaderLine('Content-Type');
     $contentLength = $response->getHeaderLine('Content-Length');
@@ -324,7 +335,7 @@ try {
 
     $client = new Client();
 
-    if (!empty(Helpers::getMaskWktFromSession()) && $query_arr["REQUEST"] == 'GetFeatureInfo') {
+    if (!empty(Helpers::getMaskWktFromSession()) && array_key_exists('REQUEST', $query_arr) && $query_arr["REQUEST"] == 'GetFeatureInfo') {
         $query_arr["FILTER_GEOM"] = Helpers::getMaskWktFromSession();
         unset($query_arr["FILTER"]);
         doPostRequest($query_arr, $client, $http_ver);

@@ -360,8 +360,12 @@ class Login
             }
 
             //mask
-            $mask = json_decode($project_settings['message'])->mask;
-            if (!empty($mask)) {
+            $proj_obj = json_decode($project_settings['message']);
+            if (isset($proj_obj->mask)) {
+                $mask = $proj_obj->mask;
+                if (!property_exists($mask, "wkt")) {
+                    $mask->wkt = null;
+                }
                 $_SESSION['mask_layer'] = $mask->layerid;
                 $_SESSION['mask_filter'] = empty($check['mask_filter']) ? $mask->filter : $check['mask_filter'];
                 $_SESSION['mask_wkt'] = empty($check['mask_wkt']) ? $mask->wkt : $check['mask_wkt'];
