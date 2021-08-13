@@ -365,6 +365,28 @@ function getExportWin(layer, geom) {
         crsCombo.store.loadData(projectData.crsComboStore());
         formatCombo.store.loadData(Eqwc.settings.vectorExportFormats);
 
+        var extentConfig = {
+            xtype: 'radiogroup',
+            allowBlank: false,
+            fieldLabel: TR.exportExtent,
+            name: 'extent_group',
+            border: false,
+            itemCls: 'x-check-group-alt',
+            columns: 1,
+            vertical: true,
+            submitValue: false,
+            items: [{
+                boxLabel: contextUseExtent[lang],
+                inputValue: 'map',
+                name: 'extent',
+                checked: true
+            }, {
+                boxLabel: TR.exportLayerExtent,
+                inputValue: 'layer',
+                name: 'extent'
+            }]
+        };
+
         var items = [
             {
                 xtype: 'displayfield',
@@ -374,30 +396,12 @@ function getExportWin(layer, geom) {
                 inputValue: layer
             },
             formatCombo,
-            crsCombo,
-            {
-                xtype: 'radiogroup',
-                allowBlank: false,
-                fieldLabel: TR.exportExtent,
-                name: 'extent_group',
-                border: false,
-                itemCls: 'x-check-group-alt',
-                columns: 1,
-                vertical: true,
-                submitValue: false,
-                items: [{
-                    boxLabel: contextUseExtent[lang],
-                    inputValue: 'map',
-                    name: 'extent',
-                    checked: true
-                },{
-                    boxLabel: TR.exportLayerExtent,
-                    inputValue: 'layer',
-                    name: 'extent'
-                }]
-            },
-            filter
+            crsCombo
         ];
+        if (!projectData.use_mask_wkt) {
+            items.push(extentConfig);
+        }
+        items.push(filter);
     } else {
         formatCombo.store.loadData(Eqwc.settings.tableExportFormats);
 
