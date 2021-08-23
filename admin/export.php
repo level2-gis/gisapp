@@ -349,6 +349,14 @@ try {
         throw new Exception("Session time out or unathorized access!");
     }
 
+    //if user is limited means export restriction
+    if (isset($_SESSION["role"])) {
+        $role = $_SESSION["role"];
+        if ($role == 'user-limit') {
+            throw new Exception("No permission!");
+        }
+    }
+
     //get project path from session
     $projectPath = $_SESSION["project_path"];
 
