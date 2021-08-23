@@ -6,6 +6,7 @@ session_start();
 $user = "" . $_SESSION['user_name'];
 $project = "" . $_SESSION['project'];
 $upload = "" . $_SESSION['upload_dir'];
+$role = "" . $_SESSION['role'];
 $mask_wkt = isset($_SESSION['mask_wkt']) ? true : false;
 
 $data = json_decode($_SESSION['data']);
@@ -104,6 +105,7 @@ projectData.link1 = '<?php echo $data->link1 ?>';
 projectData.link2 = '<?php echo $data->link2 ?>';
 projectData.link3 = '<?php echo $data->link3 ?>';
 projectData.lang = '<?php echo $lang ?>';
+projectData.role = '<?php echo $role ?>';
 
 projectData.search = eval(<?php echo json_encode($settings->search) ?>);
 projectData.layerSpecifics = eval(<?php echo json_encode($settings->layerSpecifics) ?>);

@@ -458,7 +458,7 @@ function contextMenuHandler(node) {
     //disable export for guest users
     var exportMenu = node.menu.getComponent('contextExport');
     if (exportMenu != undefined) {
-        if (projectData.user == 'guest')
+        if (projectData.user == 'guest' || projectData.role.indexOf('-limit') > -1)
             exportMenu.setDisabled(true);
         else
             exportMenu.setDisabled(false);
