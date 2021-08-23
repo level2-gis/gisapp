@@ -100,26 +100,31 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     $filter = html_entity_decode($query_arr['filter'], ENT_QUOTES);
     $options .= "-preserve_fid ";
 
-    //export only selection inside bounding box if provided
-    //we have to transform extent to layers CRS on client side
-    //if using gdal 2.0 this will not be necessary, just use -spat_srs
-    if ($query_arr['layer_extent']!='') {
-        $extent = explode(",", $query_arr['layer_extent']);
-        $xmin = $extent[0];
-        $ymin = $extent[1];
-        $xmax = $extent[2];
-        $ymax = $extent[3];
-        $options .= '-spat '. $xmin . ' ' . $ymin . ' ' . $xmax . ' ' . $ymax . ' ';
+    //only check export if mask_wkt is empty
+    if (empty(Helpers::getMaskWktFromSession())) {
+        //export only selection inside bounding box if provided
+        //we have to transform extent to layers CRS on client side
+        //if using gdal 2.0 this will not be necessary, just use -spat_srs
+        if ($query_arr['layer_extent'] != '') {
+            $extent = explode(",", $query_arr['layer_extent']);
+            $xmin = $extent[0];
+            $ymin = $extent[1];
+            $xmax = $extent[2];
+            $ymax = $extent[3];
+            $options .= '-spat ' . $xmin . ' ' . $ymin . ' ' . $xmax . ' ' . $ymax . ' ';
+        }
+    } else {
+        $options .= '-clipsrc "' . Helpers::getMaskWktFromSession() . '" ';
     }
 
     //field set
-    if ($query_arr['fields']!='') {
+    if ($query_arr['fields'] != '') {
         //primary key if exists must be removed from fields, otherwise we get ogr2ogr error
         $key = null;
-        if ($sourceProvider=='postgres') {
-            $key = str_replace("'",'',$lay_info["message"]['key']);
+        if ($sourceProvider == 'postgres') {
+            $key = str_replace("'", '', $lay_info["message"]['key']);
         }
-        $fields = array_diff(explode(',',$query_arr['fields']),[$key]);
+        $fields = array_diff(explode(',', $query_arr['fields']), [$key]);
         $options .= '-select "' . implode(',',$fields) . '" ';
 
         //sql filter from qgis project layer properties combine with table filter from request
