@@ -1030,11 +1030,6 @@ Gui.updateTranslations = function () {
     $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
 
     $('#panelFeatureInfo b').html(I18n.featureInfo.header);
-
-    //update all backbuttons at once
-    $('#back').html('aaaaa');
-    //$('#back').button('refresh');
-    $('#back').buttonMarkup("refresh");
 };
 
 //Gui.toggleFollowing = function(enabled) {
