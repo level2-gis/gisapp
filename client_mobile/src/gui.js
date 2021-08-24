@@ -30,13 +30,13 @@ Gui.updateLayout = function () {
     $('#map').width(window.innerWidth);
 
     // limit panels to screen height
-    $('#panelTopics').height(window.innerHeight - 60);
-    $('#panelLayerAll').height(window.innerHeight - 60);
-    $('#panelLayerOrder').height(window.innerHeight - 60);
-    $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 40);
+    $('#panelTopics').height(window.innerHeight - 100);
+    $('#panelLayerAll').height(window.innerHeight - 100);
+    $('#panelLayerOrder').height(window.innerHeight - 100);
+    $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 80);
     $('#panelSearch .ui-listview').height(window.innerHeight);
-    $('#panelPropertiesMap').height(window.innerHeight - 60);
-    $('#panelPropertiesEditor').height(window.innerHeight - 60);
+    $('#panelPropertiesMap').height(window.innerHeight - 100);
+    $('#panelPropertiesEditor').height(window.innerHeight - 100);
 };
 
 // show selected panel
@@ -1030,6 +1030,11 @@ Gui.updateTranslations = function () {
     $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
 
     $('#panelFeatureInfo b').html(I18n.featureInfo.header);
+
+    //update all backbuttons at once
+    $('#back').html('aaaaa');
+    //$('#back').button('refresh');
+    $('#back').buttonMarkup("refresh");
 };
 
 //Gui.toggleFollowing = function(enabled) {

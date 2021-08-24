@@ -314,6 +314,10 @@ body {
     height: 20px;
 }
 
+a.backbutton {
+    margin-top: 10px;
+}
+
 /* OpenLayers 3 */
 
 #map {
