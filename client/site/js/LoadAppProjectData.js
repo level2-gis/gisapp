@@ -96,7 +96,7 @@ function makeLayer(layDef, visible) {
                 numZoomLevels: eval(options.numZoomLevels),
                 maxResolution: eval(options.maxResolution),
                 resolutions: eval(options.resolutions),
-                serverResolutions: eval(options.serverResolutions),
+                serverResolutions: typeof options.serverResolutions == 'string' ? JSON.parse(options.serverResolutions) : options.serverResolutions,
                 print: eval(options.print)
             });
 

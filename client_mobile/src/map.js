@@ -362,7 +362,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
             var matrixIds = [];
             var resolutions = [];
-            var serverResolutions = JSON.parse(definition.serverResolutions);
+            var serverResolutions = typeof definition.serverResolutions == 'string' ? JSON.parse(definition.serverResolutions) : definition.serverResolutions;
             var projectionExtent = Config.map.projection.getExtent();
             var size = ol.extent.getWidth(projectionExtent) / 256;
             var num = serverResolutions !== undefined ? serverResolutions.length : eval(definition.numZoomLevels);
