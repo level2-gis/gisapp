@@ -620,12 +620,13 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
     srs: null,
     limit: null,
     filter: null,
+    connect: null,
 
-    initComponent: function() {
+    initComponent: function () {
 
         //this.emptyText = searchFieldDefaultTextString[lang];
         this.triggerConfig = { // we use a default clear trigger here
-            tag: "img", src: Ext.BLANK_IMAGE_URL, cls:'x-form-trigger x-form-clear-trigger'
+            tag: "img", src: Ext.BLANK_IMAGE_URL, cls: 'x-form-trigger x-form-clear-trigger'
         };
         this.on("keyUp", this.keyUpHandler);
         this.on("afterrender", this.afterrenderHandler);
@@ -637,11 +638,14 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
             srs: this.srs
         };
 
-        if(this.limit) {
+        if (this.limit) {
             params.limit = this.limit;
         }
-        if(this.filter) {
+        if (this.filter) {
             params.filter = this.filter;
+        }
+        if (this.connect) {
+            params.connect = this.connect;
         }
 
         this.store = new Ext.data.JsonStore({
@@ -782,7 +786,8 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
                     searchtable: record.get('searchtable'),
                     showlayer: record.get('showlayer'),
                     displaytext: record.get('displaytext'),
-                    srs: this.srs
+                    srs: this.srs,
+                    connect: this.connect
                 }
             });
         }

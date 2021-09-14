@@ -12,21 +12,28 @@ import psycopg2 #PostgreSQL DB Connection
 import psycopg2.extras #z.b. für named column indexes
 import sys #für Fehlerreporting
 import os
+import importlib
 
 # append the Python path with the wsgi-directory
 qwcPath = os.path.dirname(__file__)
 if not qwcPath in sys.path:
   sys.path.append(qwcPath)
-    
-import qwc_connect
 
 def application(environ, start_response):
   request = Request(environ)
 
-  searchtable = ""
-  sql = ""
-
   try:
+
+    #which connection to load
+    connect = "qwc_connect"
+    if "connect" in request.params:
+      if request.params["connect"] > "":
+        connect = request.params["connect"]
+
+    qwc_connect = importlib.import_module(connect)
+
+    searchtable = ""
+    sql = ""
 
     srs = request.params["srs"]
     displaytext = request.params["displaytext"]
