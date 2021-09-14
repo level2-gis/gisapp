@@ -7,7 +7,7 @@
 from __future__ import print_function
 
 # make themes choosable in search combo
-THEMES_CHOOSABLE = True
+THEMES_CHOOSABLE = False
 # zoom to this bbox if a layer is chosen in the search combo [minx, miny, maxx, maxy]
 # set to None if extent should not be changed
 MAX_BBOX = None
