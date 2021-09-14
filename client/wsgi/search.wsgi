@@ -31,19 +31,19 @@ if not qwcPath in sys.path:
 def application(environ, start_response):
   request = Request(environ)
 
-  #which connection to load
-  connect = "qwc_connect"
-  if "connect" in request.params:
-    connect = request.params["connect"]
-
-  qwc_connect = importlib.import_module(connect)
-
-  searchtables = []; # enter your default searchtable(s) here
-  searchtablesstring = '';
-
-  sql = ""
-
   try:
+
+    #which connection to load
+    connect = "qwc_connect"
+    if "connect" in request.params:
+      connect = request.params["connect"]
+
+    qwc_connect = importlib.import_module(connect)
+
+    searchtables = []; # enter your default searchtable(s) here
+    searchtablesstring = '';
+
+    sql = ""
 
     if "searchtables" in request.params:
       searchtablesstring = request.params["searchtables"]
