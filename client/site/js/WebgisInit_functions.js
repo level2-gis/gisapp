@@ -1097,11 +1097,14 @@ function postLoading() {
                     geomUrl: searchBoxGetGeomURL,
                     srs: projectData.crs.split(':')[1]        //this is the map coordinate system and that's what we need to get from server
                 }
-                if(projectData.wsgi.limit) {
+                if (projectData.wsgi.limit) {
                     conf.limit = projectData.wsgi.limit;
                 }
-                if(projectData.wsgi.filter) {
+                if (projectData.wsgi.filter) {
                     conf.filter = projectData.wsgi.filter;
+                }
+                if (projectData.wsgi.connect) {
+                    conf.connect = projectData.wsgi.connect;
                 }
                 qgisSearchCombo = new QGIS.SearchComboBox(conf);
             }

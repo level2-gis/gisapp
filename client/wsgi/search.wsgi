@@ -34,7 +34,7 @@ def application(environ, start_response):
   #which connection to load
   connect = "qwc_connect"
   if "connect" in request.params:
-    _connect = request.params["connect"]
+    connect = request.params["connect"]
 
   qwc_connect = importlib.import_module(connect)
 
