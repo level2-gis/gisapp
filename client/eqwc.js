@@ -2,8 +2,8 @@
  *
  * eqwc.js -- build of Extended QGIS Web Client
  *
- * version: 1.9.17
- * buildDate: Sun Sep 19 10:22:13 CEST 2021
+ * version: 1.9.18
+ * buildDate: Sun Sep 19 10:30:16 CEST 2021
  *
  * Copyright (2014-2021), Level2, All rights reserved.
  * More information at https://level2.si
@@ -216,8 +216,8 @@ function zoomHandler(a,b,c,d,e){c=a.getStore().getAt(b);d=c.id;e=a.itemId;a.getS
 function showRecordSelected(a){var b=null==a.layer?a.fid.split(".")[0]:a.layer,c=wmsLoader.layerTitleNameMapping[b];c&&thematicLayer.mergeNewParams({SELECTION:c+":"+a.id});if(-1==visibleLayers.indexOf(c)){var d=!1;layerTree.root.cascade(function(a){if(a.text==b)return d=a,!1});d&&(d.getUI().toggleCheck(!0),layerTree.fireEvent("leafschange"))}a.doZoomToExtent?geoExtMap.map.zoomToExtent(a.bbox):geoExtMap.map.setCenter(new OpenLayers.LonLat(a.x,a.y),a.zoom)}
 function exportUsingQgis(a,b,c,d){b=wmsLoader.layerTitleNameMapping[a];var e={};Object.assign(e,thematicLayer.params);e.LAYERS=b;e.FORMAT="application/dxf";e.FILE_NAME=a+".dxf";e.FORMAT_OPTIONS="MODE:SYMBOLLAYERSYMBOLOGY;CODEC:UTF-8";e.CRS=d;c&&(e.BBOX=geoExtMap.map.getExtent().toBBOX(1,OpenLayers.Projection.defaults[authid].yx));Eqwc.common.download(thematicLayer.url+Ext.urlEncode(e),e.FILE_NAME)}
 function exportData(a,b,c,d,e){var f=wmsLoader.layerTitleNameMapping[a],g=projectData.layers[f].crs,h="",q="./admin/export.php?",p=null;c&&(p=geoExtMap.map.calculateBounds().transform(authid,g));"KOF"==b||"XYZ"==b?(h=[],c=Eqwc.settings.vectorExportFormats.find(function(a){if(a[0]==b)return a}),g="use_geom",3==c.length&&(Eqwc.common.layerFieldNameExists(f,c[2].name)?h.push(c[2].name):h.push(projectData.layers[f].key),Eqwc.common.layerFieldNameExists(f,c[2].code)&&h.push(c[2].code),Eqwc.common.layerFieldNameExists(f,
-c[2].h)&&(g=c[2].h)),q="./admin/text_export.php?",q+=Ext.urlEncode({map:projectData.project,SRS:d,layer_extent:p,layer:a,fields:h.join(","),z:g,format:b,filter:e})):q+=Ext.urlEncode({map:projectData.project,SRS:d,layer_extent:p,layer:a,fields:h,format:b,filter:e});Ext.Ajax.request({url:q,disableCaching:!1,params:{cmd:"prepare"},method:"GET",success:function(a){a=Ext.util.JSON.decode(a.responseText);a.success?window.location=q+"&cmd=get&key="+a.message:Ext.Msg.alert("Error",a.message)},failure:function(a,
-b){Ext.Msg.alert("Error","server-side failure with status code "+a.status)}})}
+c[2].h)&&(g=c[2].h)),q="./admin/text_export.php?",q+=Ext.urlEncode({map:projectData.project,SRS:d,layer_extent:p,layer:a,fields:h.join(","),z:g,format:b,filter:e})):q+=Ext.urlEncode({map:projectData.project,SRS:d,layer_extent:p,layer:a,fields:h,format:b,filter:e});Ext.Ajax.request({url:q,disableCaching:!1,params:{cmd:"prepare"},method:"GET",timeout:45E3,success:function(a){a=Ext.util.JSON.decode(a.responseText);a.success?window.location=q+"&cmd=get&key="+a.message:Ext.Msg.alert("Error",a.message)},
+failure:function(a,b){Ext.Msg.alert("Error","server-side failure with status code "+a.status)}})}
 function openAttTable(){var a=layerTree.getSelectionModel().getSelectedNode().text,b=wmsLoader.layerTitleNameMapping[a],c=Eqwc.common.getIdentifyLayerName(b),d=projectData.use_ids?projectData.layers[b].wfs:!1,e=null,f=null,g=!0;(f=projectData.layers[b])&&"No geometry"==f.geom_type&&(g=!1);(b=this.parentMenu.getComponent("mapFilter"))&&(e=b.getFilter());b=Ext.getCmp("BottomPanel");f=Ext.getCmp("table_"+a);void 0==f?(f=new QGIS.SearchPanel({hasGeom:g,useWmsRequest:!0,useBbox:Eqwc.settings.syncAttributeTableWithView&&
 g&&!projectData.use_mask_wkt?!0:!1,wmsFilter:e,queryLayer:c,gridColumns:getLayerAttributes(c).columns,gridLocation:"bottom",gridEditable:d,gridTitle:a,gridResults:Eqwc.settings.limitAttributeFeatures,gridResultsPageSize:20,selectionLayer:a,formItems:[],doZoomToExtent:!0,maskElement:b.el?b.el:null}),f.onSubmit(),f.on("featureselectioncleared",clearFeatureSelected),f.on("beforesearchdataloaded",showSearchPanelResults)):(b.activate(f),b.show(),b.collapsible&&b.expand())}
 function clearTableSelection(){this.ownerCt.ownerCt.getSelectionModel().clearSelections();clearFeatureSelected()}function loadMore(){this.gridResults*=2;this.onSubmit()}function switchBbox(a,b){this.useBbox=b;this.onSubmit(!0)}

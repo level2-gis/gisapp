@@ -651,6 +651,7 @@ function exportData(layername, format, useBbox, crs, filter) {
             cmd: 'prepare'
         },
         method: 'GET',
+        timeout: 45000,
         success: function (response) {
 
             var result = Ext.util.JSON.decode(response.responseText);
