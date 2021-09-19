@@ -1107,6 +1107,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                 url: wmsURI,
                 params: params,
                 method: 'GET',
+                timeout: 45000,
                 scope: this,
                 success: this.onSuccess,
                 failure: this.onFormFailure
