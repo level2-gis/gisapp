@@ -25,13 +25,12 @@ import psycopg2.extras #z.b. für named column indexes
 import json
 import sys
 import os
+import importlib
 
 # append the Python path with the wsgi-directory
 qwcPath = os.path.dirname(__file__)
 if not qwcPath in sys.path:
   sys.path.append(qwcPath)
-
-import qwc_connect
 
 def application(environ, start_response):
   request = Request(environ)
@@ -41,6 +40,13 @@ def application(environ, start_response):
   data = ()
 
   try:
+
+    #which connection to load
+    connect = "qwc_connect"
+    if "connect" in request.params:
+      connect = request.params["connect"]
+
+    qwc_connect = importlib.import_module(connect)
 
     table = request.params["table"]
     gtype = request.params["gtype"]
