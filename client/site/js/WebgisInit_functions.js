@@ -1897,14 +1897,15 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 });
             }
             if (!searchPanelInstance.hasGeom && searchPanelInstance.gridEditable && (typeof (prepareEdit) == 'function')) {
-                if (Eqwc.common.findParentRelation(this.gridTitle) == false) {
+                //always allow to add new record for relations (showing in popup window)
+                if (searchPanelInstance.gridLocation == 'popup') {
                     toolBar.push({
                         iconCls: 'x-add-icon',
                         tooltip: TR.tableAddRecord,
-                        handler: addRecord,
+                        handler: addRelationRecord,
                         scope: searchPanelInstance
                     });
-                } else if (projectData.relations.hideJoinField == false) {
+                } else if (Eqwc.common.findParentRelation(this.gridTitle) == false || projectData.relations.hideJoinField == false) {
                     toolBar.push({
                         iconCls: 'x-add-icon',
                         tooltip: TR.tableAddRecord,

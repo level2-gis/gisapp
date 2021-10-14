@@ -778,9 +778,42 @@ function addRecord() {
             editor.attributesForm.loadRecord(feat);
         }
     }
+}
 
+function addRelationRecord() {
+    var grid = this;
+    var layer = grid.queryLayer;
+    var layerId = wmsLoader.layerTitleNameMapping[layer];
 
+    var check = checkEditorState(layerId);
+    if (check) {
+        var preparePass = prepareEdit(projectData.layers[layerId]);
 
+        var feat = new OpenLayers.Feature.Vector();
+        feat.state = OpenLayers.State.INSERT;
+
+        if (preparePass) {
+
+            var field = this.wmsFilter.split(' = ')[0];
+            var val = this.wmsFilter.split(' = ')[1];
+
+            field = field.replace(/"/g, "");
+            val = val.replace(/'/g, "");
+
+            feat.data[field] = val;
+            //
+            //set field readonly or hide
+            if (projectData.relations.hideJoinField) {
+                editor.attributesForm.getForm().findField(field).setVisible(false);
+            } else {
+                editor.attributesForm.getForm().findField(field).setReadOnly(true);
+            }
+            editor.attributesForm.relationField = field;
+
+            editor.editLayer.addFeatures([feat]);
+            editor.attributesForm.loadRecord(feat);
+        }
+    }
 }
 
 // function applyWMSFilter(item) {

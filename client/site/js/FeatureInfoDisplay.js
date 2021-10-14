@@ -762,15 +762,18 @@ function showRelations(layerId, id) {
         var field = projectData.relations[layerName][i].join_field;
         var filter = '"' + field + '" = \'' + id + '\'';
 
+        var relationLayerId = Eqwc.common.getLayerId(table);
+        var relationLayer = projectData.layers[relationLayerId];
+
         var relations = new QGIS.SearchPanel({
-            hasGeom: false,
+            hasGeom: relationLayer.geom_type == 'No geometry' ? false : true,
             useWmsRequest: true,
             useBbox: false,
             wmsFilter: filter,
             queryLayer: table,
             gridColumns: getLayerAttributes(table).columns,
             gridLocation: 'popup',
-            gridEditable: false,
+            gridEditable: relationLayer.wfs,
             gridTitle: table,
             gridResults: Eqwc.settings.limitAttributeFeatures,
             gridResultsPageSize: 20,
