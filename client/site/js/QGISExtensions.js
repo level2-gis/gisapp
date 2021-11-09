@@ -191,7 +191,7 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
 
                         //tables without geometry
                         var geom = node.getAttribute('geometryType');
-                        if(geom && geom.indexOf('NoGeometry')>-1) {
+                        if (geom && geom.indexOf('NoGeometry') > -1) {
                             layer.showLegend = false;
                             layer.visible = false;
                             layer.showCheckbox = false;
@@ -200,13 +200,20 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
 
                         layer.capability = capability;
                         this.readChildNodes(node, layer);
+
+                        //hide check box from main group (=QGIS project, that holds all other layers)
+                        //doesn't have parentLayer
+                        if (!parentLayer) {
+                            layer.showCheckbox = false;
+                        }
+
                         delete layer.capability;
                         obj.nestedLayers.push(layer);
-                        if(layer.name) {
+                        if (layer.name) {
                             var parts = layer.name.split(":"),
                                 request = capability.request,
                                 gfi = request.getfeatureinfo;
-                            if(parts.length > 0) {
+                            if (parts.length > 0) {
                                 layer.prefix = parts[0];
 
 

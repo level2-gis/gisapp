@@ -62,7 +62,11 @@ function loadWMSConfig(topicName) {
 
             if (!attr.layer.metadata.showCheckbox) {
                 // hide checkbox
-                attr.cls = 'layer-checkbox-hidden';
+                if (attr.leaf) {
+                    attr.cls = 'layer-checkbox-hidden';
+                } else {
+                    attr.cls = 'main-group-hidden';
+                }
                 attr.checked = undefined;
             }
 
@@ -222,7 +226,7 @@ function postLoading() {
     customBeforeMapInit();
 
     //set root node to active layer of layertree
-    layerTree.selectPath(layerTree.root.firstChild.getPath());
+    layerTree.selectPath(layerTree.root.getPath());
 
     applyPermalinkParams();
 

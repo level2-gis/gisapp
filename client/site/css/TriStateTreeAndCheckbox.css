@@ -1,7 +1,13 @@
 .layer-checkbox-hidden {
-    padding-left: 13px;
-    padding-top: 2px;
-    padding-bottom: 2px;
+	padding-left: 13px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+.main-group-hidden {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	/*display:none;*/
 }
 
 .x-tree-checkbox {

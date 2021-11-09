@@ -245,24 +245,24 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     }
     else {
             ?><!DOCTYPE html>
-            <html>
-            <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-                <meta name="apple-mobile-web-app-capable" content="yes">
-                <title></title>
-                <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20191026"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20200228"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20191222"/>
-                <link rel="stylesheet" type="text/css" href="client/site/css/style.css?v=20200404"/>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
+    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
+    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20211109"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20200228"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20191222"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/style.css?v=20200404"/>
 
-                <?php if ($edit) {
+    <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v='.$editVer.'"/>';
                 }?>
 
@@ -282,24 +282,24 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
 
                 <!--                FOR DEBUGGING-->
                 <!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
-                <!--                <script type="text/javascript" src="../ol2/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
+    <!--                <script type="text/javascript" src="../ol2/lib/OpenLayers/Control/LayerSwitcher.js"></script>-->
 
 
-                <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
-                <!--                DEBUG-->
-                <!--                <script type="text/javascript" src="../geoext/lib/GeoExt.js"></script>-->
+    <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
+    <!--                DEBUG-->
+    <!--                <script type="text/javascript" src="../geoext/lib/GeoExt.js"></script>-->
 
-                <script type="text/javascript" src="client/eqwc_load.php"></script>
+    <script type="text/javascript" src="client/eqwc_load.php"></script>
 
 <!--                DEBUG remove editor.js before-->
 <!--                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>-->
 
-            </head>
-            <body>
-            <!-- this empty div is used for dpi-detection - do not remove it -->
-            <div id="dpiDetection"></div>
-            </body>
-            </html>
+</head>
+<body>
+<!-- this empty div is used for dpi-detection - do not remove it -->
+<div id="dpiDetection"></div>
+</body>
+</html>
 <?php
         }
 }
