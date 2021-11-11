@@ -72,7 +72,7 @@ var layoutHeaderCfg = {
 		{
 			tag: 'div',
 			id: 'panel_header_user',
-            html: Eqwc.settings.useGisPortal ? '<a href="' + Eqwc.settings.gisPortalProfile + '"><img height="' + headerLogoHeight + 'px" src="' + userLogoImg + '"></img></a>' : '<img height="' + headerLogoHeight + 'px" src="' + userLogoImg + '"></img>'
+            html: Eqwc.settings.useGisPortal ? '<a href="' + Eqwc.settings.gisPortalProfile + '"><img height="24px" src="' + userLogoImg + '"></img></a>' : '<img height="24px" src="' + userLogoImg + '"></img>'
 		}		
 	]
 };
@@ -387,9 +387,6 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
                                 //    });
                                 //}
                             }
-						}, {
-							xtype: 'tbtext',
-							text: coordinateTextLabel[lang]
 						}, {
 							xtype: 'tbspacer'
 						}, {
