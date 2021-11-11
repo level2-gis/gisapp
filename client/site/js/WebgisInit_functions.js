@@ -263,8 +263,8 @@ function postLoading() {
 
         //user
         // adjust position
-        paddingTop = (headerLogoHeight - 12) / 2;
-        Ext.get('panel_header_user').setStyle('padding-top', paddingTop + 'px');
+        //paddingTop = (headerLogoHeight - 12) / 2;
+        //Ext.get('panel_header_user').setStyle('padding-top', paddingTop + 'px');
 
         // set terms of use link
         if ((headerTermsOfUseText != null) && !Eqwc.settings.useGisPortal) {
@@ -277,10 +277,10 @@ function postLoading() {
                 target: '_self'
             });
 
-            if (headerLogoImg != null) {
-                // adjust terms of use position
-                Ext.get('panel_header_terms_of_use').setStyle('padding-top', paddingTop + 'px');
-            }
+            // if (headerLogoImg != null) {
+            //     // adjust terms of use position
+            //     Ext.get('panel_header_terms_of_use').setStyle('padding-top', paddingTop + 'px');
+            // }
         }
 
 

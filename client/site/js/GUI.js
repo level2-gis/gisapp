@@ -72,7 +72,7 @@ var layoutHeaderCfg = {
 		{
 			tag: 'div',
 			id: 'panel_header_user',
-            html: Eqwc.settings.useGisPortal ? '<a href="'+Eqwc.settings.gisPortalProfile+'" style="text-decoration-line: none;/*!  */color: inherit;"><img height="14px" src="'+userLogoImg+'"></img>'+projectData.user+'</a>&nbsp;' : '<img height="14px" src="'+userLogoImg+'"></img>'+projectData.user
+            html: Eqwc.settings.useGisPortal ? '<a href="' + Eqwc.settings.gisPortalProfile + '"><img height="' + headerLogoHeight + 'px" src="' + userLogoImg + '"></img></a>' : '<img height="' + headerLogoHeight + 'px" src="' + userLogoImg + '"></img>'
 		}		
 	]
 };
