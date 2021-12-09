@@ -697,11 +697,14 @@ class Helpers
             $role = $_SESSION['role'];
         }
 
-        switch($role) {
+        switch ($role) {
             case null :
                 return TRUE;
 
             case 'admin' :
+                return TRUE;
+
+            case 'power' :
                 return TRUE;
 
             case 'editor' :
