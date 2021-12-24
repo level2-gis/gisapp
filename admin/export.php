@@ -72,7 +72,7 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
             //$conn = $layer["message"]->datasource;
             //removing text sslmode and all after that
             //$conn = "PG:" . rtrim(substr($conn, 0, strpos($conn, 'sslmode')));
-            $conn = "PG:dbname='".$lay_info['message']['dbname']."' host=".$lay_info['message']['host']." port=".$lay_info['message']['port']." user=".$lay_info['message']['user']." password=".$lay_info['message']['password'];
+            $conn = "PG:dbname='" . $lay_info['message']['dbname'] . "' host=" . $lay_info['message']['host'] . " port=" . $lay_info['message']['port'] . " user='" . $lay_info['message']['user'] . "' password='" . $lay_info['message']['password'] . "'";
 
             $sql = $lay_info["message"]['sql'];
 
