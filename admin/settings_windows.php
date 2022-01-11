@@ -26,6 +26,7 @@ define('PROJECT_PATH', 'C:/xampp/htdocs/gisapp/_demo/');
 
 //qgis server, check your port, if you are using default port 80, then simply go: /localhost/cgi-bin...
 define('QGISSERVERURL', 'http://localhost:8080/cgi-bin/qgis_mapserv.fcgi.exe');
+//define('QGISSERVERURL', 'http://localhost:8000');   //qgis development server, must be running, direct output, useful for debugging
 
 //caching cetain qgis server requests
 define('QGISSERVERCACHE', false);

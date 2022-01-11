@@ -105,7 +105,6 @@ Eqwc.settings.gisPortalTitle = '';
 Eqwc.settings.mailServiceUrl = Eqwc.settings.gisPortalRoot + 'mail/send';
 Eqwc.settings.gisPortalProfile = Eqwc.settings.gisPortalRoot + 'profile';
 Eqwc.settings.mobileUseTiledWMS = false;
-Eqwc.settings.mobileEnableTracking = false; //deprecated, remove it!
 Eqwc.settings.mobileMinScale = 50;
 Eqwc.settings.mobileShowAccuracy = true;
 Eqwc.settings.qgisFilesFieldAlias = 'files';
@@ -126,3 +125,6 @@ Eqwc.settings.tableExportFormats = [
     ['TSV', 'Text TSV (tab)']
 ];
 Eqwc.settings.bookmarkPanelHeight = 200;
+
+Eqwc.settings.fieldTemplates = {};
+Eqwc.settings.toolTipEmptyText = 'no data';

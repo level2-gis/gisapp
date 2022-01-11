@@ -27,7 +27,7 @@ var Eqwc = {
 Eqwc.settings.qgisVersion = "3.4";
 
 /**
- * Template string for browser window title
+ * Template string for web client header and browser window title
  * @type {string}
  * @default "projectData.title+' '+projectData.client_display_name";
  * @example "TR.appName+projectData.title+' '+projectData.client_display_name";
@@ -251,6 +251,13 @@ Eqwc.settings.symbolizersHighLightLayer = {
 Eqwc.settings.useGisPortal = false;
 
 Eqwc.settings.gisPortalRoot = '/gisportal/index.php/';
+
+/**
+ * Optional prefix to browser window title
+ * @type {string}
+ * @default ''
+ */
+Eqwc.settings.gisPortalTitle = '';
 Eqwc.settings.mailServiceUrl = Eqwc.settings.gisPortalRoot + 'mail/send';
 Eqwc.settings.gisPortalProfile = Eqwc.settings.gisPortalRoot + 'profile';
 
@@ -360,3 +367,31 @@ Eqwc.settings.tableExportFormats = [
  * @type {number}
  */
 Eqwc.settings.bookmarkPanelHeight = 200;
+
+/**
+ * Configuration for formatting values in web client identify window.
+ * Possible actions are:
+ *  - display field boolean values as translated yes/no or empty strings
+ *  - display fixed tooltip for field values
+ *  - display dynamic tooltip using database and WSGI part for specific field value
+ *  - link to URL using field value as part of URL, use HTML <a> tag
+ *  Format:
+ *  {
+ *      FIELD_NAME1_UPPER_CASE: {template: string},
+ *      FIELD_NAME2_UPPER_CASE: {template: string}
+ *  }
+ * @type {}
+ * @example {
+ * 'BOOLEAN_FIELD': {template: "BOOLEAN"},
+ * 'DB_LOOKUP_FIELD': {template: "%VALUE%", url: 'https://your_server/wsgi/lookup.wsgi?table=db_table_name&code='},
+ * 'LINK_AND_TOOLTIP_FIELD': {template: "<a class='link' ext:qtitle='Tip title' ext:qwidth='150' ext:qtip='This is a quick tip from markup!' href='http://www.google.it/#output=search&q=%VALUE%' target='_blank'>%VALUE%</a>"}
+ * }
+ * @default {}
+ */
+Eqwc.settings.fieldTemplates = {};
+
+/**
+ * This text is displayed as tooltip when dynamic tooltip using configuration above cannot retrieve data from WSGI script
+ * @type {string}
+ */
+Eqwc.settings.toolTipEmptyText = 'no data';

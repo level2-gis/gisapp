@@ -26,6 +26,7 @@ define('PROJECT_PATH', '/var/www/html/gisapp/_demo/');
 
 //qgis server
 define('QGISSERVERURL', 'http://localhost/cgi-bin/qgis_mapserv.fcgi');
+//define('QGISSERVERURL', 'http://localhost:8000');   //qgis development server, must be running, direct output, useful for debugging
 
 //caching cetain qgis server requests
 define('QGISSERVERCACHE', false);
