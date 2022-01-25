@@ -24,11 +24,11 @@
 
 .x-tool-user {
   background-image: url(../img/user_gray.png);
-  background-position: center;
-  width: 32px;
-  height: 32px;
+  /*background-position: center;*/
+  width: 28px;
+  height: 28px;
   position: absolute;
-  right: 20px;
+  right: 8px;
 }
 
 .olTileImage.olImageLoadError {
