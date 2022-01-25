@@ -69,6 +69,7 @@ function openStreetView (location) {
 
     var panel = Ext.getCmp('RightPanel');
     panel.removeAll();
+    panel.setVisible(true);
 
     var x = location.lon;
     var y = location.lat;

@@ -23,8 +23,8 @@ Eqwc.plugins["streetview"].customToolbarLoad = function() {
     var btn = Ext.getCmp('streetViewBtn');
     btn.toggleHandler = streetViewBtnHandler;
 
-    var panel = Ext.getCmp('RightPanel');
-    panel.setVisible(true);
+    // var panel = Ext.getCmp('RightPanel');
+    // panel.setVisible(true);
 };
 
 var streetViewMarkerStyle = {
