@@ -22,9 +22,13 @@
   font-weight: normal;
 }
 
-#panel_header_user {
-  float: right;
-  font-weight: bold;
+.x-tool-user {
+  background-image: url(../img/user_gray.png);
+  background-position: center;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  right: 20px;
 }
 
 .olTileImage.olImageLoadError {

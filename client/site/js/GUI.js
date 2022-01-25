@@ -68,12 +68,7 @@ var layoutHeaderCfg = {
 			tag: 'div',
 			id: 'panel_header_terms_of_use',
 			html: '<a></a>'
-		},
-		{
-			tag: 'div',
-			id: 'panel_header_user',
-            html: Eqwc.settings.useGisPortal ? '<a href="' + Eqwc.settings.gisPortalProfile + '"><img height="24px" src="' + userLogoImg + '"></img></a>' : '<img height="24px" src="' + userLogoImg + '"></img>'
-		}		
+		}
 	]
 };
 if (headerLogoImg != null) {
@@ -111,6 +106,16 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 			layout: 'border',
 			id: 'GisBrowserPanel',
 			headerCfg: layoutHeaderCfg,
+			tools: [{
+				id: 'user',
+				//qtip: 'Show user profile',
+				// hidden:true,
+				handler: function (event, toolEl, panel) {
+					if (Eqwc.settings.useGisPortal) {
+						window.location = Eqwc.settings.gisPortalProfile;
+					}
+				}
+			}],
 			items: [{
 				xtype: 'panel',
 				margins: '3 0 3 3',

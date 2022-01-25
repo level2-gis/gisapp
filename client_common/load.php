@@ -186,6 +186,3 @@ if(projectData.crs_list.indexOf(projectData.crs) == -1)
 if (projectData.relations == null) {
     projectData.relations = {};
 }
-
-//TODO use in css!
-var userLogoImg = projectData.gis_projects.path + 'admin/resources/images/user_gray.png';
