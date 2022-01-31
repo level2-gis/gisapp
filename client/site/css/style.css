@@ -25,9 +25,10 @@
 .x-tool-user {
   background-image: url(../img/user_gray.png);
   /*background-position: center;*/
-  width: 28px;
-  height: 28px;
-  position: absolute;
+  background-size: contain;
+  width: 24px;
+  height: 24px;
+  /*position: absolute;*/
   right: 8px;
 }
 
