@@ -101,7 +101,7 @@ Ext.onReady(function () {
                 }
             }
             return -1;
-        }
+        };
     }
 
     //some references
