@@ -195,8 +195,11 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
                 break;
             case "DescribeFeatureType":
                 $layer = $query_arr["TYPENAME"];
-                if (is_readable(PROJECT_PATH.'_data_definitions/'.$layer.'.xml')) {
-                    $content = file_get_contents(PROJECT_PATH.'_data_definitions/'.$layer.'.xml');
+                //first check if XML is in project subfolder of _data_definitions
+                if (is_readable(PROJECT_PATH . '_data_definitions' . DIRECTORY_SEPARATOR . $map . DIRECTORY_SEPARATOR . $layer . '.xml')) {
+                    $content = file_get_contents(PROJECT_PATH . '_data_definitions' . DIRECTORY_SEPARATOR . $map . DIRECTORY_SEPARATOR . $layer . '.xml');
+                } elseif (is_readable(PROJECT_PATH . '_data_definitions' . DIRECTORY_SEPARATOR . $layer . '.xml')) {
+                    $content = file_get_contents(PROJECT_PATH . '_data_definitions' . DIRECTORY_SEPARATOR . $layer . '.xml');
                 }
                 $contentType = "text/xml";
                 break;
