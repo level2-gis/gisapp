@@ -1,0 +1,91 @@
+/* this file contains some common styles and overriden openlayers styles */
+
+#dpiDetection {
+    height: 1in;
+    left: -100%;
+    position: absolute;
+    top: -100%;
+    width: 1in;
+}
+
+#panel_header_title {
+    float: left;
+    font-size: 20px;
+}
+
+#panel_header_link {
+    float: left;
+}
+
+#panel_header_terms_of_use {
+    float: right;
+    font-weight: normal;
+}
+
+.x-tool-user {
+    background-image: url(../img/user_gray.png);
+    /*background-position: center;*/
+    background-size: contain;
+    width: 24px;
+    height: 24px;
+    /*position: absolute;*/
+    right: 8px;
+}
+
+.olTileImage.olImageLoadError {
+    display: none !important;
+}
+
+div.olMap {
+    z-index: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: default;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+.olControlOverviewMapElement {
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+div.olControlOverviewMapMaximizeButton, div.olControlOverviewMapMinimizeButton {
+    right: 0px;
+    top: 0px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.4);
+    /*border-radius: 4px;*/
+    padding: 2px;
+}
+
+div.olControlOverviewMapMaximizeButton a, div.olControlOverviewMapMinimizeButton a {
+    display: block;
+    margin: 1px;
+    /*padding-top: 3px;*/
+    color: white;
+    font-size: 16px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /*font-weight: bold;*/
+    text-decoration: none;
+    text-align: center;
+    height: 16px;
+    width: 16px;
+    /*line-height: 19px;*/
+    /*background: #130085;*/
+    background: rgba(60, 60, 60, 0.5);
+    filter: alpha(opacity=80);
+}
+
+div.olControlOverviewMapMaximizeButton a:hover, div.olControlOverviewMapMinimizeButton a:hover {
+    /* background: #130085; */ /* fallback for IE */
+    background: rgba(60, 60, 60, 0.7);
+    filter: alpha(opacity=100);
+}
+
+@media only screen and (max-width: 600px) {
+    div.olControlOverviewMapMaximizeButton a:hover, div.olControlOverviewMapMinimizeButton a:hover {
+        background: rgba(60, 60, 60, 0.5);
+    }
+}
+ 

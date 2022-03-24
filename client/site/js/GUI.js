@@ -108,7 +108,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 			headerCfg: layoutHeaderCfg,
 			tools: [{
 				id: 'user',
-				//qtip: 'Show user profile',
+				qtip: '',
 				// hidden:true,
 				handler: function (event, toolEl, panel) {
 					if (Eqwc.settings.useGisPortal) {

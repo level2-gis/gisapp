@@ -262,6 +262,7 @@ function postLoading() {
         Ext.get('panel_header_title').update(titleBarText);
 
         //user
+        Ext.getCmp('GisBrowserPanel').tools.user.dom.qtip = projectData.user;
         // adjust position
         //paddingTop = (headerLogoHeight - 12) / 2;
         //Ext.get('panel_header_user').setStyle('padding-top', paddingTop + 'px');
@@ -762,7 +763,7 @@ function postLoading() {
         //add OpenLayers map controls
         geoExtMap.map.addControl(new OpenLayers.Control.KeyboardDefaults());
         geoExtMap.map.addControl(new OpenLayers.Control.Navigation());
-        geoExtMap.map.addControl(new OpenLayers.Control.Attribution());
+        //geoExtMap.map.addControl(new OpenLayers.Control.Attribution());
         geoExtMap.map.addControl(new OpenLayers.Control.ScaleLine({
             geodesic: true,
             topInUnits: scaleInUnits,
@@ -770,7 +771,7 @@ function postLoading() {
         }));
 
         //geoExtMap.map.addControl(new OpenLayers.Control.PanZoomBar({zoomWorldIcon:true,forceFixedZoomLevel:false}));
-        geoExtMap.map.addControl(new OpenLayers.Control.Zoom());
+        //geoExtMap.map.addControl(new OpenLayers.Control.Zoom());
 
         //for debuggin TODO UROS REMOVE THIS
         //geoExtMap.map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
@@ -903,8 +904,8 @@ function postLoading() {
             layers: [overviewLayer]
         });
         geoExtMap.map.addControl(olMap);
-        olMap.maximizeDiv.innerHTML = "<a href='#'><<</a>";
-        olMap.minimizeDiv.innerHTML = "<a href='#'>>></a>";
+        olMap.maximizeDiv.innerHTML = "<a href='#'>+</a>";
+        olMap.minimizeDiv.innerHTML = "<a href='#'>-</a>";
     }
     else {
         //todo: find out how to change the max extent in the OverviewMap

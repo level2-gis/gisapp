@@ -52,14 +52,14 @@ div.olLayerDiv {
 
 /* changed by A. Neumann - different position */
 .olControlScaleLine {
-   display: block;
-   position: absolute;
-   left: 10px;
-   bottom: 10px;
-   font-size: xx-small;
-   font-family: sans-serif;
-   background-color:white;
-   padding:1px;    
+    display: block;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    font-size: xx-small;
+    font-family: sans-serif;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 1px;
 }
 /* changed by A. Neumann - hidden because we don't want yards/miles */
 .olControlScaleLineBottom {
