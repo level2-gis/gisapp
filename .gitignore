@@ -3,5 +3,7 @@
 /client_common/settings.js
 /client/wsgi/qwc_connect.py
 /client/wsgi/loc_service_connect.py
+/client/wsgi/_demo_grob.py
+/client/wsgi/_ob_dobrova.py
 /admin/settings.php
 /.idea/
