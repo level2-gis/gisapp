@@ -19,8 +19,14 @@ function goMobile($lang, $scanner) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 
-        <link rel="apple-touch-icon" href="client_mobile/img/app_icon.png"/>
-        <link rel="icon" href="favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <!--<link rel="apple-touch-icon" href="client_mobile/img/app_icon.png"/>-->
 
         <script type="text/javascript" src="client_common/load.php"></script>
 
@@ -221,8 +227,8 @@ $_SESSION['lang'] = $def_lang;
 $_SESSION['client_path'] = $client_path;
 
 $detect = new Mobile_Detect;
-// Exclude tablets.
-if( $detect->isMobile() && !$detect->isTablet() ){
+
+if($detect->isMobile()){
     $mobile='on';
 }
 
@@ -251,16 +257,25 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
     <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
     <title></title>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
-    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
+    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-gray.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20211109"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20200228"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20191222"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/style-blue.css?v=20220131"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/style-gray.css?v=20220131"/>
 
     <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v='.$editVer.'"/>';
