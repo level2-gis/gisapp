@@ -2885,7 +2885,7 @@ function exceptionLoading(res) {
 
 function getExternalWMSDefinition(layer) {
 
-    var layerName = layer.id;
+    var layerName = layer.id.toUpperCase();
     var definition = {};
     var type = layer.params.SERVICE ? layer.params.SERVICE : 'unknown';
 
@@ -2894,16 +2894,16 @@ function getExternalWMSDefinition(layer) {
     }
 
     if(type=='WMS') {
-        definition[layerName+':url']        = layer.url.toLowerCase().replace('https','http');    //QGIS issue with https, assume URL is working also on http
-        definition[layerName+':format']     = layer.params.FORMAT;
+        definition[layerName + ':url'] = layer.url;
+        definition[layerName + ':format'] = layer.params.FORMAT;
         definition[layerName+':crs']        = projectData.crs;
         definition[layerName+':layers']     = layer.params.LAYERS;
         definition[layerName+':styles']     = layer.params.STYLES;
 
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
     } else if (layer.print) {
-        definition[layerName+':url']        = layer.print.url.toLowerCase().replace('https','http');    //QGIS issue with https, assume URL is working also on http
-        definition[layerName+':format']     = layer.print.format;
+        definition[layerName + ':url'] = layer.print.url;
+        definition[layerName + ':format'] = layer.print.format;
         definition[layerName+':crs']        = projectData.crs;
         definition[layerName+':layers']     = layer.print.layers;
         definition[layerName+':styles']     = layer.print.styles;

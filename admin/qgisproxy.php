@@ -21,11 +21,11 @@ require_once("settings.php");
 function handleGetPrint($data, $project, $user)
 {
 
-    if ($data["description"] == null) {
+    if (empty($data["description"])) {
         $data["description"] = "";
     }
 
-    if ($data["title"] == null) {
+    if (empty($data["title"])) {
         $data["title"] = "";
     }
 
