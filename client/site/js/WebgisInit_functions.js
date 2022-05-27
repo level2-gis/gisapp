@@ -2885,7 +2885,7 @@ function exceptionLoading(res) {
 
 function getExternalWMSDefinition(layer) {
 
-    var layerName = layer.id;
+    var layerName = layer.id.toUpperCase();
     var definition = {};
     var type = layer.params.SERVICE ? layer.params.SERVICE : 'unknown';
 
