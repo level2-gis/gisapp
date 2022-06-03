@@ -1527,6 +1527,8 @@ Gui.initViewer = function () {
         }
     });
 
+    $('#btnMeasure').click(Map.startMeasuring);
+
     // properties
     // $('#switchFollow').on('change', function(e) {
     //   Gui.toggleFollowing($(this).val() == 'on');
@@ -1592,7 +1594,9 @@ Gui.initViewer = function () {
         Map.toggleClickHandling(false);
     });
     $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function () {
-        Map.toggleClickHandling(true);
+        if (!Map.measurementActive) {
+            Map.toggleClickHandling(true);
+        }
     });
 
     //this is marker to display location of search result (geocoding)

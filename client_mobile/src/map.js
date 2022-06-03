@@ -1137,3 +1137,113 @@ Map.loadHiddenIcons = function () {
 
     $('#btnLocation .ui-icon').removeClass('ui-icon-location_on');
 };
+
+Map.measurementLayer = new ol.layer.Vector({
+    source: new ol.source.Vector(),
+    style: new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.2)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#ffcc33',
+            width: 2
+        }),
+        image: new ol.style.Circle({
+            radius: 7,
+            fill: new ol.style.Fill({
+                color: '#ffcc33'
+            })
+        })
+    })
+});
+
+Map.measurementSketch = new ol.interaction.Draw({
+    source: Map.measurementLayer.getSource(),
+    type: 'Polygon',
+    style: new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.2)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: 'rgba(0, 0, 0, 0.5)',
+            lineDash: [10, 10],
+            width: 2
+        }),
+        image: new ol.style.Circle({
+            radius: 5,
+            stroke: new ol.style.Stroke({
+                color: 'rgba(0, 0, 0, 0.7)'
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            })
+        })
+    })
+});
+
+Map.startMeasuring = function () {
+
+    Map.measurementActive = true;
+
+    $('#btnMeasure').hide();
+
+    Map.toggleClickHandling(false);
+
+    Map.map.addInteraction(Map.measurementSketch);
+
+    Map.map.addLayer(Map.measurementLayer);
+
+    // createMeasureTooltip();
+    // createHelpTooltip();
+    //
+    // var listener;
+    // draw.on('drawstart',
+    //     function(evt) {
+    //         // set sketch
+    //         sketch = evt.feature;
+    //
+    //         /** @type {ol.Coordinate|undefined} */
+    //         var tooltipCoord = evt.coordinate;
+    //
+    //         listener = sketch.getGeometry().on('change', function(evt) {
+    //             var geom = evt.target;
+    //             var output;
+    //             if (geom instanceof ol.geom.Polygon) {
+    //                 output = formatArea(geom);
+    //                 tooltipCoord = geom.getInteriorPoint().getCoordinates();
+    //             } else if (geom instanceof ol.geom.LineString) {
+    //                 output = formatLength(geom);
+    //                 tooltipCoord = geom.getLastCoordinate();
+    //             }
+    //             measureTooltipElement.innerHTML = output;
+    //             measureTooltip.setPosition(tooltipCoord);
+    //         });
+    //     }, this);
+    //
+    // draw.on('drawend',
+    //     function() {
+    //         measureTooltipElement.className = 'tooltip tooltip-static';
+    //         measureTooltip.setOffset([0, -7]);
+    //         // unset sketch
+    //         sketch = null;
+    //         // unset tooltip so that a new one can be created
+    //         measureTooltipElement = null;
+    //         createMeasureTooltip();
+    //         ol.Observable.unByKey(listener);
+    //     }, this);
+
+
+};
+
+Map.stopMeasuring = function () {
+
+    Map.measurementActive = false;
+
+    $('#btnMeasure').show();
+
+    Map.toggleClickHandling(true);
+    Map.map.removeInteraction(Map.measurementSketch);
+
+    Map.map.removeLayer(Map.measurementLayer);
+    Map.measurementLayer.getSource().clear();
+};

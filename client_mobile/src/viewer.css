@@ -61,6 +61,10 @@ body {
     background-image: url("../img/save-icon_32.png");
 }
 
+.ui-icon-measure {
+    background-image: url("../img/alert.png");
+}
+
 .ui-icon-record {
     background-image: url("../img/record.png");
 }
@@ -104,13 +108,18 @@ body {
     bottom: 60px;
 }
 
+#btnMeasure {
+    right: 70px;
+    bottom: 0;
+}
+
 #btnRecord {
-    right: 130px;
+    right: 190px;
     bottom: 0;
 }
 
 #btnRecordStop {
-    right: 130px;
+    right: 190px;
     bottom: 0;
 }
 
@@ -136,7 +145,7 @@ body {
 }
 
 #btnInfo {
-    right: 70px;
+    right: 130px;
     bottom: 0;
 }
 
