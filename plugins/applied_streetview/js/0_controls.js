@@ -41,21 +41,39 @@ function prepareAppliedStreetView() {
                     }, this.handlerOptions
                 );
 
-                //load iframe
                 var panel = Ext.getCmp('RightPanel');
                 panel.removeAll();
 
-                //add listener to right panel
-                panel.on('beforeadd', function (panel, item) {
-                    var center = Ext.getCmp('CenterPanel');
-                    var height = center.getHeight();
-                    item.setHeight(height - 10);
-                });
+                window.document.addEventListener('playerUpdated', function (evt) {
+                    var selected = evt.detail;
 
-                var player = new Ext.Panel({
-                    html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../player-test/player2/"></iframe>'
-                });
-                panel.add(player);
+                    //console.info('playerUpdated', selected);
+
+                    var point = new OpenLayers.Geometry.Point(selected.lon, selected.lat);
+                    point.transform('EPSG:4326', authid);
+
+                    var pointLonLat = new OpenLayers.LonLat(selected.lon, selected.lat);
+                    pointLonLat.transform('EPSG:4326', authid);
+
+                    //add location to higlightlayer
+                    var marker = new OpenLayers.Feature.Vector(
+                        point,
+                        {},
+                        appliedStreetViewMarkerStyle
+                    );
+                    featureInfoHighlightLayer.removeAllFeatures();
+                    appliedStreetViewMarkerStyle.rotation = selected.heading;
+                    featureInfoHighlightLayer.addFeatures(marker);
+
+                    //check if marker is still inside the map, move the map if necessary
+                    var bounds = geoExtMap.map.calculateBounds();
+                    var inside = bounds.containsLonLat(pointLonLat);
+                    if (!inside) {
+                        geoExtMap.map.moveTo(pointLonLat, geoExtMap.map.getZoom());
+                    }
+
+                }, false);
+
             }
         });
 
@@ -65,6 +83,26 @@ function prepareAppliedStreetView() {
                 var pos = geoExtMap.map.getLonLatFromViewPortPx(e.xy);
                 openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
             }
+        });
+
+        AppliedStreetViewControl.events.register('activate', this, function (evt) {
+            //load iframe
+            var panel = Ext.getCmp('RightPanel');
+            //panel.removeAll();
+            panel.setVisible(true);
+            panel.expand();
+
+            //add listener to right panel
+            panel.on('beforeadd', function (panel, item) {
+                var center = Ext.getCmp('CenterPanel');
+                var height = center.getHeight();
+                item.setHeight(height - 10);
+            });
+
+            var player = new Ext.Panel({
+                html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../uploads/ko_vdv_b/player-test/player2/"></iframe>'
+            });
+            panel.add(player);
         });
 
         geoExtMap.map.addControl(AppliedStreetViewControl);
@@ -79,12 +117,6 @@ function prepareAppliedStreetView() {
 
 
 function openAppliedStreetView(location) {
-
-    var panel = Ext.getCmp('RightPanel');
-    //panel.removeAll();
-    panel.setVisible(true);
-
-    panel.expand();
 
     var player = document.querySelector('#player');
     if (!player) {

@@ -48,7 +48,7 @@ Eqwc.plugins["applied_streetview"].customToolbarLoad = function () {
 var appliedStreetViewMarkerStyle = {
     graphicName: "arrow",
     strokeColor: '#333333',
-    fillColor: '#FF9900',
+    fillColor: '#485aea',
     strokeWidth: 2,
     pointRadius: 8,
     rotation: 0
