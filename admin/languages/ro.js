@@ -156,3 +156,5 @@ I18n.login = {
 };
 
 I18n.networkDown = 'Nu exista conexiune';
+
+I18n.measureArea = 'Measure area';

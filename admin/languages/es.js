@@ -156,3 +156,5 @@ I18n.login = {
 };
 
 I18n.networkDown = 'Internet connection lost';
+
+I18n.measureArea = 'Measure area';

@@ -59,9 +59,9 @@ function goMobile($lang, $scanner) {
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
 
         <!--                DEBUG remove editor.js before-->
-        <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
+        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20210824"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20220608"/>
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
     </head>
     <body>
@@ -83,6 +83,10 @@ function goMobile($lang, $scanner) {
                    class="mapicon"></a>
                 <a href="#" id="btnMeasure" data-role="button" data-icon="measure" data-iconpos="notext"
                    data-rel="dialog" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnMeasureStop" data-role="button" data-icon="goto_stop"
+                   data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnMeasureFinish" data-role="button" data-icon="check2"
+                   data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnAlert" data-role="button" data-icon="alert2"
                    data-iconpos="notext" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext"
@@ -102,7 +106,15 @@ function goMobile($lang, $scanner) {
             </div>
             <div id="locationPanel" class="ui-popup-container">LocationPanel</div>
             <div id="gotoPanel" class="ui-popup-container">GotoPanel</div>
-            <div id="measurePanel" style="display:none" class="ui-popup-container">MeasurePanel</div>
+            <div id="measurePanel" style="display:none" class="ui-popup-container">
+                <div data-role="fieldcontain">
+                    <label for="measureArea">Area</label>
+                    <select id="measureArea" name="xx" data-role="slider" data-mini="true">
+                        <option value="off">Aus</option>
+                        <option selected="true" value="on">Ein</option>
+                    </select>
+                </div>
+            </div>
             <div id="editPanel" class="ui-popup-container">EditPanel</div>
             <div id="recordPanel" class="ui-popup-container">RecordPanel</div>
         </div>

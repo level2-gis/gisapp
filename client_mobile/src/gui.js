@@ -1030,6 +1030,10 @@ Gui.updateTranslations = function () {
     $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
 
     $('#panelFeatureInfo b').html(I18n.featureInfo.header);
+
+    $('#measurePanel label[for=measureArea]').html(I18n.measureArea);
+    $('#measurePanel .ui-slider-label:contains(Ein)').html(I18n.properties.on);
+    $('#measurePanel .ui-slider-label:contains(Aus)').html(I18n.properties.off);
 };
 
 //Gui.toggleFollowing = function(enabled) {
@@ -1527,7 +1531,18 @@ Gui.initViewer = function () {
         }
     });
 
+    //measurement
     $('#btnMeasure').click(Map.startMeasuring);
+    $('#btnMeasureFinish').click(function () {
+        Map.finishMeasuringSketch();
+    });
+    $('#btnMeasureStop').click(function () {
+        Map.stopMeasuring();
+    });
+    $('#measureArea').on('change', function (e) {
+        Map.map.removeInteraction(Map.measurementSketch);
+        Map.startMeasuring();
+    });
 
     // properties
     // $('#switchFollow').on('change', function(e) {
