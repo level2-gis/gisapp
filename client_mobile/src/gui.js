@@ -781,28 +781,35 @@ Gui.showFeatureInfoResults = function (status, data) {
             $('#featureInfoResults').html(data.join(''));
         }
     } else {
-        $('#featureInfoResults').html("<span style='color:red'>" + data + "</span>");
+        var html = Gui.addFeatureInfoTopButtons();
+        $('#featureInfoResults').html(html + '</br>' + "<span style='color:red'>" + data + "</span>");
+        $('#featureInfoResults').trigger('create');
     }
 
     $('#panelFeatureInfo').panel('open');
     Map.toggleClickMarker(true);
 };
 
+Gui.addFeatureInfoTopButtons = function () {
+    var ret = '';
+
+    ret += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
+
+    //add button
+    if (typeof (Editor) == 'function' && mobEditor.layer) {
+        ret += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
+        ret += '<a href="javascript:mobEditor.startOffset();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAddOffset + '</a>';
+    }
+
+    return ret;
+};
+
 // convert XML feature info results to HTML
 Gui.showXMLFeatureInfoResults = function (results) {
-    var html = "";
     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
     filesAlias = filesAlias.toUpperCase();
 
-    //check if we don't have single no geometry layer
-    if (!(results.length == 1 && projectData.layers[results[0].layer].geom_type == 'No geometry')) {
-        html += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
-
-        //add button
-        if (typeof (Editor) == 'function' && mobEditor.layer) {
-            html += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
-        }
-    }
+    var html = Gui.addFeatureInfoTopButtons();
 
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
