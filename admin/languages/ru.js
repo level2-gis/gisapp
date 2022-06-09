@@ -33,6 +33,7 @@ var TR = {
     editMode: 'Режим редактирования',
     editDisabled: 'Редактирование отключено',
     editAdd: 'Add',
+    editAddOffset: 'Offset',
     editEdit: 'Edit',
     editDelete: 'Удалить',
     editSave: 'Сохранить',

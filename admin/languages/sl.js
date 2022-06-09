@@ -34,6 +34,7 @@ var TR = {
     editMode: 'Urejanje',
     editDisabled: 'Urejanje onemogočeno',
     editAdd: 'Dodaj',
+    editAddOffset: 'Odmik',
     editEdit: 'Uredi',
     editDelete: 'Briši',
     editSave: 'Shrani',

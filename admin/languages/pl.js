@@ -34,6 +34,7 @@ var TR = {
     editMode: 'Tryb edycji',
     editDisabled: 'Edytowanie nieaktywne',
     editAdd: 'Dodaj',
+    editAddOffset: 'Offset',
     editEdit: 'Edytuj',
     editDelete: 'Usuń',
     editSave: 'Zapisz',
