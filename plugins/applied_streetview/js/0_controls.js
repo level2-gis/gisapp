@@ -100,7 +100,7 @@ function prepareAppliedStreetView() {
             });
 
             var player = new Ext.Panel({
-                html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../uploads/ko_vdv_b/player-test/player2/"></iframe>'
+                html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../uploads/ko_vdv_b/applied_streetview/player2/"></iframe>'
             });
             panel.add(player);
         });
