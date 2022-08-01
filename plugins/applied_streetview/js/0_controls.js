@@ -62,7 +62,7 @@ function prepareAppliedStreetView() {
                         appliedStreetViewMarkerStyle
                     );
                     featureInfoHighlightLayer.removeAllFeatures();
-                    appliedStreetViewMarkerStyle.rotation = selected.heading;
+                    appliedStreetViewMarkerStyle.rotation = selected.headingHlookat;
                     featureInfoHighlightLayer.addFeatures(marker);
 
                     //check if marker is still inside the map, move the map if necessary
