@@ -46,39 +46,38 @@ function prepareAppliedStreetView() {
                         'click': this.trigger
                     }, this.handlerOptions
                 );
-
-                window.document.addEventListener('playerUpdated', function (evt) {
-                    var selected = evt.detail;
-
-                    //console.info('playerUpdated', selected);
-
-                    var point = new OpenLayers.Geometry.Point(selected.lon, selected.lat);
-                    point.transform('EPSG:4326', authid);
-
-                    var pointLonLat = new OpenLayers.LonLat(selected.lon, selected.lat);
-                    pointLonLat.transform('EPSG:4326', authid);
-
-                    //add location to higlightlayer
-                    var marker = new OpenLayers.Feature.Vector(
-                        point,
-                        {},
-                        appliedStreetViewMarkerStyle
-                    );
-                    featureInfoHighlightLayer.removeAllFeatures();
-                    appliedStreetViewMarkerStyle.rotation = selected.headingHlookat;
-                    featureInfoHighlightLayer.addFeatures(marker);
-
-                    //check if marker is still inside the map, move the map if necessary
-                    var bounds = geoExtMap.map.calculateBounds();
-                    var inside = bounds.containsLonLat(pointLonLat);
-                    if (!inside) {
-                        geoExtMap.map.moveTo(pointLonLat, geoExtMap.map.getZoom());
-                    }
-
-                }, false);
-
             }
         });
+
+        window.document.addEventListener('playerUpdated', function (evt) {
+            var selected = evt.detail;
+
+            //console.info('playerUpdated', selected);
+
+            var point = new OpenLayers.Geometry.Point(selected.lon, selected.lat);
+            point.transform('EPSG:4326', authid);
+
+            var pointLonLat = new OpenLayers.LonLat(selected.lon, selected.lat);
+            pointLonLat.transform('EPSG:4326', authid);
+
+            //add location to higlightlayer
+            var marker = new OpenLayers.Feature.Vector(
+                point,
+                {},
+                appliedStreetViewMarkerStyle
+            );
+            featureInfoHighlightLayer.removeAllFeatures();
+            appliedStreetViewMarkerStyle.rotation = selected.headingHlookat;
+            featureInfoHighlightLayer.addFeatures(marker);
+
+            //check if marker is still inside the map, move the map if necessary
+            var bounds = geoExtMap.map.calculateBounds();
+            var inside = bounds.containsLonLat(pointLonLat);
+            if (!inside) {
+                geoExtMap.map.moveTo(pointLonLat, geoExtMap.map.getZoom());
+            }
+
+        }, false);
 
         // Create a new map control based on Control Click Event
         AppliedStreetViewControl = new OpenLayers.Control.Click({
