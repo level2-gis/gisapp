@@ -83,7 +83,13 @@ function prepareAppliedStreetView() {
         });
 
         AppliedStreetViewControl.events.register('activate', this, function (evt) {
-            //load iframe
+
+            //remove Google StreetView if loaded
+            var gs = document.getElementsByClassName('gm-style')[0];
+            if (gs) {
+                gs.parentElement.removeChild(gs);
+            }
+
             var panel = Ext.getCmp('RightPanel');
             panel.removeAll();
 
@@ -94,6 +100,7 @@ function prepareAppliedStreetView() {
                 item.setHeight(height - 10);
             });
 
+            //load iframe
             var player = new Ext.Panel({
                 html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../uploads/ko_vdv_b/applied_streetview/player2/"></iframe>'
             });
