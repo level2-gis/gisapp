@@ -41,9 +41,6 @@ function prepareAppliedStreetView() {
                     }, this.handlerOptions
                 );
 
-                var panel = Ext.getCmp('RightPanel');
-                panel.removeAll();
-
                 window.document.addEventListener('playerUpdated', function (evt) {
                     var selected = evt.detail;
 
@@ -88,7 +85,8 @@ function prepareAppliedStreetView() {
         AppliedStreetViewControl.events.register('activate', this, function (evt) {
             //load iframe
             var panel = Ext.getCmp('RightPanel');
-            //panel.removeAll();
+            panel.removeAll();
+
             panel.setVisible(true);
             panel.expand();
 
