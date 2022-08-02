@@ -18,6 +18,12 @@ function appliedStreetViewBtnHandler(btn, evt) {
 
 function prepareAppliedStreetView() {
 
+    //remove Google StreetView if loaded
+    var gs = document.getElementsByClassName('gm-style')[0];
+    if (gs) {
+        gs.parentElement.removeChild(gs);
+    }
+
     if (typeof (AppliedStreetViewControl) == 'undefined') {
         // I create a new control click event class
         OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
@@ -83,12 +89,6 @@ function prepareAppliedStreetView() {
         });
 
         AppliedStreetViewControl.events.register('activate', this, function (evt) {
-
-            //remove Google StreetView if loaded
-            var gs = document.getElementsByClassName('gm-style')[0];
-            if (gs) {
-                gs.parentElement.removeChild(gs);
-            }
 
             var panel = Ext.getCmp('RightPanel');
             panel.removeAll();
