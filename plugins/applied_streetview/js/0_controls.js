@@ -86,6 +86,7 @@ function prepareAppliedStreetView() {
             //load iframe
             var panel = Ext.getCmp('RightPanel');
             panel.removeAll();
+            panel.update();
 
             panel.setVisible(true);
             panel.expand();
