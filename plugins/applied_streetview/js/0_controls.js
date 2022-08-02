@@ -86,10 +86,6 @@ function prepareAppliedStreetView() {
             //load iframe
             var panel = Ext.getCmp('RightPanel');
             panel.removeAll();
-            panel.update();
-
-            panel.setVisible(true);
-            panel.expand();
 
             //add listener to right panel
             panel.on('beforeadd', function (panel, item) {
@@ -102,6 +98,9 @@ function prepareAppliedStreetView() {
                 html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../uploads/ko_vdv_b/applied_streetview/player2/"></iframe>'
             });
             panel.add(player);
+
+            panel.setVisible(true);
+            panel.expand();
         });
 
         geoExtMap.map.addControl(AppliedStreetViewControl);
