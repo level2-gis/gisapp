@@ -1,0 +1,4 @@
+1.0.1 20220802
+- close tab on deactivation
+- icon
+- enable to work with Google StreetView
