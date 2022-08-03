@@ -24,6 +24,9 @@ function prepareAppliedStreetView() {
         gs.parentElement.removeChild(gs);
     }
 
+    var panel = Ext.getCmp('RightPanel');
+    panel.removeAll();
+
     if (typeof (AppliedStreetViewControl) == 'undefined') {
         // I create a new control click event class
         OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
@@ -89,9 +92,6 @@ function prepareAppliedStreetView() {
 
         AppliedStreetViewControl.events.register('activate', this, function (evt) {
 
-            var panel = Ext.getCmp('RightPanel');
-            panel.removeAll();
-
             //add listener to right panel
             panel.on('beforeadd', function (panel, item) {
                 var center = Ext.getCmp('CenterPanel');
@@ -107,6 +107,11 @@ function prepareAppliedStreetView() {
 
             panel.setVisible(true);
             panel.expand();
+        });
+
+        AppliedStreetViewControl.events.register('deactivate', this, function () {
+            panel.removeAll();
+            panel.collapse();
         });
 
         geoExtMap.map.addControl(AppliedStreetViewControl);
