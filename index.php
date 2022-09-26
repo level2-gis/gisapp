@@ -217,20 +217,23 @@ function goMobile($lang, $scanner) {
 }
 
 $server_os = php_uname('s');
-$def_lang = strtolower(filter_input(INPUT_GET,'lang',FILTER_SANITIZE_STRING));
-$mobile = strtolower(filter_input(INPUT_GET,'mobile',FILTER_SANITIZE_STRING));
-$public = strtolower(filter_input(INPUT_GET,'public',FILTER_SANITIZE_STRING));
+$def_lang = strtolower(filter_input(INPUT_GET, 'lang', FILTER_SANITIZE_STRING));
+$mobile = strtolower(filter_input(INPUT_GET, 'mobile', FILTER_SANITIZE_STRING));
+$public = strtolower(filter_input(INPUT_GET, 'public', FILTER_SANITIZE_STRING));
 
 $helpers = new Helpers();
 
+//for embedding gisapp into iframe
+ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_secure', 'true');
 session_start();
 
 $client_path = $helpers->getClientPath();
 $has_portal = $helpers->hasPortal();
 
-if($def_lang>'') {
+if ($def_lang > '') {
     $lang_fn = $client_path . 'admin/languages/' . $def_lang . '.js';
-    if(!(file_exists($lang_fn))) {
+    if (!(file_exists($lang_fn))) {
         $def_lang = defined('DEFAULT_LANG') ? DEFAULT_LANG : 'en';
     }
 }
