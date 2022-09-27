@@ -1635,6 +1635,38 @@ function postLoading() {
 
     //draw layers outside scale gray
     setGrayNameWhenOutsideScale();
+
+    //check if guest user, display window with title and text from settings
+    if (projectData.user == 'guest' && Eqwc.settings.guestWinTitle) {
+        var guestWin = new Ext.Window({
+            //id: 'exportWindow',
+            title: Eqwc.settings.guestWinTitle,
+            width: 400,
+            height: 400,
+            resizable: false,
+            closable: false,
+            modal: true,
+            autoScroll: true,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'  // Child items are stretched to full width
+            },
+            items: [{
+                xtype: 'textarea',
+                readOnly: true,
+                value: Eqwc.settings.guestWinText,
+                selectOnFocus: false,
+                flex: 1
+            }],
+            buttonAlign: 'center',
+            buttons: [{
+                text: Eqwc.settings.guestWinConfirm,
+                handler: function (btn) {
+                    btn.findParentByType('window').close();
+                }
+            }]
+        }).show();
+    }
 }
 
 /*
