@@ -254,16 +254,16 @@ function postLoading() {
                 }]
             });
 
-            // adjust title position
-            Ext.get('panel_header_title').setStyle('padding-left', '8px');
-            var paddingTop = (headerLogoHeight - 18) / 2;
-            Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
+            // adjust title position //moved to CSS
+            //Ext.get('panel_header_title').setStyle('padding-left', '10px');
+            //var paddingTop = (headerLogoHeight - 15) / 2;
+            //Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
         }
         Ext.get('panel_header_title').update(titleBarText);
 
         //user
         Ext.getCmp('GisBrowserPanel').tools.user.dom.qtip = projectData.user;
-        // adjust position
+        // adjust position  //moved to CSS
         //paddingTop = (headerLogoHeight - 12) / 2;
         //Ext.get('panel_header_user').setStyle('padding-top', paddingTop + 'px');
 

@@ -11,6 +11,8 @@
 #panel_header_title {
     float: left;
     font-size: 20px;
+    padding-left: 10px;
+    padding-top: 10px;
 }
 
 #panel_header_link {
@@ -26,8 +28,8 @@
     background-image: url(../img/user_gray.png);
     /*background-position: center;*/
     background-size: contain;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     /*position: absolute;*/
     right: 8px;
 }
