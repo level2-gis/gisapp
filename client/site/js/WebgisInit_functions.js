@@ -322,9 +322,11 @@ function postLoading() {
         // info buttons in layer tree
         //addInfoButtonsToLayerTree();
 
-        //expand first level
-        layerTree.root.firstChild.collapseChildNodes(true);
-        layerTree.root.firstChild.expand(false, false);
+        //expand first level depending on the setting
+        if (!projectData.expandAllGroups) {
+            layerTree.root.firstChild.collapseChildNodes(true);
+            layerTree.root.firstChild.expand(false, false);
+        }
     }
     layerTree.checkedLeafs = [];
     layerTree.resumeEvents();

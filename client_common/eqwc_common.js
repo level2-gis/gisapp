@@ -18,8 +18,11 @@ if(projectData.wsgi === null && projectData.geoCode === null && Eqwc.settings.ws
 if(projectData.locationServices === null && Eqwc.settings.locationServices) {
     projectData.locationServices = Eqwc.settings.locationServices;
 }
-if(projectData.defaultCoordinatesCrsCode === null && Eqwc.settings.defaultCoordinatesCrsCode) {
+if (projectData.defaultCoordinatesCrsCode === null && Eqwc.settings.defaultCoordinatesCrsCode) {
     projectData.defaultCoordinatesCrsCode = Eqwc.settings.defaultCoordinatesCrsCode;
+}
+if (projectData.expandAllGroups === null && Eqwc.settings.expandAllGroups) {
+    projectData.expandAllGroups = Eqwc.settings.expandAllGroups;
 }
 
 Eqwc.geolocationErrors = {
