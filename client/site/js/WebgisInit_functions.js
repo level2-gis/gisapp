@@ -1185,10 +1185,16 @@ function postLoading() {
                     return val;
                 };
 
+                //override SearchPanel title if panelTitle exists in searchconfig
+                if (searchPanelConfigs[j].panelTitle) {
+                    var sPanel = Ext.getCmp('SearchPanel');
+                    sPanel.setTitle(searchPanelConfigs[j].panelTitle);
+                }
+
                 var panel = new QGIS.SearchPanel(searchPanelConfigs[j]);
                 panel.gridLocation = 'default';
                 panel.gridTitle = searchResultString[lang];
-                panel.gridResults = Eqwc.settings.limitSearchMaxResults ? Eqwc.settings.limitSearchMaxResults: 10;
+                panel.gridResults = Eqwc.settings.limitSearchMaxResults ? Eqwc.settings.limitSearchMaxResults : 10;
                 panel.on("featureselected", showRecordSelected);
                 panel.on("featureselectioncleared", clearFeatureSelected);
                 panel.on("beforesearchdataloaded", showSearchPanelResults);

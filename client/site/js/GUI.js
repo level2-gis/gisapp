@@ -109,7 +109,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 			tools: [{
 				id: 'user',
 				qtip: '',
-				// hidden:true,
+				hidden: projectData.user == 'guest',
 				handler: function (event, toolEl, panel) {
 					if (Eqwc.settings.useGisPortal) {
 						window.location = Eqwc.settings.gisPortalProfile;
@@ -122,7 +122,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 				cmargins: '3 3 3 3',
 				title: leftPanelTitleString[lang],
 				height: 333,
-				width: 250,
+				width: 300,
 				collapsible: true,
 				boxMinWidth: 200,
 				boxMaxWidth: 400,
@@ -171,9 +171,16 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 						xtype: 'panel',
 						title: searchPanelTitleString[lang],
 						id: 'SearchPanel',
-                        //iconCls: 'x-cols-icon',
-                        border: false,
+						//iconCls: 'x-cols-icon',
+						border: false,
 						frame: false,
+						listeners: {
+							"collapse": function () {
+								var panel = this.findParentByType('panel');
+								var idx = panel.initialConfig.activeItem;
+								panel.items.get(idx).expand();	//open default panel (layers) after we close search
+							}
+						},
 						items: [{
 							xtype: 'tabpanel',
 							enableTabScroll: true,

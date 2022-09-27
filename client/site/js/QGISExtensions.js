@@ -957,6 +957,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     handler: function() {
                         this.fireEvent("featureselectioncleared");
                         this.form.getForm().reset();
+                        if (this.resultsGrid) {
+                            this.resultsGrid.hide();
+                        }
                     }
                 }
             ],
