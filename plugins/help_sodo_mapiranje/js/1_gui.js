@@ -22,10 +22,7 @@
 
 // new button for the toolbar
 customButtons.push(
-    // Add a separator and a button
     {
-        xtype: 'tbseparator'
-    }, {
         xtype: 'button',
         scale: 'medium',
         icon: 'plugins/help_sodo_mapiranje/img/icon.png',
