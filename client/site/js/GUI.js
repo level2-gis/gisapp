@@ -122,7 +122,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 				cmargins: '3 3 3 3',
 				title: leftPanelTitleString[lang],
 				height: 333,
-				width: 300,
+				width: 310,
 				collapsible: true,
 				boxMinWidth: 200,
 				boxMaxWidth: 400,
@@ -423,17 +423,17 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 					}
 				}]
 			},
-            {
-                xtype: 'panel',
-                id: 'RightPanel',
-                title: '',
-                region: 'east',
-                split: true,
-                collapsible: true,
-                collapsed: true,
-				//hidden: true,
-                width: 300
-            },
+				{
+					xtype: 'panel',
+					id: 'RightPanel',
+					title: '',
+					region: 'east',
+					split: true,
+					collapsible: true,
+					collapsed: true,
+					hidden: true,
+					width: 300
+				},
             {
                 xtype: 'tabpanel',
                 id: 'BottomPanel',
