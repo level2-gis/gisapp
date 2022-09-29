@@ -38,8 +38,8 @@
     background-image: url(../../../plugins/sodo_logotipi/img/logotipi.png);
     background-position: center;
     /*background-size: contain;*/
-    /*width: 32px;*/
-    height: 32px;
+    width: 720px;
+    height: 38px;
     position: absolute;
     /*right: 8px;*/
 }
