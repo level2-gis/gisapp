@@ -33,7 +33,14 @@ Ext.tree.TriStateNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     if(typeof checked == 'boolean'){
       this.isUpdating = true;
       this.node.eachChild(function(n){
-        n.getUI().toggleCheck(checked);
+        //uros, only enable child that have initial visibilityChecked
+        if (checked) {
+          if (n.attributes.layer.metadata.visibilityChecked) {
+            n.getUI().toggleCheck(checked);
+          }
+        } else {
+          n.getUI().toggleCheck(checked);
+        }
       }, this);
       delete this.isUpdating;
     }

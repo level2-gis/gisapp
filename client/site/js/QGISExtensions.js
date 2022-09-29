@@ -138,17 +138,20 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                           node.getAttribute("checkbox") : null;
                         attrNode = node.getAttributeNode("legend");
                         var showLegend = (attrNode && attrNode.specified) ?
-                          node.getAttribute("legend") : null;
+                            node.getAttribute("legend") : null;
                         attrNode = node.getAttributeNode("metadata");
                         var showMetadata = (attrNode && attrNode.specified) ?
-                          node.getAttribute("metadata") : null;
+                            node.getAttribute("metadata") : null;
 
                         var noSubsets = node.getAttribute('noSubsets');
                         var fixedWidth = node.getAttribute('fixedWidth');
                         var fixedHeight = node.getAttribute('fixedHeight');
+                        var mutuallyExclusive = node.getAttribute('mutuallyExclusive');
+                        var visibilityChecked = node.getAttribute('visibilityChecked');
                         var parent = parentLayer || {},
                             extend = OpenLayers.Util.extend;
-                        var layer = {nestedLayers: [],
+                        var layer = {
+                            nestedLayers: [],
                             styles: parentLayer ? [].concat(parentLayer.styles) : [],
                             srs: parentLayer ? extend({}, parent.srs) : {},
                             metadataURLs: [],
@@ -159,26 +162,26 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                             identifiers: {},
                             keywords: [],
                             queryable: (queryable && queryable !== "") ?
-                                (queryable === "1" || queryable === "true" ) :
+                                (queryable === "1" || queryable === "true") :
                                 (parent.queryable || false),
                             cascaded: (cascaded !== null) ? parseInt(cascaded) :
                                 (parent.cascaded || 0),
                             opaque: opaque ?
-                                (opaque === "1" || opaque === "true" ) :
+                                (opaque === "1" || opaque === "true") :
                                 (parent.opaque || false),
 
-                                        // QGIS extensions
-                            visible: (visible && visible !== "") ? ( visible === "1" || visible === "true" ) : true,
+                            // QGIS extensions
+                            visible: (visible && visible !== "") ? (visible === "1" || visible === "true") : false,
                             displayField: displayField,
                             showCheckbox: (showCheckbox && showCheckbox !== "") ?
-                                ( showCheckbox === "1" || showCheckbox === "true" ) : true,
+                                (showCheckbox === "1" || showCheckbox === "true") : true,
                             showLegend: (showLegend && showLegend !== "") ?
-                                ( showLegend === "1" || showLegend === "true" ) : true,
+                                (showLegend === "1" || showLegend === "true") : true,
                             showMetadata: (showMetadata && showMetadata !== "") ?
-                                ( showMetadata === "1" || showMetadata === "true" ) : true,
+                                (showMetadata === "1" || showMetadata === "true") : true,
 
                             noSubsets: (noSubsets !== null) ?
-                                (noSubsets === "1" || noSubsets === "true" ) :
+                                (noSubsets === "1" || noSubsets === "true") :
                                 (parent.noSubsets || false),
                             fixedWidth: (fixedWidth != null) ?
                                 parseInt(fixedWidth) : (parent.fixedWidth || 0),
@@ -186,7 +189,9 @@ Ext.extend(QGIS.WMSCapabilitiesLoader, GeoExt.tree.WMSCapabilitiesLoader, {
                                 parseInt(fixedHeight) : (parent.fixedHeight || 0),
                             minScale: parent.minScale,
                             maxScale: parent.maxScale,
-                            attribution: parent.attribution
+                            attribution: parent.attribution,
+                            mutuallyExclusive: (mutuallyExclusive === '1' || mutuallyExclusive === 'true') ? true : false,
+                            visibilityChecked: (visibilityChecked === '1' || visibilityChecked === 'true') ? true : false
                         };
 
                         //tables without geometry

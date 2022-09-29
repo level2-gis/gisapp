@@ -143,8 +143,21 @@ function postLoading() {
     var leafsChangeFunction = function(node, checked) {
 
         var lay = wmsLoader.layerTitleNameMapping[node.text];
+        if (lay == undefined) {
+            return;
+        }
 
-        if (node.isLeaf() && lay) {
+        var exclGroup = node.parentNode.attributes.layer.metadata.mutuallyExclusive;
+        if (exclGroup && checked !== false) {
+            //loop through all items in the same group and switch off all except this node
+            Ext.each(node.parentNode.childNodes, function (item, index, length) {
+                if (item.text != node.text) {
+                    item.getUI().toggleCheck(false);
+                }
+            });
+        }
+
+        if (node.isLeaf()) {
             //check if have to replace for identify
             var queryLay = Eqwc.common.getIdentifyLayerName(lay);
             var queryLayId = wmsLoader.layerTitleNameMapping[queryLay];
