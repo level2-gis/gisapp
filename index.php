@@ -278,7 +278,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20200228"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20191222"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/style-gray.css?v=20220927"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/style-gray.css?v=20220929"/>
 
     <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v='.$editVer.'"/>';
