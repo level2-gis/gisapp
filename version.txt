@@ -1,2 +1,2 @@
-1.9.22   - Application
+1.9.23   - Application
 19       - Database
