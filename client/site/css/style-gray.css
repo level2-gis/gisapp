@@ -41,6 +41,7 @@
     width: 720px;
     height: 38px;
     position: absolute;
+    cursor: default;
     /*right: 8px;*/
 }
 
