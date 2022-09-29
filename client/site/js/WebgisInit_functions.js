@@ -1652,24 +1652,18 @@ function postLoading() {
     //check if guest user, display window with title and text from settings
     if (projectData.user == 'guest' && Eqwc.settings.guestWinTitle) {
         var guestWin = new Ext.Window({
-            //id: 'exportWindow',
             title: Eqwc.settings.guestWinTitle,
             width: 400,
             height: 400,
             resizable: false,
             closable: false,
-            modal: true,
             autoScroll: true,
-            layout: {
-                type: 'vbox',
-                align: 'stretch'  // Child items are stretched to full width
-            },
+            modal: true,
             items: [{
-                xtype: 'textarea',
-                readOnly: true,
-                value: Eqwc.settings.guestWinText,
-                selectOnFocus: false,
-                flex: 1
+                xtype: 'panel',
+                html: Eqwc.settings.guestWinText,
+                autoHeight: true,
+                padding: 5
             }],
             buttonAlign: 'center',
             buttons: [{
