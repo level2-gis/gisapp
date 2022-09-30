@@ -1653,8 +1653,8 @@ function postLoading() {
     if (projectData.user == 'guest' && Eqwc.settings.guestWinTitle) {
         var guestWin = new Ext.Window({
             title: Eqwc.settings.guestWinTitle,
-            width: 400,
-            height: 400,
+            width: 450,
+            height: 450,
             resizable: false,
             closable: false,
             autoScroll: true,
