@@ -1,4 +1,11 @@
 /* this file contains some common styles and overriden openlayers styles */
+p {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 0;
+    margin-right: 0;
+}
 
 #dpiDetection {
     height: 1in;
