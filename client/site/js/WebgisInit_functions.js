@@ -2810,13 +2810,13 @@ function setGrayNameWhenOutsideScale() {
 
             MaxScale = Math.round(wmsLoader.projectSettings.capability.layers[i].maxScale);
             //if no MaxScale is defined
-            if (MaxScale < 1){
+            if (isNaN(MaxScale)) {
                 MaxScale = 1;
             }
 
             MinScale = Math.round(wmsLoader.projectSettings.capability.layers[i].minScale);
             //if no MinScale is defined
-            if (MinScale < 1){ //if not defined, this value is very small
+            if (isNaN(MinScale)) { //if not defined, this value is very small
                 MinScale = 150000000; //within terrestrial dimensions big enough
             }
 
