@@ -230,8 +230,13 @@ Eqwc.common.reverseArray = function(arr) {
     return newArray;
 };
 
-Eqwc.common.redirect = function() {
-    Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru="+Eqwc.common.getProjectUrl() : window.location.href = "./admin/login.php?action=logout&map="+projectData.project;
+Eqwc.common.redirect = function () {
+    //check for public map
+    if (window.location.href.toLowerCase().indexOf('public=on') > -1) {
+        window.location.href = window.location.href;
+    } else {
+        Eqwc.settings.useGisPortal ? window.location.href = Eqwc.settings.gisPortalRoot + "login?ru=" + Eqwc.common.getProjectUrl() : window.location.href = "./admin/login.php?action=logout&map=" + projectData.project;
+    }
 };
 
 Eqwc.common.addMapFilter = function(layer, field, value, operator) {
