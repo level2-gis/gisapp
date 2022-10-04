@@ -34,6 +34,29 @@
   right: 8px;
 }
 
+.x-tool-sodo_logotipi {
+  background-image: url(../../../plugins/sodo_logotipi/img/logotipi.png);
+  background-position: center;
+  /*background-size: contain;*/
+  width: 720px;
+  height: 38px;
+  position: absolute;
+  cursor: default;
+  /*right: 8px;*/
+}
+
+.x-tool-geoportal_logo {
+  background-image: url(../../../admin/resources/images/_temp.png);
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  /*position: absolute;*/
+  /*cursor: default;*/
+  /*right: 8px;*/
+}
+
+
 .olTileImage.olImageLoadError {
   display: none !important;
 }
