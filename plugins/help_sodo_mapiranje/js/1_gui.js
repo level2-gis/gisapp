@@ -39,7 +39,7 @@ Eqwc.plugins["help_sodo_mapiranje"].customToolbarLoad = function() {
     btn.setHandler(newWindow);
 
     function newWindow() {
-        var url = "plugins/help_sodo_mapiranje/Navodila za uporabo spletne aplikacije.pdf?n=" + getRandomNum();
+        var url = "https://sodo.si/storage/app/media/Navodila za uporabo spletne aplikacije SODOKart.pdf?n=" + getRandomNum();
         window.open(url);
     }
 
