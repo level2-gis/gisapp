@@ -41,6 +41,9 @@ if (!property_exists($settings, "defaultCoordinatesCrsCode")) {
 if (!property_exists($settings, "editor")) {
     $settings->editor = null;
 }
+if (!property_exists($settings, "expandAllGroups")) {
+    $settings->expandAllGroups = false;
+}
 if (!property_exists($data, "project_id")) {
     $data->project_id = 0;
 }
