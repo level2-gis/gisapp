@@ -332,6 +332,8 @@ try {
     $user = null;
     if (isset($_SESSION["user_name"])) {
         $user = $_SESSION["user_name"];
+        //add username to apache access log for this request
+        apache_note('username',$user);
     }
 
     $query_arr["map"] = $projectPath;
