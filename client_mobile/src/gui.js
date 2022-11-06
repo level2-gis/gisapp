@@ -781,28 +781,35 @@ Gui.showFeatureInfoResults = function (status, data) {
             $('#featureInfoResults').html(data.join(''));
         }
     } else {
-        $('#featureInfoResults').html("<span style='color:red'>" + data + "</span>");
+        var html = Gui.addFeatureInfoTopButtons();
+        $('#featureInfoResults').html(html + '</br>' + "<span style='color:red'>" + data + "</span>");
+        $('#featureInfoResults').trigger('create');
     }
 
     $('#panelFeatureInfo').panel('open');
     Map.toggleClickMarker(true);
 };
 
+Gui.addFeatureInfoTopButtons = function () {
+    var ret = '';
+
+    ret += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
+
+    //add button
+    if (typeof (Editor) == 'function' && mobEditor.layer) {
+        ret += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
+        //ret += '<a href="javascript:mobEditor.startOffset();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAddOffset + '</a>';
+    }
+
+    return ret;
+};
+
 // convert XML feature info results to HTML
 Gui.showXMLFeatureInfoResults = function (results) {
-    var html = "";
     var filesAlias = Eqwc.settings.qgisFilesFieldAlias ? Eqwc.settings.qgisFilesFieldAlias : 'files';
     filesAlias = filesAlias.toUpperCase();
 
-    //check if we don't have single no geometry layer
-    if (!(results.length == 1 && projectData.layers[results[0].layer].geom_type == 'No geometry')) {
-        html += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
-
-        //add button
-        if (typeof (Editor) == 'function' && mobEditor.layer) {
-            html += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
-        }
-    }
+    var html = Gui.addFeatureInfoTopButtons();
 
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
@@ -1030,6 +1037,10 @@ Gui.updateTranslations = function () {
     $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
 
     $('#panelFeatureInfo b').html(I18n.featureInfo.header);
+
+    $('#measurePanel label[for=measureArea]').html(I18n.measureArea);
+    $('#measurePanel .ui-slider-label:contains(Ein)').html(I18n.properties.on);
+    $('#measurePanel .ui-slider-label:contains(Aus)').html(I18n.properties.off);
 };
 
 //Gui.toggleFollowing = function(enabled) {
@@ -1551,6 +1562,19 @@ Gui.initViewer = function () {
         }
     });
 
+    //measurement
+    $('#btnMeasure').click(Map.startMeasuring);
+    $('#btnMeasureFinish').click(function () {
+        Map.finishMeasuringSketch();
+    });
+    $('#btnMeasureStop').click(function () {
+        Map.stopMeasuring();
+    });
+    $('#measureArea').on('change', function (e) {
+        Map.map.removeInteraction(Map.measurementSketch);
+        Map.startMeasuring();
+    });
+
     // properties
     // $('#switchFollow').on('change', function(e) {
     //   Gui.toggleFollowing($(this).val() == 'on');
@@ -1616,7 +1640,9 @@ Gui.initViewer = function () {
         Map.toggleClickHandling(false);
     });
     $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function () {
-        Map.toggleClickHandling(true);
+        if (!Map.measurementActive) {
+            Map.toggleClickHandling(true);
+        }
     });
 
     //this is marker to display location of search result (geocoding)

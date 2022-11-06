@@ -61,6 +61,14 @@ body {
     background-image: url("../img/save-icon_32.png");
 }
 
+.ui-icon-measure {
+    background-image: url("../img/measure.png");
+}
+
+.ui-icon-check2 {
+    background-image: url("../img/check.png");
+}
+
 .ui-icon-record {
     background-image: url("../img/record.png");
 }
@@ -104,13 +112,28 @@ body {
     bottom: 60px;
 }
 
+#btnMeasure {
+    right: 70px;
+    bottom: 0;
+}
+
+#btnMeasureFinish {
+    left: 70px;
+    bottom: 25px;
+}
+
+#btnMeasureStop {
+    left: 10px;
+    bottom: 25px;
+}
+
 #btnRecord {
-    right: 130px;
+    right: 190px;
     bottom: 0;
 }
 
 #btnRecordStop {
-    right: 130px;
+    right: 190px;
     bottom: 0;
 }
 
@@ -136,7 +159,7 @@ body {
 }
 
 #btnInfo {
-    right: 70px;
+    right: 130px;
     bottom: 0;
 }
 
@@ -190,7 +213,7 @@ body {
     padding: 4px;
 }
 
-#gotoPanel {
+#gotoPanel, #measurePanel {
     border-radius: 8px;
     position: absolute;
     font-size: 1.2em;
@@ -668,4 +691,41 @@ input[data-type='search']::-ms-clear {
     width: auto;
     padding-top: 10px;
     padding-left: 10px;
+}
+
+.tooltip {
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    color: white;
+    padding: 4px 8px;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.tooltip-measure {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.tooltip-static {
+    background-color: #ffcc33;
+    color: black;
+    border: 1px solid white;
+}
+
+.tooltip-measure:before,
+.tooltip-static:before {
+    border-top: 6px solid rgba(0, 0, 0, 0.5);
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    margin-left: -7px;
+    left: 50%;
+}
+
+.tooltip-static:before {
+    border-top-color: #ffcc33;
 }

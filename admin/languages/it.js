@@ -34,6 +34,7 @@ var TR = {
     editMode: 'Modalità modifica',
     editDisabled: 'Modifica disabilitata',
     editAdd: 'Add',
+    editAddOffset: 'Offset',
     editEdit: 'Edit',
     editDelete: 'Cancella',
     editSave: 'Salva',
@@ -156,3 +157,5 @@ I18n.login = {
 };
 
 I18n.networkDown = 'Internet connection lost';
+
+I18n.measureArea = 'Measure area';

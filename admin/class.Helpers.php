@@ -698,24 +698,14 @@ class Helpers
         }
 
         switch ($role) {
+            case 'admin':
+            case 'power':
+            case 'editor':
             case null :
                 return TRUE;
 
-            case 'admin' :
-                return TRUE;
-
-            case 'power' :
-                return TRUE;
-
-            case 'editor' :
-                return TRUE;
-
-            case 'user' :
-                return FALSE;
-
-            case 'public' :
-                return FALSE;
-
+            case 'user':
+            case 'public':
             default :
                 return FALSE;
         }

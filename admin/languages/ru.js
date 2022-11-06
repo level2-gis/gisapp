@@ -33,6 +33,7 @@ var TR = {
     editMode: 'Режим редактирования',
     editDisabled: 'Редактирование отключено',
     editAdd: 'Add',
+    editAddOffset: 'Offset',
     editEdit: 'Edit',
     editDelete: 'Удалить',
     editSave: 'Сохранить',
@@ -155,3 +156,5 @@ I18n.login = {
 };
 
 I18n.networkDown = 'Internet connection lost';
+
+I18n.measureArea = 'Measure area';

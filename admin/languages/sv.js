@@ -34,6 +34,7 @@ var TR = {
     editMode: 'Editeringsläge',
     editDisabled: 'Editering inaktiverad',
     editAdd: 'Add',
+    editAddOffset: 'Offset',
     editEdit: 'Edit',
     editDelete: 'Ta bort',
     editSave: 'Spara',
@@ -156,3 +157,5 @@ I18n.login = {
 };
 
 I18n.networkDown = 'Internet connection lost';
+
+I18n.measureArea = 'Measure area';
