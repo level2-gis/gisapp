@@ -796,7 +796,7 @@ Gui.addFeatureInfoTopButtons = function () {
     ret += '<a href="javascript:Map.openNavigation();" data-theme="e" data-inline="true" data-mini="true" data-role="button">' + TR.navigation + '</a>';
 
     //add button
-    if (typeof (Editor) == 'function' && mobEditor.layer) {
+    if (typeof (Editor) == 'function' && mobEditor && mobEditor.layer) {
         ret += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
         ret += '<a href="javascript:mobEditor.startOffset();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAddOffset + '</a>';
     }
