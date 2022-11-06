@@ -302,8 +302,10 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
     switch (lay.type) {
         case 'OSM' :
+            var definition = $.parseJSON(lay.definition);
             layOl3 = new ol.layer.Tile({
                 visible: visible,
+                opacity: definition.opacity,
                 //name: lay.name,
                 source: new ol.source.OSM
             });
@@ -314,6 +316,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
             var definition = $.parseJSON(lay.definition);
             layOl3 = new ol.layer.Tile({
                 visible: visible,
+                opacity: definition.options.opacity,
                 //name: lay.name,
                 source: new ol.source.XYZ(definition)
             });
@@ -432,6 +435,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
             //tiled wms layer
             layOl3 = new ol.layer.Tile({
                 visible: visibility,
+                opacity: definition.options.opacity,
                 //name: lay.name,
                 source: new ol.source.TileWMS({
                     url: definition.url,
