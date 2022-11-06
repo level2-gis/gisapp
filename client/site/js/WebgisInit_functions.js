@@ -2941,16 +2941,16 @@ function getExternalWMSDefinition(layer) {
     }
 
     if(type=='WMS') {
-        definition[layerName + ':url'] = layer.url;
-        definition[layerName + ':format'] = layer.params.FORMAT;
+        definition[layerName+':url']        = layer.url;
+        definition[layerName+':format']     = layer.params.FORMAT;
         definition[layerName+':crs']        = projectData.crs;
         definition[layerName+':layers']     = layer.params.LAYERS;
         definition[layerName+':styles']     = layer.params.STYLES;
 
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
     } else if (layer.print) {
-        definition[layerName + ':url'] = layer.print.url;
-        definition[layerName + ':format'] = layer.print.format;
+        definition[layerName+':url']        = layer.print.url;
+        definition[layerName+':format']     = layer.print.format;
         definition[layerName+':crs']        = projectData.crs;
         definition[layerName+':layers']     = layer.print.layers;
         definition[layerName+':styles']     = layer.print.styles;
