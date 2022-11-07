@@ -385,6 +385,13 @@ Gui.loadLayers = function (data) {
             var layerVisible = (visibleLayers.indexOf($(this).data('layer')) != -1);
             if (layerVisible != $(this).is(':checked')) {
                 // layer visibility changed
+                //when switching on group, check if layer has visibility_checked false and return
+                //TODO cant' use this, need to know if user clicked on group or layer
+                //if ($(this).is(':checked') == true && projectData.layers[$(this).data('layer')].parent !== null && projectData.layers[$(this).data('layer')].visibility_checked == false) {
+                //    return;
+                //}
+                //console.log(index + ' ' + $(this).data('layer') + ' '+ $(this).is(':checked'));
+
                 Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
                 Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
             }
