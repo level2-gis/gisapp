@@ -118,6 +118,11 @@ body {
 }
 
 #btnMeasureFinish {
+    left: 130px;
+    bottom: 25px;
+}
+
+#btnMeasureRemove {
     left: 70px;
     bottom: 25px;
 }

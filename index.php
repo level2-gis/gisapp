@@ -67,7 +67,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
         <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20220608"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20221109"/>
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
     </head>
     <body>
@@ -90,6 +90,8 @@ function goMobile($lang, $scanner) {
                 <a href="#" id="btnMeasure" data-role="button" data-icon="measure" data-iconpos="notext"
                    data-rel="dialog" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnMeasureStop" data-role="button" data-icon="goto_stop"
+                   data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnMeasureRemove" data-role="button" data-icon="remove"
                    data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnMeasureFinish" data-role="button" data-icon="check2"
                    data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>

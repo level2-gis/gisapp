@@ -1574,6 +1574,9 @@ Gui.initViewer = function () {
     $('#btnMeasureFinish').click(function () {
         Map.finishMeasuringSketch();
     });
+    $('#btnMeasureRemove').click(function () {
+        Map.removeLastMeasurePoint();
+    });
     $('#btnMeasureStop').click(function () {
         Map.stopMeasuring();
     });
