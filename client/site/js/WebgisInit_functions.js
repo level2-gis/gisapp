@@ -2941,10 +2941,14 @@ function getExternalWMSDefinition(layer) {
     }
 
     if(type=='WMS') {
+        if (layer.params.LAYERS.length == 0) {
+            return null;
+        }
+
         definition[layerName+':url']        = layer.url;
         definition[layerName+':format']     = layer.params.FORMAT;
         definition[layerName+':crs']        = projectData.crs;
-        definition[layerName+':layers']     = layer.params.LAYERS;
+        definition[layerName+':layers']     = layer.params.LAYERS.join(',');
         definition[layerName+':styles']     = layer.params.STYLES;
 
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
