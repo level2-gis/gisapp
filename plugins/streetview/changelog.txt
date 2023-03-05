@@ -1,0 +1,4 @@
+1.0.3 20220802
+- fix for creating multiple divs for streetview
+- close tab on deactivation
+- additional parameters

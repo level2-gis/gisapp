@@ -46,10 +46,17 @@ function prepareStreetView() {
         });
 
         // Create a new map control based on Control Click Event
-        StreetViewControl = new OpenLayers.Control.Click( {
-            trigger: function(e) {
+        StreetViewControl = new OpenLayers.Control.Click({
+            trigger: function (e) {
                 openStreetView(geoExtMap.map.getLonLatFromViewPortPx(e.xy));
             }
+
+        });
+
+        StreetViewControl.events.register('deactivate', this, function () {
+            var panel = Ext.getCmp('RightPanel');
+            panel.removeAll();
+            panel.collapse();
         });
 
         geoExtMap.map.addControl(StreetViewControl);
@@ -66,6 +73,12 @@ function prepareStreetView() {
 function openStreetView (location) {
 
     //TODO have to check if google is avaliable
+
+    //remove Google StreetView if loaded
+    var gs = document.getElementsByClassName('gm-style')[0];
+    if (gs) {
+        gs.parentElement.removeChild(gs);
+    }
 
     var panel = Ext.getCmp('RightPanel');
     panel.removeAll();
@@ -97,7 +110,9 @@ function openStreetView (location) {
             heading: 0,
             pitch: 0,
             zoom: 1
-        }
+        },
+        imageDateControl: true,
+        showRoadLabels: true
     };
 
     //panorama = new gxp.GoogleStreetViewPanel({
