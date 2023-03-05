@@ -1,6 +1,6 @@
 // OpenLayers. See https://openlayers.org/
 // License: https://raw.githubusercontent.com/openlayers/openlayers/master/LICENSE.md
-// Version: v4.6.5-4-g46d9969b6
+// Version: v4.6.5-7-gae5476c
 ;(function (root, factory) {
   if (typeof exports === "object") {
     module.exports = factory();
@@ -61333,6 +61333,7 @@ ol.interaction.Draw.prototype.addToDrawing_ = function(event) {
  * @api
  */
 ol.interaction.Draw.prototype.removeLastPoint = function() {
+  let finishCoordinate;
   if (!this.sketchFeature_) {
     return;
   }
@@ -61341,14 +61342,20 @@ ol.interaction.Draw.prototype.removeLastPoint = function() {
   if (this.mode_ === ol.interaction.Draw.Mode_.LINE_STRING) {
     coordinates = this.sketchCoords_;
     coordinates.splice(-2, 1);
-    this.geometryFunction_(coordinates, geometry);
     if (coordinates.length >= 2) {
       this.finishCoordinate_ = coordinates[coordinates.length - 2].slice();
+      finishCoordinate = this.finishCoordinate_.slice();
+      coordinates[coordinates.length-1] = finishCoordinate;
     }
+    this.geometryFunction_(coordinates, geometry);
   } else if (this.mode_ === ol.interaction.Draw.Mode_.POLYGON) {
     coordinates = this.sketchCoords_[0];
     coordinates.splice(-2, 1);
     sketchLineGeom = /** @type {ol.geom.LineString} */ (this.sketchLine_.getGeometry());
+    if (coordinates.length >= 2) {
+      finishCoordinate = coordinates[coordinates.length - 2].slice();
+      coordinates[coordinates.length-1] = finishCoordinate;
+    }
     sketchLineGeom.setCoordinates(coordinates);
     this.geometryFunction_(this.sketchCoords_, geometry);
   }
@@ -96120,7 +96127,7 @@ goog.exportProperty(
     ol.View.prototype,
     'un',
     ol.View.prototype.un);
-ol.VERSION = 'v4.6.5-4-g46d9969b6';
+ol.VERSION = 'v4.6.5-7-gae5476c';
 OPENLAYERS.ol = ol;
 
   return OPENLAYERS.ol;
