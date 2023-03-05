@@ -52,8 +52,8 @@ function goMobile($lang, $scanner) {
         ?>
 
         <!-- OpenLayers 3 -->
-        <script src="client_mobile/lib/ol3/ol.js?v=4.6.5a"></script>
-        <!--        <script src="client_mobile/lib/ol3/ol-debug.js?v=4.6.5a"></script>-->
+        <script src="client_mobile/lib/ol3/ol.js?v=4.6.5b"></script>
+        <!--        <script src="client_mobile/lib/ol3/ol-debug.js?v=4.6.5b"></script>-->
         <link rel="stylesheet" href="client_mobile/lib/ol3/ol.css?v=4.6.5"/>
 
         <script type="text/javascript" src="client_mobile/eqwc_mobile_load.php"></script>
@@ -61,7 +61,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
         <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20220608"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20221110"/>
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
     </head>
     <body>
@@ -84,6 +84,8 @@ function goMobile($lang, $scanner) {
                 <a href="#" id="btnMeasure" data-role="button" data-icon="measure" data-iconpos="notext"
                    data-rel="dialog" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnMeasureStop" data-role="button" data-icon="goto_stop"
+                   data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
+                <a href="#" style="display:none" id="btnMeasureRemove" data-role="button" data-icon="remove"
                    data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnMeasureFinish" data-role="button" data-icon="check2"
                    data-iconpos="notext" data-rel="dialog" data-theme="e" class="mapicon"></a>
