@@ -302,8 +302,10 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
 
     switch (lay.type) {
         case 'OSM' :
+            var definition = $.parseJSON(lay.definition);
             layOl3 = new ol.layer.Tile({
                 visible: visible,
+                opacity: definition.opacity,
                 //name: lay.name,
                 source: new ol.source.OSM
             });
@@ -314,6 +316,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
             var definition = $.parseJSON(lay.definition);
             layOl3 = new ol.layer.Tile({
                 visible: visible,
+                opacity: definition.options.opacity,
                 //name: lay.name,
                 source: new ol.source.XYZ(definition)
             });
@@ -432,6 +435,7 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
             //tiled wms layer
             layOl3 = new ol.layer.Tile({
                 visible: visibility,
+                opacity: definition.options.opacity,
                 //name: lay.name,
                 source: new ol.source.TileWMS({
                     url: definition.url,
@@ -1068,12 +1072,12 @@ Map.activateClickHandler = function (name) {
 };
 
 Map.featureInfoOnLocation = function () {
-    if (!Map.ignoreClick) {
+    //if (!Map.ignoreClick) {
         var location = Map.geolocation.getPosition();
         var fi = new FeatureInfo(Gui.showFeatureInfoResults);
         fi.callOnLocation(location, Config.featureInfo.useWMSGetFeatureInfo, null);
         Map.lastClickPos = location;
-    }
+    //}
 };
 
 Map.openNavigation = function () {
@@ -1142,27 +1146,40 @@ Map.loadHiddenIcons = function () {
 
 Map.formatLength = function (line) {
     var length = ol.Sphere.getLength(line);
+    if (length === 0) {
+        $(".tooltip-measure").hide();
+        return null;
+    }
     var output;
-    if (length > 100) {
+    if (length > 1000) {
         output = (Math.round(length / 1000 * 100) / 100) +
             ' ' + 'km';
     } else {
         output = (Math.round(length * 100) / 100) +
             ' ' + 'm';
     }
+    $(".tooltip-measure").show();
     return output;
 };
 
 Map.formatArea = function (polygon) {
     var area = ol.Sphere.getArea(polygon);
+    if (area === 0) {
+        $(".tooltip-measure").hide();
+        return null;
+    }
     var output;
-    if (area > 10000) {
+    if (area >= 1000000) {
         output = (Math.round(area / 1000000 * 100) / 100) +
             ' ' + 'km<sup>2</sup>';
+    } else if (area < 1000000 && area >= 10000) {
+        output = (Math.round(area / 10000 * 100) / 100) +
+            ' ' + 'ha';
     } else {
         output = (Math.round(area * 100) / 100) +
             ' ' + 'm<sup>2</sup>';
     }
+    $(".tooltip-measure").show();
     return output;
 };
 
@@ -1203,6 +1220,7 @@ Map.measurementLayer = new ol.layer.Vector({
 Map.startMeasuring = function () {
 
     Map.measurementSketch = new ol.interaction.Draw({
+        clickTolerance: 1,
         source: Map.measurementLayer.getSource(),
         type: $('#measureArea').val() == 'off' ? 'LineString' : 'Polygon',
         style: new ol.style.Style({
@@ -1243,6 +1261,7 @@ Map.startMeasuring = function () {
         function (evt) {
 
             $('#btnMeasureFinish').show();
+            $('#btnMeasureRemove').show();
 
             // set sketch
             sketch = evt.feature;
@@ -1252,6 +1271,11 @@ Map.startMeasuring = function () {
             listener = sketch.getGeometry().on('change', function (evt) {
                 var geom = evt.target;
                 var output;
+                if (geom.getCoordinates().length === 0) {
+                    Map.measureTooltipElement.parentNode.setAttribute('hidden', true);
+                    Map.measurementSketch.dispatchEvent({type: 'drawend'});
+                    return;
+                }
                 if (geom instanceof ol.geom.Polygon) {
                     output = Map.formatArea(geom);
                     tooltipCoord = geom.getInteriorPoint().getCoordinates();
@@ -1268,6 +1292,7 @@ Map.startMeasuring = function () {
         function () {
 
             $('#btnMeasureFinish').hide();
+            $('#btnMeasureRemove').hide();
 
             Map.measureTooltipElement.className = 'tooltip tooltip-static';
             Map.measureTooltip.setOffset([0, -7]);
@@ -1295,6 +1320,7 @@ Map.stopMeasuring = function () {
 
     $('#measurePanel').hide();
     $('#btnMeasureStop').hide();
+    $('#btnMeasureRemove').hide();
     $('#btnMeasureFinish').hide();
     $('#btnMeasure').show();
 
@@ -1307,4 +1333,8 @@ Map.stopMeasuring = function () {
 
 Map.finishMeasuringSketch = function () {
     Map.measurementSketch.finishDrawing();
+};
+
+Map.removeLastMeasurePoint = function () {
+    Map.measurementSketch.removeLastPoint();
 };

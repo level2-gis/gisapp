@@ -1330,6 +1330,30 @@ Gui.toggleBackgroundLayer = function (layer, checked) {
     }
 };
 
+Gui.closeGuestWin = function () {
+    $.mobile.changePage($("#mappage"));
+};
+
+Gui.showGuestWin = function () {
+
+    var page = $("<div data-role='page' data-theme='c' data-close-btn='none' id='guestWinPage'>" +
+        "<div data-role='content' style='padding:10px;' data-theme='c'>" + Eqwc.settings.guestWinText + "</div>" +
+
+        "<div data-position='fixed' class='ui-bar-a ui-footer-fixed slideup'>" +
+        //"<div data-role='footer' class='ui-bar-a ui-footer-fixed slideup'>" +
+        //"<div class='ui-bar-a ui-footer-fixed slideup'>" +
+        "<a href='#' data-theme='c' data-inline='true' data-role='button' id='guestWinConfirm'>" + Eqwc.settings.guestWinConfirm + "</a>" +
+
+        "</div>" +
+        "</div>");
+
+    page.appendTo($.mobile.pageContainer);
+    $("#guestWinConfirm").click($.proxy(Gui.closeGuestWin, this));
+
+    $.mobile.changePage(page);
+
+};
+
 Gui.initViewer = function () {
     Gui.updateTranslations();
     Gui.fillMapCrs();
@@ -1543,6 +1567,9 @@ Gui.initViewer = function () {
     $('#btnMeasureFinish').click(function () {
         Map.finishMeasuringSketch();
     });
+    $('#btnMeasureRemove').click(function () {
+        Map.removeLastMeasurePoint();
+    });
     $('#btnMeasureStop').click(function () {
         Map.stopMeasuring();
     });
@@ -1631,6 +1658,10 @@ Gui.initViewer = function () {
 
     //just to load&hide hidden icons to cache them
     Map.loadHiddenIcons();
+
+    if (projectData.user == 'guest' && Eqwc.settings.guestWinTitle) {
+        Gui.showGuestWin();
+    }
 
     // invoke custom post viewer init
     Config.customInitViewer();
