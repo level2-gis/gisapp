@@ -41,6 +41,9 @@ if (!property_exists($settings, "defaultCoordinatesCrsCode")) {
 if (!property_exists($settings, "editor")) {
     $settings->editor = null;
 }
+if (!property_exists($settings, "expandAllGroups")) {
+    $settings->expandAllGroups = false;
+}
 if (!property_exists($data, "project_id")) {
     $data->project_id = 0;
 }
@@ -115,6 +118,7 @@ projectData.relations = eval(<?php echo json_encode($settings->relations) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
 projectData.defaultCoordinatesCrsCode = eval(<?php echo json_encode($settings->defaultCoordinatesCrsCode) ?>);
 projectData.editor = eval(<?php echo json_encode($settings->editor) ?>);
+projectData.expandAllGroups = <?php echo json_encode($settings->expandAllGroups) ?>;
 
 projectData.geolocation = <?php echo json_encode($data->geolocation) ?>;
 projectData.userFeedback = <?php echo json_encode($data->feedback) ?>;

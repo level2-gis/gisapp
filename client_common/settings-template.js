@@ -125,6 +125,6 @@ Eqwc.settings.tableExportFormats = [
     ['TSV', 'Text TSV (tab)']
 ];
 Eqwc.settings.bookmarkPanelHeight = 200;
-
 Eqwc.settings.fieldTemplates = {};
 Eqwc.settings.toolTipEmptyText = 'no data';
+Eqwc.settings.expandAllGroups = false;

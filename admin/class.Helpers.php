@@ -556,7 +556,7 @@ class Helpers
                     $lay->toclayertitle = (string)$el->attributes()["name"];
                     $lay->visini = (string)$el->attributes()["checked"] == 'Qt::Checked' ? true : false;
                     $lay->id = (string)$el->attributes()["id"];
-                    $lay->wms_sort = (900-$cnt);
+                    $lay->wms_sort = (900 - $cnt);
                     $lay->toc_sort = $cnt;
                     $lay->wfs = false;      //fill later
                     $lay->goto = false;      //fill later
@@ -564,6 +564,12 @@ class Helpers
                     $lay->geom_type = '';   //fill later
                     $lay->geom_column = ''; //fill later
                     $lay->crs = ''; //fill later
+
+                    //set visibilityChecked and adjust visini (layer is checked but parent group is not)
+                    $lay->visibility_checked = $lay->visini;
+                    if ((string)$group->attributes()["checked"] == 'Qt::Unchecked') {
+                        $lay->visini = false;
+                    }
 
                     array_push($this->qgs_layers, $lay);
                 }
@@ -704,6 +710,8 @@ class Helpers
             case null :
                 return TRUE;
 
+            case 'user':
+            case 'public':
             default :
                 return FALSE;
         }

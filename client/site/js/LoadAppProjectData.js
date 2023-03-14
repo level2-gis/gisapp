@@ -388,7 +388,7 @@ var titleBarText = Ext.decode(Eqwc.settings.title);
 // header logo image and link
 var headerLogoImg = projectData.client_logo;
 var headerLogoHeight = 28; // logo image height in pixels
-var headerLogoLink = Eqwc.settings.useGisPortal ? Eqwc.settings.gisPortalRoot : projectData.client_url; // logo links to this URL
+var headerLogoLink = (Eqwc.settings.useGisPortal && projectData.user != 'guest') ? Eqwc.settings.gisPortalRoot : projectData.client_url; // logo links to this URL
 var headerTermsOfUseText = TR.logoutLabel; // set null for no link
 var headerTermsOfUseLink = "./admin/login.php?action=logout"; // URL to terms of use
 

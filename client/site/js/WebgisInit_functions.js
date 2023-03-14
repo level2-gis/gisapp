@@ -143,8 +143,21 @@ function postLoading() {
     var leafsChangeFunction = function(node, checked) {
 
         var lay = wmsLoader.layerTitleNameMapping[node.text];
+        if (lay == undefined) {
+            return;
+        }
 
-        if (node.isLeaf() && lay) {
+        var exclGroup = node.parentNode.attributes.layer.metadata.mutuallyExclusive;
+        if (exclGroup && checked !== false) {
+            //loop through all items in the same group and switch off all except this node
+            Ext.each(node.parentNode.childNodes, function (item, index, length) {
+                if (item.text != node.text) {
+                    item.getUI().toggleCheck(false);
+                }
+            });
+        }
+
+        if (node.isLeaf()) {
             //check if have to replace for identify
             var queryLay = Eqwc.common.getIdentifyLayerName(lay);
             var queryLayId = wmsLoader.layerTitleNameMapping[queryLay];
@@ -254,16 +267,16 @@ function postLoading() {
                 }]
             });
 
-            // adjust title position
-            Ext.get('panel_header_title').setStyle('padding-left', '8px');
-            var paddingTop = (headerLogoHeight - 18) / 2;
-            Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
+            // adjust title position //moved to CSS
+            //Ext.get('panel_header_title').setStyle('padding-left', '10px');
+            //var paddingTop = (headerLogoHeight - 15) / 2;
+            //Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
         }
         Ext.get('panel_header_title').update(titleBarText);
 
         //user
         Ext.getCmp('GisBrowserPanel').tools.user.dom.qtip = projectData.user;
-        // adjust position
+        // adjust position  //moved to CSS
         //paddingTop = (headerLogoHeight - 12) / 2;
         //Ext.get('panel_header_user').setStyle('padding-top', paddingTop + 'px');
 
@@ -322,9 +335,11 @@ function postLoading() {
         // info buttons in layer tree
         //addInfoButtonsToLayerTree();
 
-        //expand first level
-        layerTree.root.firstChild.collapseChildNodes(true);
-        layerTree.root.firstChild.expand(false, false);
+        //expand first level depending on the setting
+        if (!projectData.expandAllGroups) {
+            layerTree.root.firstChild.collapseChildNodes(true);
+            layerTree.root.firstChild.expand(false, false);
+        }
     }
     layerTree.checkedLeafs = [];
     layerTree.resumeEvents();
@@ -1183,10 +1198,16 @@ function postLoading() {
                     return val;
                 };
 
+                //override SearchPanel title if panelTitle exists in searchconfig
+                if (searchPanelConfigs[j].panelTitle) {
+                    var sPanel = Ext.getCmp('SearchPanel');
+                    sPanel.setTitle(searchPanelConfigs[j].panelTitle);
+                }
+
                 var panel = new QGIS.SearchPanel(searchPanelConfigs[j]);
                 panel.gridLocation = 'default';
                 panel.gridTitle = searchResultString[lang];
-                panel.gridResults = Eqwc.settings.limitSearchMaxResults ? Eqwc.settings.limitSearchMaxResults: 10;
+                panel.gridResults = Eqwc.settings.limitSearchMaxResults ? Eqwc.settings.limitSearchMaxResults : 10;
                 panel.on("featureselected", showRecordSelected);
                 panel.on("featureselectioncleared", clearFeatureSelected);
                 panel.on("beforesearchdataloaded", showSearchPanelResults);
@@ -1627,6 +1648,32 @@ function postLoading() {
 
     //draw layers outside scale gray
     setGrayNameWhenOutsideScale();
+
+    //check if guest user, display window with title and text from settings
+    if (projectData.user == 'guest' && Eqwc.settings.guestWinTitle) {
+        var guestWin = new Ext.Window({
+            title: Eqwc.settings.guestWinTitle,
+            width: 450,
+            height: 450,
+            resizable: false,
+            closable: false,
+            autoScroll: true,
+            modal: true,
+            items: [{
+                xtype: 'panel',
+                html: Eqwc.settings.guestWinText,
+                autoHeight: true,
+                padding: 5
+            }],
+            buttonAlign: 'center',
+            buttons: [{
+                text: Eqwc.settings.guestWinConfirm,
+                handler: function (btn) {
+                    btn.findParentByType('window').close();
+                }
+            }]
+        }).show();
+    }
 }
 
 /*
@@ -2763,13 +2810,13 @@ function setGrayNameWhenOutsideScale() {
 
             MaxScale = Math.round(wmsLoader.projectSettings.capability.layers[i].maxScale);
             //if no MaxScale is defined
-            if (MaxScale < 1){
+            if (isNaN(MaxScale)) {
                 MaxScale = 1;
             }
 
             MinScale = Math.round(wmsLoader.projectSettings.capability.layers[i].minScale);
             //if no MinScale is defined
-            if (MinScale < 1){ //if not defined, this value is very small
+            if (isNaN(MinScale)) { //if not defined, this value is very small
                 MinScale = 150000000; //within terrestrial dimensions big enough
             }
 
@@ -2894,10 +2941,14 @@ function getExternalWMSDefinition(layer) {
     }
 
     if(type=='WMS') {
+        if (layer.params.LAYERS.length == 0) {
+            return null;
+        }
+
         definition[layerName+':url']        = layer.url;
         definition[layerName+':format']     = layer.params.FORMAT;
         definition[layerName+':crs']        = projectData.crs;
-        definition[layerName+':layers']     = layer.params.LAYERS;
+        definition[layerName+':layers']     = layer.params.LAYERS.join(',');
         definition[layerName+':styles']     = layer.params.STYLES;
 
         return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
