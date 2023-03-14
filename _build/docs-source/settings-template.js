@@ -86,16 +86,6 @@ Eqwc.settings.enableHoverPopup = false;
 Eqwc.settings.defaultIdentificationMode = "allLayers";
 
 /**
- * By default project CRS is selected for displaying coordinates. You can change it with this setting.
- *
- * > Note: CRS must have it's definition loaded (EPSG js file) and must be added to QGIS project properties CRS restriction part.
- * @type {null|number}
- * @default null
- * @example 3794
- */
-Eqwc.settings.defaultCoordinatesCrsCode = null;
-
-/**
  * Display coordinates of clicked location on top of identify window results
  * @type {boolean}
  * @default true
@@ -395,3 +385,68 @@ Eqwc.settings.fieldTemplates = {};
  * @type {string}
  */
 Eqwc.settings.toolTipEmptyText = 'no data';
+
+/**
+ * Display of modal window that guest users must accept before continue. Write title for window to display it.
+ * @type {null|string}
+ */
+Eqwc.settings.guestWinTitle = null;
+
+/**
+ * Button text for accepting conditions for guest users
+ * @type {string}
+ */
+Eqwc.settings.guestWinConfirm = 'Accept and continue';
+
+/**
+ * Detail text in HTML for modal window
+ * @type {string}
+ */
+Eqwc.settings.guestWinText = '<p><b>Conditions of use of web client</b></p><p>Details</p>';
+
+/**
+ * By default project CRS is selected for displaying coordinates. You can change default display of coordinates with this setting.
+ *
+ * > Note: CRS must have it's definition loaded (EPSG js file) and must be added to QGIS project properties CRS restriction part.
+ * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *defaultCoordinatesCrsCode* property.
+ * @type {null|number}
+ * @default null
+ * @example 3794
+ */
+Eqwc.settings.defaultCoordinatesCrsCode = null;
+
+/**
+ * By default all groups inside QGIS project will be closed in web client. This setting to true opens all groups in web client on project open.
+ * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *expandAllGroups* property.
+ * @type {boolean}
+ * @default false
+ */
+Eqwc.settings.expandAllGroups = false;
+
+/**
+ * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#1-search-panels
+ * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *search* property.
+ * @type {*[]}
+ */
+Eqwc.settings.search = [];
+
+/**
+ * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#2-search-combo
+ * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *geocode* property.
+ * @type {{}}
+ */
+Eqwc.settings.geocode = {};
+
+/**
+ * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#2-search-combo
+ * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *wsgi* property.
+ * @type {{}}
+ */
+Eqwc.settings.wsgi = {};
+
+/**
+ * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#3-location-services
+ * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *locationServices* property.
+ * @type {*[]}
+ */
+Eqwc.settings.locationServices = [];

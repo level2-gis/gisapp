@@ -128,3 +128,8 @@ Eqwc.settings.bookmarkPanelHeight = 200;
 Eqwc.settings.fieldTemplates = {};
 Eqwc.settings.toolTipEmptyText = 'no data';
 Eqwc.settings.expandAllGroups = false;
+
+Eqwc.settings.guestWinTitle = null;
+Eqwc.settings.guestWinConfirm = 'Accept and continue';
+Eqwc.settings.guestWinText = '<p><b>Conditions of use of web client</b></p><p>Details</p>';
+
