@@ -1129,7 +1129,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         } else {
             //qgis 3.22 doesn't work with empty filter in case of sql definition for layer in qgis project. Bug should be reported.
             //only for empty filters
-            if (filter > layerId+":" && Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
+            if (filter == layerId+":" && Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
                 var yy = geoExtMap.map.getMaxExtent().toGeometry();
                 params.FILTER_GEOM = yy.toString();
             } else {
