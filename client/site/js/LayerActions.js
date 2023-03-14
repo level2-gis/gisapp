@@ -529,6 +529,13 @@ function showRecordSelected(args) {
         });
     }
 
+    //if we have point add to highlightlayer
+    if(args.x && args.y) {
+        var geom = new OpenLayers.Geometry.Point(args.x,args.y);
+        var feature = new OpenLayers.Feature.Vector(geom);
+        featureInfoHighlightLayer.addFeatures([feature]);
+    }
+
     if (visibleLayers.indexOf(layerId) == -1) {
         var found = false;
         layerTree.root.cascade(function (n) {
