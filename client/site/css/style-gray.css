@@ -24,6 +24,10 @@
     font-weight: normal;
 }
 
+.x-panel-header {
+    border-right: 0 solid;
+}
+
 .x-tool-user {
     background-image: url(../img/user_gray.png);
     /*background-position: center;*/

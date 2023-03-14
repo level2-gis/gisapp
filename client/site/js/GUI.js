@@ -134,6 +134,10 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 				split: true,
 				//collapseMode: 'mini',
 				id: 'LeftPanel',
+				style: {
+					'border-right': '1px solid',
+					'border-color': 'inherit'
+				},
 				items: [{
 					xtype: 'button',
 					height: '1.5em',
@@ -152,6 +156,9 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 					frame: false,
 					id: 'collapsiblePanels',
 					flex: 0.9,
+					style: {
+						'padding-right': '2px'
+					},
 					width: '100%',
 					layoutConfig: {
 						titleCollapse: true,
