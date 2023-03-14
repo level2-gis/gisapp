@@ -322,6 +322,16 @@ Eqwc.common.findParentRelation = function(name) {
     return false;
 };
 
+Eqwc.common.cleanArray = function (arr) {
+    if (typeof arr !== 'object') {
+        return arr;
+    }
+
+    var filtered = arr.filter(Boolean);
+
+    return filtered;
+};
+
 //todo fix for dxf export
 // Eqwc.common.download = function(url, filename) {
 //     fetch(url).then(function(t) {
