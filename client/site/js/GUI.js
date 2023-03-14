@@ -118,8 +118,8 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 			}],
 			items: [{
 				xtype: 'panel',
-				margins: '3 0 3 3',
-				cmargins: '3 3 3 3',
+				margins: '3 0 6 3',
+				cmargins: '3 3 7 3',
 				title: leftPanelTitleString[lang],
 				height: 333,
 				width: 310,
@@ -239,9 +239,9 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 				}] // left panel items
 			}, {
 				xtype: 'panel',
-                border: false,
-                frame: false,
-                margins: '3 3 3 0',
+				border: false,
+				frame: false,
+				margins: '3 3 4 0',
 				flex: 1,
 				region: 'center',
 				width: 100,
@@ -421,7 +421,27 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							id: 'ScaleNumberField'
 						}]
 					}
-				}]
+				},
+					{
+						xtype: 'tabpanel',
+						id: 'BottomPanel',
+						margins: '0 3 3 0',
+						cmargins: '3 3 3 0',
+						title: '',
+						region: 'south',
+						split: true,
+						collapsible: true,
+						collapsed: true,
+						hidden: false,
+						height: 300,
+						listeners: {
+							tabchange: function () {
+								if (this.items.getCount() == 0) {
+									this.collapse();
+								}
+							}
+						}
+					}]
 			},
 				{
 					xtype: 'panel',
@@ -433,25 +453,8 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 					collapsed: true,
 					hidden: true,
 					width: 300
-				},
-            {
-                xtype: 'tabpanel',
-                id: 'BottomPanel',
-                title: '',
-                region: 'south',
-                split: true,
-                collapsible: true,
-                collapsed: true,
-                hidden: false,
-                height: 300,
-                listeners: {
-                    tabchange: function() {
-                        if(this.items.getCount()==0) {
-                            this.collapse();
-                        }
-                    }
-                }
-            }]
+				}
+			]
 		}];
 
 		// Appends custom buttons from customizations.js

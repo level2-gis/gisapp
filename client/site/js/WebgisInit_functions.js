@@ -2945,13 +2945,19 @@ function getExternalWMSDefinition(layer) {
             return null;
         }
 
-        definition[layerName+':url']        = layer.url;
-        definition[layerName+':format']     = layer.params.FORMAT;
-        definition[layerName+':crs']        = projectData.crs;
-        definition[layerName+':layers']     = layer.params.LAYERS.join(',');
-        definition[layerName+':styles']     = layer.params.STYLES;
+        var layersArr = Eqwc.common.cleanArray(layer.params.LAYERS);
 
-        return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
+        definition[layerName + ':url'] = layer.url;
+        definition[layerName + ':format'] = layer.params.FORMAT;
+        definition[layerName + ':crs'] = projectData.crs;
+        definition[layerName + ':layers'] = typeof layer.params.LAYERS == 'string' ? layer.params.LAYERS : layersArr.join(',');
+        definition[layerName + ':styles'] = typeof layer.params.LAYERS == 'string' ? layer.params.STYLES : Array(layersArr.length).join(',');
+
+        return {
+            name: 'EXTERNAL_WMS:' + layerName,
+            opacity: layer.opacity ? Math.round(layer.opacity * 255) : 255,
+            definition: Ext.urlEncode(definition)
+        };
     } else if (layer.print) {
         definition[layerName+':url']        = layer.print.url;
         definition[layerName+':format']     = layer.print.format;
@@ -2959,7 +2965,11 @@ function getExternalWMSDefinition(layer) {
         definition[layerName+':layers']     = layer.print.layers;
         definition[layerName+':styles']     = layer.print.styles;
 
-        return {name: 'EXTERNAL_WMS:'+layerName, definition: Ext.urlEncode(definition)};
+        return {
+            name: 'EXTERNAL_WMS:' + layerName,
+            opacity: layer.opacity ? Math.round(layer.opacity * 255) : 255,
+            definition: Ext.urlEncode(definition)
+        };
     }
     return null;
 }
@@ -2979,7 +2989,11 @@ function getVisibleExtraLayersForPrint() {
             } else {
                 var externalWms = getExternalWMSDefinition(lay);
                 if(externalWms) {
-                    ret.push({name: externalWms.name, definition: externalWms.definition});
+                    ret.push({
+                        name: externalWms.name,
+                        opacity: externalWms.opacity,
+                        definition: externalWms.definition
+                    });
                 }
             }
         }

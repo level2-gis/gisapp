@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DISTRIBUTION_NAME="eqwc"
+DISTRIBUTION_NAME="eqwc-geo-portal"
 VERSION=$(head -c 8 ../version.txt)
 
 echo $DISTRIBUTION_NAME $VERSION

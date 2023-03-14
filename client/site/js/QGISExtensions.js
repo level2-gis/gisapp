@@ -449,21 +449,35 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
 
             var layers = [];
             var styles = [];
-            if(thematicLayer.params.LAYERS > '') {
+            var opacities = [];
+            if (thematicLayer.params.LAYERS > '') {
                 layers = layers.concat(thematicLayer.params.LAYERS.split(','));
             }
-            if(thematicLayer.params.STYLES > '') {
+            if (thematicLayer.params.STYLES > '') {
                 styles = styles.concat(thematicLayer.params.STYLES.split(','));
+            }
+            if (thematicLayer.params.OPACITIES > '') {
+                opacities = opacities.concat(thematicLayer.params.OPACITIES.split(','));
             }
             var extra = getVisibleExtraLayersForPrint();
             var extraDefinition = '';
             var baseDefinition = '';
-            if(extra.length>0) {
-                var extraNames = extra.map(function(item){return item.name;});
-                var extraStyles = extra.map(function(item){return item.definition[item.name+':styles'];});
-                extraDefinition = extra.map(function(item){return item.definition;});
+            if (extra.length > 0) {
+                var extraNames = extra.map(function (item) {
+                    return item.name;
+                });
+                var extraOpa = extra.map(function (item) {
+                    return item.opacity;
+                });
+                var extraStyles = extra.map(function (item) {
+                    return item.definition[item.name + ':styles'];
+                });
+                extraDefinition = extra.map(function (item) {
+                    return item.definition;
+                });
                 layers.unshift(extraNames.reverse().join(','));
                 styles.unshift(extraStyles.reverse().join(','));
+                opacities.unshift(extraOpa.reverse().join(','));
             }
 
             //add currently visible base layer for printing if exists in projects
@@ -477,7 +491,8 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                     var baseWms = getExternalWMSDefinition(printBaseLayerOl2);
                     if(baseWms) {
                         layers.unshift(baseWms.name);
-                        styles.unshift(baseWms.definition[baseWms.name+':styles']);
+                        styles.unshift(baseWms.definition[baseWms.name + ':styles']);
+                        opacities.unshift(baseWms.opacity);
                         baseDefinition = baseWms.definition;
                     }
                 }
@@ -490,17 +505,18 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             //only check for reverse axis for QGIS 3.x, for QGIS 2 is false
             var reverseAxisOrder = (Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2) ? OpenLayers.Projection.defaults[authid].yx : false;
             var printUrl = this.url + '&' + Ext.urlEncode({
-                    'SRS': authid,
-                    'DPI': printResolution,
-                    'TEMPLATE': this.layout.get("name"),
-                    'map0:extent': printExtent.page.getPrintExtent(map).toBBOX(1, reverseAxisOrder),
-                    'map0:scale': mapScale,
-                    'map0:rotation': (printExtent.page.rotation * -1),
-                    //'map0:grid_interval_x': grid_interval,
-                    //'map0:grid_interval_y': grid_interval,
-                    'LAYERS': layers.join(','),
-                    'STYLES': styles.join(',')
-                });
+                'SRS': authid,
+                'DPI': printResolution,
+                'TEMPLATE': this.layout.get("name"),
+                'map0:extent': printExtent.page.getPrintExtent(map).toBBOX(1, reverseAxisOrder),
+                'map0:scale': mapScale,
+                'map0:rotation': (printExtent.page.rotation * -1),
+                //'map0:grid_interval_x': grid_interval,
+                //'map0:grid_interval_y': grid_interval,
+                'LAYERS': layers.join(','),
+                'STYLES': styles.join(','),
+                'OPACITIES': opacities.join(',')
+            });
 
             if(this.customParams.filterToAdd) {
                 if(thematicLayer.params.FILTER) {
@@ -516,10 +532,6 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
             }
 
             printUrl += '&' + Ext.urlEncode(this.customParams);
-
-            if (thematicLayer.params.OPACITIES) {
-                printUrl += '&OPACITIES=' + encodeURIComponent(thematicLayer.params.OPACITIES);
-            }
 
             if (thematicLayer.params.SELECTION) {
                 printUrl += '&SELECTION=' + encodeURIComponent(thematicLayer.params.SELECTION);
@@ -645,9 +657,10 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
         this.on("beforeselect", this.beforeselectHandler);
 
 
-        var params =   {
+        var params = {
             searchtables: this.getSearchTables(),
-            srs: this.srs
+            srs: this.srs,
+            pos: null
         };
 
         if (this.limit) {
@@ -1114,7 +1127,13 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             }
 
         } else {
-            params.FILTER = filter;
+            //qgis 3.22 doesn't work with empty filter in case of sql definition for layer in qgis project. Bug should be reported.
+            if (Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
+                var xx = geoExtMap.map.getMaxExtent().toGeometry();
+                params.FILTER_GEOM = xx.toString();
+            } else {
+                params.FILTER = filter;
+            }
         }
 
         if (fieldsValidate) {
