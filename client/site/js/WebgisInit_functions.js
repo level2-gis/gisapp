@@ -1834,7 +1834,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 listeners: {
                     render: function (grid) {
                         grid.store.on('load', function (store, records, options) {
-                            if (features.length == 1) {
+                            if (records.length == 1) {
                                 grid.getSelectionModel().selectFirstRow();
                                 grid.fireEvent('rowClick', grid, 0);
                             }
@@ -1848,6 +1848,12 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             var sourceLayer = Eqwc.common.getIdentifyLayerNameRevert(layer);
                             var layerId = wmsLoader.layerTitleNameMapping[sourceLayer];
                             var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
+
+                            if(filt.length == 0) {
+                                thematicLayer.mergeNewParams({FILTER: null});
+                                return;
+                            }
+
                             Ext.each(filt, function (f) {
                                 var sep = '';
                                 var valStr = "'"+f.data.value+"'";
@@ -2795,6 +2801,7 @@ function setGrayNameWhenOutsideScale() {
         //layers
         //------
         var allLayersWithIDs = [];
+        var node,menu;
 
         //iterate layer tree to get title and layer-id
         layerTree.root.firstChild.cascade(
@@ -2826,12 +2833,19 @@ function setGrayNameWhenOutsideScale() {
                 for (var j=0;j<allLayersWithIDs.length;j++){
                     //comparison layerTree and info from getProjectsettings
                     if (allLayersWithIDs[j][0] == wmsLoader.projectSettings.capability.layers[i].title) {
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).setCls('outsidescale');//add css for outside scale
+                        node = layerTree.root.findChild('id', allLayersWithIDs[j][1], true);
+                        node.setCls('outsidescale');//add css for outside scale
                         strTOCTooltip = tooltipLayerTreeLayerOutsideScale[lang] + ' 1:' + MaxScale + ' - 1:' + MinScale;
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).setTooltip(strTOCTooltip);
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).isOutsideScale = true;
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).MinScale = MinScale;
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).MaxScale = MaxScale;
+                        node.setTooltip(strTOCTooltip);
+                        node.isOutsideScale = true;
+                        node.MinScale = MinScale;
+                        node.MaxScale = MaxScale;
+
+                        //disable table
+                        menu = node.menu.getComponent('contextOpenTable');
+                        if (menu != undefined) {
+                            menu.setDisabled(true);
+                        }
                     }
                 }
 
@@ -2839,12 +2853,18 @@ function setGrayNameWhenOutsideScale() {
             } else {
                 for (var j=0;j<allLayersWithIDs.length;j++){
                     if (allLayersWithIDs[j][0] == wmsLoader.projectSettings.capability.layers[i].title) {
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).setTooltip(''); //empty tooltip
-                        var node = layerTree.root.findChild('id', allLayersWithIDs[j][1], true); //remove css class
+                        node = layerTree.root.findChild('id', allLayersWithIDs[j][1], true);
+                        node.setTooltip(''); //empty tooltip
                         node.ui.removeClass('outsidescale'); //remove css class
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).isOutsideScale = false;
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).MinScale = MinScale;
-                        layerTree.root.findChild('id', allLayersWithIDs[j][1], true).MinScale = MaxScale;
+                        node.isOutsideScale = false;
+                        node.MinScale = MinScale;
+                        node.MinScale = MaxScale;
+
+                        //enable table
+                        menu = node.menu.getComponent('contextOpenTable');
+                        if (menu != undefined) {
+                            menu.setDisabled(false);
+                        }
                     }
                 }
             }
