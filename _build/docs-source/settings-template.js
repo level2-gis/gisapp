@@ -426,7 +426,7 @@ Eqwc.settings.expandAllGroups = false;
 /**
  * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#1-search-panels
  * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *search* property.
- * @type {*[]}
+ * @type {string[]}
  */
 Eqwc.settings.search = [];
 
@@ -447,6 +447,6 @@ Eqwc.settings.wsgi = {};
 /**
  * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#3-location-services
  * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *locationServices* property.
- * @type {*[]}
+ * @type {string[]}
  */
 Eqwc.settings.locationServices = [];
