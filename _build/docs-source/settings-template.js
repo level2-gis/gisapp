@@ -424,21 +424,21 @@ Eqwc.settings.defaultCoordinatesCrsCode = null;
 Eqwc.settings.expandAllGroups = false;
 
 /**
- * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#1-search-panels
+ * [More information - search panels]{@link https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#1-search-panels}
  * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *search* property.
  * @type {string[]}
  */
 Eqwc.settings.search = [];
 
 /**
- * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#2-search-combo
+ * [More information - search combo]{@link https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#2-search-combo}
  * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *geocode* property.
  * @type {{}}
  */
 Eqwc.settings.geocode = {};
 
 /**
- * More information - https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#2-search-combo
+ * [More information - search combo]{@link https://github.com/level2-gis/gisapp/wiki/5.2.-JSON#2-search-combo}
  * > Note: This setting here is global for all projects. Can be overwritten per each project by adding data into *project.json* file into *wsgi* property.
  * @type {{}}
  */
