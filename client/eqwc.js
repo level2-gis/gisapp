@@ -2,8 +2,8 @@
  *
  * eqwc.js -- build of Extended QGIS Web Client
  *
- * version: 1.10.0g
- * buildDate: Thu Mar 16 13:56:17 CET 2023
+ * version: 1.10.1g
+ * buildDate: Thu Mar 16 14:34:12 CET 2023
  *
  * Copyright (2014-2021), Level2, All rights reserved.
  * More information at https://level2.si
@@ -213,8 +213,8 @@ name:"filter",checked:!1};if(b){var e=c.cloneConfig({fieldLabel:TR.exportCrs,nam
 items:g}],buttons:[{itemId:"ok",text:Ext.MessageBox.buttonText.ok,handler:exportWindowHandler},{itemId:"cancel",text:Ext.MessageBox.buttonText.cancel,handler:exportWindowHandler}]})}function layerProperties(a){a=layerTree.getSelectionModel().getSelectedNode().text;showLegendAndMetadata(a)}
 function contextMenuHandler(a){var b=a.menu.getComponent("contextExport");void 0!=b&&("guest"==projectData.user||-1<projectData.role.indexOf("-limit")?b.setDisabled(!0):b.setDisabled(!1));a.select();a.menu.show(a.ui.getAnchor())}
 function zoomHandler(a,b,c,d,e){c=a.getStore().getAt(b);d=c.id;e=a.itemId;a.getSelectionModel().selectRow(b);c.data.layer=e;c.data.doZoomToExtent=!0;c.data.id=d;a=c.data.bbox;c.data.bbox instanceof OpenLayers.Bounds||(a=OpenLayers.Bounds.fromArray([a.minx,a.miny,a.maxx,a.maxy]),d=a.getWidth(),b=a.getHeight(),50>d?(d=a.left+0.5*d,a.left=d-25,a.right=d+25):(a.left-=0.05*d,a.right+=0.05*d),50>b?(b=a.bottom+0.5*b,a.bottom=b-25,a.top=b+25):(a.bottom-=0.05,a.top+=0.05),c.data.bbox=a);showRecordSelected(c.data)}
-function showRecordSelected(a){var b=null==a.layer?a.fid.split(".")[0]:a.layer,c=wmsLoader.layerTitleNameMapping[b],d;c&&thematicLayer.mergeNewParams({SELECTION:c+":"+a.id});"Point"==projectData.layers[c].geom_type&&(d=projDef.yx?new OpenLayers.Geometry.Point(a.y,a.x):new OpenLayers.Geometry.Point(a.x,a.y),d=new OpenLayers.Feature.Vector(d),featureInfoHighlightLayer.addFeatures([d]));if(-1==visibleLayers.indexOf(c)){var e=!1;layerTree.root.cascade(function(a){if(a.text==b)return e=a,!1});e&&(e.getUI().toggleCheck(!0),
-layerTree.fireEvent("leafschange"))}a.doZoomToExtent?geoExtMap.map.zoomToExtent(a.bbox):geoExtMap.map.setCenter(new OpenLayers.LonLat(a.x,a.y),a.zoom)}
+function showRecordSelected(a){var b=null==a.layer?a.fid.split(".")[0]:a.layer,c=wmsLoader.layerTitleNameMapping[b];a.doZoomToExtent?geoExtMap.map.zoomToExtent(a.bbox):geoExtMap.map.setCenter(new OpenLayers.LonLat(a.x,a.y),a.zoom);if(c&&(thematicLayer.mergeNewParams({SELECTION:c+":"+a.id}),"Point"==projectData.layers[c].geom_type&&(a=projDef.yx?new OpenLayers.Geometry.Point(a.y,a.x):new OpenLayers.Geometry.Point(a.x,a.y),a=new OpenLayers.Feature.Vector(a),featureInfoHighlightLayer.addFeatures([a])),
+-1==visibleLayers.indexOf(c))){var d=!1;layerTree.root.cascade(function(a){if(a.text==b)return d=a,!1});d&&(d.getUI().toggleCheck(!0),layerTree.fireEvent("leafschange"))}}
 function exportUsingQgis(a,b,c,d){b=wmsLoader.layerTitleNameMapping[a];var e={};Object.assign(e,thematicLayer.params);e.LAYERS=b;e.FORMAT="application/dxf";e.FILE_NAME=a+".dxf";e.FORMAT_OPTIONS="MODE:SYMBOLLAYERSYMBOLOGY;CODEC:UTF-8";e.CRS=d;c&&(e.BBOX=geoExtMap.map.getExtent().toBBOX(1,OpenLayers.Projection.defaults[authid].yx));Eqwc.common.download(thematicLayer.url+Ext.urlEncode(e),e.FILE_NAME)}
 function exportData(a,b,c,d,e){var f=wmsLoader.layerTitleNameMapping[a],g=projectData.layers[f].crs,h="",k="./admin/export.php?",q=null;c&&(q=geoExtMap.map.calculateBounds().transform(authid,g));"KOF"==b||"XYZ"==b?(h=[],c=Eqwc.settings.vectorExportFormats.find(function(a){if(a[0]==b)return a}),g="use_geom",3==c.length&&(Eqwc.common.layerFieldNameExists(f,c[2].name)?h.push(c[2].name):h.push(projectData.layers[f].key),Eqwc.common.layerFieldNameExists(f,c[2].code)&&h.push(c[2].code),Eqwc.common.layerFieldNameExists(f,
 c[2].h)&&(g=c[2].h)),k="./admin/text_export.php?",k+=Ext.urlEncode({map:projectData.project,SRS:d,layer_extent:q,layer:a,fields:h.join(","),z:g,format:b,filter:e})):k+=Ext.urlEncode({map:projectData.project,SRS:d,layer_extent:q,layer:a,fields:h,format:b,filter:e});Ext.Ajax.request({url:k,disableCaching:!1,params:{cmd:"prepare"},method:"GET",timeout:45E3,success:function(a){a=Ext.util.JSON.decode(a.responseText);a.success?window.location=k+"&cmd=get&key="+a.message:Ext.Msg.alert("Error",a.message)},
