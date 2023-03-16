@@ -523,12 +523,20 @@ function showRecordSelected(args) {
     var layerId = wmsLoader.layerTitleNameMapping[layer];
     var geom;
 
-    // select feature in layer, selection color is handled by server from qgis project properties
-    if (layerId) {
-        thematicLayer.mergeNewParams({
-            "SELECTION": layerId + ":" + args["id"]
-        });
+    if (args["doZoomToExtent"]) {
+        geoExtMap.map.zoomToExtent(args["bbox"]);
+    } else {
+        geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
     }
+
+    if (!layerId) {
+        return;
+    }
+
+    // select feature in layer, selection color is handled by server from qgis project properties
+    thematicLayer.mergeNewParams({
+        "SELECTION": layerId + ":" + args["id"]
+    });
 
     //if we have point add to highlightlayer
     if(projectData.layers[layerId].geom_type == 'Point') {
@@ -555,12 +563,6 @@ function showRecordSelected(args) {
             // Spread the word ...
             layerTree.fireEvent("leafschange");
         }
-    }
-
-    if (args["doZoomToExtent"]) {
-        geoExtMap.map.zoomToExtent(args["bbox"]);
-    } else {
-        geoExtMap.map.setCenter(new OpenLayers.LonLat(args["x"], args["y"]), args["zoom"]);
     }
 }
 
