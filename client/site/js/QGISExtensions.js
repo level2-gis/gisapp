@@ -1070,9 +1070,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         var storedFilter = this.wmsFilter;
         var layerId = wmsLoader.layerTitleNameMapping[this.queryLayer];
         var fieldsValidate = true;
+        var filter = [];
 
         if (storedFilter == "") {
-            var filter = [];
             var fieldValues = this.form.getForm().getFieldValues();
 
             for (var key in fieldValues) {
@@ -1128,9 +1128,10 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
 
         } else {
             //qgis 3.22 doesn't work with empty filter in case of sql definition for layer in qgis project. Bug should be reported.
-            if (Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
-                var xx = geoExtMap.map.getMaxExtent().toGeometry();
-                params.FILTER_GEOM = xx.toString();
+            //only for empty filters
+            if (filter == layerId+":" && Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
+                var yy = geoExtMap.map.getMaxExtent().toGeometry();
+                params.FILTER_GEOM = yy.toString();
             } else {
                 params.FILTER = filter;
             }

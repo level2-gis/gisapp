@@ -772,7 +772,7 @@ Gui.selectLayer = function (layer) {
 };
 
 // show feature info results
-Gui.showFeatureInfoResults = function (status, data) {
+Gui.showFeatureInfoResults = function (status, data, code) {
 
     if (status == 'success') {
         if (Config.featureInfo.format === 'text/xml') {
@@ -780,9 +780,13 @@ Gui.showFeatureInfoResults = function (status, data) {
         } else {
             $('#featureInfoResults').html(data.join(''));
         }
+    } else if (code === 401) {
+        //session timeout
+        Eqwc.common.redirect();
     } else {
         var html = Gui.addFeatureInfoTopButtons();
-        $('#featureInfoResults').html(html + '</br>' + "<span style='color:red'>" + data + "</span>");
+        $('#featureInfoResults').html(html);
+        //$('#featureInfoResults').html(html + '</br>' + "<span style='color:red'>" + data + "</span>");
         $('#featureInfoResults').trigger('create');
     }
 

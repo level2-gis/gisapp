@@ -69,12 +69,16 @@ FeatureInfo.prototype.callOnLocation = function (location, useWMS, layersArr) {
                 results = [data];
             }
 
-            this.resultsCallback(status, results);
+            this.resultsCallback(status, results, 200);
             //allow clicking again
             Map.toggleClickHandling(true);
         })
         .fail(function (xhr, status, error) {
-            this.resultsCallback(status, error);
+            if (xhr.responseText) {
+                this.resultsCallback(status, xhr.responseText, xhr.status);
+            } else {
+                this.resultsCallback(status, error, 0);
+            }
             Map.toggleClickHandling(true);
         });
 };
@@ -113,12 +117,12 @@ FeatureInfo.prototype.filter = function (filter, layers) {
                 results = [data];
             }
 
-            this.resultsCallback(status, results);
+            this.resultsCallback(status, results, 200);
             //allow clicking again
             Map.toggleClickHandling(true);
         })
         .fail(function (xhr, status, error) {
-            this.resultsCallback(status, error);
+            this.resultsCallback(status, error, 0);
             Map.toggleClickHandling(true);
         });
 };
@@ -173,16 +177,16 @@ FeatureInfo.prototype.handleEvent = function (e) {
             results = [data];
         }
 
-        this.resultsCallback(status, results);
+        this.resultsCallback(status, results, 200);
         //allow clicking again
         Map.toggleClickHandling(true);
     })
         .fail(function (xhr, status, error) {
             this.loading('hide');
             if (xhr.responseText) {
-                this.resultsCallback(status, xhr.responseText);
+                this.resultsCallback(status, xhr.responseText, xhr.status);
             } else {
-                this.resultsCallback(status, status);
+                this.resultsCallback(status, error, 0);
             }
             Map.toggleClickHandling(true);
         });

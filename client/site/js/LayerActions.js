@@ -59,7 +59,7 @@ function buildLayerContextMenu(node) {
     //Open att table
     if (layer.queryable && typeof(layer.attributes) !== 'undefined') {
         menuItems.push({
-            //itemId: 'contextOpenTable',
+            itemId: 'contextOpenTable',
             text: contextOpenTable[lang],
             iconCls: 'x-table-icon',
             handler: openAttTable
@@ -521,6 +521,7 @@ function showRecordSelected(args) {
 
     var layer = args["layer"] == null ? args["fid"].split('.')[0] : args["layer"];
     var layerId = wmsLoader.layerTitleNameMapping[layer];
+    var geom;
 
     // select feature in layer, selection color is handled by server from qgis project properties
     if (layerId) {
@@ -530,8 +531,12 @@ function showRecordSelected(args) {
     }
 
     //if we have point add to highlightlayer
-    if(args.x && args.y) {
-        var geom = new OpenLayers.Geometry.Point(args.x,args.y);
+    if(projectData.layers[layerId].geom_type == 'Point') {
+        if(projDef.yx) {
+            geom = new OpenLayers.Geometry.Point(args.y,args.x);
+        } else {
+            geom = new OpenLayers.Geometry.Point(args.x,args.y);
+        }
         var feature = new OpenLayers.Feature.Vector(geom);
         featureInfoHighlightLayer.addFeatures([feature]);
     }
