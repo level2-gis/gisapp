@@ -362,21 +362,30 @@ try {
     }
 
 } catch (Exception\ServerException $e) {
-    //if ($e->hasResponse()) {
-    //    header('', true, $e->getResponse()->getStatusCode());
-    //} else {
-    header($http_ver . " 500 Server Error");
+    if ($e->hasResponse()) {
+        $res = $e->getResponse();
+        header($http_ver . '" ' . $res->getStatusCode() . ' ' . $res->getReasonPhrase() . '"');
+    } else {
+        header($http_ver . " 500 Server Error");
+    }
     header("Content-Type: text/html");
-    //}
     echo $e->getMessage();
 
 } catch (Exception\ClientException $e) {
-    header($http_ver . " 401 Unathorized");
+    if ($e->hasResponse()) {
+        $res = $e->getResponse();
+        header($http_ver . '" ' . $res->getStatusCode() . ' ' . $res->getReasonPhrase() . '"');
+    } else {
+        header($http_ver . " 401 Unathorized");
+    }
     header("Content-Type: text/html");
     echo $e->getMessage();
 
 } catch (Exception\RequestException $e) {
-    header($http_ver . " 500 Error");
+    if ($e->hasResponse()) {
+        $res = $e->getResponse();
+        header($http_ver . '" ' . $res->getStatusCode() . ' ' . $res->getReasonPhrase() . '"');
+    }
     header("Content-Type: text/html");
     echo $e->getMessage();
 }

@@ -93,9 +93,13 @@ function showFeatureInfo(evt) {
         if(evt.request.status == 200) {
             parseFIResult(xmlDoc);
             featureInfoResultLayers.reverse();
-        } else {
-            text += "<b><span style='color:red'>" + evt.text + "</span></b>";
+        } else if (evt.request.status == 401) {
+            //session time out, need to login again
+            Eqwc.common.redirect();
         }
+        // else {
+            //    text += "<b><span style='color:red'>" + evt.text + "</span></b>";
+        //}
 
         //highLightGeometry.reverse();
 
