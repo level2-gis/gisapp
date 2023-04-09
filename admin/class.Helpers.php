@@ -294,7 +294,15 @@ class Helpers
             //return false;
         } else {
             $prop->crs = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->authid;
-            $prop->crs_description = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->description;
+
+            //override crs description for Slovenia
+            if($prop->crs == 'EPSG:3912') {
+                $prop->crs_description = 'D48/GK Gauss-Krüger';
+            } else if ($prop->crs == 'EPSG:3794') {
+                $prop->crs_description = 'D96/TM Mercator';
+            } else {
+                $prop->crs_description = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->description;
+            }
             $prop->proj4 = (string)$qgs["message"]->mapcanvas->destinationsrs->spatialrefsys->proj4;
             $prop->title = (string)$qgs["message"]->title == "" ? basename($map, ".qgs") : (string)$qgs["message"]->title;
             $prop->extent = self::getQgsProjectExtent($qgs["message"]);
