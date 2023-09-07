@@ -28,7 +28,7 @@ var TR = {
     noPublicAccess: 'Projekt nie jest dostępny w trybie publicznym.',
     clearFilter: 'Wyczyść filtry',
     clearSelection: 'Zlikwiduj zaznaczenie',
-    select: 'Select element to display its geometry',
+    select: 'Wybierz element, aby wyświetlić jego geometrię',
     menuFilterText: 'Filtry',
     editData: 'Edytuj dane',
     editMode: 'Tryb edycji',
@@ -49,10 +49,10 @@ var TR = {
     feedback: 'Uwagi',
     feedbackTitle: 'Wyślij uwagi',
     feedbackDescription: 'Twoje dane, projekt i link do aktualnego widoku zostaną dodane do wiadomości!',
-    feedbackErrorTitle: "Error",
-    feedbackErrorMsg: "There was error sending your message!",
-    feedbackSuccessTitle: "Success",
-    feedbackSuccessMsg: "Your message was successfully sent.",
+    feedbackErrorTitle: "Błąd",
+    feedbackErrorMsg: "Podczas wysyłania wiadomości wystąpił błąd!",
+    feedbackSuccessTitle: "Wysłano",
+    feedbackSuccessMsg: "Twoja wiadomość została pomyślnie wysłana.",
     transactionFail: 'Operacja nie powiodła się',
     show: 'Pokaż',
     properties: 'Właściwości',
@@ -62,24 +62,24 @@ var TR = {
     loadMore: 'Wczytaj więcej...',
     loadMoreToolTip: 'Tabela jest niekompletna. Kliknij by załadować więcej danych z serwera!',
     height: 'Wysokość',
-    exportData: 'Export data',
+    exportData: 'Eksportuj dane',
     exportFormat: 'Format',
-    exportCrs: 'CRS',
-    exportLayer: 'Layer',
-    exportExtent: 'Extent',
-    exportLayerExtent: 'Use layer extent',
-    exportUseMapCrs: "Use map CRS",
-    exportFilter: "Filter",
-    exportUseTableFilter: "Use attribute filter set on table",
-    tableUseExtent: "Only show features in map extent",
-    tableAddRecord: "Add new record",
-    style: "Style",
-    navigation: "Navigation",
-    relations: "Relations",
-    bookmarks: "Bookmarks",
-    bookmarkName: "Name",
-    bookmarkGroup: "Group",
-    bookmarkEmptyGroupText: "no group",
+    exportCrs: 'Układ wsp.',
+    exportLayer: 'Warstwa',
+    exportExtent: 'Zasięg',
+    exportLayerExtent: 'Użyj zasięgu warstwy',
+    exportUseMapCrs: "Użyj układu współrzędnych mapy",
+    exportFilter: "Filtr",
+    exportUseTableFilter: "Użyj filtrowania atrybutów ustawionego dla tabeli",
+    tableUseExtent: "Pokaż tylko obiekty widoczne na mapie",
+    tableAddRecord: "Dodaj nowy wiersz",
+    style: "Styl",
+    navigation: "Nawigacja",
+    relations: "Relacje",
+    bookmarks: "Zakładki",
+    bookmarkName: "Nazwa",
+    bookmarkGroup: "Grupa",
+    bookmarkEmptyGroupText: "brak grupy",
     link: "LINK"
 };
 
@@ -156,6 +156,6 @@ I18n.login = {
     statusFailed: "Błędny status"
 };
 
-I18n.networkDown = 'Internet connection lost';
+I18n.networkDown = 'Utracono połączenie z Internetem';
 
-I18n.measureArea = 'Measure area';
+I18n.measureArea = 'Pomiar powierzchni';
