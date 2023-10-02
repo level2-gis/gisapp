@@ -836,7 +836,8 @@ function identifyAction(type, id, extra) {
 
                 if (preparePass) {
 
-                    feat.data[extra] = id.split('.')[1];
+                    //feat.data[extra] = id.split('.')[1];
+                    feat.data[extra] = id.substring(id.indexOf('.')+1,id.length);
 
                     //set field readonly or hide
                     if(projectData.relations.hideJoinField) {
