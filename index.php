@@ -18,6 +18,7 @@ function goMobile($lang, $scanner) {
 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="robots" content="noindex, nofollow">
 
         <link rel="apple-touch-icon" href="client_mobile/img/app_icon.png"/>
         <link rel="icon" href="favicon.ico" />
@@ -282,6 +283,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="robots" content="noindex, nofollow">
     <title></title>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
