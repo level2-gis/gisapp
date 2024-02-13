@@ -72,7 +72,9 @@ def application(environ, start_response):
     #    else:
     #      filt.extend(filterString.split(','))
 
-    sql += "SELECT code, description FROM " + table + " WHERE geom_type="+gtype
+    #change to disable geom_type filter, you can always create different fields for different geom_types
+    #sql += "SELECT code, description FROM " + table + " WHERE geom_type="+gtype
+    sql += "SELECT code, description FROM " + table + " WHERE 1=1
 
     if categoryString:
       filt.extend(categoryString.split(','))
