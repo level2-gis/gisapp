@@ -648,7 +648,7 @@ class Helpers
         return $ret;
     }
 
-    public function isValidUserProj($project)
+    public static function isValidUserProj($project)
     {
         $valid = isset($_SESSION['user_is_logged_in']);
         $sess = isset($_SESSION['project']) ? $_SESSION['project'] : null;
