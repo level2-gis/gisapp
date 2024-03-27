@@ -611,7 +611,7 @@ function parseFIResult(node) {
                                         }
                                     }
 
-                                    if (attNameCase == 'MAPTIP' || attNameCase == filesAlias) {
+                                    if (attNameCase == 'MAPTIP' || attNameCase == filesAlias || attNameCase.indexOf('LGS_IMG')>-1) {
                                         htmlText += "<td colspan='2'>" + attValue + "</td></tr>";
                                     } else {
                                         htmlText += "<td>" + attValue + "</td></tr>";
