@@ -568,7 +568,7 @@ function parseFIResult(node) {
 
                                     //if (attName !== "maptip") {
                                     htmlText += "\n   <tr>";
-                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
+                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias && attNameCase.indexOf('LGS_IMG')==-1) {
                                         htmlText += "<td>" + attNameCase + ":</td>";
                                     }
 
