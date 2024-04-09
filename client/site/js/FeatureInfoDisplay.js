@@ -142,23 +142,17 @@ function showFeatureInfo(evt) {
             items: popupItems,
             maximizable: true,
             collapsible: true,
+            resizable: false,
             listeners: {
                 close: onClickPopupClosed,
                 beforeshow: function () {
 
                     var maxHeight = geoExtMap.getHeight() * 0.8;
-                    var minWidth = 280;
-
-                    if ((geoExtMap.getWidth() * 0.25) > minWidth) {
-                        this.setWidth(geoExtMap.getWidth() * 0.25);
-                    } else {
-                        this.setWidth(minWidth);
-                    }
-
                     if (this.getHeight() > maxHeight) {
                         this.setHeight(maxHeight);
                     }
 
+                    this.doLayout();
                     //create layer abstract and ajax tooltips defined in settings.js for each id in _temp_ids
                     function set(element) {
                         var split = element.split('::');
