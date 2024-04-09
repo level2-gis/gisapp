@@ -227,8 +227,8 @@ function exportWindowHandler(btn) {
         var useFilter = fieldValues.filter;
         var filter = '';
 
+        var layer = projectData.layers[layerId];
         if(myFormat == 'KOF') {
-            var layer = projectData.layers[layerId];
             if(layer.provider != 'postgres') {
                 Ext.Msg.alert('Error','Provider: '+layer.provider + ' not supported!');
                 return false;
@@ -239,6 +239,11 @@ function exportWindowHandler(btn) {
 
         if (useFilter) {
             filter = wmsLoader.layerProperties[layerId].currentFilter;
+        }
+
+        if(win.exportSelection.length>0) {
+            exportExtent = false;
+            filter = layer.key + ' IN (' + win.exportSelection + ')';
         }
 
         if (myFormat == 'QGIS_DXF') {
@@ -425,6 +430,7 @@ function getExportWin(layer, geom) {
         renderTo: "geoExtMapPanel",
         resizable: false,
         closable: false,
+        exportSelection: [],
         items: [{
             xtype: 'form',
             padding: '3',
