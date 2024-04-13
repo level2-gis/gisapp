@@ -1340,7 +1340,11 @@ function postLoading() {
                 uiProvider: Ext.tree.TriStateNodeUI
             });
             extraLayGroup.appendChild(extraNode);
-            extraNode.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+
+            buildBaseContextMenu(extraNode);
+
+            //extraNode.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+            extraNode.on('contextMenu', contextMenuHandler);
         }
     }
 
@@ -1378,7 +1382,10 @@ function postLoading() {
                 currentlyVisibleBaseLayer = baseLayers[i].name;
             }
             BgLayerList.appendChild(bgnode);
-            bgnode.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+
+            buildBaseContextMenu(bgnode);
+
+            bgnode.on('contextMenu', contextMenuHandler);
             bgnode.on('checkchange', baseChangeFunction);
         }
     }

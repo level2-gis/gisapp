@@ -34,6 +34,52 @@ function buildGroupContextMenu(node) {
     node.menu = new Ext.menu.Menu(menuCfg);
 }
 
+function buildBaseContextMenu(node) {
+
+    var menuItems = [];
+
+    var tip = new Ext.slider.Tip({
+        // getText: function(thumb){
+        //     return String.format('<b>{0}%</b>', thumb.value);
+        // }
+    });
+
+    var slider = new Ext.Slider({
+        width: 200,
+        value: (1-node.layer.opacity)*100,
+        minValue: 0,
+        maxValue: 100,
+        plugins: tip,
+        style: {
+            marginLeft: '5px',
+            marginRight: '5px'
+        },
+        listeners: {
+            change: function(sld,newValue,thumb) {
+                var node = layerTree.getSelectionModel().getSelectedNode();
+                node.layer.setOpacity(1-(newValue/100));
+            }
+        }
+    });
+
+    menuItems.push({
+        text: I18n.layers.transparency,
+        canActivate: false,
+        style: {
+            cursor: 'default',
+            marginLeft: '-20px'
+        }
+    });
+
+    menuItems.push(slider);
+
+    var menuCfg = {
+        showSeparator: false,
+        items: menuItems
+    };
+
+    node.menu = new Ext.menu.Menu(menuCfg);
+}
 
 function buildLayerContextMenu(node) {
 
