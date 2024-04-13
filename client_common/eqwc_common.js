@@ -31,6 +31,7 @@ Eqwc.geolocationErrors = {
     TIMEOUT: 3
 };
 
+Eqwc.tooltips = {};
 Eqwc.common = {};
 
 Eqwc.common.createHyperlink = function(att, val, pattern) {

@@ -925,7 +925,36 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         }
                     }
                 } else {
-                    attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
+                    if(attribute.value>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(name) && Eqwc.settings.fieldTemplates[name].template) {
+                        //if we have URL need to store target element for later create tooltips
+                        var target_el = name+'___'+attribute.value;
+                        var templ = Eqwc.settings.fieldTemplates[name];
+                        if(templ.url && Eqwc.tooltips.hasOwnProperty(target_el)===false) {
+                            Eqwc.tooltips[target_el]=null;
+                        }
+                        var newVal="";
+                        if(templ.template == 'BOOLEAN') {
+                            if(attribute.value == 'true') {
+                                newVal = I18n.properties.on;
+                            } else if (attribute.value == 'false') {
+                                newVal = I18n.properties.off;
+                            } else {
+                                newVal = '';
+                            }
+                        } else {
+                            newVal = templ.template.replaceAll('%VALUE%', attribute.value);
+                        }
+                        if (templ.url) {
+                            newVal = '<a href="#tooltip_'+target_el+'" id="open_'+target_el+'" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">'+attribute.value+'</a>';
+                            newVal+= '<div data-role="popup" id="tooltip_'+target_el+'" data-overlay-theme="a">';
+                            newVal+= '<p id="'+target_el+'">...</p>';
+                            newVal+= '</div>';
+                        }
+                        attribute.value = newVal;
+                    }
+                    else {
+                        attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
+                    }
                 }
 
                 // add attribute name and value
@@ -950,6 +979,25 @@ Gui.showXMLFeatureInfoResults = function (results) {
     }
 
     $('#featureInfoResults').html(html);
+    $('#featureInfoResults').on("create", function () {
+        $.each(Eqwc.tooltips, function (item) {
+            var split = item.split('___');
+            var field = split[0];
+            var value = split[1];
+
+            $('#open_' + item).on("click", function () {
+                $.ajax({
+                    url: Eqwc.settings.fieldTemplates[field].url + value,
+                    type: "GET",
+                    success: function (response) {
+                        // Upon successful retrieval, update the tooltip content
+                        $("#"+item).html(response);
+                        Eqwc.tooltips[item] = response;
+                    }
+                });
+            });
+        });
+    });
     $('#featureInfoResults').trigger('create');
 };
 

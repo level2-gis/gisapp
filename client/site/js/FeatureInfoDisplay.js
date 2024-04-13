@@ -142,28 +142,23 @@ function showFeatureInfo(evt) {
             items: popupItems,
             maximizable: true,
             collapsible: true,
+            resizable: false,
             listeners: {
                 close: onClickPopupClosed,
                 beforeshow: function () {
 
                     var maxHeight = geoExtMap.getHeight() * 0.8;
-                    var minWidth = 280;
-
-                    if ((geoExtMap.getWidth() * 0.25) > minWidth) {
-                        this.setWidth(geoExtMap.getWidth() * 0.25);
-                    } else {
-                        this.setWidth(minWidth);
-                    }
-
                     if (this.getHeight() > maxHeight) {
                         this.setHeight(maxHeight);
                     }
 
+                    this.doLayout();
                     //create layer abstract and ajax tooltips defined in settings.js for each id in _temp_ids
                     function set(element) {
-                        var split = element.split('::');
+                        var split = element.split('___');
                         var field = split[0];
                         var value = split[1];
+                        var el_short = field+"___"+value;
 
                         //workaround to create layer abstract tooltip
                         if (value == 'abstract' && wmsLoader.layerProperties[field].abstract) {
@@ -171,29 +166,41 @@ function showFeatureInfo(evt) {
                             new Ext.ToolTip({
                                 target: element,
                                 anchor: 'left',
-                                html: wmsLoader.layerProperties[field].abstract,
-                                autoHide: false
+                                html: wmsLoader.layerProperties[field].abstract
+                                //autoHide: false
                                 //closable: true
                             });
 
                         } else {
 
-                            new Ext.ToolTip({
-                                target: element,
-                                anchor: 'left',
-                                width: 150,
-                                autoLoad: {
-                                    url: this[field].url + value,
-                                    scripts: false,
-                                    callback: function (el, success, response, object) {
-                                        if (success) {
-                                            if (response.responseText == '') {
-                                                el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                            if (Eqwc.tooltips[el_short]) {
+
+                                new Ext.ToolTip({
+                                    target: element,
+                                    anchor: 'left',
+                                    html: Eqwc.tooltips[el_short]
+                                });
+
+                            } else {
+                                new Ext.ToolTip({
+                                    target: element,
+                                    anchor: 'left',
+                                    width: 150,
+                                    autoLoad: {
+                                        url: this[field].url + value,
+                                        scripts: false,
+                                        callback: function (el, success, response, object) {
+                                            if (success) {
+                                                if (response.responseText == '') {
+                                                    el.dom.textContent = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                                                } else {
+                                                    Eqwc.tooltips[el_short] = response.responseText;
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
 
@@ -485,7 +492,7 @@ function parseFIResult(node) {
                 htmlText += "<h2>" + layerTitle;
                 if(layer.abstract) {
                     //htmlText += " <div class='i-more' ext:qtip='"+layer.abstract+"'></div>";
-                    var layerAbEl = layerId+"::abstract";
+                    var layerAbEl = layerId+"___abstract";
                     htmlText += " <div class='i-more' id='"+layerAbEl+"'></div>";
                     Eqwc._temp_ids.push(layerAbEl);
                 }
@@ -584,12 +591,13 @@ function parseFIResult(node) {
                                         }
                                     } else {
                                         if(attValue>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase) && Eqwc.settings.fieldTemplates[attNameCase].template) {
-                                            //if we have URL need to store target element ids into array and later create tooltips
-                                            var target_el = attNameCase+'::'+attValue+'::'+id;
+                                            //if we have URL need to store target element for later create tooltips
+                                            var target_el_short = attNameCase+'___'+attValue;
+                                            var target_el = target_el_short+'___'+id;
+                                            var templ = Eqwc.settings.fieldTemplates[attNameCase];
                                             if(Eqwc.settings.fieldTemplates[attNameCase].url && Eqwc._temp_ids.indexOf(target_el)==-1) {
                                                 Eqwc._temp_ids.push(target_el);
                                             }
-                                            var templ = Eqwc.settings.fieldTemplates[attNameCase];
                                             var newVal = "";
                                             if(templ.template == 'BOOLEAN') {
                                                 if(attValue=='true') {
@@ -836,7 +844,8 @@ function identifyAction(type, id, extra) {
 
                 if (preparePass) {
 
-                    feat.data[extra] = id.split('.')[1];
+                    //feat.data[extra] = id.split('.')[1];
+                    feat.data[extra] = id.substring(id.indexOf('.')+1,id.length);
 
                     //set field readonly or hide
                     if(projectData.relations.hideJoinField) {
