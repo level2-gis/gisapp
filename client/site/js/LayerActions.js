@@ -38,18 +38,19 @@ function buildBaseContextMenu(node) {
 
     var menuItems = [];
 
-    var tip = new Ext.slider.Tip({
+    //var tip = new Ext.slider.Tip({
         // getText: function(thumb){
         //     return String.format('<b>{0}%</b>', thumb.value);
         // }
-    });
+    //});
 
+    var opacityValue = (1-node.layer.opacity)*100;
     var slider = new Ext.Slider({
         width: 200,
-        value: (1-node.layer.opacity)*100,
+        value: opacityValue,
         minValue: 0,
         maxValue: 100,
-        plugins: tip,
+        //plugins: tip,
         style: {
             marginLeft: '5px',
             marginRight: '5px'
@@ -58,12 +59,15 @@ function buildBaseContextMenu(node) {
             change: function(sld,newValue,thumb) {
                 var node = layerTree.getSelectionModel().getSelectedNode();
                 node.layer.setOpacity(1-(newValue/100));
+                var title = sld.ownerCt.getComponent('menuTitle');
+                title.setText(I18n.layers.transparency + ' ('+newValue+'%)');
             }
         }
     });
 
     menuItems.push({
-        text: I18n.layers.transparency,
+        text: I18n.layers.transparency + ' ('+opacityValue+'%)',
+        itemId: 'menuTitle',
         canActivate: false,
         style: {
             cursor: 'default',
