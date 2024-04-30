@@ -1930,3 +1930,20 @@ Ext.override(Ext.dd.DragTracker, {
         this.fireEvent('drag', this, e);
     }
 });
+
+//change the default function to return undefined in case of '' and not false as original
+Ext.override(Ext.grid.BooleanColumn, {
+    constructor: function(cfg){
+        Ext.grid.BooleanColumn.superclass.constructor.call(this, cfg);
+        var t = this.trueText, f = this.falseText, u = this.undefinedText;
+        this.renderer = function(v){
+            if(!v){
+                return u;
+            }
+            if(v === 'false'){
+                return f;
+            }
+            return t;
+        };
+    }
+});

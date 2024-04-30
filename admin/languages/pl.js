@@ -80,7 +80,9 @@ var TR = {
     bookmarkName: "Nazwa",
     bookmarkGroup: "Grupa",
     bookmarkEmptyGroupText: "brak grupy",
-    link: "LINK"
+    link: "LINK",
+    trueText: 'Yes',
+    falseText: 'No'
 };
 
 /**

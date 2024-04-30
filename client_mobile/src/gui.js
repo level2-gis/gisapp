@@ -940,17 +940,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
                             Eqwc.tooltips[target_el]=null;
                         }
                         var newVal="";
-                        if(templ.template == 'BOOLEAN') {
-                            if(attribute.value == 'true') {
-                                newVal = I18n.properties.on;
-                            } else if (attribute.value == 'false') {
-                                newVal = I18n.properties.off;
-                            } else {
-                                newVal = '';
-                            }
-                        } else {
-                            newVal = templ.template.replaceAll('%VALUE%', attribute.value);
-                        }
+                        newVal = templ.template.replaceAll('%VALUE%', attribute.value);
                         if (templ.url) {
                             newVal = '<a href="#tooltip_'+target_el+'" id="open_'+target_el+'" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">'+attribute.value+'</a>';
                             newVal+= '<div data-role="popup" id="tooltip_'+target_el+'" data-overlay-theme="a">';
@@ -961,6 +951,12 @@ Gui.showXMLFeatureInfoResults = function (results) {
                     }
                     else {
                         attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
+                    }
+                    if(attribute.value === 'true') {
+                        attribute.value = TR.trueText;
+                    }
+                    if (attribute.value === 'false') {
+                        attribute.value = TR.falseText;
                     }
                 }
 

@@ -600,14 +600,7 @@ function parseFIResult(node) {
                                             }
                                             var newVal = "";
                                             if(templ.template == 'BOOLEAN') {
-                                                if(attValue=='true') {
-                                                    newVal = Ext.MessageBox.buttonText.yes;
-                                                } else if (attValue == 'false') {
-                                                    newVal = Ext.MessageBox.buttonText.no;
-                                                } else {
-                                                    newVal = '';
-                                                }
-                                                attValue = newVal;
+
                                             } else {
                                                 newVal = templ.template.replaceAll('%VALUE%',attValue);
                                                 attValue = '<div class="tip-target" id="'+target_el+'">'+newVal+'</div>';
@@ -616,6 +609,12 @@ function parseFIResult(node) {
                                             if (attNameCase != 'MAPTIP') {
                                                 attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
                                             }
+                                        }
+                                        if(attValue === 'true') {
+                                            attValue = TR.trueText;
+                                        }
+                                        if (attValue === 'false') {
+                                            attValue = TR.falseText;
                                         }
                                     }
 

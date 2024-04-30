@@ -986,8 +986,8 @@ function getLayerAttributes(layer) {
 
         if(fieldType.indexOf('bool')>-1) {
             ret.columns[i].xtype = 'booleancolumn';
-            ret.columns[i].falseText = '-';
-            ret.columns[i].trueText = Ext.MessageBox.buttonText.yes;
+            ret.columns[i].falseText = TR.falseText;
+            ret.columns[i].trueText = TR.trueText;
         }
     }
 

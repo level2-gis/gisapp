@@ -371,7 +371,6 @@ Eqwc.settings.bookmarkPanelHeight = 200;
 /**
  * Configuration for formatting values in web client identify window.
  * Possible actions are:
- *  - display field boolean values as translated yes/no or empty strings
  *  - display fixed tooltip for field values
  *  - display dynamic tooltip using database and WSGI part for specific field value
  *  - link to URL using field value as part of URL, use HTML <a> tag
@@ -382,7 +381,6 @@ Eqwc.settings.bookmarkPanelHeight = 200;
  *  }
  * @type {}
  * @example {
- * 'BOOLEAN_FIELD': {template: "BOOLEAN"},
  * 'DB_LOOKUP_FIELD': {template: "%VALUE%", url: 'https://your_server/wsgi/lookup.wsgi?table=db_table_name&code='},
  * 'LINK_AND_TOOLTIP_FIELD': {template: "<a class='link' ext:qtitle='Tip title' ext:qwidth='150' ext:qtip='This is a quick tip from markup!' href='http://www.google.it/#output=search&q=%VALUE%' target='_blank'>%VALUE%</a>"}
  * }
