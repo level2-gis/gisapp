@@ -957,6 +957,12 @@ function getLayerAttributes(layer) {
                 }
                 return value;
             } else {
+                if(value === true) {
+                    return TR.trueText;
+                }
+                if(value === false) {
+                    return TR.falseText;
+                }
                 return Eqwc.common.createHyperlink(value, null, mediaurl);
             }
         };
@@ -984,11 +990,11 @@ function getLayerAttributes(layer) {
             ret.columns[i].format = 'Y-m-d H:i:s';
         }
 
-        if(fieldType.indexOf('bool')>-1) {
-            ret.columns[i].xtype = 'booleancolumn';
-            ret.columns[i].falseText = TR.falseText;
-            ret.columns[i].trueText = TR.trueText;
-        }
+        // if(fieldType.indexOf('bool')>-1) {
+        //     ret.columns[i].xtype = 'booleancolumn';
+        //     ret.columns[i].falseText = TR.falseText;
+        //     ret.columns[i].trueText = TR.trueText;
+        // }
     }
 
     var actionColumn = getActionColumns(sourceLayerId);
