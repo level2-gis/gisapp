@@ -913,6 +913,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
             for (var k = 0; k < feature.attributes.length; k++) {
                 var attribute = feature.attributes[k];
                 var name = attribute.name.toUpperCase();
+                var newName = name;
 
                 // skip hidden attributes and hidden values
                 //if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
@@ -948,6 +949,9 @@ Gui.showXMLFeatureInfoResults = function (results) {
                             newVal+= '</div>';
                         }
                         attribute.value = newVal;
+                        if(templ.newName) {
+                            newName = templ.newName;
+                        }
                     }
                     else {
                         attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
@@ -963,7 +967,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
                 // add attribute name and value
                 //hide field name in this cases, hardcoded
                 if (name !== 'MAPTIP' && name !== filesAlias && name.indexOf('LGS_IMG')==-1) {
-                    html += '<span class="name">' + attribute.name + ': </span>';
+                    html += '<span class="name">' + newName + ': </span>';
                 }
                 html += '<span class="value">' + attribute.value + '</span>';
                 //}
@@ -994,6 +998,9 @@ Gui.showXMLFeatureInfoResults = function (results) {
                     type: "GET",
                     success: function (response) {
                         // Upon successful retrieval, update the tooltip content
+                        if (response == '') {
+                            response = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                        }
                         $("#"+item).html(response);
                         Eqwc.tooltips[item] = response;
                     }

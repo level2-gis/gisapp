@@ -552,6 +552,7 @@ function parseFIResult(node) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
                             var attNameCase = attName.toUpperCase();
+                            var newName = attNameCase;
                             var attValue = attributeNode.getAttribute("value").replace(/null/ig, Eqwc.settings.noDataValue);
                             if ((attName !== mapInfoFieldName) && ((suppressEmptyValues == true && attValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '') !== "") || suppressEmptyValues == false)) {
                                 if (attNameCase === "GEOMETRY") {
@@ -575,9 +576,6 @@ function parseFIResult(node) {
 
                                     //if (attName !== "maptip") {
                                     htmlText += "\n   <tr>";
-                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias && attNameCase.indexOf('LGS_IMG')==-1) {
-                                        htmlText += "<td>" + attNameCase + ":</td>";
-                                    }
 
                                     if (attNameCase == filesAlias){
                                         if (attValue>'') {
@@ -595,16 +593,16 @@ function parseFIResult(node) {
                                             var target_el_short = attNameCase+'___'+attValue;
                                             var target_el = target_el_short+'___'+id;
                                             var templ = Eqwc.settings.fieldTemplates[attNameCase];
-                                            if(Eqwc.settings.fieldTemplates[attNameCase].url && Eqwc._temp_ids.indexOf(target_el)==-1) {
+                                            if(templ.url && Eqwc._temp_ids.indexOf(target_el)==-1) {
                                                 Eqwc._temp_ids.push(target_el);
                                             }
-                                            var newVal = "";
-                                            if(templ.template == 'BOOLEAN') {
 
-                                            } else {
-                                                newVal = templ.template.replaceAll('%VALUE%',attValue);
-                                                attValue = '<div class="tip-target" id="'+target_el+'">'+newVal+'</div>';
+                                            if(templ.newName) {
+                                                newName = templ.newName;
                                             }
+
+                                            var newVal = templ.template.replaceAll('%VALUE%',attValue);
+                                            attValue = '<div class="tip-target" id="'+target_el+'">'+newVal+'</div>';
                                         } else {
                                             if (attNameCase != 'MAPTIP') {
                                                 attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
@@ -616,6 +614,10 @@ function parseFIResult(node) {
                                         if (attValue === 'false') {
                                             attValue = TR.falseText;
                                         }
+                                    }
+
+                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias && attNameCase.indexOf('LGS_IMG')==-1) {
+                                        htmlText += "<td>" + newName + ":</td>";
                                     }
 
                                     if (attNameCase == 'MAPTIP' || attNameCase == filesAlias || attNameCase.indexOf('LGS_IMG')>-1) {
