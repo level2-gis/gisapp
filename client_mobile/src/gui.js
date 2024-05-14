@@ -940,8 +940,10 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         if(templ.url && Eqwc.tooltips.hasOwnProperty(target_el)===false) {
                             Eqwc.tooltips[target_el]=null;
                         }
-                        var newVal="";
-                        newVal = templ.template.replaceAll('%VALUE%', attribute.value);
+                        var newVal = "";
+                        if (templ.template) {
+                            newVal = templ.template.replaceAll('%VALUE%', attribute.value);
+                        }
                         if (templ.url) {
                             newVal = '<a href="#tooltip_'+target_el+'" id="open_'+target_el+'" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">'+attribute.value+'</a>';
                             newVal+= '<div data-role="popup" id="tooltip_'+target_el+'" data-overlay-theme="a">';

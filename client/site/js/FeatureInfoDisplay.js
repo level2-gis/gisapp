@@ -601,8 +601,10 @@ function parseFIResult(node) {
                                                 newName = templ.newName;
                                             }
 
-                                            var newVal = templ.template.replaceAll('%VALUE%',attValue);
-                                            attValue = '<div class="tip-target" id="'+target_el+'">'+newVal+'</div>';
+                                            if (templ.template) {
+                                                var newVal = templ.template.replaceAll('%VALUE%', attValue);
+                                                attValue = '<div class="tip-target" id="' + target_el + '">' + newVal + '</div>';
+                                            }
                                         } else {
                                             if (attNameCase != 'MAPTIP') {
                                                 attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
