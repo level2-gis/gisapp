@@ -933,7 +933,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         }
                     }
                 } else {
-                    if(attribute.value>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(name) && Eqwc.settings.fieldTemplates[name].template) {
+                    if(attribute.value>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(name)) {
                         //if we have URL need to store target element for later create tooltips
                         var target_el = name+'___'+attribute.value;
                         var templ = Eqwc.settings.fieldTemplates[name];

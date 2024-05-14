@@ -588,7 +588,7 @@ function parseFIResult(node) {
                                             attValue = newArr.join('</br>');
                                         }
                                     } else {
-                                        if(attValue>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase) && Eqwc.settings.fieldTemplates[attNameCase].template) {
+                                        if(attValue>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase)) {
                                             //if we have URL need to store target element for later create tooltips
                                             var target_el_short = attNameCase+'___'+attValue;
                                             var target_el = target_el_short+'___'+id;
