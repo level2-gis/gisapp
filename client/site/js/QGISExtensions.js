@@ -1202,9 +1202,15 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                         fieldType = 'date';
                     }
 
+                    if (fieldType.indexOf('long')>-1) {
+                        fieldType = 'int';
+                    }
+
                     if (fieldType == 'double') {
                         fieldType = 'float';
                     }
+
+                    //console.log(wmsLayerFields[i].name + ': ' + fieldType);
 
                     //if (fieldType=='date') {
                     //    storeFields.push({name: wmsLayerFields[i].name, type: fieldType, dateFormat: "Y-m-d H:i:s"});

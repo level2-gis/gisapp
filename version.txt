@@ -1,2 +1,2 @@
-1.11.5   - Application
+1.11.6   - Application
 19       - Database

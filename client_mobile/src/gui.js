@@ -943,6 +943,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         var newVal = "";
                         if (templ.template) {
                             newVal = templ.template.replaceAll('%VALUE%', attribute.value);
+                            newVal = newVal.replaceAll('%PROJECT%', projectData.project);
                         }
                         if (templ.url) {
                             newVal = '<a href="#tooltip_'+target_el+'" id="open_'+target_el+'" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">'+attribute.value+'</a>';

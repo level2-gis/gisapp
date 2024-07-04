@@ -148,8 +148,12 @@ function showFeatureInfo(evt) {
                 beforeshow: function () {
 
                     var maxHeight = geoExtMap.getHeight() * 0.8;
+                    var maxWidth = geoExtMap.getWidth() * 0.5;
                     if (this.getHeight() > maxHeight) {
                         this.setHeight(maxHeight);
+                    }
+                    if (this.getWidth() > maxWidth) {
+                        this.setWidth(maxWidth);
                     }
 
                     this.doLayout();
@@ -603,6 +607,7 @@ function parseFIResult(node) {
 
                                             if (templ.template) {
                                                 var newVal = templ.template.replaceAll('%VALUE%', attValue);
+                                                newVal = newVal.replaceAll('%PROJECT%', projectData.project);
                                                 attValue = '<div class="tip-target" id="' + target_el + '">' + newVal + '</div>';
                                             }
                                         } else {

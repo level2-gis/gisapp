@@ -926,7 +926,9 @@ function getLayerAttributes(layer) {
         } else if (fieldType.indexOf('Date')>-1) {
             fieldType = 'date';
         }
-
+        if (fieldType.indexOf('long')>-1) {
+            fieldType = 'int';
+        }
 
         //if(fieldType=='int' || fieldType=='date' || fieldType=='boolean') {
         //    ret.fields.push({name: attribute.name,type:fieldType});
