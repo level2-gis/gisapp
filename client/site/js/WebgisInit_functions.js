@@ -644,9 +644,7 @@ function postLoading() {
             if (!initialLoadDone) {
                 //show that we are done with initializing the map
                 //mainStatusText.setText(modeNavigationString[lang]);
-                if (loadMask) {
-                    loadMask.hide();
-                }
+                loadMask.hide();
                 initialLoadDone = true;
                 // run the function in the Customizations.js
                 customAfterMapInit();
@@ -731,16 +729,13 @@ function postLoading() {
         // loading listeners
         thematicLayer.events.register('loadstart', this, function() {
             mapIsLoading = true;
-            // show the loadMask with a delay of two second, no need to show it for quick changes
-            setTimeout("displayLoadMask()", 2000);
+            // show the loadMask with a delay of half second, no need to show it for quick changes
+            setTimeout("displayLoadMask()", 500);
         });
 
         thematicLayer.events.register('loadend', this, function() {
             mapIsLoading = false;
-            if (loadMask) {
-                loadMask.hide();
-                loadMask = null;
-            }
+            loadMask.hide();
         });
 
         //listener on numberfield to set map scale
@@ -2326,7 +2321,6 @@ function handleMeasurements(event) {
 // function to display a loadMask during lengthy load operations
 function displayLoadMask() {
     if (mapIsLoading) { // check if layer is still loading
-        loadMask = new Ext.LoadMask(Ext.getCmp('MapPanel').body, {msg:mapLoadingString[lang]});
         loadMask.show();
     }
 }
