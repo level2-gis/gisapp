@@ -423,8 +423,6 @@ function postLoading() {
                 n.on('checkchange', leafsChangeFunction);
             }
             else {
-                //disable contextmenu on groups
-                //n.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
 
                 //create menu and filter properties from json configuration
                 buildGroupContextMenu(n);
@@ -1324,8 +1322,6 @@ function postLoading() {
             text: externalLayerTitleString[lang]
         });
         layerTree.root.appendChild(extraLayGroup);
-        //disable context menu
-        extraLayGroup.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
 
         for (var k = 0; k < extraLayers.length; k++) {
             var extraNode = new GeoExt.tree.LayerNode({
@@ -1338,7 +1334,6 @@ function postLoading() {
 
             buildBaseContextMenu(extraNode);
 
-            //extraNode.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
             extraNode.on('contextMenu', contextMenuHandler);
         }
     }
@@ -1352,7 +1347,6 @@ function postLoading() {
         });
 
         layerTree.root.appendChild(BgLayerList);
-        BgLayerList.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
 
         if (visibleBackgroundLayer != null) {
             //initialBGMap = -1;
