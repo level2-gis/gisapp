@@ -940,7 +940,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         if(templ.url && Eqwc.tooltips.hasOwnProperty(target_el)===false) {
                             Eqwc.tooltips[target_el]=null;
                         }
-                        var newVal = "";
+                        var newVal = attribute.value;
                         if (templ.template) {
                             newVal = templ.template.replaceAll('%VALUE%', attribute.value);
                             newVal = newVal.replaceAll('%PROJECT%', projectData.project);
