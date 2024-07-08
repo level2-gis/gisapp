@@ -201,12 +201,20 @@ function postLoading() {
             styles = layerStyles(selectedLayers).join(',');
         }
 
-        thematicLayer.mergeNewParams({
-            LAYERS: selectedLayers.join(","),
-            //OPACITIES: layerOpacities(selectedLayers),
-            STYLES: styles,
-            FORMAT: format
-        });
+        // Debounce wrapper logic
+        if (!this.debounceTimer) {
+            this.debounceTimer = setTimeout(function() {
+                thematicLayer.mergeNewParams({
+                    LAYERS: selectedLayers.join(","),
+                    //OPACITIES: layerOpacities(selectedLayers),
+                    STYLES: styles,
+                    FORMAT: format
+                });
+                // Reset the timer so it can be triggered again
+                clearTimeout(this.debounceTimer);
+                this.debounceTimer = null;
+            }.bind(this), 250); // Adjust the delay as needed
+        }
     };
 
     var baseChangeFunction = function (node, checked) {
