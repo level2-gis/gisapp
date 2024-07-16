@@ -650,7 +650,7 @@ function postLoading() {
             if (!initialLoadDone) {
                 //show that we are done with initializing the map
                 //mainStatusText.setText(modeNavigationString[lang]);
-                loadMask.hide();
+                hideLoadMask();
                 initialLoadDone = true;
                 // run the function in the Customizations.js
                 customAfterMapInit();
@@ -741,7 +741,7 @@ function postLoading() {
 
         thematicLayer.events.register('loadend', this, function() {
             mapIsLoading = false;
-            loadMask.hide();
+            hideLoadMask();
         });
 
         //listener on numberfield to set map scale
@@ -2323,8 +2323,22 @@ function handleMeasurements(event) {
 // function to display a loadMask during lengthy load operations
 function displayLoadMask() {
     if (mapIsLoading) { // check if layer is still loading
+        //var myTopToolbar = Ext.getCmp('myTopToolbar');
+        var leftPanel = Ext.getCmp('LeftPanel');
+
+        //myTopToolbar.setDisabled(true);
+        leftPanel.setDisabled(true);
         loadMask.show();
     }
+}
+function hideLoadMask() {
+    //var myTopToolbar = Ext.getCmp('myTopToolbar');
+    var leftPanel = Ext.getCmp('LeftPanel');
+
+    //can't do that because some icons that should be disabled got enabled (like print, zoom back...)
+    //myTopToolbar.setDisabled(false);
+    leftPanel.setDisabled(false);
+    loadMask.hide();
 }
 
 function changeCursorInMap(cursorStyle) {
@@ -2941,7 +2955,7 @@ function setGrayNameWhenOutsideScale() {
 }
 
 function exceptionLoading(res) {
-    loadMask.hide();
+    hideLoadMask();
 
     Ext.Msg.show({
         title: 'Error code: '+res.status,
