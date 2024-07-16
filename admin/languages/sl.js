@@ -71,7 +71,7 @@ var TR = {
     exportUseMapCrs: "Uporabi projektni koord. sistem",
     exportFilter: "Filter",
     exportUseTableFilter: "Uporabi filter tabele",
-    tableUseExtent: "Prikaži samo elemente znotraj trenutnega prikaza",
+    tableUseExtent: "Prikaži samo elemente znotraj trenutnega območja",
     tableAddRecord: "Dodaj nov zapis",
     style: "Stil",
     navigation: "Navigacija",
