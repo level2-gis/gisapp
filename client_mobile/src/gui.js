@@ -933,27 +933,31 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         }
                     }
                 } else {
-                    if(attribute.value>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(name)) {
-                        //if we have URL need to store target element for later create tooltips
-                        var target_el = name+'___'+attribute.value;
+                    if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(name)) {
                         var templ = Eqwc.settings.fieldTemplates[name];
-                        if(templ.url && Eqwc.tooltips.hasOwnProperty(target_el)===false) {
-                            Eqwc.tooltips[target_el]=null;
-                        }
-                        var newVal = attribute.value;
-                        if (templ.template) {
-                            newVal = templ.template.replaceAll('%VALUE%', attribute.value);
-                            newVal = newVal.replaceAll('%PROJECT%', projectData.project);
-                        }
-                        if (templ.url) {
-                            newVal = '<a href="#tooltip_'+target_el+'" id="open_'+target_el+'" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">'+attribute.value+'</a>';
-                            newVal+= '<div data-role="popup" id="tooltip_'+target_el+'" data-overlay-theme="a">';
-                            newVal+= '<p id="'+target_el+'">...</p>';
-                            newVal+= '</div>';
-                        }
-                        attribute.value = newVal;
                         if(templ.newName) {
                             newName = templ.newName;
+                        }
+
+                        if (attribute.value > '') {
+                            //if we have URL need to store target element for later create tooltips
+                            var target_el = name + '___' + attribute.value;
+
+                            if (templ.url && Eqwc.tooltips.hasOwnProperty(target_el) === false) {
+                                Eqwc.tooltips[target_el] = null;
+                            }
+                            var newVal = attribute.value;
+                            if (templ.template) {
+                                newVal = templ.template.replaceAll('%VALUE%', attribute.value);
+                                newVal = newVal.replaceAll('%PROJECT%', projectData.project);
+                            }
+                            if (templ.url) {
+                                newVal = '<a href="#tooltip_' + target_el + '" id="open_' + target_el + '" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">' + attribute.value + '</a>';
+                                newVal += '<div data-role="popup" id="tooltip_' + target_el + '" data-overlay-theme="a">';
+                                newVal += '<p id="' + target_el + '">...</p>';
+                                newVal += '</div>';
+                            }
+                            attribute.value = newVal;
                         }
                     }
                     else {
