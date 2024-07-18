@@ -592,23 +592,25 @@ function parseFIResult(node) {
                                             attValue = newArr.join('</br>');
                                         }
                                     } else {
-                                        if(attValue>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase)) {
-                                            //if we have URL need to store target element for later create tooltips
-                                            var target_el_short = attNameCase+'___'+attValue;
-                                            var target_el = target_el_short+'___'+id;
+                                        if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase)) {
                                             var templ = Eqwc.settings.fieldTemplates[attNameCase];
-                                            if(templ.url && Eqwc._temp_ids.indexOf(target_el)==-1) {
-                                                Eqwc._temp_ids.push(target_el);
-                                            }
-
                                             if(templ.newName) {
                                                 newName = templ.newName;
                                             }
+                                            if (attValue>'') {
+                                                //if we have URL need to store target element for later create tooltips
+                                                var target_el_short = attNameCase + '___' + attValue;
+                                                var target_el = target_el_short + '___' + id;
 
-                                            if (templ.template) {
-                                                var newVal = templ.template.replaceAll('%VALUE%', attValue);
-                                                newVal = newVal.replaceAll('%PROJECT%', projectData.project);
-                                                attValue = '<div class="tip-target" id="' + target_el + '">' + newVal + '</div>';
+                                                if (templ.url && Eqwc._temp_ids.indexOf(target_el) == -1) {
+                                                    Eqwc._temp_ids.push(target_el);
+                                                }
+
+                                                if (templ.template) {
+                                                    var newVal = templ.template.replaceAll('%VALUE%', attValue);
+                                                    newVal = newVal.replaceAll('%PROJECT%', projectData.project);
+                                                    attValue = '<div class="tip-target" id="' + target_el + '">' + newVal + '</div>';
+                                                }
                                             }
                                         } else {
                                             if (attNameCase != 'MAPTIP') {
