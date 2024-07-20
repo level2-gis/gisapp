@@ -941,62 +941,50 @@ function getLayerAttributes(layer) {
         //    }
         //}
 
-        ret.columns[i].header = attribute.alias == null ? attribute.name : attribute.alias;
+        var header = attribute.name;
+        if (attribute.alias) {
+            header = attribute.alias;
+        } else {
+            header = (Eqwc.settings.fieldTemplates[attribute.name.toLocaleUpperCase()] && Eqwc.settings.fieldTemplates[attribute.name.toLocaleUpperCase()].newName) ? Eqwc.settings.fieldTemplates[attribute.name.toLocaleUpperCase()].newName : attribute.name;
+        }
+
+        ret.columns[i].header = header.toLocaleUpperCase();
         ret.columns[i].dataIndex = attribute.name;
         ret.columns[i].menuDisabled = false;
         ret.columns[i].sortable = true;
         ret.columns[i].filterable = true;
-        ret.columns[i].renderer = function(value) {
-            if (this.dataIndex == 'files') {
-                if (value>'') {
-                    var attArr = Ext.util.JSON.decode(value);
-                    var newArr = [];
-                    Ext.each(attArr, function (item, index, array) {
-                        var val = this;
-                        val.push(Eqwc.common.manageFile(item, false));
-                    }, newArr);
-                    value = newArr.join(', ');
-                }
-                return value;
-            } else {
-                if(value === true) {
-                    return TR.trueText;
-                }
-                if(value === false) {
-                    return TR.falseText;
-                }
-                return Eqwc.common.createHyperlink(value, null, mediaurl);
-            }
-        };
 
-        if(fieldType=='double') {
-            ret.columns[i].xtype = 'numbercolumn';
-            ret.columns[i].format = '0.000,00/i';
-            ret.columns[i].align = 'right';
-            //no effect
-            //ret[i].style = 'text-align:left'
-        }
-        if(fieldType=='int') {
-            ret.columns[i].xtype = 'numbercolumn';
-            ret.columns[i].format = '000';
-            ret.columns[i].align = 'right';
-        }
+        //we dont' set xtype because of predefined renderer, pass fieldType to custom gridRenderer
+        ret.columns[i].fieldType = fieldType;
 
-        if(fieldType=='date') {
-            ret.columns[i].xtype = 'datecolumn';
-            ret.columns[i].format = 'Y-m-d';
-        }
-
-        if(fieldType=='time') {
-            ret.columns[i].xtype = 'datecolumn';
-            ret.columns[i].format = 'Y-m-d H:i:s';
-        }
+        // if(fieldType=='double') {
+        //     ret.columns[i].xtype = 'numbercolumn';
+        //     ret.columns[i].format = '0.000,00/i';
+        //     ret.columns[i].align = 'right';
+        // }
+        // if(fieldType=='int') {
+        //     ret.columns[i].xtype = 'numbercolumn';
+        //     ret.columns[i].format = '000';
+        //     ret.columns[i].align = 'right';
+        // }
+        //
+        // if(fieldType=='date') {
+        //     ret.columns[i].xtype = 'datecolumn';
+        //     ret.columns[i].format = 'Y-m-d';
+        // }
+        //
+        // if(fieldType=='time') {
+        //     ret.columns[i].xtype = 'datecolumn';
+        //     ret.columns[i].format = 'Y-m-d H:i:s';
+        // }
 
         // if(fieldType.indexOf('bool')>-1) {
         //     ret.columns[i].xtype = 'booleancolumn';
         //     ret.columns[i].falseText = TR.falseText;
         //     ret.columns[i].trueText = TR.trueText;
         // }
+
+        ret.columns[i].renderer = gridRenderer;
     }
 
     var actionColumn = getActionColumns(sourceLayerId);
@@ -1024,6 +1012,9 @@ function getActionColumns(layerId) {
 
     var action = new Ext.grid.ActionColumn({
         width: 22,
+        menuDisabled: true,
+        hideable: false,
+        resizable: false,
         items: [{
             icon: iconDirectory + "contextmenu/zoom.png",
             tooltip: TR.show,
@@ -1033,4 +1024,45 @@ function getActionColumns(layerId) {
     });
 
     return action;
+}
+
+function gridRenderer(value, meta) {
+
+    //test for custom styling, todo from settings.js
+    //meta.style =  'background-color:aliceblue;';
+
+    if (this.fieldType == 'int') {
+        meta.style+='text-align:right;';
+    }
+    if (this.fieldType == 'double') {
+        meta.style+='text-align:right;';
+        value = Ext.util.Format.number(value,'0.000,00/i');
+    }
+    if (this.fieldType == 'date') {
+        value = Ext.util.Format.date(value,'Y-m-d');
+    }
+    if (this.fieldType == 'time') {
+        value = Ext.util.Format.date(value,'Y-m-d H:i:s');
+    }
+
+    if (this.dataIndex == 'files') {
+        if (value>'') {
+            var attArr = Ext.util.JSON.decode(value);
+            var newArr = [];
+            Ext.each(attArr, function (item, index, array) {
+                var val = this;
+                val.push(Eqwc.common.manageFile(item, false));
+            }, newArr);
+            value = newArr.join(', ');
+        }
+        return value;
+    } else {
+        if(value === true) {
+            return TR.trueText;
+        }
+        if(value === false) {
+            return TR.falseText;
+        }
+        return Eqwc.common.createHyperlink(value, null, mediaurl);
+    }
 }

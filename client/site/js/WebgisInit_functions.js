@@ -251,6 +251,8 @@ function postLoading() {
 
     applyPermalinkParams();
 
+    projectData.layersWithNodes = [];
+
     //now set all visible layers and document/toolbar title
     //var layerNode;
     layerTree.suspendEvents();
@@ -316,22 +318,32 @@ function postLoading() {
         layerTree.root.firstChild.expand(true, false);
         // expand all nodes in order to allow toggling checkboxes on deeper levels
         layerTree.root.findChildBy(function () {
+            var layerId = this.attributes.layer.metadata.name;
             if (this.isExpandable()) {
                 this.expand(true, false);
             }
+            // toggle checkboxes of visible layers
+            if (visibleLayers.indexOf(layerId)>-1) {
+                this.getUI().toggleCheck(true);
+            }
+            //save node id to layer for later
+            if(projectData.layers[layerId]) {
+                projectData.layers[layerId].node_id = this.id;
+                projectData.layersWithNodes.push([this.text,this.id]);    //needed for setgrayscale, TODO layername, could be a problem!
+            }
             return false;
         }, null, true);
-        for (var index = 0; index < visibleLayers.length; index++) {
-            // toggle checkboxes of visible layers
-            layerTree.root.findChildBy(function () {
-                if (wmsLoader.layerTitleNameMapping[this.attributes["text"]] == visibleLayers[index]) {
-                    this.getUI().toggleCheck(true);
-                    // FIXME: never return true even if node is found to avoid TypeError
-                    //				return true;
-                }
-                return false;
-            }, null, true);
-        }
+        // for (var index = 0; index < visibleLayers.length; index++) {
+        //     // toggle checkboxes of visible layers
+        //     layerTree.root.findChildBy(function () {
+        //         if (wmsLoader.layerTitleNameMapping[this.attributes["text"]] == visibleLayers[index]) {
+        //             this.getUI().toggleCheck(true);
+        //             // FIXME: never return true even if node is found to avoid TypeError
+        //             //				return true;
+        //         }
+        //         return false;
+        //     }, null, true);
+        // }
 
         //we need to get a flat list of visible layers so we can set the layerOrderPanel
         //getVisibleFlatLayers(layerTree.root.firstChild);
@@ -1910,6 +1922,9 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 var cnt_all = store.totalCount;
                 var cnt_filt = store.getTotalCount();
 
+                var layerId = wmsLoader.layerTitleNameMapping[grid.itemId];
+                var node = layerTree.root.findChild('id', projectData.layers[layerId].node_id, true);
+
                 if(grid.getBottomToolbar()) {
                     var complete = (store.totalCount == store.maxResults) ? false : true;
                     var loadmore = grid.getBottomToolbar().getComponent('loadmore');
@@ -1924,8 +1939,11 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
                 if (cnt_filt < cnt_all) {
                     grid.setTitle(store.gridTitle + "* (" + cnt_filt + ")");
+                    //can't modify node.text because of many references which break. So we do it with css
+                    node.setCls('filtered');
                 } else {
                     grid.setTitle(store.gridTitle + " (" + cnt_all + ")");
+                    node.ui.removeClass('filtered');
                 }
             }, searchPanelInstance.resultsGrid);
 
@@ -2811,23 +2829,23 @@ function imageFormatForLayers(layers) {
 
 //this function checks if layers and layer-groups are outside scale-limits.
 //if a layer is outside scale-limits, its label in the TOC is being displayed in a light gray
-//TODO Fix this, duplicate declarations, global vars..., have to simplify this and also use it on base and extra layers
+//TODO Fix this, too many loops, have to simplify this and also use it on base and extra layers
 function setGrayNameWhenOutsideScale() {
     if ( grayLayerNameWhenOutsideScale ) { //only if global boolean is set
 
         //layers
         //------
-        var allLayersWithIDs = [];
+        var allLayersWithIDs = projectData.layersWithNodes;
         var node,menu;
 
-        //iterate layer tree to get title and layer-id
-        layerTree.root.firstChild.cascade(
-            function (n) {
-                if (n.isLeaf()) {
-                    allLayersWithIDs.push([n.text,n.id]);
-                }
-            }
-        );
+        // //iterate layer tree to get title and layer-id
+        // layerTree.root.firstChild.cascade(
+        //     function (n) {
+        //         if (n.isLeaf()) {
+        //             allLayersWithIDs.push([n.text,n.id]);
+        //         }
+        //     }
+        // );
 
         //iterate ProjectSettings
         for (var i=0;i<wmsLoader.projectSettings.capability.layers.length;i++){
