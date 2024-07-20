@@ -1,4 +1,4 @@
-/* styling for context menu items */
+/* styling for context menu and table items */
 
 .x-menu-item-text {
 	color: black;
@@ -64,4 +64,8 @@
 /* default table style for featureinfo */
 td {
     vertical-align: top;
+}
+
+.x-grid3-td-numberer {
+    background-image: unset!important;
 }

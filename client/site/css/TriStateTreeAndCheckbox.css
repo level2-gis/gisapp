@@ -94,3 +94,7 @@
     color:#AAAAAA !important;
     font-style:italic;
 }
+
+.filtered a span:after {
+	content: '*';
+}
