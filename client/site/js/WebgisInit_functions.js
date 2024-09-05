@@ -1923,6 +1923,9 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 var cnt_filt = store.getTotalCount();
 
                 var layerId = wmsLoader.layerTitleNameMapping[grid.itemId];
+                if (layerId == undefined) {
+                    return;
+                }
                 var node = layerTree.root.findChild('id', projectData.layers[layerId].node_id, true);
 
                 if(grid.getBottomToolbar()) {
