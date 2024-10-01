@@ -191,6 +191,10 @@ Eqwc.common.getProjectUrl = function() {
   return projectData.gis_projects.path + projectData.project;
 };
 
+Eqwc.common.getRootUrl = function(url) {
+    return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
+};
+
 Eqwc.common.getLayerId = function (name) {
     for (var lay in projectData.layers) {
         if (projectData.layers[lay].layername === name)
