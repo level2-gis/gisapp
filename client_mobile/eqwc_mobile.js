@@ -2,8 +2,8 @@
  *
  * eqwc_mobile.js -- build of Extended QGIS Web Client
  *
- * version: 1.11.10
- * buildDate: Thu Sep  5 08:15:17 CEST 2024
+ * version: 1.11.11
+ * buildDate: Wed Oct  2 10:40:26 CEST 2024
  *
  * Copyright (2014-2021), Level2, All rights reserved.
  * More information at https://level2.si
@@ -16,7 +16,7 @@ a+'" target="_blank">'+b+"</a>")}catch(d){return b}finally{return a}};Eqwc.commo
 Eqwc.common.getRasterFieldName=function(a,b){return Eqwc.settings.overWriteRasterFieldName&&Eqwc.settings.overWriteRasterFieldName[a]?Eqwc.settings.overWriteRasterFieldName[a][0]==b?Eqwc.settings.overWriteRasterFieldName[a][1]:b:b};Eqwc.common.layerFieldNameExists=function(a,b){for(var c=wmsLoader.layerProperties[a],d=0;d<c.attributes.length;d++)if(c.attributes[d].name==b)return!0;return!1};Eqwc.common.lookup=function(a,b,c){for(var d=0,e=a.length;d<e;d++)if(a[d]&&a[d][b]===c)return a[d]};
 Eqwc.common.getIdentifyLayerName=function(a){var b=projectData.layers[a];if("undefined"==typeof b)return a;if(b.identifyname)return b.identifyname;b=b.layername;Eqwc.settings.replaceIdentifyLayerWithView&&-1<Eqwc.settings.replaceIdentifyLayerWithView.indexOf(b)&&Eqwc.common.getLayerId(b+"_view")&&(b+="_view");return projectData.layers[a].identifyname=b};
 Eqwc.common.getIdentifyLayerNameRevert=function(a){var b;return-1<a.indexOf("_view")&&(b=a.split("_view")[0],Eqwc.settings.replaceIdentifyLayerWithView&&-1<Eqwc.settings.replaceIdentifyLayerWithView.indexOf(b))?b:a};Eqwc.common.getHiddenLayersFromSettings=function(){var a=[Eqwc.settings.QgisUsersPrintName],b=Eqwc.settings.replaceIdentifyLayerWithView;if(b)for(var c=0;c<b.length;c++){var d=Eqwc.common.getLayerId(b[c]);d&&(d=Eqwc.common.getIdentifyLayerName(d),b[c]!=d&&a.push(d))}return a};
-Eqwc.common.getProjectUrl=function(){return projectData.gis_projects.path+projectData.project};Eqwc.common.getLayerId=function(a){for(var b in projectData.layers)if(projectData.layers[b].layername===a)return projectData.layers[b].id;return!1};
+Eqwc.common.getProjectUrl=function(){return projectData.gis_projects.path+projectData.project};Eqwc.common.getRootUrl=function(a){return a.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1")};Eqwc.common.getLayerId=function(a){for(var b in projectData.layers)if(projectData.layers[b].layername===a)return projectData.layers[b].id;return!1};
 Eqwc.common.parseInputTextToCoord=function(a){var b=[],c=[];-1<a.indexOf(",")?c=a.split(","):-1<a.indexOf(";")?c=a.split(";"):-1<a.indexOf(" ")&&(c=a.split(" "));if(0==c.length)return!1;for(var d in c)isNaN(parseFloat(c[d]))||b.push(parseFloat(c[d]));return 0==b.length?!1:b};Eqwc.common.reverseArray=function(a){for(var b=[],c=a.length-1;0<=c;c--)b.push(a[c]);return b};
 Eqwc.common.redirect=function(){-1<window.location.href.toLowerCase().indexOf("public=on")?window.location.href=window.location.href:Eqwc.settings.useGisPortal?window.location.href=Eqwc.settings.gisPortalRoot+"login?ru="+Eqwc.common.getProjectUrl():window.location.href="./admin/login.php?action=logout&map="+projectData.project};
 Eqwc.common.addMapFilter=function(a,b,c,d){if(a=Eqwc.common.getLayerId(a)){null==d&&(d="=");var e={};e.FILTER=a+':"'+b+'" '+d+" "+c;Map.hasOwnProperty("mergeWmsParams")&&(Map.mergeWmsParams(e),$("#panelLayer").panel("close"))}};Eqwc.common.clearMapFilters=function(){Map.hasOwnProperty("mergeWmsParams")&&(Map.mergeWmsParams({FILTER:""}),$("#panelLayer").panel("close"))};
