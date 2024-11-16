@@ -1988,7 +1988,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                         handler: addRelationRecord,
                         scope: searchPanelInstance
                     });
-                } else if (Eqwc.common.findParentRelation(this.gridTitle) == false || projectData.relations.hideJoinField == false) {
+                } else if (Eqwc.common.findParentRelation(this.gridTitle) == false) {
                     toolBar.push({
                         iconCls: 'x-add-icon',
                         tooltip: TR.tableAddRecord,

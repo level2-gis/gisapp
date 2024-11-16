@@ -871,14 +871,6 @@ function addRelationRecord() {
             val = val.replace(/'/g, "");
 
             feat.data[field] = val;
-            //
-            //set field readonly or hide
-            if (projectData.relations.hideJoinField) {
-                editor.attributesForm.getForm().findField(field).setVisible(false);
-            } else {
-                editor.attributesForm.getForm().findField(field).setReadOnly(true);
-            }
-            editor.attributesForm.relationField = field;
 
             editor.editLayer.addFeatures([feat]);
             editor.attributesForm.loadRecord(feat);

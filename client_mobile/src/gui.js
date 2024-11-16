@@ -240,9 +240,9 @@ Gui.loadLayers = function (data) {
                     if (!layer.wfs) {
                         return;
                     }
-                    //also skip if layer is WFS published is in relation and setting hideJoinField = true
+                    //also skip if layer is WFS published is in relation
                     //that means no manual inserting possible, only through relations
-                    if (Eqwc.common.findParentRelation(layer.layername) && projectData.relations.hideJoinField) {
+                    if (Eqwc.common.findParentRelation(layer.layername)) {
                         return;
                     }
                 }
