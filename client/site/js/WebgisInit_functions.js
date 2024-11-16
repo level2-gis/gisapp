@@ -1428,7 +1428,7 @@ function postLoading() {
                             },{
                                 id: 'printDescription',
                                 xtype: 'textarea',
-                                maxLength: 100,
+                                maxLength: 150,
                                 boxMaxHeight: 35,
                                 boxMinHeight: 35,
                                 height: 35,
@@ -1436,7 +1436,8 @@ function postLoading() {
                                 hideLabel: true,
                                 emptyText: TR.emptyPrintDescriptionText,
                                 hidden: projectData.user=='guest',
-                                anchor:'100%'
+                                anchor:'100%',
+                                autoCreate: {tag: 'textarea', type: 'text', autocomplete: 'off', maxlength: '150'}
                             }],
 
 
