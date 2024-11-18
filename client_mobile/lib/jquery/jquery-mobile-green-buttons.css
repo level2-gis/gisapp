@@ -1,0 +1,57 @@
+/* Green button theme for JQuery Mobile
+ * - Use data-theme="g" for green versions of the default JQuery Mobile Buttons.
+ ******************************************************************************************/
+
+.ui-btn-up-g {
+    border: 1px solid #146714;
+    background: #25AB25;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 -1px 1px #000;
+    background-image: -moz-linear-gradient(top, #4EC54E, #25AB25);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+    color-stop(0, #4EC54E),
+    color-stop(1, #25AB25));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#4EC54E', EndColorStr='#25AB25')";
+}
+.ui-btn-up-g a.ui-link-inherit {
+    color: #fff;
+}
+.ui-btn-hover-g {
+    border: 1px solid #006E00;
+    background: #4BB64B;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 -1px 1px #000;
+    background-image: -moz-linear-gradient(top,
+    #72D472,
+    #4BB64B);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+    color-stop(0, #72D472),
+    color-stop(1, #4BB64B));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#72D472', EndColorStr='#4BB64B')";
+}
+.ui-btn-hover-g a.ui-link-inherit {
+    color: #fff;
+}
+.ui-btn-down-g {
+    border: 1px solid #227722;
+    background: #4EC54E;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 -1px 1px #000;
+    background-image: -moz-linear-gradient(top, #399E39, #4EC54E);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+    color-stop(0, #399E39),
+    color-stop(1, #4EC54E));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#399E39', EndColorStr='#4EC54E')";
+}
+.ui-btn-down-g a.ui-link-inherit {
+    color: #fff;
+}
+.ui-btn-up-g,
+.ui-btn-hover-g,
+.ui-btn-down-g {
+    font-family: Helvetica, Arial, sans-serif;
+    text-decoration: none;
+}
