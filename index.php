@@ -43,7 +43,8 @@ function goMobile($lang, $scanner) {
         <script src="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.js"></script>
         <script src="client_mobile/src/jquery.mobile.collapsible.groupcheckbox.js"></script>
         <link rel="stylesheet" href="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.css" />
-        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery-mobile-red-buttons.css" />
+        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery-mobile-red-buttons.css?v=20241119" />
+        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery-mobile-green-buttons.css?v=20241119" />
 
         <!-- Proj4js -->
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
@@ -67,7 +68,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
         <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20221110"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20241119"/>
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
     </head>
     <body>
@@ -98,7 +99,7 @@ function goMobile($lang, $scanner) {
                 <a href="#" style="display:none" id="btnAlert" data-role="button" data-icon="alert2"
                    data-iconpos="notext" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext"
-                   data-rel="dialog" class="ui-disabled mapicon"></a>
+                   data-rel="dialog" data-theme="g" class="ui-disabled mapicon"></a>
                 <a href="#" style="display:none" id="btnRemove" data-role="button" data-icon="remove"
                    data-iconpos="notext" data-rel="dialog" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnRecord" data-role="button" data-icon="record"

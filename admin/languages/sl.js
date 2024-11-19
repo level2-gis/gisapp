@@ -130,7 +130,7 @@ I18n.layers = {
 };
 
 I18n.featureInfo = {
-    header: "Informacije",
+    header: "Lokacija",
     feature: "Element ID:",
     raster: "Raster",
     noFeatureFound: "Ni elementov"

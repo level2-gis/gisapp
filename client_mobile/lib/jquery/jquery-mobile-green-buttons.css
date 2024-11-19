@@ -5,9 +5,9 @@
 .ui-btn-up-g {
     border: 1px solid #146714;
     background: #25AB25;
-    font-weight: bold;
+    font-weight: 700;
     color: #fff;
-    text-shadow: 0 -1px 1px #000;
+    text-shadow: 0 1px 0px #000;
     background-image: -moz-linear-gradient(top, #4EC54E, #25AB25);
     background-image: -webkit-gradient(linear,left top,left bottom,
     color-stop(0, #4EC54E),
@@ -20,9 +20,9 @@
 .ui-btn-hover-g {
     border: 1px solid #006E00;
     background: #4BB64B;
-    font-weight: bold;
+    font-weight: 700;
     color: #fff;
-    text-shadow: 0 -1px 1px #000;
+    text-shadow: 0 1px 0px #000;
     background-image: -moz-linear-gradient(top,
     #72D472,
     #4BB64B);
@@ -37,9 +37,9 @@
 .ui-btn-down-g {
     border: 1px solid #227722;
     background: #4EC54E;
-    font-weight: bold;
+    font-weight: 700;
     color: #fff;
-    text-shadow: 0 -1px 1px #000;
+    text-shadow: 0 1px 0px #000;
     background-image: -moz-linear-gradient(top, #399E39, #4EC54E);
     background-image: -webkit-gradient(linear,left top,left bottom,
     color-stop(0, #399E39),

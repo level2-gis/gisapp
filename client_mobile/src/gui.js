@@ -808,7 +808,7 @@ Gui.addFeatureInfoTopButtons = function () {
 
     //add button
     if (typeof (Editor) == 'function' && mobEditor && mobEditor.layer) {
-        ret += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
+        ret += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="g" data-icon="plus" data-inline="true" data-mini="true" data-role="button">' + mobEditor.layer.layername + '</a>';
         if(EditorConfig.useOffset) {
             ret += '<a href="javascript:mobEditor.startOffset();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAddOffset + '</a>';
         }
@@ -875,13 +875,19 @@ Gui.showXMLFeatureInfoResults = function (results) {
             //add edit and goto button in case of editor plugin and layer is available for editing
             var hasControlGroup = false;
             if (typeof (Editor) == 'function' && layer.geom_type != 'No geometry') {
-                hasControlGroup = true;
-                html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
                 if (Config.data.wfslayers[layer.id]) {
+                    hasControlGroup = true;
+                    html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
                     html += '<a href="javascript:Eqwc.common.callEditor(\'' + layer.id + '\',' + feature.id + ', \'edit\');" data-theme="b" data-role="button">' + TR.editEdit + '</a>';
                 }
                 if (Config.data.gotolayers[layer.id]) {
+                    if(!hasControlGroup) {
+                        html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
+                    }
                     html += '<a href="javascript:Eqwc.common.callEditor(\'' + layer.id + '\',' + feature.id + ', \'goto\');" data-theme="e" data-role="button">' + I18n.editor.goto + '</a>';
+                }
+                if (hasControlGroup) {
+                    html += '</div>';
                 }
             }
 
@@ -891,20 +897,14 @@ Gui.showXMLFeatureInfoResults = function (results) {
                 var field = projectData.relations[layerTitle][0].join_field;
                 var filter = table + ':"' + field + '" = \'' + feature.id + '\'';
 
-                if (!hasControlGroup) {
-                    hasControlGroup = true;
-                    html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
-                }
-
-                html += '<a href="javascript:Gui.wmsSearch(\'' + tableId + '\',\'' + feature.id + '\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b">' + TR.relations + '</a>';
+                html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
+                html += '<a href="javascript:Gui.wmsSearch(\'' + tableId + '\',\'' + feature.id + '\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b"></a>';
 
                 if (countRelations == 1 && typeof (Editor) == 'function' && Config.data.wfslayers[tableId] && projectData.layers[tableId].geom_type == 'No geometry') {
                     //feature.id can be string, so need to quote here
-                    html += '<a href="javascript:Eqwc.common.callEditor(\'' + tableId + '\',\'' + feature.id + '\', \'addRelation\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="plus" data-theme="a">' + TR.editAdd + '</a>';
+                    html += '<a href="javascript:Eqwc.common.callEditor(\'' + tableId + '\',\'' + feature.id + '\', \'addRelation\', \'' + field + '\');" data-role="button" data-icon="plus" data-theme="g">'+table+'</a>';
                 }
-            }
 
-            if (hasControlGroup) {
                 html += '</div>';
             }
 
