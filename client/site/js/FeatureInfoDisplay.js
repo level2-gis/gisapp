@@ -148,8 +148,12 @@ function showFeatureInfo(evt) {
                 beforeshow: function () {
 
                     var maxHeight = geoExtMap.getHeight() * 0.8;
+                    var maxWidth = geoExtMap.getWidth() * 0.5;
                     if (this.getHeight() > maxHeight) {
                         this.setHeight(maxHeight);
+                    }
+                    if (this.getWidth() > maxWidth) {
+                        this.setWidth(maxWidth);
                     }
 
                     this.doLayout();
@@ -552,6 +556,7 @@ function parseFIResult(node) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
                             var attNameCase = attName.toUpperCase();
+                            var newName = attNameCase;
                             var attValue = attributeNode.getAttribute("value").replace(/null/ig, Eqwc.settings.noDataValue);
                             if ((attName !== mapInfoFieldName) && ((suppressEmptyValues == true && attValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '') !== "") || suppressEmptyValues == false)) {
                                 if (attNameCase === "GEOMETRY") {
@@ -575,9 +580,6 @@ function parseFIResult(node) {
 
                                     //if (attName !== "maptip") {
                                     htmlText += "\n   <tr>";
-                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
-                                        htmlText += "<td>" + attNameCase + ":</td>";
-                                    }
 
                                     if (attNameCase == filesAlias){
                                         if (attValue>'') {
@@ -590,33 +592,41 @@ function parseFIResult(node) {
                                             attValue = newArr.join('</br>');
                                         }
                                     } else {
-                                        if(attValue>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase) && Eqwc.settings.fieldTemplates[attNameCase].template) {
-                                            //if we have URL need to store target element for later create tooltips
-                                            var target_el_short = attNameCase+'___'+attValue;
-                                            var target_el = target_el_short+'___'+id;
+                                        if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase)) {
                                             var templ = Eqwc.settings.fieldTemplates[attNameCase];
-                                            if(Eqwc.settings.fieldTemplates[attNameCase].url && Eqwc._temp_ids.indexOf(target_el)==-1) {
-                                                Eqwc._temp_ids.push(target_el);
+                                            if(templ.newName) {
+                                                newName = templ.newName;
                                             }
-                                            var newVal = "";
-                                            if(templ.template == 'BOOLEAN') {
-                                                if(attValue=='true') {
-                                                    newVal = Ext.MessageBox.buttonText.yes;
-                                                } else if (attValue == 'false') {
-                                                    newVal = Ext.MessageBox.buttonText.no;
-                                                } else {
-                                                    newVal = '';
+                                            if (attValue>'') {
+                                                //if we have URL need to store target element for later create tooltips
+                                                var target_el_short = attNameCase + '___' + attValue;
+                                                var target_el = target_el_short + '___' + id;
+
+                                                if (templ.url && Eqwc._temp_ids.indexOf(target_el) == -1) {
+                                                    Eqwc._temp_ids.push(target_el);
                                                 }
-                                                attValue = newVal;
-                                            } else {
-                                                newVal = templ.template.replaceAll('%VALUE%',attValue);
-                                                attValue = '<div class="tip-target" id="'+target_el+'">'+newVal+'</div>';
+
+                                                if (templ.template) {
+                                                    var newVal = templ.template.replaceAll('%VALUE%', attValue);
+                                                    newVal = newVal.replaceAll('%PROJECT%', projectData.project);
+                                                    attValue = '<div class="tip-target" id="' + target_el + '">' + newVal + '</div>';
+                                                }
                                             }
                                         } else {
                                             if (attNameCase != 'MAPTIP') {
                                                 attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
                                             }
                                         }
+                                        if(attValue === 'true') {
+                                            attValue = TR.trueText;
+                                        }
+                                        if (attValue === 'false') {
+                                            attValue = TR.falseText;
+                                        }
+                                    }
+
+                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
+                                        htmlText += "<td>" + newName + ":</td>";
                                     }
 
                                     if (attNameCase == 'MAPTIP' || attNameCase == filesAlias) {
@@ -846,14 +856,6 @@ function identifyAction(type, id, extra) {
 
                     //feat.data[extra] = id.split('.')[1];
                     feat.data[extra] = id.substring(id.indexOf('.')+1,id.length);
-
-                    //set field readonly or hide
-                    if(projectData.relations.hideJoinField) {
-                        editor.attributesForm.getForm().findField(extra).setVisible(false);
-                    } else {
-                        editor.attributesForm.getForm().findField(extra).setReadOnly(true);
-                    }
-                    editor.attributesForm.relationField = extra;
 
                     editor.editLayer.addFeatures([feat]);
                     editor.attributesForm.loadRecord(feat);

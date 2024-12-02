@@ -80,7 +80,9 @@ var TR = {
     bookmarkName: "naziv",
     bookmarkGroup: "Skupina",
     bookmarkEmptyGroupText: "brez skupine",
-    link: "POVEZAVA"
+    link: "POVEZAVA",
+    trueText: 'da',
+    falseText: 'ne'
 };
 
 /**
