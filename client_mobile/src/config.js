@@ -379,3 +379,40 @@ Config.print = {
 Config.customInitViewer = function () {
 
 };
+
+//some common needed functions
+
+function sendMail(to, subject, body, silent, template) {
+
+    var data = {};
+    data.mailto = to;
+    data.subject = subject;
+    data.body = body;
+    data.template = '';
+
+    if (template) {
+        data.template = template;
+    }
+
+    if (Eqwc.settings.mailServiceUrl > '') {
+
+        $.ajax({
+            url: Eqwc.settings.mailServiceUrl,
+            data: data,
+            type: 'POST',
+            dataType: 'text',
+            timeout: 1000,
+            context: this
+        })
+            .done(function (data, status, xhr) {
+                if (!silent) {
+                    alert(TR.feedbackSuccessTitle + '<br>' +  TR.feedbackSuccessMsg);
+                }
+            })
+            .fail(function (xhr, status, error) {
+                if (!silent) {
+                    alert(TR.feedbackErrorTitle + '<br>' +  TR.feedbackErrorMsg);
+                }
+            });
+    }
+}

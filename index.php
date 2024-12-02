@@ -16,7 +16,7 @@ function goMobile($lang, $scanner) {
         <!--        <title>Mobile Viewer</title>-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 	<meta name="robots" content="noindex, nofollow">
 
@@ -38,7 +38,8 @@ function goMobile($lang, $scanner) {
         <script src="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.js"></script>
         <script src="client_mobile/src/jquery.mobile.collapsible.groupcheckbox.js"></script>
         <link rel="stylesheet" href="client_mobile/lib/jquery/jquery.mobile-1.3.2.min.css" />
-        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery-mobile-red-buttons.css" />
+        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery-mobile-red-buttons.css?v=20241119" />
+        <link rel="stylesheet" href="client_mobile/lib/jquery/jquery-mobile-green-buttons.css?v=20241119" />
 
         <!-- Proj4js -->
         <script type="text/javascript" src="client_mobile/lib/proj4js/proj4.js"></script>
@@ -62,7 +63,7 @@ function goMobile($lang, $scanner) {
         <!--                DEBUG remove editor.js before-->
         <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20221110"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20241119"/>
         <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
     </head>
     <body>
@@ -93,7 +94,7 @@ function goMobile($lang, $scanner) {
                 <a href="#" style="display:none" id="btnAlert" data-role="button" data-icon="alert2"
                    data-iconpos="notext" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnAdd" data-role="button" data-icon="add" data-iconpos="notext"
-                   data-rel="dialog" class="ui-disabled mapicon"></a>
+                   data-rel="dialog" data-theme="g" class="ui-disabled mapicon"></a>
                 <a href="#" style="display:none" id="btnRemove" data-role="button" data-icon="remove"
                    data-iconpos="notext" data-rel="dialog" class="mapicon"></a>
                 <a href="#" style="display:none" id="btnRecord" data-role="button" data-icon="record"
@@ -253,8 +254,8 @@ $_SESSION['lang'] = $def_lang;
 $_SESSION['client_path'] = $client_path;
 
 $detect = new Mobile_Detect;
-// Exclude tablets.
-if( $detect->isMobile() && !$detect->isTablet() ){
+
+if($detect->isMobile()){
     $mobile='on';
 }
 
@@ -282,17 +283,17 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="robots" content="noindex, nofollow">
     <title></title>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20211109"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20240708"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20200228"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20191222"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20240718"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/style-blue.css?v=20230314"/>
 
     <?php if ($edit) {
@@ -311,7 +312,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js?v=20180215"></script>
 
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-1.1.0-compressed.js"></script>
-                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20210307"></script>
+                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20240710"></script>
 
                 <!--                FOR DEBUGGING-->
     <!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->

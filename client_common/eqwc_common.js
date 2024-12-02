@@ -43,28 +43,35 @@ Eqwc.common.createHyperlink = function(att, val, pattern) {
         val = att;
     }
 
-    // add hyperlinks for URLs in attribute values
-    if (/^((http|https|ftp):\/\/)./i.test(att)) {
-        if (!/\<a./i.test(att)) {
-            //do not reformat already formated tags
-            att = "<a class=\"link\" href=\"" + att + "\" target=\"_blank\">" + val + "</a>";
-        }
-    } else if(val.indexOf('href=')>-1 && val.indexOf(' target=')==-1) {
-        //add target blank if contains href and not target
-        att = val.replaceAll('<a ', '<a target="_blank"');
-    } else if(val.length>10 && typeof Ext != 'undefined') {
-        //create tooltip for longer texts
-        att = "<div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' ext:qtip='" + val + "'>" + val + "</div>";
-    }
-    // add hyperlinks for URLs containing mediaurl pattern
-    if (pattern > '') {
-        var mediapattern = new RegExp(pattern, 'i');
-        if (mediapattern.test(att)) {
-            att = "<a href=\"/" + att + "\" target=\"_blank\">" + val + "</a>";
-        }
-    }
+    try {
 
-    return att;
+        // add hyperlinks for URLs in attribute values
+        if (/^((http|https|ftp):\/\/)./i.test(att)) {
+            if (!/\<a./i.test(att)) {
+                //do not reformat already formated tags
+                att = "<a class=\"link\" href=\"" + att + "\" target=\"_blank\">" + val + "</a>";
+            }
+        } else if (val.indexOf('href=') > -1 && val.indexOf(' target=') == -1) {
+            //add target blank if contains href and not target
+            att = val.replaceAll('<a ', '<a target="_blank"');
+        } else if (val.length > 10 && typeof Ext != 'undefined') {
+            //create tooltip for longer texts
+            att = "<div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' ext:qtip='" + val + "'>" + val + "</div>";
+        }
+        // add hyperlinks for URLs containing mediaurl pattern
+        if (pattern > '') {
+            var mediapattern = new RegExp(pattern, 'i');
+            if (mediapattern.test(att)) {
+                att = "<a href=\"/" + att + "\" target=\"_blank\">" + val + "</a>";
+            }
+        }
+    }
+    catch(err) {
+        return val;
+    }
+    finally {
+        return att;
+    }
 };
 
 Eqwc.common.manageFile = function(fn, handleImages) {
@@ -182,6 +189,10 @@ Eqwc.common.getHiddenLayersFromSettings = function() {
 
 Eqwc.common.getProjectUrl = function() {
   return projectData.gis_projects.path + projectData.project;
+};
+
+Eqwc.common.getRootUrl = function(url) {
+    return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1");
 };
 
 Eqwc.common.getLayerId = function (name) {
