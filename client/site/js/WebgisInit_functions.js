@@ -1451,7 +1451,7 @@ function postLoading() {
                                 width: 180,
                                 mode: 'local',
                                 triggerAction: 'all',
-                                readonly: true,
+                                editable: false,
                                 store: new Ext.data.JsonStore({
                                     // store configs
                                     data: printCapabilities,
