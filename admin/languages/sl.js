@@ -71,7 +71,7 @@ var TR = {
     exportUseMapCrs: "Uporabi projektni koord. sistem",
     exportFilter: "Filter",
     exportUseTableFilter: "Uporabi filter tabele",
-    tableUseExtent: "Prikaži samo elemente znotraj trenutnega prikaza",
+    tableUseExtent: "Prikaži samo elemente znotraj trenutnega območja",
     tableAddRecord: "Dodaj nov zapis",
     style: "Stil",
     navigation: "Navigacija",
@@ -80,7 +80,9 @@ var TR = {
     bookmarkName: "naziv",
     bookmarkGroup: "Skupina",
     bookmarkEmptyGroupText: "brez skupine",
-    link: "POVEZAVA"
+    link: "POVEZAVA",
+    trueText: 'da',
+    falseText: 'ne'
 };
 
 /**
@@ -128,7 +130,7 @@ I18n.layers = {
 };
 
 I18n.featureInfo = {
-    header: "Informacije",
+    header: "Lokacija",
     feature: "Element ID:",
     raster: "Raster",
     noFeatureFound: "Ni elementov"

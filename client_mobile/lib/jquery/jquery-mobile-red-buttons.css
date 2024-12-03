@@ -5,9 +5,9 @@
 .ui-btn-up-r {
     border: 1px solid #721414;
     background: #AB2525;
-    font-weight: bold;
+    font-weight: 700;
     color: #fff;
-    text-shadow: 0 -1px 1px #000;
+    text-shadow: 0 1px 0px #000;
     background-image: -moz-linear-gradient(top, #C54E4E, #AB2525);
     background-image: -webkit-gradient(linear,left top,left bottom,
         color-stop(0, #C54E4E),
@@ -20,9 +20,9 @@
 .ui-btn-hover-r {
     border: 1px solid #6E0000;
     background: #B64B4B;
-    font-weight: bold;
+    font-weight: 700;
     color: #fff;
-    text-shadow: 0 -1px 1px #000;
+    text-shadow: 0 1px 0px #000;
     background-image: -moz-linear-gradient(top, 
         #D47272, 
         #B64B4B);
@@ -37,9 +37,9 @@
 .ui-btn-down-r {
     border: 1px solid #772222;
     background: #C54E4E;
-    font-weight: bold;
+    font-weight: 700;
     color: #fff;
-    text-shadow: 0 -1px 1px #000;
+    text-shadow: 0 1px 0px #000;
     background-image: -moz-linear-gradient(top, #9E3939, #C54E4E);
     background-image: -webkit-gradient(linear,left top,left bottom,
         color-stop(0, #9E3939),

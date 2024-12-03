@@ -1,6 +1,7 @@
 #!/bin/bash
 
 now="$(date)"
+year=$(date +"%Y")
 
 echo "/*"
 echo " *"
@@ -9,7 +10,7 @@ echo " *"
 echo " * version: $2"
 echo " * buildDate: $now"
 echo " *"
-echo " * Copyright (2014-2021), Level2, All rights reserved."
+echo " * Copyright (2014-$year), Level2, All rights reserved."
 echo " * More information at https://level2.si"
 echo " *"
 echo " */"

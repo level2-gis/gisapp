@@ -240,9 +240,9 @@ Gui.loadLayers = function (data) {
                     if (!layer.wfs) {
                         return;
                     }
-                    //also skip if layer is WFS published is in relation and setting hideJoinField = true
+                    //also skip if layer is WFS published is in relation
                     //that means no manual inserting possible, only through relations
-                    if (Eqwc.common.findParentRelation(layer.layername) && projectData.relations.hideJoinField) {
+                    if (Eqwc.common.findParentRelation(layer.layername)) {
                         return;
                     }
                 }
@@ -385,6 +385,13 @@ Gui.loadLayers = function (data) {
             var layerVisible = (visibleLayers.indexOf($(this).data('layer')) != -1);
             if (layerVisible != $(this).is(':checked')) {
                 // layer visibility changed
+                //when switching on group, check if layer has visibility_checked false and return
+                //TODO cant' use this, need to know if user clicked on group or layer
+                //if ($(this).is(':checked') == true && projectData.layers[$(this).data('layer')].parent !== null && projectData.layers[$(this).data('layer')].visibility_checked == false) {
+                //    return;
+                //}
+                //console.log(index + ' ' + $(this).data('layer') + ' '+ $(this).is(':checked'));
+
                 Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
                 Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
             }
@@ -801,7 +808,7 @@ Gui.addFeatureInfoTopButtons = function () {
 
     //add button
     if (typeof (Editor) == 'function' && mobEditor && mobEditor.layer) {
-        ret += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAdd + '</a>';
+        ret += '<a href="javascript:mobEditor.addPointOnClickPos();" data-theme="g" data-icon="plus" data-inline="true" data-mini="true" data-role="button">' + mobEditor.layer.layername + '</a>';
         if(EditorConfig.useOffset) {
             ret += '<a href="javascript:mobEditor.startOffset();" data-theme="a" data-inline="true" data-mini="true" data-role="button">' + TR.editAddOffset + '</a>';
         }
@@ -868,13 +875,19 @@ Gui.showXMLFeatureInfoResults = function (results) {
             //add edit and goto button in case of editor plugin and layer is available for editing
             var hasControlGroup = false;
             if (typeof (Editor) == 'function' && layer.geom_type != 'No geometry') {
-                hasControlGroup = true;
-                html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
                 if (Config.data.wfslayers[layer.id]) {
+                    hasControlGroup = true;
+                    html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
                     html += '<a href="javascript:Eqwc.common.callEditor(\'' + layer.id + '\',' + feature.id + ', \'edit\');" data-theme="b" data-role="button">' + TR.editEdit + '</a>';
                 }
                 if (Config.data.gotolayers[layer.id]) {
+                    if(!hasControlGroup) {
+                        html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
+                    }
                     html += '<a href="javascript:Eqwc.common.callEditor(\'' + layer.id + '\',' + feature.id + ', \'goto\');" data-theme="e" data-role="button">' + I18n.editor.goto + '</a>';
+                }
+                if (hasControlGroup) {
+                    html += '</div>';
                 }
             }
 
@@ -884,20 +897,14 @@ Gui.showXMLFeatureInfoResults = function (results) {
                 var field = projectData.relations[layerTitle][0].join_field;
                 var filter = table + ':"' + field + '" = \'' + feature.id + '\'';
 
-                if (!hasControlGroup) {
-                    hasControlGroup = true;
-                    html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
-                }
-
-                html += '<a href="javascript:Gui.wmsSearch(\'' + tableId + '\',\'' + feature.id + '\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b">' + TR.relations + '</a>';
+                html += '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
+                html += '<a href="javascript:Gui.wmsSearch(\'' + tableId + '\',\'' + feature.id + '\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="bars" data-theme="b"></a>';
 
                 if (countRelations == 1 && typeof (Editor) == 'function' && Config.data.wfslayers[tableId] && projectData.layers[tableId].geom_type == 'No geometry') {
                     //feature.id can be string, so need to quote here
-                    html += '<a href="javascript:Eqwc.common.callEditor(\'' + tableId + '\',\'' + feature.id + '\', \'addRelation\', \'' + field + '\');" data-role="button" data-iconpos="notext" data-icon="plus" data-theme="a">' + TR.editAdd + '</a>';
+                    html += '<a href="javascript:Eqwc.common.callEditor(\'' + tableId + '\',\'' + feature.id + '\', \'addRelation\', \'' + field + '\');" data-role="button" data-icon="plus" data-theme="g">'+table+'</a>';
                 }
-            }
 
-            if (hasControlGroup) {
                 html += '</div>';
             }
 
@@ -906,6 +913,7 @@ Gui.showXMLFeatureInfoResults = function (results) {
             for (var k = 0; k < feature.attributes.length; k++) {
                 var attribute = feature.attributes[k];
                 var name = attribute.name.toUpperCase();
+                var newName = name;
 
                 // skip hidden attributes and hidden values
                 //if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
@@ -925,42 +933,48 @@ Gui.showXMLFeatureInfoResults = function (results) {
                         }
                     }
                 } else {
-                    if(attribute.value>'' && Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(name) && Eqwc.settings.fieldTemplates[name].template) {
-                        //if we have URL need to store target element for later create tooltips
-                        var target_el = name+'___'+attribute.value;
+                    if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(name)) {
                         var templ = Eqwc.settings.fieldTemplates[name];
-                        if(templ.url && Eqwc.tooltips.hasOwnProperty(target_el)===false) {
-                            Eqwc.tooltips[target_el]=null;
+                        if(templ.newName) {
+                            newName = templ.newName;
                         }
-                        var newVal="";
-                        if(templ.template == 'BOOLEAN') {
-                            if(attribute.value == 'true') {
-                                newVal = I18n.properties.on;
-                            } else if (attribute.value == 'false') {
-                                newVal = I18n.properties.off;
-                            } else {
-                                newVal = '';
+
+                        if (attribute.value > '') {
+                            //if we have URL need to store target element for later create tooltips
+                            var target_el = name + '___' + attribute.value;
+
+                            if (templ.url && Eqwc.tooltips.hasOwnProperty(target_el) === false) {
+                                Eqwc.tooltips[target_el] = null;
                             }
-                        } else {
-                            newVal = templ.template.replaceAll('%VALUE%', attribute.value);
+                            var newVal = attribute.value;
+                            if (templ.template) {
+                                newVal = templ.template.replaceAll('%VALUE%', attribute.value);
+                                newVal = newVal.replaceAll('%PROJECT%', projectData.project);
+                            }
+                            if (templ.url) {
+                                newVal = '<a href="#tooltip_' + target_el + '" id="open_' + target_el + '" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">' + attribute.value + '</a>';
+                                newVal += '<div data-role="popup" id="tooltip_' + target_el + '" data-overlay-theme="a">';
+                                newVal += '<p id="' + target_el + '">...</p>';
+                                newVal += '</div>';
+                            }
+                            attribute.value = newVal;
                         }
-                        if (templ.url) {
-                            newVal = '<a href="#tooltip_'+target_el+'" id="open_'+target_el+'" data-rel="popup" data-inline="true" data-transition="pop" data-position-to="window">'+attribute.value+'</a>';
-                            newVal+= '<div data-role="popup" id="tooltip_'+target_el+'" data-overlay-theme="a">';
-                            newVal+= '<p id="'+target_el+'">...</p>';
-                            newVal+= '</div>';
-                        }
-                        attribute.value = newVal;
                     }
                     else {
                         attribute.value = Eqwc.common.createHyperlink(attribute.value, null, null);
+                    }
+                    if(attribute.value === 'true') {
+                        attribute.value = TR.trueText;
+                    }
+                    if (attribute.value === 'false') {
+                        attribute.value = TR.falseText;
                     }
                 }
 
                 // add attribute name and value
                 //hide field name in this cases, hardcoded
-                if (name !== 'MAPTIP' && name !== filesAlias) {
-                    html += '<span class="name">' + attribute.name + ': </span>';
+                if (name !== 'MAPTIP' && name !== filesAlias && name.indexOf('LGS_IMG')==-1) {
+                    html += '<span class="name">' + newName + ': </span>';
                 }
                 html += '<span class="value">' + attribute.value + '</span>';
                 //}
@@ -991,6 +1005,9 @@ Gui.showXMLFeatureInfoResults = function (results) {
                     type: "GET",
                     success: function (response) {
                         // Upon successful retrieval, update the tooltip content
+                        if (response == '') {
+                            response = Eqwc.settings.toolTipEmptyText ? Eqwc.settings.toolTipEmptyText : 'no data';
+                        }
                         $("#"+item).html(response);
                         Eqwc.tooltips[item] = response;
                     }

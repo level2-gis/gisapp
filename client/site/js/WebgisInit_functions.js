@@ -201,12 +201,20 @@ function postLoading() {
             styles = layerStyles(selectedLayers).join(',');
         }
 
-        thematicLayer.mergeNewParams({
-            LAYERS: selectedLayers.join(","),
-            //OPACITIES: layerOpacities(selectedLayers),
-            STYLES: styles,
-            FORMAT: format
-        });
+        // Debounce wrapper logic
+        if (!this.debounceTimer) {
+            this.debounceTimer = setTimeout(function() {
+                thematicLayer.mergeNewParams({
+                    LAYERS: selectedLayers.join(","),
+                    //OPACITIES: layerOpacities(selectedLayers),
+                    STYLES: styles,
+                    FORMAT: format
+                });
+                // Reset the timer so it can be triggered again
+                clearTimeout(this.debounceTimer);
+                this.debounceTimer = null;
+            }.bind(this), 250); // Adjust the delay as needed
+        }
     };
 
     var baseChangeFunction = function (node, checked) {
@@ -242,6 +250,8 @@ function postLoading() {
     layerTree.selectPath(layerTree.root.getPath());
 
     applyPermalinkParams();
+
+    projectData.layersWithNodes = [];
 
     //now set all visible layers and document/toolbar title
     //var layerNode;
@@ -308,22 +318,32 @@ function postLoading() {
         layerTree.root.firstChild.expand(true, false);
         // expand all nodes in order to allow toggling checkboxes on deeper levels
         layerTree.root.findChildBy(function () {
+            var layerId = this.attributes.layer.metadata.name;
             if (this.isExpandable()) {
                 this.expand(true, false);
             }
+            // toggle checkboxes of visible layers
+            if (visibleLayers.indexOf(layerId)>-1) {
+                this.getUI().toggleCheck(true);
+            }
+            //save node id to layer for later
+            if(projectData.layers[layerId]) {
+                projectData.layers[layerId].node_id = this.id;
+                projectData.layersWithNodes.push([this.text,this.id]);    //needed for setgrayscale, TODO layername, could be a problem!
+            }
             return false;
         }, null, true);
-        for (var index = 0; index < visibleLayers.length; index++) {
-            // toggle checkboxes of visible layers
-            layerTree.root.findChildBy(function () {
-                if (wmsLoader.layerTitleNameMapping[this.attributes["text"]] == visibleLayers[index]) {
-                    this.getUI().toggleCheck(true);
-                    // FIXME: never return true even if node is found to avoid TypeError
-                    //				return true;
-                }
-                return false;
-            }, null, true);
-        }
+        // for (var index = 0; index < visibleLayers.length; index++) {
+        //     // toggle checkboxes of visible layers
+        //     layerTree.root.findChildBy(function () {
+        //         if (wmsLoader.layerTitleNameMapping[this.attributes["text"]] == visibleLayers[index]) {
+        //             this.getUI().toggleCheck(true);
+        //             // FIXME: never return true even if node is found to avoid TypeError
+        //             //				return true;
+        //         }
+        //         return false;
+        //     }, null, true);
+        // }
 
         //we need to get a flat list of visible layers so we can set the layerOrderPanel
         //getVisibleFlatLayers(layerTree.root.firstChild);
@@ -423,8 +443,6 @@ function postLoading() {
                 n.on('checkchange', leafsChangeFunction);
             }
             else {
-                //disable contextmenu on groups
-                //n.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
 
                 //create menu and filter properties from json configuration
                 buildGroupContextMenu(n);
@@ -644,9 +662,7 @@ function postLoading() {
             if (!initialLoadDone) {
                 //show that we are done with initializing the map
                 //mainStatusText.setText(modeNavigationString[lang]);
-                if (loadMask) {
-                    loadMask.hide();
-                }
+                hideLoadMask();
                 initialLoadDone = true;
                 // run the function in the Customizations.js
                 customAfterMapInit();
@@ -731,16 +747,13 @@ function postLoading() {
         // loading listeners
         thematicLayer.events.register('loadstart', this, function() {
             mapIsLoading = true;
-            // show the loadMask with a delay of two second, no need to show it for quick changes
-            setTimeout("displayLoadMask()", 2000);
+            // show the loadMask with a delay of half second, no need to show it for quick changes
+            setTimeout("displayLoadMask()", 500);
         });
 
         thematicLayer.events.register('loadend', this, function() {
             mapIsLoading = false;
-            if (loadMask) {
-                loadMask.hide();
-                loadMask = null;
-            }
+            hideLoadMask();
         });
 
         //listener on numberfield to set map scale
@@ -1329,8 +1342,6 @@ function postLoading() {
             text: externalLayerTitleString[lang]
         });
         layerTree.root.appendChild(extraLayGroup);
-        //disable context menu
-        extraLayGroup.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
 
         for (var k = 0; k < extraLayers.length; k++) {
             var extraNode = new GeoExt.tree.LayerNode({
@@ -1343,7 +1354,6 @@ function postLoading() {
 
             buildBaseContextMenu(extraNode);
 
-            //extraNode.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
             extraNode.on('contextMenu', contextMenuHandler);
         }
     }
@@ -1357,7 +1367,6 @@ function postLoading() {
         });
 
         layerTree.root.appendChild(BgLayerList);
-        BgLayerList.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
 
         if (visibleBackgroundLayer != null) {
             //initialBGMap = -1;
@@ -1419,7 +1428,7 @@ function postLoading() {
                             },{
                                 id: 'printDescription',
                                 xtype: 'textarea',
-                                maxLength: 100,
+                                maxLength: 150,
                                 boxMaxHeight: 35,
                                 boxMinHeight: 35,
                                 height: 35,
@@ -1427,7 +1436,8 @@ function postLoading() {
                                 hideLabel: true,
                                 emptyText: TR.emptyPrintDescriptionText,
                                 hidden: projectData.user=='guest',
-                                anchor:'100%'
+                                anchor:'100%',
+                                autoCreate: {tag: 'textarea', type: 'text', autocomplete: 'off', maxlength: '150'}
                             }],
 
 
@@ -1441,7 +1451,7 @@ function postLoading() {
                                 width: 180,
                                 mode: 'local',
                                 triggerAction: 'all',
-                                readonly: true,
+                                editable: false,
                                 store: new Ext.data.JsonStore({
                                     // store configs
                                     data: printCapabilities,
@@ -1913,6 +1923,12 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 var cnt_all = store.totalCount;
                 var cnt_filt = store.getTotalCount();
 
+                var layerId = wmsLoader.layerTitleNameMapping[grid.itemId];
+                if (layerId == undefined) {
+                    return;
+                }
+                var node = layerTree.root.findChild('id', projectData.layers[layerId].node_id, true);
+
                 if(grid.getBottomToolbar()) {
                     var complete = (store.totalCount == store.maxResults) ? false : true;
                     var loadmore = grid.getBottomToolbar().getComponent('loadmore');
@@ -1927,8 +1943,11 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
                 if (cnt_filt < cnt_all) {
                     grid.setTitle(store.gridTitle + "* (" + cnt_filt + ")");
+                    //can't modify node.text because of many references which break. So we do it with css
+                    node.setCls('filtered');
                 } else {
                     grid.setTitle(store.gridTitle + " (" + cnt_all + ")");
+                    node.ui.removeClass('filtered');
                 }
             }, searchPanelInstance.resultsGrid);
 
@@ -1970,7 +1989,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                         handler: addRelationRecord,
                         scope: searchPanelInstance
                     });
-                } else if (Eqwc.common.findParentRelation(this.gridTitle) == false || projectData.relations.hideJoinField == false) {
+                } else if (Eqwc.common.findParentRelation(this.gridTitle) == false) {
                     toolBar.push({
                         iconCls: 'x-add-icon',
                         tooltip: TR.tableAddRecord,
@@ -2326,9 +2345,22 @@ function handleMeasurements(event) {
 // function to display a loadMask during lengthy load operations
 function displayLoadMask() {
     if (mapIsLoading) { // check if layer is still loading
-        loadMask = new Ext.LoadMask(Ext.getCmp('MapPanel').body, {msg:mapLoadingString[lang]});
+        //var myTopToolbar = Ext.getCmp('myTopToolbar');
+        var leftPanel = Ext.getCmp('LeftPanel');
+
+        //myTopToolbar.setDisabled(true);
+        leftPanel.setDisabled(true);
         loadMask.show();
     }
+}
+function hideLoadMask() {
+    //var myTopToolbar = Ext.getCmp('myTopToolbar');
+    var leftPanel = Ext.getCmp('LeftPanel');
+
+    //can't do that because some icons that should be disabled got enabled (like print, zoom back...)
+    //myTopToolbar.setDisabled(false);
+    leftPanel.setDisabled(false);
+    loadMask.hide();
 }
 
 function changeCursorInMap(cursorStyle) {
@@ -2801,23 +2833,23 @@ function imageFormatForLayers(layers) {
 
 //this function checks if layers and layer-groups are outside scale-limits.
 //if a layer is outside scale-limits, its label in the TOC is being displayed in a light gray
-//TODO Fix this, duplicate declarations, global vars..., have to simplify this and also use it on base and extra layers
+//TODO Fix this, too many loops, have to simplify this and also use it on base and extra layers
 function setGrayNameWhenOutsideScale() {
     if ( grayLayerNameWhenOutsideScale ) { //only if global boolean is set
 
         //layers
         //------
-        var allLayersWithIDs = [];
+        var allLayersWithIDs = projectData.layersWithNodes;
         var node,menu;
 
-        //iterate layer tree to get title and layer-id
-        layerTree.root.firstChild.cascade(
-            function (n) {
-                if (n.isLeaf()) {
-                    allLayersWithIDs.push([n.text,n.id]);
-                }
-            }
-        );
+        // //iterate layer tree to get title and layer-id
+        // layerTree.root.firstChild.cascade(
+        //     function (n) {
+        //         if (n.isLeaf()) {
+        //             allLayersWithIDs.push([n.text,n.id]);
+        //         }
+        //     }
+        // );
 
         //iterate ProjectSettings
         for (var i=0;i<wmsLoader.projectSettings.capability.layers.length;i++){
@@ -2945,7 +2977,7 @@ function setGrayNameWhenOutsideScale() {
 }
 
 function exceptionLoading(res) {
-    loadMask.hide();
+    hideLoadMask();
 
     Ext.Msg.show({
         title: 'Error code: '+res.status,

@@ -485,4 +485,9 @@ Ext.onReady(function () {
 		renderTo: Ext.getBody()
 	});
 	cmp1.show();
+
+	// Disable context menu globally
+	Ext.getBody().on('contextmenu', function(e) {
+		e.preventDefault();
+	});
 });

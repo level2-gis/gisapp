@@ -42,8 +42,6 @@ function handleGetPrint($data, $project, $user)
 
     } catch (PDOException $e) {
         error_log("EQWC PRINT: PDO database connection problem: " . $e->getMessage());
-    } catch (Exception $e) {
-        error_log("EQWCPRINT: General problem: " . $e->getMessage());
     }
 }
 
