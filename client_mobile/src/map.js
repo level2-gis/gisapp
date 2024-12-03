@@ -20,8 +20,11 @@ function Progress() {
  * Increment the count of loading tiles.
  */
 Progress.prototype.addLoading = function () {
+    var this_ = this;
     if (this.loading === 0) {
-        this.show();
+        this.loadingTimeout = setTimeout(function() {
+            this_.show();
+        }, 500); // Show loading indicator after 500ms delay
     }
     ++this.loading;
     this.update();
@@ -33,10 +36,12 @@ Progress.prototype.addLoading = function () {
  */
 Progress.prototype.addLoaded = function () {
     var this_ = this;
-    //setTimeout(function() {
     ++this_.loaded;
+    if (this_.loadingTimeout) {
+        clearTimeout(this_.loadingTimeout);
+        this_.loadingTimeout = null;
+    }
     this_.update();
-    //}, 100);
 };
 
 
