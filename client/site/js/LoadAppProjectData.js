@@ -73,10 +73,11 @@ function makeLayer(layDef, visible) {
                 matrixIds = eval(options.matrixIds);
             }
 
-            var layer = new OpenLayers.Layer.WMTS({
+            layer = new OpenLayers.Layer.WMTS({
                 name: title,
                 visibility: visibility,
                 opacity: options.opacity,
+                buffer: options.buffer,
                 url: options.url,
                 layer: options.layer,
                 requestEncoding: options.requestEncoding,
