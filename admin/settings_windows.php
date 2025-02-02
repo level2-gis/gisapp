@@ -12,7 +12,7 @@
 define('DEFAULT_LANG', 'en');
 
 //true loads source javascript files, false loads single minified version for production
-define('DEBUG', false);
+define('DEBUG', true);
 
 //database connection
 define('DB_CONN_STRING', 'pgsql:host=localhost;port=5432;dbname=gisapp');
@@ -43,5 +43,5 @@ define('MAIN_UPLOAD_DIR', './uploads/');
 
 //other settings
 define('OGR2OGR', 'C:/OSGeo4W64/bin/ogr2ogr');
-define('TEMP_PATH', 'C:/Windows/Temp/');
+define('TEMP_PATH', 'C:/xampp\tmp/');
 define('GISAPPURL', '/gisapp/'); //for now this one should not change!

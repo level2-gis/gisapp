@@ -12,7 +12,7 @@
 define('DEFAULT_LANG', 'en');
 
 //true loads source javascript files, false loads single minified version for production
-define('DEBUG', false);
+define('DEBUG', true);
 
 //database connection
 define('DB_CONN_STRING', 'pgsql:host=localhost;port=5432;dbname=gisapp');
