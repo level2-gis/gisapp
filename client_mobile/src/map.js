@@ -20,28 +20,25 @@ function Progress() {
  * Increment the count of loading tiles.
  */
 Progress.prototype.addLoading = function () {
-    var this_ = this;
     if (this.loading === 0) {
         this.loadingTimeout = setTimeout(function() {
-            this_.show();
-        }, 500); // Show loading indicator after 500ms delay
+            this.show(I18n.properties.mapLoading);
+        }.bind(this), 500);
     }
-    ++this.loading;
+    this.loading++;
     this.update();
 };
-
 
 /**
  * Increment the count of loaded tiles.
  */
 Progress.prototype.addLoaded = function () {
-    var this_ = this;
-    ++this_.loaded;
-    if (this_.loadingTimeout) {
-        clearTimeout(this_.loadingTimeout);
-        this_.loadingTimeout = null;
+    this.loaded++;
+    if (this.loadingTimeout) {
+        clearTimeout(this.loadingTimeout);
+        this.loadingTimeout = null;
     }
-    this_.update();
+    this.update();
 };
 
 
@@ -49,17 +46,10 @@ Progress.prototype.addLoaded = function () {
  * Update the progress.
  */
 Progress.prototype.update = function () {
-
     if (this.loading === this.loaded) {
         this.loading = 0;
         this.loaded = 0;
         this.hide();
-    } else {
-        if (this.loading > 1) {
-            this.show(I18n.properties.mapLoading + this.loaded + "/" + this.loading);
-        } else {
-            this.show(I18n.properties.mapLoading);
-        }
     }
 };
 
