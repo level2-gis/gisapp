@@ -41,7 +41,7 @@ Visit **<a target="_blank" href="http://test.level2.si">Demo by Level2</a>**
 
 ## Contributing
 
-Support this project by [**DONATING**](http://level2.si/product/donation-extended-qgis-web-client/).
+Support this project by [**DONATING**](https://github.com/sponsors/level2-gis).
 
 You are also welcome to contribute to the project by testing, requesting new features, translating, submitting code, ...
 Read this [tutorial about making changes to repositories](https://help.github.com/articles/fork-a-repo/).
@@ -76,7 +76,7 @@ This software is released under a GPL-v3.0 license.
 ## Copyright 
 2010-2014, The QGIS Project for official QGIS Web Client I and
 
-2014-2019 Level2 for Extended QGIS Web Client,
+2014-2025 Level2 for Extended QGIS Web Client,
 
 All rights reserved.
 
