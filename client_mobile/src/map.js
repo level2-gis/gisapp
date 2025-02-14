@@ -427,16 +427,27 @@ Map.setBackgroundLayer = function (layerName, layerId, isBase) {
                 visibility = definition.visibility;
             }
 
-            //tiled wms layer
-            layOl3 = new ol.layer.Tile({
-                visible: visibility,
-                opacity: definition.options.opacity,
-                //name: lay.name,
-                source: new ol.source.TileWMS({
-                    url: definition.url,
-                    params: definition.params
-                })
-            });
+            if (definition.options.singleTile) {
+                layOl3 = new ol.layer.Image({
+                    visible: visibility,
+                    //name: lay.name,
+                    source: new ol.source.ImageWMS({
+                        url: definition.url,
+                        params: definition.params
+                    })
+                });
+            } else {
+                //tiled wms layer
+                layOl3 = new ol.layer.Tile({
+                    visible: visibility,
+                    //name: lay.name,
+                    source: new ol.source.TileWMS({
+                        url: definition.url,
+                        params: definition.params,
+                        transition: 0
+                    })
+                });
+            }
 
             break;
 
