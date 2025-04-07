@@ -16,35 +16,22 @@ require_once("settings.php");
 function doGetRequest($query_arr, $client, $http_ver, $url)
 {
     $new_request = new Request('GET', $url);
-    $content = null;
-    $contentType = null;
-    $cacheKey = null;
-    $contentLength = 0;
-
     $response = $client->send($new_request, [
         'query' => $query_arr,
         'http_errors' => true,
-        //request without SSL verification, read this http://docs.guzzlephp.org/en/latest/request-options.html#verify-option
         'verify' => false
     ]);
     $contentType = $response->getHeaderLine('Content-Type');
-    $contentLength = $response->getHeaderLine('Content-Length');
     $content = $response->getBody()->__toString();
 
-    //get client headers
+    // generate etag and check client headers
     $client_headers = apache_request_headers();
-
-    //generate etag
     $new_etag = md5($content);
-
-    //check if client send etag and compare it
     if (isset($client_headers['If-None-Match']) && strcmp($new_etag, $client_headers['If-None-Match']) == 0) {
-        //return code 304 not modified without content
         header($http_ver . " 304 Not Modified");
         header("Cache-control: max-age=0");
         header("Etag: " . $new_etag);
     } else {
-        //header("Content-Length: " . $contentLength);
         header("Content-Type: " . $contentType);
         header("Cache-control: max-age=0");
         header("Etag: " . $new_etag);
@@ -53,27 +40,38 @@ function doGetRequest($query_arr, $client, $http_ver, $url)
 }
 
 try {
+    // Sanitize and validate GET parameters
+    $query_arr = filter_input_array(INPUT_GET, [
+        'provider'  => FILTER_SANITIZE_STRING,
+        'query'     => FILTER_SANITIZE_STRING,
+        'country'   => FILTER_SANITIZE_STRING,
+        'limit'     => FILTER_VALIDATE_INT,
+        'types'     => FILTER_SANITIZE_STRING,
+        'language'  => FILTER_SANITIZE_STRING,
+        'proximity' => FILTER_SANITIZE_STRING,
+    ]);
 
-    //parameters
-    $query_arr = filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW);
+    // Validate country parameter further if necessary (e.g., only letters and commas)
+    if (isset($query_arr['country']) && !preg_match('/^[a-zA-Z,]+$/', $query_arr['country'])) {
+        unset($query_arr['country']); // or handle it as needed
+    }
+
     $request_method = $_SERVER['REQUEST_METHOD'];
     $http_ver = $_SERVER["SERVER_PROTOCOL"];
 
-    //check param
     if (empty($query_arr["provider"])) {
         throw new Exception('Provider missing!');
     }
 
     switch ($query_arr["provider"]) {
         case "mapbox":
-            if(!defined('MAPBOX_KEY')) {
-                throw new Exception('Mapbox acces token misssing!');
+            if (!defined('MAPBOX_KEY')) {
+                throw new Exception('Mapbox access token missing!');
             }
-            $url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'.$query_arr["query"].'.json';
+            $url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' . urlencode($query_arr["query"]) . '.json';
             $query_arr["access_token"] = MAPBOX_KEY;
             $query_arr["autocomplete"] = true;
             break;
-
         default:
             throw new Exception('Provider not supported!');
     }
@@ -85,11 +83,6 @@ try {
         throw new Exception('Operation not supported!');
     }
 } catch (Exception $e) {
-    //if ($e->hasResponse()) {
-    //    header('', true, $e->getResponse()->getStatusCode());
-    //} else {
-    //header($http_ver . " 500 Server Error");
     header("Content-Type: text/html");
-    //}
     echo $e->getMessage();
 }
