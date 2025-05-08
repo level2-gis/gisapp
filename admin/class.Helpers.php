@@ -489,6 +489,11 @@ class Helpers
             }
         }
 
+        //gpkg
+        if (strpos($datasource,'gpkg|') > -1) {
+            $ds_parms['table'] = str_replace('layername=', '', explode('|',$datasource)[1]);
+        }
+
         if(empty($ds_parms['type'])) {
             $ds_parms['type'] = (string)$layer['geometry'];
         }
