@@ -41,3 +41,14 @@ QgisPermalink.prototype.read = function (urlParams, callback) {
     // init viewer
     callback();
 };
+
+QgisPermalink.prototype.create = function () {
+    var permalinkParams = {
+        startExtent: Map.map.getView().calculateExtent()
+    };
+
+    var params = new URLSearchParams(permalinkParams).toString();
+    var permalink = UrlParams.baseUrl + '?' + params;
+
+    return permalink;
+};

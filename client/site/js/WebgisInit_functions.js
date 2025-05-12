@@ -2408,28 +2408,30 @@ function createPermalink() {
     permalinkParams.startExtent = startExtent;
 
     // visible BackgroundLayer
-    permalinkParams.visibleBackgroundLayer = visibleBackgroundLayer;
+    //TODO FIX THIS
+    //permalinkParams.visibleBackgroundLayer = visibleBackgroundLayer;
 
     // visible layers and layer order
     permalinkParams.visibleLayers = visibleLayers.toString();
 
     // layer opacities as hash of <layername>: <opacity>
-    var opacities = null;
-    for (layer in wmsLoader.layerProperties) {
-        if (wmsLoader.layerProperties.hasOwnProperty(layer)) {
-            var opacity = wmsLoader.layerProperties[layer].opacity;
-            // collect only non-default values
-            if (opacity != 255) {
-                if (opacities == null) {
-                    opacities = {};
-                }
-                opacities[layer] = opacity;
-            }
-        }
-    }
-    if (opacities != null) {
-        permalinkParams.opacities = Ext.util.JSON.encode(opacities);
-    }
+    //TODO FIX THIS
+    // var opacities = null;
+    // for (layer in wmsLoader.layerProperties) {
+    //     if (wmsLoader.layerProperties.hasOwnProperty(layer)) {
+    //         var opacity = wmsLoader.layerProperties[layer].opacity;
+    //         // collect only non-default values
+    //         if (opacity != 255) {
+    //             if (opacities == null) {
+    //                 opacities = {};
+    //             }
+    //             opacities[layer] = opacity;
+    //         }
+    //     }
+    // }
+    // if (opacities != null) {
+    //     permalinkParams.opacities = Ext.util.JSON.encode(opacities);
+    // }
 
     //layer order
     if(showLayerOrderTab) {
