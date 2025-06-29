@@ -1730,7 +1730,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 break;
             case 'popup':
                 var win = Ext.getCmp('window_'+searchPanelInstance.selectionLayer);
-                //searchPanelId = 'popup_'+searchPanelInstance.queryLayer;
+                searchPanelId = 'popup_'+searchPanelInstance.queryLayer;
                 if (typeof(win) == 'undefined') {
                     new Ext.Window(
                         {

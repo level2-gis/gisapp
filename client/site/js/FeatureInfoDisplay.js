@@ -507,6 +507,10 @@ function parseFIResult(node) {
                 countRelations = projectData.relations[layerName].length;
             }
 
+            if (countRelations > 0) {
+                projectData.relations[layerName][0].display_array = {};
+            }
+
             while (layerChildNode) {
 
                 var id = layerChildNode.id;
@@ -637,7 +641,7 @@ function parseFIResult(node) {
                                     hasAttributes = true;
 
                                     if(countRelations>0 && projectData.relations[layerName][0].display_field && attNameCase == projectData.relations[layerName][0].display_field.toUpperCase()) {
-                                        projectData.relations[layerName][0].display_value = attValue;
+                                        projectData.relations[layerName][0].display_array[id] = attValue;
                                     }
 
                                     //}
@@ -772,7 +776,7 @@ function showRelations(layerId, id) {
         cmp.destroy();
     }
 
-    var display = projectData.relations[layerName][0].display_value;
+    var display = projectData.relations[layerName][0].display_array[id];
     if(display) {
         display = layerName + ': ' + display;
     } else {
