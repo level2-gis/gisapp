@@ -536,7 +536,7 @@ function parseFIResult(node) {
                         if (projectData.layers[layerId].wfs && Eqwc.plugins["editing"] !== undefined) {
                             edit = '<a class="i-edit" ext:qtip="' + TR.editData + '" href="javascript:;" onclick="identifyAction(\'edit\',\'' + fid + '\');"></a>';
                         }
-                        htmlText +=  select + edit + clear;
+                        htmlText +=  select + clear + edit;
                     }
                     if (countRelations > 0) {
                         var add = '';
