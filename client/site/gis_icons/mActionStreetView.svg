@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- License: CC Attribution. Made by FortAwesome: https://github.com/FortAwesome/Font-Awesome -->
+
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="mActionStreetView.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     showgrid="false"
+     inkscape:zoom="33.141332"
+     inkscape:cx="9.459487"
+     inkscape:cy="13.502777"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1421" />
+  <g
+     id="g1421">
+    <path
+       id="path2"
+       style="fill:#6d97c4;fill-opacity:1;stroke:#415a75;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 11.999999,0.1755195 c -1.63279,0 -2.9561195,1.32333 -2.9561195,2.95612 0,1.63279 1.3233295,2.95612 2.9561195,2.95612 1.63279,0 2.95612,-1.32333 2.95612,-2.95612 0,-1.63279 -1.32333,-2.95612 -2.95612,-2.95612 z m -2.2170895,6.65127 c -1.22448,0 -2.21709,0.99261 -2.21709,2.21709 v 4.4341795 c 0,0.81617 0.66189,1.47806 1.47806,1.47806 v 4.43418 c 0,0.81617 0.66189,1.47806 1.4780595,1.47806 h 2.95612 c 0.81617,0 1.47806,-0.66189 1.47806,-1.47806 v -4.43418 c 0.81617,0 1.47806,-0.66189 1.47806,-1.47806 V 9.0438795 c 0,-1.22448 -0.99261,-2.21709 -2.21709,-2.21709 h -0.54507 c -0.51132,0.23233 -1.07433,0.36952 -1.67202,0.36952 -0.59769,0 -1.16079,-0.13719 -1.67211,-0.36952 z m -2.95152,8.5801295 c -3.93672,0.71963 -6.65587,2.23049 -6.65587,3.98338 0,2.44896 5.29423,4.43418 11.8244795,4.43418 6.53025,0 11.82448,-1.98522 11.82448,-4.43418 0,-1.75289 -2.71915,-3.26375 -6.65587,-3.98338 -0.2134,0.2448 -0.45175,0.46653 -0.73443,0.6305 v 1.05956 c 3.07252,0.43141 5.17321,1.29563 5.17321,2.29332 0,1.42864 -4.30115,2.58661 -9.60739,2.58661 -5.3062395,0 -9.6073895,-1.15797 -9.6073895,-2.58661 0,-0.99769 2.10069,-1.86145 5.17321,-2.29332 v -1.05956 c -0.28268,-0.16397 -0.52103,-0.3857 -0.73443,-0.6305 z" />
+  </g>
+</svg>

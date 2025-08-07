@@ -996,7 +996,7 @@ function getActionColumns(layerId) {
 
     if (prop && prop.geom_type != 'No geometry') {
         columns.push({
-            icon: iconDirectory + "contextmenu/zoom.png",
+            icon: iconDirectory + "contextmenu/zoom.svg",
             tooltip: TR.show,
             disabled: false,
             handler: zoomHandler
@@ -1012,7 +1012,7 @@ function getActionColumns(layerId) {
     if (projectData.relations && projectData.relations[prop.layername]) {
         projectData.relations[prop.layername][0].display_array = {};
         columns.push({
-            icon: iconDirectory + "contextmenu/table.png",
+            iconCls: "x-table-icon",
             tooltip: TR.relations,
             disabled: false,
             handler: relationHandler
@@ -1022,7 +1022,7 @@ function getActionColumns(layerId) {
     //only if editing plugin and layer is editable, published as WFS, also not for guests (real protection is on server side)
     if (prop && prop.wfs && projectData.user != 'guest' && Eqwc.plugins["editing"] !== undefined) {
         columns.push({
-            icon: iconDirectory + "mActionToggleEditing.png",
+            iconCls: 'x-edit-icon',
             tooltip: TR.editData,
             disabled: false,
             handler: editHandler
@@ -1031,7 +1031,7 @@ function getActionColumns(layerId) {
 
     if (columns.length > 0) {
         return new Ext.grid.ActionColumn({
-            width: 22*columns.length,
+            width: 24*columns.length,
             menuDisabled: true,
             hideable: false,
             resizable: false,

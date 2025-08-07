@@ -951,7 +951,7 @@ function postLoading() {
 
         //zoom extent
         var zoomExtent = new Ext.Button({
-            icon: iconDirectory+'mActionZoomFullExtent.png',
+            icon: iconDirectory+'mActionZoomFullExtent.svg',
             id: 'navZoomFullExtent',
             scale: 'medium',
             map: geoExtMap.map,
@@ -963,7 +963,7 @@ function postLoading() {
 
         //zoom box
         var zoomBoxAction = new GeoExt.Action({
-            icon: iconDirectory+'mActionZoomBox.png',
+            icon: iconDirectory+'mActionZoomBox.svg',
             id: 'navZoomBoxButton',
             scale: 'medium',
             control: new OpenLayers.Control.ZoomBox({
@@ -981,7 +981,7 @@ function postLoading() {
         Ext.getCmp('navZoomBoxButton').on('toggle', mapToolbarHandler);
 
         var zoomToPreviousAction = new GeoExt.Action({
-            icon: iconDirectory+'mActionZoomLast.png',
+            icon: iconDirectory+'mActionZoomLast.svg',
             scale: 'medium',
             control: navHistoryCtrl.previous,
             disabled: true,
@@ -993,7 +993,7 @@ function postLoading() {
         myTopToolbar.insert(2, zoomToPreviousAction);
         //zoom next
         var zoomToNextAction = new GeoExt.Action({
-            icon: iconDirectory+'mActionZoomNext.png',
+            icon: iconDirectory+'mActionZoomNext.svg',
             scale: 'medium',
             control: navHistoryCtrl.next,
             disabled: true,
@@ -1007,7 +1007,7 @@ function postLoading() {
         //geolocate control
         if (projectData.geolocation) {
             var geoLocateAction = new GeoExt.Action({
-                icon: iconDirectory + 'mActionLocate.png',
+                icon: iconDirectory + 'mActionLocate.svg',
                 id: 'geoLocate',
                 scale: 'medium',
                 control: new OpenLayers.Control.Geolocate({
