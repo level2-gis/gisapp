@@ -5,21 +5,25 @@
 }
 
 .x-table-icon {
-    background-image:url(../gis_icons/contextmenu/table.png);
+    background-image:url(../gis_icons/contextmenu/table.svg);
+    background-size: contain;
+    width: 16px;
 }
 
 .x-zoom-icon {
-    background-image:url(../gis_icons/contextmenu/zoom.png);
+    background-image:url(../gis_icons/contextmenu/zoom.svg);
 }
 
 .x-export-icon {
-    background-image:url(../gis_icons/contextmenu/export.png);
+    background-image:url(../gis_icons/contextmenu/export.svg);
 }
 
 /* Here are new styles */
 
 .x-edit-icon {
-    background-image:url(../gis_icons/mActionToggleEditing.png);
+    background-image:url(../gis_icons/mActionToggleEditing.svg);
+    background-size: contain;
+    width: 16px;
 }
 
 .x-clearfilter-icon {

@@ -17,7 +17,8 @@
     width: 16px;
     padding-top: 16px;
     overflow: hidden;
-    background: url(../gis_icons/mActionSelect.png);
+    background: url(../gis_icons/mActionSelect.svg);
+    background-size: contain;
 }
 
 .i-edit {
@@ -28,7 +29,8 @@
     width: 16px;
     padding-top: 16px;
     overflow: hidden;
-    background: url(../gis_icons/mActionToggleEditing.png);
+    background: url(../gis_icons/mActionToggleEditing.svg);
+    background-size: contain;
 }
 
 .i-clear {
@@ -39,7 +41,8 @@
     width: 16px;
     padding-top: 16px;
     overflow: hidden;
-    background: url(../gis_icons/mActionClear.png);
+    background: url(../gis_icons/mActionClear.svg);
+    background-size: contain;
 }
 
 .i-add {
@@ -77,7 +80,8 @@
     width: 16px;
     padding-top: 16px;
     overflow: hidden;
-    background: url(../gis_icons/contextmenu/table.png);
+    background: url(../gis_icons/contextmenu/table.svg);
+    background-size: contain;
 }
 
 .tip-target {
