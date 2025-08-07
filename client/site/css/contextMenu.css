@@ -31,7 +31,9 @@
 }
 
 .x-clear-icon {
-    background-image:url(../gis_icons/mActionClear.png);
+    background-image:url(../gis_icons/mActionClear.svg);
+    background-size: contain;
+    width: 16px;
 }
 
 .x-extent-icon {
