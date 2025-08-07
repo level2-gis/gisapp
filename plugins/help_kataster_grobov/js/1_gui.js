@@ -28,7 +28,7 @@ customButtons.push(
     }, {
         xtype: 'button',
         scale: 'medium',
-        icon: 'plugins/help_kataster_grobov/img/icon.png',
+        icon: iconDirectory+'mActionDocs.svg',
         tooltipType: 'qtip',
         tooltip: 'Navodila za urejanje katastra grobov',
         id: 'helpActionBtn'                                   //must be unique ID

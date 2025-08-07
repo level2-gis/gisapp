@@ -29,7 +29,7 @@ customButtons.push(
         allowDepress: true,
         toggleGroup: 'mapTools',
         scale: 'medium',
-        icon: 'plugins/applied_streetview/img/mActionAppliedStreetView.png',
+        icon: iconDirectory+'mActionAppliedStreetView.svg',
         tooltipType: 'qtip',
         tooltip: 'Applied StreetView',
         id: 'appliedStreetViewBtn'

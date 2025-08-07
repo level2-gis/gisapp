@@ -25,9 +25,9 @@ customButtons.push(
     {
         xtype: 'button',
         scale: 'medium',
-        icon: 'plugins/help_sodo_mapiranje/img/icon.png',
+        icon: iconDirectory+'mActionDocs.svg',
         tooltipType: 'qtip',
-        tooltip: 'navodila za uporabo vmesnika',
+        tooltip: 'Navodila za uporabo vmesnika',
         id: 'helpSodoBtn'                                   //must be unique ID
     }
 );

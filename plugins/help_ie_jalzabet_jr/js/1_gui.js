@@ -28,7 +28,7 @@ customButtons.push(
     }, {
         xtype: 'button',
         scale: 'medium',
-        icon: 'plugins/help_ie_jalzabet_jr/img/icon.png',
+        icon: iconDirectory+'mActionDocs.svg',
         tooltipType: 'qtip',
         tooltip: 'Svjetiljke Jalžabet',
         id: 'helpIeJalzabetActionBtn'                                   //must be unique ID
