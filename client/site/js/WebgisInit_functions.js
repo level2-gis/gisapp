@@ -1864,51 +1864,87 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             var layer = searchPanelInstance.queryLayer;
                             var sourceLayer = Eqwc.common.getIdentifyLayerNameRevert(layer);
                             var layerId = wmsLoader.layerTitleNameMapping[sourceLayer];
-                            var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
+                            var filt = searchPanelInstance.resultsGrid.filters.getFilterData();
 
-                            if(filt.length == 0) {
-                                thematicLayer.mergeNewParams({FILTER: null});
-                                return;
-                            }
-
-                            Ext.each(filt, function (f) {
-                                var sep = '';
-                                var valStr = "'"+f.data.value+"'";
-                                if (f.data.type == 'string') {
-                                    wmsFilter.push("\"" + f.field + "\" ILIKE \'%" + f.data.value + "%\'");
-                                } else if (f.data.type == 'numeric' || f.data.type == 'date') {
-                                    switch (f.data.comparison) {
-                                        case 'gt':
-                                            sep = '>';
-                                            break;
-                                        case 'lt':
-                                            sep = '<';
-                                            break;
-                                        case 'eq':
-                                            sep = '=';
-                                            break;
+                            // Build current layer filter
+                            var currentLayerFilter = "";
+                            if(filt.length > 0) {
+                                // Get layer provider to determine appropriate filter syntax
+                                var layerProvider = projectData.layers[layerId] ? projectData.layers[layerId].provider : 'postgres';
+                                
+                                Ext.each(filt, function (f) {
+                                    var sep = '';
+                                    var valStr = "'"+f.data.value+"'";
+                                    if (f.data.type == 'string') {
+                                        // Use different string matching based on provider
+                                        if (layerProvider === 'postgres') {
+                                            // PostgreSQL supports ILIKE for case-insensitive pattern matching
+                                            wmsFilter.push("\"" + f.field + "\" ILIKE \'%" + f.data.value + "%\'");
+                                        } else {
+                                            // For other providers, try LIKE (works with most SQL-based providers)
+                                            // Fall back option for unknown providers
+                                            wmsFilter.push("\"" + f.field + "\" LIKE \'%" + f.data.value + "%\'");
+                                        }
+                                    } else if (f.data.type == 'numeric' || f.data.type == 'date') {
+                                        switch (f.data.comparison) {
+                                            case 'gt':
+                                                sep = '>';
+                                                break;
+                                            case 'lt':
+                                                sep = '<';
+                                                break;
+                                            case 'eq':
+                                                sep = '=';
+                                                break;
+                                        }
+                                        if(f.data.type=='numeric') {
+                                            valStr = f.data.value;
+                                        }
+                                        wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
+                                    } else {
+                                        sep = '=';
+                                        wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
                                     }
-                                    if(f.data.type=='numeric') {
-                                        valStr = f.data.value;
-                                    }
-                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
-                                } else {
-                                    sep = '=';
-                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
-                                }
-                            });
-
-                            //filter also view (for print table)
-                            if(layer.indexOf('_view')>-1) {
-                                thematicLayer.mergeNewParams({
-                                    FILTER: layerId + ":" + wmsFilter.join(" AND ") + ";" + wmsLoader.layerTitleNameMapping[layer] + ":" + wmsFilter.join(" AND ")
                                 });
-                            } else {
-                                thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
+                                currentLayerFilter = wmsFilter.join(" AND ");
                             }
 
-                            //store filter
-                            wmsLoader.layerProperties[layerId].currentFilter = wmsFilter.join(" AND ");
+                            // Build complete FILTER parameter preserving other layer filters
+                            var allFilters = [];
+                            var currentParams = thematicLayer.params.FILTER;
+                            
+                            // Parse existing FILTER parameter to preserve other layer filters
+                            if (currentParams) {
+                                var existingFilters = currentParams.split(';');
+                                for (var i = 0; i < existingFilters.length; i++) {
+                                    var filterPart = existingFilters[i];
+                                    if (filterPart.indexOf(':') > -1) {
+                                        var filterLayerId = filterPart.split(':')[0];
+                                        // Skip current layer and view layer filters as we'll add them fresh
+                                        if (filterLayerId !== layerId && 
+                                            filterLayerId !== wmsLoader.layerTitleNameMapping[layer]) {
+                                            allFilters.push(filterPart);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Add current layer filter if it exists
+                            if (currentLayerFilter) {
+                                allFilters.push(layerId + ":" + currentLayerFilter);
+                                
+                                // Add view filter if needed (for print table)
+                                if(layer.indexOf('_view') > -1) {
+                                    allFilters.push(wmsLoader.layerTitleNameMapping[layer] + ":" + currentLayerFilter);
+                                }
+                            }
+
+                            // Update FILTER parameter
+                            var finalFilter = allFilters.length > 0 ? allFilters.join(";") : null;
+                            thematicLayer.mergeNewParams({FILTER: finalFilter});
+
+                            // Store filter for current layer
+                            wmsLoader.layerProperties[layerId].currentFilter = currentLayerFilter;
                         }
                     }
                 }
@@ -1944,7 +1980,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 if (cnt_filt < cnt_all) {
                     grid.setTitle(store.gridTitle + "* (" + cnt_filt + ")");
                     //can't modify node.text because of many references which break. So we do it with css
-                    node.setCls('filtered');
+                    node.ui.addClass('filtered');
                 } else {
                     grid.setTitle(store.gridTitle + " (" + cnt_all + ")");
                     node.ui.removeClass('filtered');
