@@ -28,6 +28,9 @@ function prepareAppliedStreetView() {
     panel.removeAll();
 
     if (typeof (AppliedStreetViewControl) == 'undefined') {
+        // Flag to prevent initial player location from moving the map
+        var isPlayerInitializing = false;
+        
         // I create a new control click event class
         OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
             defaultHandlerOptions: {
@@ -56,6 +59,12 @@ function prepareAppliedStreetView() {
             var selected = evt.detail;
 
             //console.info('playerUpdated', selected);
+            
+            // Ignore playerUpdated events during initial loading
+            if (isPlayerInitializing) {
+                console.log('Ignoring playerUpdated during initialization');
+                return;
+            }
 
             var point = new OpenLayers.Geometry.Point(selected.lon, selected.lat);
             point.transform('EPSG:4326', authid);
@@ -90,6 +99,9 @@ function prepareAppliedStreetView() {
                 // Load iframe on first click if it doesn't exist
                 var existingPlayer = document.querySelector('#player');
                 if (!existingPlayer) {
+                    // Set flag to ignore initial playerUpdated events
+                    isPlayerInitializing = true;
+                    
                     //add listener to right panel
                     panel.on('beforeadd', function (panel, item) {
                         var center = Ext.getCmp('CenterPanel');
@@ -109,6 +121,11 @@ function prepareAppliedStreetView() {
                     // Small delay to ensure iframe is loaded before sending location
                     setTimeout(function() {
                         openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
+                        // Clear the flag after sending our intended location
+                        setTimeout(function() {
+                            isPlayerInitializing = false;
+                            console.log('Player initialization complete');
+                        }, 1000);
                     }, 500);
                 } else {
                     openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
