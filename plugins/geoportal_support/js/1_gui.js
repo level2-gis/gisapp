@@ -17,7 +17,7 @@ Eqwc.plugins["geoportal_support"].customToolbarLoad = function () {
         }
     });
 
-    header.tools[id].setRight(36);
+    header.tools[id].setRight(42);
 
     // Initialize new items count check
     loadFeedData();

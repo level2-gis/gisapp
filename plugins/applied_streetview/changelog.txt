@@ -1,3 +1,6 @@
+1.0.2 20250808
+- remove start player at always same location
+
 1.0.1 20220802
 - close tab on deactivation
 - icon

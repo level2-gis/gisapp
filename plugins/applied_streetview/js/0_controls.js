@@ -86,27 +86,38 @@ function prepareAppliedStreetView() {
         AppliedStreetViewControl = new OpenLayers.Control.Click({
             trigger: function (e) {
                 var pos = geoExtMap.map.getLonLatFromViewPortPx(e.xy);
-                openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
+                
+                // Load iframe on first click if it doesn't exist
+                var existingPlayer = document.querySelector('#player');
+                if (!existingPlayer) {
+                    //add listener to right panel
+                    panel.on('beforeadd', function (panel, item) {
+                        var center = Ext.getCmp('CenterPanel');
+                        var height = center.getHeight();
+                        item.setHeight(height - 10);
+                    });
+                    
+                    var player = new Ext.Panel({
+                        html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../uploads/ko_vdv_b/applied_streetview/player2/"></iframe>'
+                    });
+                    panel.add(player);
+                    
+                    // Open the panel on first click
+                    panel.setVisible(true);
+                    panel.expand();
+                    
+                    // Small delay to ensure iframe is loaded before sending location
+                    setTimeout(function() {
+                        openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
+                    }, 500);
+                } else {
+                    openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
+                }
             }
         });
 
         AppliedStreetViewControl.events.register('activate', this, function (evt) {
-
-            //add listener to right panel
-            panel.on('beforeadd', function (panel, item) {
-                var center = Ext.getCmp('CenterPanel');
-                var height = center.getHeight();
-                item.setHeight(height - 10);
-            });
-
-            //load iframe
-            var player = new Ext.Panel({
-                html: '<iframe id="player" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="../uploads/ko_vdv_b/applied_streetview/player2/"></iframe>'
-            });
-            panel.add(player);
-
-            panel.setVisible(true);
-            panel.expand();
+            // Don't open panel immediately - wait for first map click
         });
 
         AppliedStreetViewControl.events.register('deactivate', this, function () {
@@ -132,9 +143,16 @@ function openAppliedStreetView(location) {
         return;
     }
 
-    var event = new window.CustomEvent('playerLookAt', {detail: location});
-
-    player.contentDocument.dispatchEvent(event);
+    // Wait for iframe to be fully loaded before sending event
+    if (player.contentDocument && player.contentDocument.readyState === 'complete') {
+        var event = new window.CustomEvent('playerLookAt', {detail: location});
+        player.contentDocument.dispatchEvent(event);
+    } else {
+        // If iframe is not ready, wait a bit and try again
+        setTimeout(function() {
+            openAppliedStreetView(location);
+        }, 100);
+    }
 }
 
 
