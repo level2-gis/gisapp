@@ -84,11 +84,7 @@ function prepareAppliedStreetView() {
                 
                 if (latMatch && lonMatch) {
                     console.log('Received playerUpdated with our intended location - clearing initialization flag');
-                    console.log('Now expanding the panel with correct location');
-                    
-                    // NOW expand the panel since we have the correct location
-                    var panel = Ext.getCmp('RightPanel');
-                    panel.expand();
+                    console.log('Correct location loaded - flash should be minimal');
                     
                     window.isPlayerInitializing = false;
                     window.firstLocationSent = false;
@@ -147,26 +143,13 @@ function prepareAppliedStreetView() {
                     });
                     panel.add(player);
                     
-                    // Make panel visible but collapsed so iframe gets created in DOM
+                    // Open the panel immediately - the flash will be minimized by our logic
                     panel.setVisible(true);
-                    panel.collapse();
-                    console.log('Panel created (collapsed) - waiting for correct location');
+                    panel.expand();
+                    console.log('Panel opened - will minimize flash with correct location handling');
                     
-                    // Wait for panel/iframe to be rendered in DOM, then send location
+                    // Small delay to ensure iframe is loaded before sending location
                     setTimeout(function() {
-                        // Check if iframe is now available
-                        var playerCheck = document.querySelector('#player');
-                        if (!playerCheck) {
-                            console.log('Iframe still not ready, waiting more...');
-                            setTimeout(function() {
-                                sendLocationToPlayer(pos);
-                            }, 500);
-                        } else {
-                            sendLocationToPlayer(pos);
-                        }
-                    }, 500);
-                    
-                    function sendLocationToPlayer(pos) {
                         window.firstLocationSent = true;
                         console.log('Sending intended location to player');
                         var transformedPos = pos.transform(authid, 'EPSG:4326');
@@ -178,7 +161,7 @@ function prepareAppliedStreetView() {
                         };
                         console.log('Stored intended location:', window.intendedLocation);
                         openAppliedStreetView(transformedPos);
-                    }
+                    }, 1000);
                 } else {
                     openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
                 }
