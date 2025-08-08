@@ -84,11 +84,10 @@ function prepareAppliedStreetView() {
                 
                 if (latMatch && lonMatch) {
                     console.log('Received playerUpdated with our intended location - clearing initialization flag');
-                    console.log('Now showing the panel with correct location');
+                    console.log('Now expanding the panel with correct location');
                     
-                    // NOW show the panel since we have the correct location
+                    // NOW expand the panel since we have the correct location
                     var panel = Ext.getCmp('RightPanel');
-                    panel.setVisible(true);
                     panel.expand();
                     
                     window.isPlayerInitializing = false;
@@ -148,8 +147,10 @@ function prepareAppliedStreetView() {
                     });
                     panel.add(player);
                     
-                    // DON'T open the panel yet - wait until our location is loaded
-                    console.log('Panel created but not shown - waiting for correct location');
+                    // Make panel visible but collapsed so iframe gets created in DOM
+                    panel.setVisible(true);
+                    panel.collapse();
+                    console.log('Panel created (collapsed) - waiting for correct location');
                     
                     // Small delay to ensure iframe is loaded before sending location
                     setTimeout(function() {
