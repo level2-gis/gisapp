@@ -65,17 +65,22 @@ function prepareAppliedStreetView() {
 
             console.log('playerUpdated received:', selected);
             
-            // Ignore playerUpdated events during initial loading
+            // Always ignore playerUpdated events during initial loading phase
             if (window.isPlayerInitializing && !window.firstLocationSent) {
-                console.log('Ignoring playerUpdated during initialization');
+                console.log('Ignoring playerUpdated during initialization (before our location sent)');
                 return;
             }
             
             // If this is after we sent our location, check if it matches our intended location
             if (window.isPlayerInitializing && window.firstLocationSent && window.intendedLocation) {
-                var tolerance = 0.001; // Allow small differences due to precision
+                var tolerance = 0.01; // Increased tolerance for better matching
                 var latMatch = Math.abs(selected.lat - window.intendedLocation.lat) < tolerance;
                 var lonMatch = Math.abs(selected.lon - window.intendedLocation.lon) < tolerance;
+                
+                console.log('Comparing locations:');
+                console.log('  Received:', selected.lat, selected.lon);
+                console.log('  Intended:', window.intendedLocation.lat, window.intendedLocation.lon);
+                console.log('  Differences:', Math.abs(selected.lat - window.intendedLocation.lat), Math.abs(selected.lon - window.intendedLocation.lon));
                 
                 if (latMatch && lonMatch) {
                     console.log('Received playerUpdated with our intended location - clearing initialization flag');
@@ -83,7 +88,7 @@ function prepareAppliedStreetView() {
                     window.firstLocationSent = false;
                     window.intendedLocation = null;
                 } else {
-                    console.log('Ignoring playerUpdated - not our intended location');
+                    console.log('Ignoring playerUpdated - not our intended location (differences too large)');
                     return;
                 }
             }
@@ -121,7 +126,7 @@ function prepareAppliedStreetView() {
                 // Load iframe on first click if it doesn't exist
                 var existingPlayer = document.querySelector('#player');
                 if (!existingPlayer) {
-                    // Set flag to ignore initial playerUpdated events
+                    // Set flag to ignore initial playerUpdated events BEFORE creating iframe
                     window.isPlayerInitializing = true;
                     
                     //add listener to right panel
@@ -153,7 +158,7 @@ function prepareAppliedStreetView() {
                         };
                         console.log('Stored intended location:', window.intendedLocation);
                         openAppliedStreetView(transformedPos);
-                    }, 500);
+                    }, 1000); // Increased delay to 1000ms to ensure iframe is fully loaded
                 } else {
                     openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
                 }
