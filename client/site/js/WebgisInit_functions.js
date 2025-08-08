@@ -3017,9 +3017,32 @@ function setGrayNameWhenOutsideScale() {
 function exceptionLoading(res) {
     hideLoadMask();
 
+    var errorMessage = res.responseText;
+    
+    // Check if response is XML and extract ServerException text
+    if (res.responseText && res.responseText.indexOf('<?xml') === 0) {
+        try {
+            // Parse XML response
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(res.responseText, "text/xml");
+            var serverException = xmlDoc.getElementsByTagName("ServerException")[0];
+            
+            if (serverException && serverException.textContent) {
+                errorMessage = serverException.textContent;
+            }
+        } catch (e) {
+            // If XML parsing fails, use original response text
+            console.log("Error parsing XML response:", e);
+        }
+    }
+
+    //send email with errorMessage and projectData.user and project name
+    //leave sendto empty so it will send it to main administrator defined in gisportal
+    sendMail(null, 'Error in project: ' + projectData.title, errorMessage + ' (User: ' + projectData.user + ')', true);
+
     Ext.Msg.show({
         title: 'Error code: '+res.status,
-        msg: res.responseText,
+        msg: errorMessage,
         //width: 300,
         buttons: Ext.MessageBox.OK,
         //multiline: true,

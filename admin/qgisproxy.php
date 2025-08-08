@@ -363,27 +363,64 @@ try {
     if ($e->hasResponse()) {
         $res = $e->getResponse();
         header($http_ver . '" ' . $res->getStatusCode() . ' ' . $res->getReasonPhrase() . '"');
+        
+        // Get the original response body from QGIS Server
+        $originalContent = $res->getBody()->__toString();
+        
+        // Check if it's XML content from QGIS Server
+        if (strpos($originalContent, '<?xml') === 0 || strpos($originalContent, '<ServerException>') !== false) {
+            header("Content-Type: text/xml");
+            echo $originalContent;
+        } else {
+            header("Content-Type: text/html");
+            echo $e->getMessage();
+        }
     } else {
         header($http_ver . " 500 Server Error");
+        header("Content-Type: text/html");
+        echo $e->getMessage();
     }
-    header("Content-Type: text/html");
-    echo $e->getMessage();
 
 } catch (Exception\ClientException $e) {
     if ($e->hasResponse()) {
         $res = $e->getResponse();
         header($http_ver . '" ' . $res->getStatusCode() . ' ' . $res->getReasonPhrase() . '"');
+        
+        // Get the original response body from QGIS Server
+        $originalContent = $res->getBody()->__toString();
+        
+        // Check if it's XML content from QGIS Server
+        if (strpos($originalContent, '<?xml') === 0 || strpos($originalContent, '<ServerException>') !== false) {
+            header("Content-Type: text/xml");
+            echo $originalContent;
+        } else {
+            header("Content-Type: text/html");
+            echo $e->getMessage();
+        }
     } else {
         header($http_ver . " 401 Unathorized");
+        header("Content-Type: text/html");
+        echo $e->getMessage();
     }
-    header("Content-Type: text/html");
-    echo $e->getMessage();
 
 } catch (Exception\RequestException $e) {
     if ($e->hasResponse()) {
         $res = $e->getResponse();
         header($http_ver . '" ' . $res->getStatusCode() . ' ' . $res->getReasonPhrase() . '"');
+        
+        // Get the original response body from QGIS Server
+        $originalContent = $res->getBody()->__toString();
+        
+        // Check if it's XML content from QGIS Server
+        if (strpos($originalContent, '<?xml') === 0 || strpos($originalContent, '<ServerException>') !== false) {
+            header("Content-Type: text/xml");
+            echo $originalContent;
+        } else {
+            header("Content-Type: text/html");
+            echo $e->getMessage();
+        }
+    } else {
+        header("Content-Type: text/html");
+        echo $e->getMessage();
     }
-    header("Content-Type: text/html");
-    echo $e->getMessage();
 }
