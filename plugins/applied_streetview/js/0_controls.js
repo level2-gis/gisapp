@@ -160,8 +160,6 @@ function openAppliedStreetView(location) {
         return;
     }
 
-    console.log(location);
-
     // Wait for iframe to be fully loaded before sending event
     if (player.contentDocument && player.contentDocument.readyState === 'complete') {
         var event = new window.CustomEvent('playerLookAt', {detail: location});
