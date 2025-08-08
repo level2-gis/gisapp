@@ -147,7 +147,7 @@ function showFeatureInfo(evt) {
                 close: onClickPopupClosed,
                 beforeshow: function () {
 
-                    var maxHeight = geoExtMap.getHeight() * 0.8;
+                    var maxHeight = geoExtMap.getHeight() * 0.75;
                     var maxWidth = geoExtMap.getWidth() * 0.5;
                     if (this.getHeight() > maxHeight) {
                         this.setHeight(maxHeight);
@@ -209,6 +209,61 @@ function showFeatureInfo(evt) {
                     }
 
                     Ext.iterate(Eqwc._temp_ids, set, Eqwc.settings.fieldTemplates);
+                },
+                afterrender: function() {
+                    // Handle image loading to recalculate popup size
+                    var popup = this;
+                    var images = popup.body.select('img');
+                    var loadedImages = 0;
+                    var totalImages = images.getCount();
+                    
+                    if (totalImages > 0) {
+                        var maxHeight = geoExtMap.getHeight() * 0.75;
+                        var maxWidth = geoExtMap.getWidth() * 0.5;
+                        
+                        images.each(function(img) {
+                            if (img.dom.complete) {
+                                loadedImages++;
+                                if (loadedImages === totalImages) {
+                                    // All images loaded, recalculate size
+                                    popup.doLayout();
+                                    if (popup.getHeight() > maxHeight) {
+                                        popup.setHeight(maxHeight);
+                                    }
+                                    if (popup.getWidth() > maxWidth) {
+                                        popup.setWidth(maxWidth);
+                                    }
+                                }
+                            } else {
+                                img.on('load', function() {
+                                    loadedImages++;
+                                    if (loadedImages === totalImages) {
+                                        // All images loaded, recalculate size
+                                        popup.doLayout();
+                                        if (popup.getHeight() > maxHeight) {
+                                            popup.setHeight(maxHeight);
+                                        }
+                                        if (popup.getWidth() > maxWidth) {
+                                            popup.setWidth(maxWidth);
+                                        }
+                                    }
+                                });
+                                img.on('error', function() {
+                                    loadedImages++;
+                                    if (loadedImages === totalImages) {
+                                        // All images processed (loaded or errored), recalculate size
+                                        popup.doLayout();
+                                        if (popup.getHeight() > maxHeight) {
+                                            popup.setHeight(maxHeight);
+                                        }
+                                        if (popup.getWidth() > maxWidth) {
+                                            popup.setWidth(maxWidth);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
             }
         });

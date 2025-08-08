@@ -8,6 +8,36 @@ require_once("admin/class.Helpers.php");
 require_once("admin/class.Login.php");
 require_once("admin/settings.php");
 
+// Handle short URL redirects
+if (isset($_GET['link'])) {
+    $shortCode = preg_replace('/[^a-zA-Z0-9]/', '', $_GET['link']);
+    $shortUrlsDir = __DIR__ . '/admin/short_urls/';
+    $filename = $shortUrlsDir . $shortCode . '.txt';
+    
+    if (file_exists($filename)) {
+        $data = file_get_contents($filename);
+        
+        // Handle both old format (plain text) and new format (JSON)
+        $longUrl = $data;
+        if (json_decode($data, true)) {
+            $urlData = json_decode($data, true);
+            $longUrl = $urlData['url'];
+            
+            // Update last accessed time
+            $urlData['last_accessed'] = time();
+            file_put_contents($filename, json_encode($urlData));
+        }
+        
+        // Decode URL if it was encoded
+        $longUrl = urldecode($longUrl);
+        
+        // Redirect to the long URL
+        header("Location: " . $longUrl);
+        exit;
+    }
+    // If short URL not found, continue with normal page load (graceful fallback)
+}
+
 function goMobile($lang, $scanner) {
  ?><!DOCTYPE html>
     <html>
