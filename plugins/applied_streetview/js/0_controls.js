@@ -30,6 +30,7 @@ function prepareAppliedStreetView() {
     if (typeof (AppliedStreetViewControl) == 'undefined') {
         // Flag to prevent initial player location from moving the map
         var isPlayerInitializing = false;
+        var firstLocationSent = false;
         
         // I create a new control click event class
         OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
@@ -61,9 +62,16 @@ function prepareAppliedStreetView() {
             //console.info('playerUpdated', selected);
             
             // Ignore playerUpdated events during initial loading
-            if (isPlayerInitializing) {
+            if (isPlayerInitializing && !firstLocationSent) {
                 console.log('Ignoring playerUpdated during initialization');
                 return;
+            }
+            
+            // If this is the first playerUpdated after we sent our location, clear the flag
+            if (isPlayerInitializing && firstLocationSent) {
+                console.log('First playerUpdated after our location - clearing initialization flag');
+                isPlayerInitializing = false;
+                firstLocationSent = false;
             }
 
             var point = new OpenLayers.Geometry.Point(selected.lon, selected.lat);
@@ -120,12 +128,9 @@ function prepareAppliedStreetView() {
                     
                     // Small delay to ensure iframe is loaded before sending location
                     setTimeout(function() {
+                        firstLocationSent = true;
+                        console.log('Sending intended location to player');
                         openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
-                        // Clear the flag after sending our intended location
-                        setTimeout(function() {
-                            isPlayerInitializing = false;
-                            console.log('Player initialization complete');
-                        }, 1000);
                     }, 500);
                 } else {
                     openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
@@ -160,12 +165,16 @@ function openAppliedStreetView(location) {
         return;
     }
 
+    console.log('Attempting to send location to player:', location);
+
     // Wait for iframe to be fully loaded before sending event
     if (player.contentDocument && player.contentDocument.readyState === 'complete') {
         var event = new window.CustomEvent('playerLookAt', {detail: location});
         player.contentDocument.dispatchEvent(event);
+        console.log('Location event dispatched to player');
     } else {
         // If iframe is not ready, wait a bit and try again
+        console.log('Player not ready, retrying...');
         setTimeout(function() {
             openAppliedStreetView(location);
         }, 100);
