@@ -31,6 +31,7 @@ function prepareAppliedStreetView() {
     if (typeof window.isPlayerInitializing === 'undefined') {
         window.isPlayerInitializing = false;
         window.firstLocationSent = false;
+        window.intendedLocation = null;
     }
 
     if (typeof (AppliedStreetViewControl) == 'undefined') {
@@ -70,11 +71,21 @@ function prepareAppliedStreetView() {
                 return;
             }
             
-            // If this is the first playerUpdated after we sent our location, clear the flag
-            if (window.isPlayerInitializing && window.firstLocationSent) {
-                console.log('First playerUpdated after our location - clearing initialization flag');
-                window.isPlayerInitializing = false;
-                window.firstLocationSent = false;
+            // If this is after we sent our location, check if it matches our intended location
+            if (window.isPlayerInitializing && window.firstLocationSent && window.intendedLocation) {
+                var tolerance = 0.001; // Allow small differences due to precision
+                var latMatch = Math.abs(selected.lat - window.intendedLocation.lat) < tolerance;
+                var lonMatch = Math.abs(selected.lon - window.intendedLocation.lon) < tolerance;
+                
+                if (latMatch && lonMatch) {
+                    console.log('Received playerUpdated with our intended location - clearing initialization flag');
+                    window.isPlayerInitializing = false;
+                    window.firstLocationSent = false;
+                    window.intendedLocation = null;
+                } else {
+                    console.log('Ignoring playerUpdated - not our intended location');
+                    return;
+                }
             }
 
             var point = new OpenLayers.Geometry.Point(selected.lon, selected.lat);
@@ -135,6 +146,12 @@ function prepareAppliedStreetView() {
                         console.log('Sending intended location to player');
                         var transformedPos = pos.transform(authid, 'EPSG:4326');
                         console.log('Transformed position:', transformedPos);
+                        // Store the intended location for comparison
+                        window.intendedLocation = {
+                            lat: transformedPos.lat,
+                            lon: transformedPos.lon
+                        };
+                        console.log('Stored intended location:', window.intendedLocation);
                         openAppliedStreetView(transformedPos);
                     }, 500);
                 } else {
@@ -153,6 +170,7 @@ function prepareAppliedStreetView() {
             // Reset flags when deactivating
             window.isPlayerInitializing = false;
             window.firstLocationSent = false;
+            window.intendedLocation = null;
         });
 
         geoExtMap.map.addControl(AppliedStreetViewControl);
