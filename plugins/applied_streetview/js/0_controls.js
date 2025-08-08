@@ -62,12 +62,9 @@ function prepareAppliedStreetView() {
 
         window.document.addEventListener('playerUpdated', function (evt) {
             var selected = evt.detail;
-
-            console.log('playerUpdated received:', selected);
             
             // Always ignore playerUpdated events during initial loading phase
             if (window.isPlayerInitializing && !window.firstLocationSent) {
-                console.log('Ignoring playerUpdated during initialization (before our location sent)');
                 return;
             }
             
@@ -77,20 +74,11 @@ function prepareAppliedStreetView() {
                 var latMatch = Math.abs(selected.lat - window.intendedLocation.lat) < tolerance;
                 var lonMatch = Math.abs(selected.lon - window.intendedLocation.lon) < tolerance;
                 
-                console.log('Comparing locations:');
-                console.log('  Received:', selected.lat, selected.lon);
-                console.log('  Intended:', window.intendedLocation.lat, window.intendedLocation.lon);
-                console.log('  Differences:', Math.abs(selected.lat - window.intendedLocation.lat), Math.abs(selected.lon - window.intendedLocation.lon));
-                
                 if (latMatch && lonMatch) {
-                    console.log('Received playerUpdated with our intended location - clearing initialization flag');
-                    console.log('Correct location loaded - flash should be minimal');
-                    
                     window.isPlayerInitializing = false;
                     window.firstLocationSent = false;
                     window.intendedLocation = null;
                 } else {
-                    console.log('Ignoring playerUpdated - not our intended location (differences too large)');
                     return;
                 }
             }
@@ -146,20 +134,16 @@ function prepareAppliedStreetView() {
                     // Open the panel immediately - the flash will be minimized by our logic
                     panel.setVisible(true);
                     panel.expand();
-                    console.log('Panel opened - will minimize flash with correct location handling');
                     
                     // Small delay to ensure iframe is loaded before sending location
                     setTimeout(function() {
                         window.firstLocationSent = true;
-                        console.log('Sending intended location to player');
                         var transformedPos = pos.transform(authid, 'EPSG:4326');
-                        console.log('Transformed position:', transformedPos);
                         // Store the intended location for comparison
                         window.intendedLocation = {
                             lat: transformedPos.lat,
                             lon: transformedPos.lon
                         };
-                        console.log('Stored intended location:', window.intendedLocation);
                         openAppliedStreetView(transformedPos);
                     }, 1000);
                 } else {
@@ -196,7 +180,6 @@ function openAppliedStreetView(location) {
 
     var player = document.querySelector('#player');
     if (!player) {
-        console.log('Player element not found');
         return;
     }
 
@@ -205,17 +188,13 @@ function openAppliedStreetView(location) {
         lon: location.lon || location.x,
         lat: location.lat || location.y
     };
-    
-    console.log('Attempting to send location to player:', locationData);
 
     // Wait for iframe to be fully loaded before sending event
     if (player.contentDocument && player.contentDocument.readyState === 'complete') {
         var event = new window.CustomEvent('playerLookAt', {detail: locationData});
         player.contentDocument.dispatchEvent(event);
-        console.log('Location event dispatched to player with data:', locationData);
     } else {
         // If iframe is not ready, wait a bit and try again
-        console.log('Player not ready, retrying...');
         setTimeout(function() {
             openAppliedStreetView(location);
         }, 100);

@@ -1,4 +1,4 @@
-1.0.11 20250808
+1.0.12 20250808
 - remove start player at always same location
 
 1.0.1 20220802
