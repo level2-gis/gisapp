@@ -27,10 +27,13 @@ function prepareAppliedStreetView() {
     var panel = Ext.getCmp('RightPanel');
     panel.removeAll();
 
+    // Flag to prevent initial player location from moving the map - declare globally
+    if (typeof window.isPlayerInitializing === 'undefined') {
+        window.isPlayerInitializing = false;
+        window.firstLocationSent = false;
+    }
+
     if (typeof (AppliedStreetViewControl) == 'undefined') {
-        // Flag to prevent initial player location from moving the map
-        var isPlayerInitializing = false;
-        var firstLocationSent = false;
         
         // I create a new control click event class
         OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
@@ -62,16 +65,16 @@ function prepareAppliedStreetView() {
             //console.info('playerUpdated', selected);
             
             // Ignore playerUpdated events during initial loading
-            if (isPlayerInitializing && !firstLocationSent) {
+            if (window.isPlayerInitializing && !window.firstLocationSent) {
                 console.log('Ignoring playerUpdated during initialization');
                 return;
             }
             
             // If this is the first playerUpdated after we sent our location, clear the flag
-            if (isPlayerInitializing && firstLocationSent) {
+            if (window.isPlayerInitializing && window.firstLocationSent) {
                 console.log('First playerUpdated after our location - clearing initialization flag');
-                isPlayerInitializing = false;
-                firstLocationSent = false;
+                window.isPlayerInitializing = false;
+                window.firstLocationSent = false;
             }
 
             var point = new OpenLayers.Geometry.Point(selected.lon, selected.lat);
@@ -108,7 +111,7 @@ function prepareAppliedStreetView() {
                 var existingPlayer = document.querySelector('#player');
                 if (!existingPlayer) {
                     // Set flag to ignore initial playerUpdated events
-                    isPlayerInitializing = true;
+                    window.isPlayerInitializing = true;
                     
                     //add listener to right panel
                     panel.on('beforeadd', function (panel, item) {
@@ -128,7 +131,7 @@ function prepareAppliedStreetView() {
                     
                     // Small delay to ensure iframe is loaded before sending location
                     setTimeout(function() {
-                        firstLocationSent = true;
+                        window.firstLocationSent = true;
                         console.log('Sending intended location to player');
                         openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
                     }, 500);
