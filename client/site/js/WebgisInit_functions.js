@@ -3038,7 +3038,10 @@ function exceptionLoading(res) {
 
     //send email with errorMessage and projectData.user and project name
     //leave sendto empty so it will send it to main administrator defined in gisportal
-    sendMail(null, 'Error in project: ' + projectData.title, errorMessage + ' (User: ' + projectData.user + ')', true);
+    mailMessage = 'Project ' + projectData.project + ': ' + errorMessage;
+    mailMessage += '<br>User: ' + projectData.user;
+    mailMessage += '<br>Client: ' + projectData.client_name;
+    sendMail(null, 'Error in project: ' + projectData.title, mailMessage, true);
 
     Ext.Msg.show({
         title: 'Error code: '+res.status,
