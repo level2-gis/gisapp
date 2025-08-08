@@ -62,7 +62,7 @@ function prepareAppliedStreetView() {
         window.document.addEventListener('playerUpdated', function (evt) {
             var selected = evt.detail;
 
-            //console.info('playerUpdated', selected);
+            console.log('playerUpdated received:', selected);
             
             // Ignore playerUpdated events during initial loading
             if (window.isPlayerInitializing && !window.firstLocationSent) {
@@ -133,7 +133,9 @@ function prepareAppliedStreetView() {
                     setTimeout(function() {
                         window.firstLocationSent = true;
                         console.log('Sending intended location to player');
-                        openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
+                        var transformedPos = pos.transform(authid, 'EPSG:4326');
+                        console.log('Transformed position:', transformedPos);
+                        openAppliedStreetView(transformedPos);
                     }, 500);
                 } else {
                     openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
@@ -148,6 +150,9 @@ function prepareAppliedStreetView() {
         AppliedStreetViewControl.events.register('deactivate', this, function () {
             panel.removeAll();
             panel.collapse();
+            // Reset flags when deactivating
+            window.isPlayerInitializing = false;
+            window.firstLocationSent = false;
         });
 
         geoExtMap.map.addControl(AppliedStreetViewControl);
@@ -165,16 +170,23 @@ function openAppliedStreetView(location) {
 
     var player = document.querySelector('#player');
     if (!player) {
+        console.log('Player element not found');
         return;
     }
 
-    console.log('Attempting to send location to player:', location);
+    // Ensure we have a proper location object
+    var locationData = {
+        lon: location.lon || location.x,
+        lat: location.lat || location.y
+    };
+    
+    console.log('Attempting to send location to player:', locationData);
 
     // Wait for iframe to be fully loaded before sending event
     if (player.contentDocument && player.contentDocument.readyState === 'complete') {
-        var event = new window.CustomEvent('playerLookAt', {detail: location});
+        var event = new window.CustomEvent('playerLookAt', {detail: locationData});
         player.contentDocument.dispatchEvent(event);
-        console.log('Location event dispatched to player');
+        console.log('Location event dispatched to player with data:', locationData);
     } else {
         // If iframe is not ready, wait a bit and try again
         console.log('Player not ready, retrying...');
