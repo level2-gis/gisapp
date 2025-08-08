@@ -152,8 +152,21 @@ function prepareAppliedStreetView() {
                     panel.collapse();
                     console.log('Panel created (collapsed) - waiting for correct location');
                     
-                    // Small delay to ensure iframe is loaded before sending location
+                    // Wait for panel/iframe to be rendered in DOM, then send location
                     setTimeout(function() {
+                        // Check if iframe is now available
+                        var playerCheck = document.querySelector('#player');
+                        if (!playerCheck) {
+                            console.log('Iframe still not ready, waiting more...');
+                            setTimeout(function() {
+                                sendLocationToPlayer(pos);
+                            }, 500);
+                        } else {
+                            sendLocationToPlayer(pos);
+                        }
+                    }, 500);
+                    
+                    function sendLocationToPlayer(pos) {
                         window.firstLocationSent = true;
                         console.log('Sending intended location to player');
                         var transformedPos = pos.transform(authid, 'EPSG:4326');
@@ -165,7 +178,7 @@ function prepareAppliedStreetView() {
                         };
                         console.log('Stored intended location:', window.intendedLocation);
                         openAppliedStreetView(transformedPos);
-                    }, 1000); // Increased delay to 1000ms to ensure iframe is fully loaded
+                    }
                 } else {
                     openAppliedStreetView(pos.transform(authid, 'EPSG:4326'));
                 }
