@@ -41,7 +41,7 @@ p {
     background-size: contain;
     width: 32px;
     height: 32px;
-    /*position: absolute;*/
+    position: absolute;
     right: 8px;
 }
 
@@ -66,6 +66,16 @@ p {
     /*cursor: default;*/
     /*right: 8px;*/
 }
+
+.x-tool-geoportal_support {
+    background-image: url(../gis_icons/question.svg);
+    background-position: center;
+    background-size: contain;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    right: 42x;
+    cursor: pointer;}
 
 
 .olTileImage.olImageLoadError {

@@ -4,6 +4,7 @@ session_start();
 
 //Setting some global variables
 $user = "" . $_SESSION['user_name'];
+$old_last_login = isset($_SESSION['old_last_login']) ? $_SESSION['old_last_login'] : 0;
 $project = "" . $_SESSION['project'];
 $upload = "" . $_SESSION['upload_dir'];
 $role = "" . $_SESSION['role'];
@@ -95,6 +96,7 @@ var projectData = {};
 
 //bind PHP --> JS
 projectData.user = '<?php echo $user ?>';
+projectData.old_last_login = <?php echo $old_last_login ?>;
 projectData.client_id = '<?php echo $data->client_id ?>';
 projectData.client_name = '<?php echo $data->client_name ?>';
 projectData.client_display_name = '<?php echo $data->client_display_name ?>';
