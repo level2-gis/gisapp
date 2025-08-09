@@ -76,8 +76,10 @@ Permalink.prototype = {
         }
 
         // map extent
-        if (urlParams.extent != undefined) {
-            this.startExtent = $.map(urlParams.extent.split(','), function (value, index) {
+        // Support short parameter 'e' for startExtent, fallback to long names
+        var extentParam = urlParams.e || urlParams.extent || urlParams.startExtent;
+        if (extentParam != undefined) {
+            this.startExtent = $.map(extentParam.split(','), function (value, index) {
                 return parseFloat(value);
             });
         }
@@ -94,8 +96,14 @@ Permalink.prototype = {
         }
 
         // layers
-        if (urlParams.activeLayers != undefined) {
-            this.activeLayers = urlParams.activeLayers.split(',');
+        // Support short parameter 'v' for activeLayers/visibleLayers, fallback to long names
+        var activeLayersParam = urlParams.v || urlParams.activeLayers || urlParams.visibleLayers;
+        if (activeLayersParam != undefined) {
+            // For mobile client compatibility, we'll set both activeLayers and compute inactiveLayers
+            this.activeLayers = activeLayersParam.split(',');
+            
+            // Also set visibleLayers property for compatibility
+            this.visibleLayers = this.activeLayers;
         }
         if (urlParams.inactiveLayers != undefined) {
             this.inactiveLayers = urlParams.inactiveLayers.split(',');

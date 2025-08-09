@@ -21,22 +21,8 @@ QgisPermalink.prototype = new Permalink();
  * callback(): init viewer
  */
 QgisPermalink.prototype.read = function (urlParams, callback) {
-    // default permalink parameters
+    // default permalink parameters (base class now handles short parameters)
     Permalink.prototype.read.call(this, urlParams);
-
-    // Support single character parameter 'e' for startExtent, fallback to full name
-    var startExtentParam = urlParams.e || urlParams.startExtent;
-    if (startExtentParam > '') {
-        this.startExtent = $.map(startExtentParam.split(','), function (value, index) {
-            return parseFloat(value);
-        });
-    }
-
-    // Support single character parameter 'v' for visibleLayers, fallback to full name
-    var visibleLayersParam = urlParams.v || urlParams.visibleLayers;
-    if (visibleLayersParam > '') {
-        this.activeLayers = visibleLayersParam.split(',');
-    }
 
     if (urlParams.visibleBackgroundLayer > '') {
         this.initialBackgroundTopic = urlParams.visibleBackgroundLayer;
@@ -49,7 +35,7 @@ QgisPermalink.prototype.read = function (urlParams, callback) {
 QgisPermalink.prototype.create = function () {
     var permalinkParams = {
         e: Map.map.getView().calculateExtent(),  // startExtent -> e
-        //TODO, not working in read: v: Map.visibleLayers(),          // visibleLayers -> v
+        v: Map.visibleLayers(),          // visibleLayers -> v
     };
 
     var params = new URLSearchParams(permalinkParams).toString();
