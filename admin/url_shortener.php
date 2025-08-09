@@ -35,7 +35,11 @@ function cleanupOldUrls($maxAge = 31536000) { // Default: 1 year
 }
 
 // Configuration
-define('URL_BASE', 'http://localhost/gisapp/'); // Base URL for your GIS app
+// Dynamically determine the base URL
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
+$scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+define('URL_BASE', $protocol . $host . $scriptDir . '/'); // e.g., http://localhost/gisapp/admin/
 define('DATA_DIR', __DIR__ . '/short_urls/');
 
 // Ensure data directory exists
