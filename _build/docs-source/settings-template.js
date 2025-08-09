@@ -458,3 +458,12 @@ Eqwc.settings.wsgi = {};
  * @type {string[]}
  */
 Eqwc.settings.locationServices = [];
+
+/**
+ * URL endpoint for shortening permalink URLs. This service allows creation of short URLs for long permalink URLs that include map extent and layer visibility state.
+ * > Set to null or empty string to disable URL shortening functionality
+ * @type {string|null}
+ * @default null
+ * @example "/gisapp/admin/url_shortener.php"
+ */
+Eqwc.settings.permaLinkURLShortener = null;
