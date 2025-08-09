@@ -79,7 +79,10 @@ var TR = {
     bookmarkEmptyGroupText: "no group",
     link: "LINK",
     trueText: 'Yes',
-    falseText: 'No'
+    falseText: 'No',
+    close: 'Close',
+    copyLink: 'Copy link',
+    copied: 'Copied'
 };
 
 /**

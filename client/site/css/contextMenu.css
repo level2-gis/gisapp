@@ -5,21 +5,25 @@
 }
 
 .x-table-icon {
-    background-image:url(../gis_icons/contextmenu/table.png);
+    background-image:url(../gis_icons/contextmenu/table.svg);
+    background-size: contain;
+    width: 16px;
 }
 
 .x-zoom-icon {
-    background-image:url(../gis_icons/contextmenu/zoom.png);
+    background-image:url(../gis_icons/contextmenu/zoom.svg);
 }
 
 .x-export-icon {
-    background-image:url(../gis_icons/contextmenu/export.png);
+    background-image:url(../gis_icons/contextmenu/export.svg);
 }
 
 /* Here are new styles */
 
 .x-edit-icon {
-    background-image:url(../gis_icons/mActionToggleEditing.png);
+    background-image:url(../gis_icons/mActionToggleEditing.svg);
+    background-size: contain;
+    width: 16px;
 }
 
 .x-clearfilter-icon {
@@ -27,7 +31,9 @@
 }
 
 .x-clear-icon {
-    background-image:url(../gis_icons/mActionClear.png);
+    background-image:url(../gis_icons/mActionClear.svg);
+    background-size: contain;
+    width: 16px;
 }
 
 .x-extent-icon {
@@ -64,4 +70,8 @@
 /* default table style for featureinfo */
 td {
     vertical-align: top;
+}
+
+.x-grid3-td-numberer {
+    background-image: unset!important;
 }

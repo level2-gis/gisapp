@@ -1215,7 +1215,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     //if (fieldType=='date') {
                     //    storeFields.push({name: wmsLayerFields[i].name, type: fieldType, dateFormat: "Y-m-d H:i:s"});
                     //} else {
-                        storeFields.push({name: wmsLayerFields[i].name, type: fieldType});
+                        storeFields.push({name: wmsLayerFields[i].name, type: fieldType, useNull: true});
                     //}
                 }
 

@@ -23,6 +23,18 @@ import sys #für Fehlerreporting
 import os
 import importlib
 
+def sanitize_tsquery(query_string):
+  """Sanitize query string for PostgreSQL tsquery to avoid syntax errors.
+  Remove or escape characters that have special meaning in tsquery syntax."""
+  # Remove characters that cause tsquery syntax errors
+  # These include: ( ) & | ! : ' " \ and other special characters
+  sanitized = re.sub(r'[()&|!:\'\"\\<>]', '', query_string)
+  # Replace multiple spaces with single space
+  sanitized = re.sub(r'\s+', ' ', sanitized)
+  # Strip leading/trailing whitespace
+  sanitized = sanitized.strip()
+  return sanitized
+
 # append the Python path with the wsgi-directory
 qwcPath = os.path.dirname(__file__)
 if not qwcPath in sys.path:
@@ -98,12 +110,22 @@ def application(environ, start_response):
         # this search does not use the field searchstring_tsvector at all but converts searchstring into a tsvector, its use is discouraged!
         #sql += "searchstring::tsvector @@ lower(%s)::tsquery"
         #data += (querystrings[j]+":*",)
-        # this search uses the searchstring_tsvector field, which _must_ have been filled with to_tsvector('not_your_language', 'yourstring')
-        #sql += "searchstring_tsvector @@ to_tsquery(\'not_your_language\', %s)"
-        #data += (querystrings[j]+":*",)
-        # if all tsvector stuff fails you can use this string comparison on the searchstring field
-        sql += "searchstring ILIKE %s"
-        data += ("%" + querystrings[j] + "%",)
+        # go with tsvector search if searchtable contains tsvector string
+        if searchtables[i].find('tsvector') > 0:
+          # this search uses the searchstring_tsvector field, which _must_ have been filled with to_tsvector('not_your_language', 'yourstring')
+          # sanitize the query string to avoid tsquery syntax errors
+          sanitized_query = sanitize_tsquery(querystrings[j])
+          if sanitized_query:  # only proceed if there's something left after sanitization
+            sql += "searchstring_tsvector @@ to_tsquery(%s)"
+            data += (sanitized_query+":*",)
+          else:
+            # if sanitization removed everything, fall back to ILIKE search
+            sql += "searchstring ILIKE %s"
+            data += ("%" + querystrings[j] + "%",)
+        else:
+          # if all tsvector stuff fails you can use this string comparison on the searchstring field
+          sql += "searchstring ILIKE %s"
+          data += ("%" + querystrings[j] + "%",)
 
         if j < querystringsLength - 1:
           sql += " AND "

@@ -32,9 +32,9 @@
   background-image: url(../img/user_gray.png);
   /*background-position: center;*/
   background-size: contain;
-  width: 24px;
-  height: 24px;
-  /*position: absolute;*/
+  width: 32px;
+  height: 32px;
+  position: absolute;
   right: 8px;
 }
 

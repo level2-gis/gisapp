@@ -991,31 +991,67 @@ function getLayerAttributes(layer) {
 
 function getActionColumns(layerId) {
 
-    var lay = projectData.layers[layerId];
+    var prop = projectData.layers[layerId];
+    var columns = [];
 
-    //if qgis version >3.4 we need add geometry to fetureinfo enabled to use feature boundingbox
-    if(!projectData.add_geom && Eqwc.common.compareQgisVersionWithInteger(304) == 'higher') {
-        return null;
-    }
-
-    if(lay && lay.geom_type == 'No geometry') {
-        return null;
-    }
-
-    var action = new Ext.grid.ActionColumn({
-        width: 22,
-        menuDisabled: true,
-        hideable: false,
-        resizable: false,
-        items: [{
-            icon: iconDirectory + "contextmenu/zoom.png",
+    if (prop && prop.geom_type != 'No geometry') {
+        columns.push({
+            icon: iconDirectory + "contextmenu/zoom.svg",
             tooltip: TR.show,
             disabled: false,
             handler: zoomHandler
-        }]
-    });
+        });
+    }
 
-    return action;
+    //if qgis version >3.4 we need add geometry to fetureinfo enabled to use feature boundingbox
+    if (!projectData.add_geom && Eqwc.common.compareQgisVersionWithInteger(304) == 'higher') {
+        columns = [];
+    }
+
+    //relations
+    if (projectData.relations && projectData.relations[prop.layername]) {
+        projectData.relations[prop.layername][0].display_array = {};
+        columns.push({
+            iconCls: "x-table-icon",
+            tooltip: TR.relations,
+            disabled: false,
+            handler: relationHandler
+        });
+    }
+
+    //only if editing plugin and layer is editable, published as WFS, also not for guests (real protection is on server side)
+    if (prop && prop.wfs && projectData.user != 'guest' && Eqwc.plugins["editing"] !== undefined) {
+        columns.push({
+            iconCls: 'x-edit-icon',
+            tooltip: TR.editData,
+            disabled: false,
+            handler: editHandler
+        });
+    }
+
+    if (columns.length > 0) {
+        return new Ext.grid.ActionColumn({
+            width: 24*columns.length,
+            menuDisabled: true,
+            hideable: false,
+            resizable: false,
+            items: columns
+        });
+    } else {
+        return null;
+    }
+}
+
+function relationHandler(grid, rowIndex, colIndex) {
+
+    var store = grid.getStore();
+    var record = store.getAt(rowIndex);
+    var recId = record.id;
+
+    var selectedLayer = grid.panel.queryLayer;
+    var layerId = wmsLoader.layerTitleNameMapping[selectedLayer];
+
+    showRelations(layerId, recId);
 }
 
 function gridRenderer(value, meta) {

@@ -133,3 +133,4 @@ Eqwc.settings.guestWinTitle = null;
 Eqwc.settings.guestWinConfirm = 'Accept and continue';
 Eqwc.settings.guestWinText = '<p><b>Conditions of use of web client</b></p><p>Details</p>';
 
+//Eqwc.settings.permaLinkURLShortener = '/gisapp/admin/url_shortener.php';

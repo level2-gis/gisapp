@@ -147,7 +147,7 @@ function showFeatureInfo(evt) {
                 close: onClickPopupClosed,
                 beforeshow: function () {
 
-                    var maxHeight = geoExtMap.getHeight() * 0.8;
+                    var maxHeight = geoExtMap.getHeight() * 0.75;
                     var maxWidth = geoExtMap.getWidth() * 0.5;
                     if (this.getHeight() > maxHeight) {
                         this.setHeight(maxHeight);
@@ -209,6 +209,61 @@ function showFeatureInfo(evt) {
                     }
 
                     Ext.iterate(Eqwc._temp_ids, set, Eqwc.settings.fieldTemplates);
+                },
+                afterrender: function() {
+                    // Handle image loading to recalculate popup size
+                    var popup = this;
+                    var images = popup.body.select('img');
+                    var loadedImages = 0;
+                    var totalImages = images.getCount();
+
+                    if (totalImages > 0) {
+                        var maxHeight = geoExtMap.getHeight() * 0.75;
+                        var maxWidth = geoExtMap.getWidth() * 0.5;
+
+                        images.each(function(img) {
+                            if (img.dom.complete) {
+                                loadedImages++;
+                                if (loadedImages === totalImages) {
+                                    // All images loaded, recalculate size
+                                    popup.doLayout();
+                                    if (popup.getHeight() > maxHeight) {
+                                        popup.setHeight(maxHeight);
+                                    }
+                                    if (popup.getWidth() > maxWidth) {
+                                        popup.setWidth(maxWidth);
+                                    }
+                                }
+                            } else {
+                                img.on('load', function() {
+                                    loadedImages++;
+                                    if (loadedImages === totalImages) {
+                                        // All images loaded, recalculate size
+                                        popup.doLayout();
+                                        if (popup.getHeight() > maxHeight) {
+                                            popup.setHeight(maxHeight);
+                                        }
+                                        if (popup.getWidth() > maxWidth) {
+                                            popup.setWidth(maxWidth);
+                                        }
+                                    }
+                                });
+                                img.on('error', function() {
+                                    loadedImages++;
+                                    if (loadedImages === totalImages) {
+                                        // All images processed (loaded or errored), recalculate size
+                                        popup.doLayout();
+                                        if (popup.getHeight() > maxHeight) {
+                                            popup.setHeight(maxHeight);
+                                        }
+                                        if (popup.getWidth() > maxWidth) {
+                                            popup.setWidth(maxWidth);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -507,6 +562,10 @@ function parseFIResult(node) {
                 countRelations = projectData.relations[layerName].length;
             }
 
+            if (countRelations > 0) {
+                projectData.relations[layerName][0].display_array = {};
+            }
+
             while (layerChildNode) {
 
                 var id = layerChildNode.id;
@@ -532,7 +591,7 @@ function parseFIResult(node) {
                         if (projectData.layers[layerId].wfs && Eqwc.plugins["editing"] !== undefined) {
                             edit = '<a class="i-edit" ext:qtip="' + TR.editData + '" href="javascript:;" onclick="identifyAction(\'edit\',\'' + fid + '\');"></a>';
                         }
-                        htmlText +=  select + edit + clear;
+                        htmlText +=  select + clear + edit;
                     }
                     if (countRelations > 0) {
                         var add = '';
@@ -625,11 +684,11 @@ function parseFIResult(node) {
                                         }
                                     }
 
-                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias) {
+                                    if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias && attNameCase.indexOf('LGS_IMG')==-1) {
                                         htmlText += "<td>" + newName + ":</td>";
                                     }
 
-                                    if (attNameCase == 'MAPTIP' || attNameCase == filesAlias) {
+                                    if (attNameCase == 'MAPTIP' || attNameCase == filesAlias || attNameCase.indexOf('LGS_IMG')>-1) {
                                         htmlText += "<td colspan='2'>" + attValue + "</td></tr>";
                                     } else {
                                         htmlText += "<td>" + attValue + "</td></tr>";
@@ -637,7 +696,7 @@ function parseFIResult(node) {
                                     hasAttributes = true;
 
                                     if(countRelations>0 && projectData.relations[layerName][0].display_field && attNameCase == projectData.relations[layerName][0].display_field.toUpperCase()) {
-                                        projectData.relations[layerName][0].display_value = attValue;
+                                        projectData.relations[layerName][0].display_array[id] = attValue;
                                     }
 
                                     //}
@@ -772,7 +831,7 @@ function showRelations(layerId, id) {
         cmp.destroy();
     }
 
-    var display = projectData.relations[layerName][0].display_value;
+    var display = projectData.relations[layerName][0].display_array[id];
     if(display) {
         display = layerName + ': ' + display;
     } else {

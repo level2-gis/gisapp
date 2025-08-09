@@ -73,10 +73,11 @@ function makeLayer(layDef, visible) {
                 matrixIds = eval(options.matrixIds);
             }
 
-            var layer = new OpenLayers.Layer.WMTS({
+            layer = new OpenLayers.Layer.WMTS({
                 name: title,
                 visibility: visibility,
                 opacity: options.opacity,
+                buffer: options.buffer,
                 url: options.url,
                 layer: options.layer,
                 requestEncoding: options.requestEncoding,
@@ -336,7 +337,7 @@ var autoActivateSearchGeometryLayer = true;
 //var searchBoxGetGeomURL = 'client/php/search_geom.php?map=' + projectData.project;
 
 var enablePermalink = true;
-var permaLinkURLShortener = null; // "/wsgi/createShortPermalink.wsgi";
+var permaLinkURLShortener = Eqwc.settings.permaLinkURLShortener || null; // "/wsgi/createShortPermalink.wsgi";
 
 var enableBGMaps = true;
 var enableExtraLayers = true;

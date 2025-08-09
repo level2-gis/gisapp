@@ -1146,8 +1146,12 @@ Gui.applyPermalink = function () {
         // update layer tree
         var checkbox = $('#panelLayerAll :checkbox[data-layer="' + layer + '"]');
         if (checkbox.is(':checked') != active) {
-            //checkbox.prop('checked', active).checkboxradio('refresh').trigger('change');
             checkbox.prop('checked', active);
+            try {
+                checkbox.checkboxradio('refresh').trigger('change');
+            } catch (e) {
+                // Silently handle jQuery Mobile widget initialization issues
+            }
         }
     };
 

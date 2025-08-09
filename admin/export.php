@@ -62,8 +62,13 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     switch ($sourceProvider) {
         case 'ogr':
             $conn = $layer["message"]->datasource;
-            $source = ' "' . $conn . '"';
 
+            //Fix gpkg connection
+            if (strpos($conn,'gpkg|') > -1) {
+                $source = ' "' . explode('|',$conn)[0] . '" ' . $table;
+            } else {
+                $source = ' "' . $conn . '"';
+            }
             break;
 
         case 'postgres':

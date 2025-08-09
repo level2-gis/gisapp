@@ -98,3 +98,8 @@
 .filtered a span:after {
 	content: '*';
 }
+
+/* Fix positioning for filtered layers without geometry (prevent text alignment shift) */
+.layer-checkbox-hidden.filtered {
+	padding-left: 13px !important; /* Ensure the container keeps its left padding when filtered */
+}

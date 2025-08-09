@@ -7,7 +7,7 @@ customButtons.push(
         allowDepress: true,
         toggleGroup: 'mapTools',
         scale: 'medium',
-        icon: iconDirectory+'mActionStreetView.png',
+        icon: iconDirectory+'mActionStreetView.svg',
         tooltipType: 'qtip',
         tooltip: 'GoogleStreetView',
         id: 'streetViewBtn'

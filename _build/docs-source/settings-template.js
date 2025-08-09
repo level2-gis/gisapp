@@ -86,6 +86,16 @@ Eqwc.settings.enableHoverPopup = false;
 Eqwc.settings.defaultIdentificationMode = "allLayers";
 
 /**
+ * By default project CRS is selected for displaying coordinates. You can change it with this setting.
+ *
+ * > Note: CRS must have it's definition loaded (EPSG js file) and must be added to QGIS project properties CRS restriction part.
+ * @type {null|number}
+ * @default null
+ * @example 3794
+ */
+Eqwc.settings.defaultCoordinatesCrsCode = null;
+
+/**
  * Display coordinates of clicked location on top of identify window results
  * @type {boolean}
  * @default true
@@ -361,7 +371,6 @@ Eqwc.settings.bookmarkPanelHeight = 200;
 /**
  * Configuration for formatting values in web client identify window.
  * Possible actions are:
- *  - display field boolean values as translated yes/no or empty strings
  *  - display fixed tooltip for field values
  *  - display dynamic tooltip using database and WSGI part for specific field value
  *  - link to URL using field value as part of URL, use HTML <a> tag
@@ -372,7 +381,6 @@ Eqwc.settings.bookmarkPanelHeight = 200;
  *  }
  * @type {}
  * @example {
- * 'BOOLEAN_FIELD': {template: "BOOLEAN"},
  * 'DB_LOOKUP_FIELD': {template: "%VALUE%", url: 'https://your_server/wsgi/lookup.wsgi?table=db_table_name&code='},
  * 'LINK_AND_TOOLTIP_FIELD': {template: "<a class='link' ext:qtitle='Tip title' ext:qwidth='150' ext:qtip='This is a quick tip from markup!' href='http://www.google.it/#output=search&q=%VALUE%' target='_blank'>%VALUE%</a>"}
  * }

@@ -1,4 +1,11 @@
 /* this file contains some common styles and overriden openlayers styles */
+p {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 0;
+    margin-right: 0;
+}
 
 #dpiDetection {
     height: 1in;
@@ -32,9 +39,9 @@
     background-image: url(../img/user_gray.png);
     /*background-position: center;*/
     background-size: contain;
-    width: 24px;
-    height: 24px;
-    /*position: absolute;*/
+    width: 32px;
+    height: 32px;
+    position: absolute;
     right: 8px;
 }
 

@@ -951,7 +951,7 @@ function postLoading() {
 
         //zoom extent
         var zoomExtent = new Ext.Button({
-            icon: iconDirectory+'mActionZoomFullExtent.png',
+            icon: iconDirectory+'mActionZoomFullExtent.svg',
             id: 'navZoomFullExtent',
             scale: 'medium',
             map: geoExtMap.map,
@@ -963,7 +963,7 @@ function postLoading() {
 
         //zoom box
         var zoomBoxAction = new GeoExt.Action({
-            icon: iconDirectory+'mActionZoomBox.png',
+            icon: iconDirectory+'mActionZoomBox.svg',
             id: 'navZoomBoxButton',
             scale: 'medium',
             control: new OpenLayers.Control.ZoomBox({
@@ -981,7 +981,7 @@ function postLoading() {
         Ext.getCmp('navZoomBoxButton').on('toggle', mapToolbarHandler);
 
         var zoomToPreviousAction = new GeoExt.Action({
-            icon: iconDirectory+'mActionZoomLast.png',
+            icon: iconDirectory+'mActionZoomLast.svg',
             scale: 'medium',
             control: navHistoryCtrl.previous,
             disabled: true,
@@ -993,7 +993,7 @@ function postLoading() {
         myTopToolbar.insert(2, zoomToPreviousAction);
         //zoom next
         var zoomToNextAction = new GeoExt.Action({
-            icon: iconDirectory+'mActionZoomNext.png',
+            icon: iconDirectory+'mActionZoomNext.svg',
             scale: 'medium',
             control: navHistoryCtrl.next,
             disabled: true,
@@ -1007,7 +1007,7 @@ function postLoading() {
         //geolocate control
         if (projectData.geolocation) {
             var geoLocateAction = new GeoExt.Action({
-                icon: iconDirectory + 'mActionLocate.png',
+                icon: iconDirectory + 'mActionLocate.svg',
                 id: 'geoLocate',
                 scale: 'medium',
                 control: new OpenLayers.Control.Geolocate({
@@ -1730,7 +1730,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 break;
             case 'popup':
                 var win = Ext.getCmp('window_'+searchPanelInstance.selectionLayer);
-                //searchPanelId = 'popup_'+searchPanelInstance.queryLayer;
+                searchPanelId = 'popup_'+searchPanelInstance.queryLayer;
                 if (typeof(win) == 'undefined') {
                     new Ext.Window(
                         {
@@ -1864,51 +1864,87 @@ function showSearchPanelResults(searchPanelInstance, features) {
                             var layer = searchPanelInstance.queryLayer;
                             var sourceLayer = Eqwc.common.getIdentifyLayerNameRevert(layer);
                             var layerId = wmsLoader.layerTitleNameMapping[sourceLayer];
-                            var filt = Ext.decode(Ext.encode(searchPanelInstance.resultsGrid.filters.getFilterData()));
+                            var filt = searchPanelInstance.resultsGrid.filters.getFilterData();
 
-                            if(filt.length == 0) {
-                                thematicLayer.mergeNewParams({FILTER: null});
-                                return;
-                            }
+                            // Build current layer filter
+                            var currentLayerFilter = "";
+                            if(filt.length > 0) {
+                                // Get layer provider to determine appropriate filter syntax
+                                var layerProvider = projectData.layers[layerId] ? projectData.layers[layerId].provider : 'postgres';
 
-                            Ext.each(filt, function (f) {
-                                var sep = '';
-                                var valStr = "'"+f.data.value+"'";
-                                if (f.data.type == 'string') {
-                                    wmsFilter.push("\"" + f.field + "\" ILIKE \'%" + f.data.value + "%\'");
-                                } else if (f.data.type == 'numeric' || f.data.type == 'date') {
-                                    switch (f.data.comparison) {
-                                        case 'gt':
-                                            sep = '>';
-                                            break;
-                                        case 'lt':
-                                            sep = '<';
-                                            break;
-                                        case 'eq':
-                                            sep = '=';
-                                            break;
+                                Ext.each(filt, function (f) {
+                                    var sep = '';
+                                    var valStr = "'"+f.data.value+"'";
+                                    if (f.data.type == 'string') {
+                                        // Use different string matching based on provider
+                                        if (layerProvider === 'postgres') {
+                                            // PostgreSQL supports ILIKE for case-insensitive pattern matching
+                                            wmsFilter.push("\"" + f.field + "\" ILIKE \'%" + f.data.value + "%\'");
+                                        } else {
+                                            // For other providers, try LIKE (works with most SQL-based providers)
+                                            // Fall back option for unknown providers
+                                            wmsFilter.push("\"" + f.field + "\" LIKE \'%" + f.data.value + "%\'");
+                                        }
+                                    } else if (f.data.type == 'numeric' || f.data.type == 'date') {
+                                        switch (f.data.comparison) {
+                                            case 'gt':
+                                                sep = '>';
+                                                break;
+                                            case 'lt':
+                                                sep = '<';
+                                                break;
+                                            case 'eq':
+                                                sep = '=';
+                                                break;
+                                        }
+                                        if(f.data.type=='numeric') {
+                                            valStr = f.data.value;
+                                        }
+                                        wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
+                                    } else {
+                                        sep = '=';
+                                        wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
                                     }
-                                    if(f.data.type=='numeric') {
-                                        valStr = f.data.value;
-                                    }
-                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
-                                } else {
-                                    sep = '=';
-                                    wmsFilter.push("\"" + f.field + "\" " + sep + " " + valStr);
-                                }
-                            });
-
-                            //filter also view (for print table)
-                            if(layer.indexOf('_view')>-1) {
-                                thematicLayer.mergeNewParams({
-                                    FILTER: layerId + ":" + wmsFilter.join(" AND ") + ";" + wmsLoader.layerTitleNameMapping[layer] + ":" + wmsFilter.join(" AND ")
                                 });
-                            } else {
-                                thematicLayer.mergeNewParams({FILTER: layerId + ":" + wmsFilter.join(" AND ")});
+                                currentLayerFilter = wmsFilter.join(" AND ");
                             }
 
-                            //store filter
-                            wmsLoader.layerProperties[layerId].currentFilter = wmsFilter.join(" AND ");
+                            // Build complete FILTER parameter preserving other layer filters
+                            var allFilters = [];
+                            var currentParams = thematicLayer.params.FILTER;
+
+                            // Parse existing FILTER parameter to preserve other layer filters
+                            if (currentParams) {
+                                var existingFilters = currentParams.split(';');
+                                for (var i = 0; i < existingFilters.length; i++) {
+                                    var filterPart = existingFilters[i];
+                                    if (filterPart.indexOf(':') > -1) {
+                                        var filterLayerId = filterPart.split(':')[0];
+                                        // Skip current layer and view layer filters as we'll add them fresh
+                                        if (filterLayerId !== layerId &&
+                                            filterLayerId !== wmsLoader.layerTitleNameMapping[layer]) {
+                                            allFilters.push(filterPart);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Add current layer filter if it exists
+                            if (currentLayerFilter) {
+                                allFilters.push(layerId + ":" + currentLayerFilter);
+
+                                // Add view filter if needed (for print table)
+                                if(layer.indexOf('_view') > -1) {
+                                    allFilters.push(wmsLoader.layerTitleNameMapping[layer] + ":" + currentLayerFilter);
+                                }
+                            }
+
+                            // Update FILTER parameter
+                            var finalFilter = allFilters.length > 0 ? allFilters.join(";") : null;
+                            thematicLayer.mergeNewParams({FILTER: finalFilter});
+
+                            // Store filter for current layer
+                            wmsLoader.layerProperties[layerId].currentFilter = currentLayerFilter;
                         }
                     }
                 }
@@ -1944,7 +1980,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 if (cnt_filt < cnt_all) {
                     grid.setTitle(store.gridTitle + "* (" + cnt_filt + ")");
                     //can't modify node.text because of many references which break. So we do it with css
-                    node.setCls('filtered');
+                    node.ui.addClass('filtered');
                 } else {
                     grid.setTitle(store.gridTitle + " (" + cnt_all + ")");
                     node.ui.removeClass('filtered');
@@ -2224,11 +2260,14 @@ function mapToolbarHandler(btn, evt) {
         var permalink = createPermalink();
         if (permaLinkURLShortener) {
             var servername = location.protocol+"//"+location.href.split(/\/+/)[1];
+            var fullUrl = servername + permaLinkURLShortener;
+
             Ext.Ajax.request({
-                url: servername + permaLinkURLShortener,
+                url: fullUrl,
                 success: receiveShortPermalinkFromDB,
                 failure: function ( result, request) {
-                    alert("failed to get short URL from Python wsgi script.\n\nError Message:\n\n"+result.responseText);
+                    // Fallback to original permalink
+                    openPermaLink(permalink);
                 },
                 method: 'GET',
                 params: { longPermalink: permalink }
@@ -2404,51 +2443,27 @@ function createPermalink() {
         permalink += "&";
     }
 
-    // extent
-    permalinkParams.startExtent = startExtent;
+    permalinkParams.e = startExtent;  // startExtent -> e
 
     // visible BackgroundLayer
-    permalinkParams.visibleBackgroundLayer = visibleBackgroundLayer;
+    //TODO FIX THIS
+    //permalinkParams.visibleBackgroundLayer = visibleBackgroundLayer;
 
     // visible layers and layer order
-    permalinkParams.visibleLayers = visibleLayers.toString();
-
-    // layer opacities as hash of <layername>: <opacity>
-    var opacities = null;
-    for (layer in wmsLoader.layerProperties) {
-        if (wmsLoader.layerProperties.hasOwnProperty(layer)) {
-            var opacity = wmsLoader.layerProperties[layer].opacity;
-            // collect only non-default values
-            if (opacity != 255) {
-                if (opacities == null) {
-                    opacities = {};
-                }
-                opacities[layer] = opacity;
-            }
-        }
-    }
-    if (opacities != null) {
-        permalinkParams.opacities = Ext.util.JSON.encode(opacities);
-    }
-
-    //layer order
-    if(showLayerOrderTab) {
-        permalinkParams.initialLayerOrder = layerOrderPanel.orderedLayers().toString();
-    }
-
-    //language
+    permalinkParams.v = visibleLayers.toString();  // visibleLayers -> v
     permalinkParams.lang = lang;
 
-    // selection
-    if(typeof(thematicLayer.params.SELECTION) != 'undefined')
-        permalinkParams.selection = thematicLayer.params.SELECTION;
+    // layer order (only if enabled and different from default)
+    if(showLayerOrderTab) {
+        permalinkParams.o = layerOrderPanel.orderedLayers().toString();  // initialLayerOrder -> o
+    }
 
-    if (permaLinkURLShortener) {
-        permalink = encodeURIComponent(permalink + decodeURIComponent(Ext.urlEncode(permalinkParams)));
+    // selection (only if exists)
+    if(typeof(thematicLayer.params.SELECTION) != 'undefined') {
+        permalinkParams.s = thematicLayer.params.SELECTION;  // selection -> s
     }
-    else {
-        permalink = permalink + Ext.urlEncode(permalinkParams);
-    }
+
+    permalink = permalink + Ext.urlEncode(permalinkParams);
 
     return permalink;
 }
@@ -2650,29 +2665,83 @@ function activateGetFeatureInfo(doIt) {
 }
 
 function openPermaLink(permalink) {
-    //var mailToText = "mailto:?subject="+sendPermalinkLinkFromString[lang]+titleBarText+layerTree.root.firstChild.text+"&body="+permalink;
-    //var mailWindow = window.open(mailToText);
-    //if (mailWindow){
-    //    mailWindow.close();
-
     if (typeof(PermaLinkWin) != 'undefined'){
         PermaLinkWin.close();
     }
 
+    // Create a unique ID for the textarea to reference it later
+    var textareaId = 'permalink-textarea-' + new Date().getTime();
+    var statusId = 'permalink-status-' + new Date().getTime();
+
     PermaLinkWin = new Ext.Window({
-        title: sendPermalinkLinkFromString[lang],    //+titleBarText+layerTree.root.firstChild.text,
-        width: 300,
-        height: 200,
-        layout: {
-            type: 'vbox',
-            align: 'stretch'  // Child items are stretched to full width
-        },
+        title: sendPermalinkLinkFromString[lang],
+        width: 200,
+        height: 150,
+        resizable: true,
+        modal: true,
+        layout: 'fit',
         items: [{
-            xtype: 'textarea',
-            readOnly: true,
-            value: permalink,
-            selectOnFocus: true,
-            flex: 1
+            xtype: 'panel',
+            layout: 'border',
+            border: false,
+            items: [{
+                xtype: 'textarea',
+                id: textareaId,
+                region: 'center',
+                readOnly: true,
+                value: permalink,
+                style: 'font-family: monospace; font-size: 13px; padding: 10px;',
+                selectOnFocus: true
+            }, {
+                xtype: 'panel',
+                region: 'south',
+                height: 25,
+                border: false,
+                html: '<div id="' + statusId + '" style="text-align: center; padding: 5px; font-weight: bold; color: green; height: 20px;"></div>'
+            }]
+        }],
+        buttonAlign: 'center',
+        buttons: [{
+            text: TR.copyLink,
+            //iconCls: 'x-copy-icon',
+            handler: function() {
+                var textarea = Ext.getCmp(textareaId);
+                var statusDiv = document.getElementById(statusId);
+                if (textarea) {
+                    textarea.focus();
+                    textarea.getEl().dom.select();
+
+                    try {
+                        // Try to copy to clipboard
+                        if (navigator.clipboard && window.isSecureContext) {
+                            navigator.clipboard.writeText(permalink).then(function() {
+                                statusDiv.innerHTML = '✓ '+TR.copied+'!';
+                                setTimeout(function() {
+                                    statusDiv.innerHTML = '';
+                                }, 2000);
+                            });
+                        } else {
+                            // Fallback for older browsers
+                            document.execCommand('copy');
+                            statusDiv.innerHTML = '✓ '+TR.copied+'!';
+                            setTimeout(function() {
+                                statusDiv.innerHTML = '';
+                            }, 2000);
+                        }
+                    } catch (err) {
+                        // Final fallback
+                        statusDiv.innerHTML = 'Press Ctrl+C to copy';
+                        setTimeout(function() {
+                            statusDiv.innerHTML = '';
+                        }, 3000);
+                    }
+                }
+            }
+        }, {
+            text: TR.close,
+            handler: function() {
+                PermaLinkWin.close();
+            }
         }]
     }).show();
 }
@@ -2807,8 +2876,23 @@ function sendMail(to, subject, body, silent, template) {
 
 
 function receiveShortPermalinkFromDB(result, request) {
-    var result = eval("("+result.responseText+")");
-    openPermaLink(result.shortUrl);
+    try {
+        var response = JSON.parse(result.responseText);
+        if (response.success && response.shortUrl) {
+            openPermaLink(response.shortUrl);
+        } else {
+            console.error('URL shortener error:', response.error || 'Unknown error');
+            // Fallback to original permalink
+            var permalink = createPermalink();
+            openPermaLink(permalink);
+        }
+    } catch (e) {
+        console.error('Failed to parse URL shortener response:', e);
+        console.error('Response text:', result.responseText);
+        // Fallback to original permalink
+        var permalink = createPermalink();
+        openPermaLink(permalink);
+    }
 }
 
 // get best image format for a list of layers
@@ -2979,9 +3063,35 @@ function setGrayNameWhenOutsideScale() {
 function exceptionLoading(res) {
     hideLoadMask();
 
+    var errorMessage = res.responseText;
+
+    // Check if response is XML and extract ServerException text
+    if (res.responseText && res.responseText.indexOf('<?xml') === 0) {
+        try {
+            // Parse XML response
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(res.responseText, "text/xml");
+            var serverException = xmlDoc.getElementsByTagName("ServerException")[0];
+
+            if (serverException && serverException.textContent) {
+                errorMessage = serverException.textContent;
+            }
+        } catch (e) {
+            // If XML parsing fails, use original response text
+            console.log("Error parsing XML response:", e);
+        }
+    }
+
+    //send email with errorMessage and projectData.user and project name
+    //leave sendto empty so it will send it to main administrator defined in gisportal
+    mailMessage = 'Project ' + projectData.project + ': ' + errorMessage;
+    mailMessage += '<br>User: ' + projectData.user;
+    mailMessage += '<br>Client: ' + projectData.client_name;
+    sendMail(null, 'Error in project: ' + projectData.title, mailMessage, true);
+
     Ext.Msg.show({
         title: 'Error code: '+res.status,
-        msg: res.responseText,
+        msg: errorMessage,
         //width: 300,
         buttons: Ext.MessageBox.OK,
         //multiline: true,

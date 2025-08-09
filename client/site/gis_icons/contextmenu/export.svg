@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="16"
+   viewBox="0 0 16 16"
+   width="16"
+   version="1.1"
+   id="svg16"
+   sodipodi:docname="mActionSharingImport.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs20" />
+  <sodipodi:namedview
+     id="namedview18"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     showgrid="false"
+     inkscape:zoom="23.820332"
+     inkscape:cx="11.649712"
+     inkscape:cy="14.378473"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg16" />
+  <g
+     id="g854"
+     transform="matrix(0.65730203,0,0,0.65730203,0.02918172,0.2719162)">
+    <path
+       d="M 12.124275,17.030891 6.1523325,11.166553 10.084699,11.136293 9.96135,1.0257089 13.896304,0.99542449 14.019653,11.10601 l 3.93236,-0.03026 -5.827738,5.955149 z"
+       style="fill:#6d97c4;fill-rule:evenodd;stroke:#415a75;stroke-width:1.29685;stroke-linecap:round;stroke-linejoin:round"
+       id="path2" />
+    <g
+       fill="none"
+       stroke-dasharray="1.896, 0.948"
+       stroke-width="0.948"
+       id="g12">
+      <path
+         d="M 1.0054352,1 H 16.837774 V 4.1664679 H 1.0054352 Z"
+         id="path4" />
+      <path
+         d="M 1.0054352,1 H 21.587476 V 4.1664679 H 1.0054352 Z"
+         id="path6" />
+      <path
+         d="m 21.587477,4.1664677 h 3.166468 v 1.583234 h -3.166468 z"
+         id="path8" />
+      <path
+         d="M 1.0054352,1 H 21.587476 V 4.1664679 H 1.0054352 Z"
+         id="path10" />
+    </g>
+    <path
+       d="m 23.155936,22.716623 -22.16525521,-0.03016 0.006463,-4.749698 4.74969731,0.0065 -0.00215,1.583232 12.6658599,0.01723 0.0022,-1.583232 4.749697,0.0065 z"
+       fill="#6d97c4"
+       stroke="#415a75"
+       stroke-width="1.15576"
+       id="path14" />
+  </g>
+</svg>

@@ -51669,8 +51669,8 @@ OpenLayers.Format.WFST.v1_1_0 = OpenLayers.Class(
                 this.readChildNodes(node, obj);
             },
             "TransactionSummary": function(node, obj) {
-                // this is a limited test of success
-                obj.success = true;
+                var value = parseInt(node.childNodes[1].textContent);
+                obj.success = !(isNaN(value) || value === 0);
             },
             "InsertResults": function(node, obj) {
                 this.readChildNodes(node, obj);

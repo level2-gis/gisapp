@@ -8,6 +8,36 @@ require_once("admin/class.Helpers.php");
 require_once("admin/class.Login.php");
 require_once("admin/settings.php");
 
+// Handle short URL redirects
+if (isset($_GET['link'])) {
+    $shortCode = preg_replace('/[^a-zA-Z0-9]/', '', $_GET['link']);
+    $shortUrlsDir = __DIR__ . '/admin/short_urls/';
+    $filename = $shortUrlsDir . $shortCode . '.txt';
+
+    if (file_exists($filename)) {
+        $data = file_get_contents($filename);
+
+        // Handle both old format (plain text) and new format (JSON)
+        $longUrl = $data;
+        if (json_decode($data, true)) {
+            $urlData = json_decode($data, true);
+            $longUrl = $urlData['url'];
+
+            // Update last accessed time
+            $urlData['last_accessed'] = time();
+            file_put_contents($filename, json_encode($urlData));
+        }
+
+        // Decode URL if it was encoded
+        $longUrl = urldecode($longUrl);
+
+        // Redirect to the long URL
+        header("Location: " . $longUrl);
+        exit;
+    }
+    // If short URL not found, continue with normal page load (graceful fallback)
+}
+
 function goMobile($lang, $scanner) {
  ?><!DOCTYPE html>
     <html>
@@ -289,11 +319,11 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20240708"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20250807"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20200228"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20250807"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20240718"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20250807"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/style-blue.css?v=20230314"/>
 
     <?php if ($edit) {
@@ -312,7 +342,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js?v=20180215"></script>
 
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-1.1.0-compressed.js"></script>
-                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20240710"></script>
+                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20250627"></script>
 
                 <!--                FOR DEBUGGING-->
     <!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
