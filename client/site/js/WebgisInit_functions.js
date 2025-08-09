@@ -2443,24 +2443,24 @@ function createPermalink() {
         permalink += "&";
     }
 
-    permalinkParams.startExtent = startExtent;
+    permalinkParams.e = startExtent;  // startExtent -> e
 
     // visible BackgroundLayer
     //TODO FIX THIS
     //permalinkParams.visibleBackgroundLayer = visibleBackgroundLayer;
 
     // visible layers and layer order
-    permalinkParams.visibleLayers = visibleLayers.toString();
+    permalinkParams.v = visibleLayers.toString();  // visibleLayers -> v
     permalinkParams.lang = lang;
 
     // layer order (only if enabled and different from default)
     if(showLayerOrderTab) {
-        permalinkParams.initialLayerOrder = layerOrderPanel.orderedLayers().toString();
+        permalinkParams.o = layerOrderPanel.orderedLayers().toString();  // initialLayerOrder -> o
     }
 
     // selection (only if exists)
     if(typeof(thematicLayer.params.SELECTION) != 'undefined') {
-        permalinkParams.selection = thematicLayer.params.SELECTION;
+        permalinkParams.s = thematicLayer.params.SELECTION;  // selection -> s
     }
 
     permalink = permalink + Ext.urlEncode(permalinkParams);

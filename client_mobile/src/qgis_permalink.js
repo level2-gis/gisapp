@@ -24,14 +24,18 @@ QgisPermalink.prototype.read = function (urlParams, callback) {
     // default permalink parameters
     Permalink.prototype.read.call(this, urlParams);
 
-    if (urlParams.startExtent > '') {
-        this.startExtent = $.map(urlParams.startExtent.split(','), function (value, index) {
+    // Support single character parameter 'e' for startExtent, fallback to full name
+    var startExtentParam = urlParams.e || urlParams.startExtent;
+    if (startExtentParam > '') {
+        this.startExtent = $.map(startExtentParam.split(','), function (value, index) {
             return parseFloat(value);
         });
     }
 
-    if (urlParams.visibleLayers > '') {
-        this.activeLayers = urlParams.visibleLayers.split(',');
+    // Support single character parameter 'v' for visibleLayers, fallback to full name
+    var visibleLayersParam = urlParams.v || urlParams.visibleLayers;
+    if (visibleLayersParam > '') {
+        this.activeLayers = visibleLayersParam.split(',');
     }
 
     if (urlParams.visibleBackgroundLayer > '') {
@@ -44,7 +48,8 @@ QgisPermalink.prototype.read = function (urlParams, callback) {
 
 QgisPermalink.prototype.create = function () {
     var permalinkParams = {
-        startExtent: Map.map.getView().calculateExtent()
+        e: Map.map.getView().calculateExtent(),  // startExtent -> e
+        //TODO, not working in read: v: Map.visibleLayers(),          // visibleLayers -> v
     };
 
     var params = new URLSearchParams(permalinkParams).toString();

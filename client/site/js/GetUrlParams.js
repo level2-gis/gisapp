@@ -76,20 +76,28 @@ if (urlArray.length > 1) {
 			wmsMapName = urlParams.map;
 		}
 	}
-	if (urlParams.visibleLayers != null) {
-		if (urlParams.visibleLayers == "") {
+	// Support single character parameter 'v' for visibleLayers, fallback to full name
+	var visibleLayersParam = urlParams.v || urlParams.visibleLayers;
+	if (visibleLayersParam != null) {
+		// Store in both short and long form for backward compatibility
+		urlParams.visibleLayers = visibleLayersParam;
+		if (visibleLayersParam == "") {
 			visibleLayers = [];
 		} else {
-			visibleLayers = urlParams.visibleLayers.split(",");
+			visibleLayers = visibleLayersParam.split(",");
 		}
 	}
 	if (enableBGMaps && (urlParams.visibleBackgroundLayer != null)) {
 		visibleBackgroundLayer = urlParams.visibleBackgroundLayer;
 	}
 	
-	if (urlParams.initialLayerOrder != null) {
-		if (urlParams.initialLayerOrder != "") {
-			initialLayerOrder = urlParams.initialLayerOrder.split(",");
+	// Support single character parameter 'o' for initialLayerOrder, fallback to full name
+	var initialLayerOrderParam = urlParams.o || urlParams.initialLayerOrder;
+	if (initialLayerOrderParam != null) {
+		// Store in both short and long form for backward compatibility
+		urlParams.initialLayerOrder = initialLayerOrderParam;
+		if (initialLayerOrderParam != "") {
+			initialLayerOrder = initialLayerOrderParam.split(",");
 		}
 	}
 	if (urlParams.fullColorLayers != null) {
@@ -118,11 +126,15 @@ if (urlArray.length > 1) {
 	if (urlParams.searchtables) {
 		searchtables = urlParams.searchtables;
 	}
-	if (urlParams.startExtent) {
+	// Support single character parameter 'e' for startExtent, fallback to full name
+	var startExtentParam = urlParams.e || urlParams.startExtent;
+	if (startExtentParam) {
+		// Store in both short and long form for backward compatibility
+		urlParams.startExtent = startExtentParam;
 		//need to check validity of startExtent parameter
 		//can be either "project" or corner coordinates in OpenLayers.Bounds format (left, bottom, right, top)
-		if (urlParams.startExtent.match(olBoundsRegexp)) {
-			var startExtentParams = urlParams.startExtent.split(",");
+		if (startExtentParam.match(olBoundsRegexp)) {
+			var startExtentParams = startExtentParam.split(",");
 			if (parseFloat(startExtentParams[0]) > parseFloat(startExtentParams[2]) || parseFloat(startExtentParams[1]) > parseFloat(startExtentParams[3])) {
 				urlParamsOK = false;
 			}
@@ -146,6 +158,13 @@ if (urlArray.length > 1) {
 			urlParamsOK = false;
 			alert(errMessageExtentParamWrongPart1[lang] + "maxExtent" + errMessageExtentParamWrongPart2[lang]);
 		}
+	}
+	
+	// Support single character parameter 's' for selection, fallback to full name
+	var selectionParam = urlParams.s || urlParams.selection;
+	if (selectionParam) {
+		// Store in both short and long form for backward compatibility
+		urlParams.selection = selectionParam;
 	}
 } else {
 	    urlParamsOK = !norewrite;
