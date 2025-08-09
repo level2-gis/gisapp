@@ -111,7 +111,7 @@ def application(environ, start_response):
         #sql += "searchstring::tsvector @@ lower(%s)::tsquery"
         #data += (querystrings[j]+":*",)
         # go with tsvector search if searchtable contains tsvector string
-        if searchtables[i].find('tsvector') > 0:
+        if searchtables[i].find('tsvector') > 0:  
           # this search uses the searchstring_tsvector field, which _must_ have been filled with to_tsvector('not_your_language', 'yourstring')
           # sanitize the query string to avoid tsquery syntax errors
           sanitized_query = sanitize_tsquery(querystrings[j])
