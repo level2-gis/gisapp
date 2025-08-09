@@ -337,7 +337,7 @@ var autoActivateSearchGeometryLayer = true;
 //var searchBoxGetGeomURL = 'client/php/search_geom.php?map=' + projectData.project;
 
 var enablePermalink = true;
-var permaLinkURLShortener = null; // "/wsgi/createShortPermalink.wsgi";
+var permaLinkURLShortener = Eqwc.settings.permaLinkURLShortener || null; // "/wsgi/createShortPermalink.wsgi";
 
 var enableBGMaps = true;
 var enableExtraLayers = true;

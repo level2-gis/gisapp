@@ -2260,11 +2260,14 @@ function mapToolbarHandler(btn, evt) {
         var permalink = createPermalink();
         if (permaLinkURLShortener) {
             var servername = location.protocol+"//"+location.href.split(/\/+/)[1];
+            var fullUrl = servername + permaLinkURLShortener;
+
             Ext.Ajax.request({
-                url: servername + permaLinkURLShortener,
+                url: fullUrl,
                 success: receiveShortPermalinkFromDB,
                 failure: function ( result, request) {
-                    alert("failed to get short URL from Python wsgi script.\n\nError Message:\n\n"+result.responseText);
+                    // Fallback to original permalink
+                    openPermaLink(permalink);
                 },
                 method: 'GET',
                 params: { longPermalink: permalink }
@@ -2440,7 +2443,6 @@ function createPermalink() {
         permalink += "&";
     }
 
-    // extent
     permalinkParams.startExtent = startExtent;
 
     // visible BackgroundLayer
@@ -2449,44 +2451,19 @@ function createPermalink() {
 
     // visible layers and layer order
     permalinkParams.visibleLayers = visibleLayers.toString();
+    permalinkParams.lang = lang;
 
-    // layer opacities as hash of <layername>: <opacity>
-    //TODO FIX THIS
-    // var opacities = null;
-    // for (layer in wmsLoader.layerProperties) {
-    //     if (wmsLoader.layerProperties.hasOwnProperty(layer)) {
-    //         var opacity = wmsLoader.layerProperties[layer].opacity;
-    //         // collect only non-default values
-    //         if (opacity != 255) {
-    //             if (opacities == null) {
-    //                 opacities = {};
-    //             }
-    //             opacities[layer] = opacity;
-    //         }
-    //     }
-    // }
-    // if (opacities != null) {
-    //     permalinkParams.opacities = Ext.util.JSON.encode(opacities);
-    // }
-
-    //layer order
+    // layer order (only if enabled and different from default)
     if(showLayerOrderTab) {
         permalinkParams.initialLayerOrder = layerOrderPanel.orderedLayers().toString();
     }
 
-    //language
-    permalinkParams.lang = lang;
-
-    // selection
-    if(typeof(thematicLayer.params.SELECTION) != 'undefined')
+    // selection (only if exists)
+    if(typeof(thematicLayer.params.SELECTION) != 'undefined') {
         permalinkParams.selection = thematicLayer.params.SELECTION;
+    }
 
-    if (permaLinkURLShortener) {
-        permalink = encodeURIComponent(permalink + decodeURIComponent(Ext.urlEncode(permalinkParams)));
-    }
-    else {
-        permalink = permalink + Ext.urlEncode(permalinkParams);
-    }
+    permalink = permalink + Ext.urlEncode(permalinkParams);
 
     return permalink;
 }
@@ -2688,29 +2665,83 @@ function activateGetFeatureInfo(doIt) {
 }
 
 function openPermaLink(permalink) {
-    //var mailToText = "mailto:?subject="+sendPermalinkLinkFromString[lang]+titleBarText+layerTree.root.firstChild.text+"&body="+permalink;
-    //var mailWindow = window.open(mailToText);
-    //if (mailWindow){
-    //    mailWindow.close();
-
     if (typeof(PermaLinkWin) != 'undefined'){
         PermaLinkWin.close();
     }
 
+    // Create a unique ID for the textarea to reference it later
+    var textareaId = 'permalink-textarea-' + new Date().getTime();
+    var statusId = 'permalink-status-' + new Date().getTime();
+
     PermaLinkWin = new Ext.Window({
-        title: sendPermalinkLinkFromString[lang],    //+titleBarText+layerTree.root.firstChild.text,
-        width: 300,
-        height: 200,
-        layout: {
-            type: 'vbox',
-            align: 'stretch'  // Child items are stretched to full width
-        },
+        title: sendPermalinkLinkFromString[lang],
+        width: 200,
+        height: 150,
+        resizable: true,
+        modal: true,
+        layout: 'fit',
         items: [{
-            xtype: 'textarea',
-            readOnly: true,
-            value: permalink,
-            selectOnFocus: true,
-            flex: 1
+            xtype: 'panel',
+            layout: 'border',
+            border: false,
+            items: [{
+                xtype: 'textarea',
+                id: textareaId,
+                region: 'center',
+                readOnly: true,
+                value: permalink,
+                style: 'font-family: monospace; font-size: 13px; padding: 10px;',
+                selectOnFocus: true
+            }, {
+                xtype: 'panel',
+                region: 'south',
+                height: 25,
+                border: false,
+                html: '<div id="' + statusId + '" style="text-align: center; padding: 5px; font-weight: bold; color: green; height: 20px;"></div>'
+            }]
+        }],
+        buttonAlign: 'center',
+        buttons: [{
+            text: TR.copyLink,
+            //iconCls: 'x-copy-icon',
+            handler: function() {
+                var textarea = Ext.getCmp(textareaId);
+                var statusDiv = document.getElementById(statusId);
+                if (textarea) {
+                    textarea.focus();
+                    textarea.getEl().dom.select();
+                    
+                    try {
+                        // Try to copy to clipboard
+                        if (navigator.clipboard && window.isSecureContext) {
+                            navigator.clipboard.writeText(permalink).then(function() {
+                                statusDiv.innerHTML = '✓ '+TR.copied+'!';
+                                setTimeout(function() {
+                                    statusDiv.innerHTML = '';
+                                }, 2000);
+                            });
+                        } else {
+                            // Fallback for older browsers
+                            document.execCommand('copy');
+                            statusDiv.innerHTML = '✓ '+TR.copied+'!';
+                            setTimeout(function() {
+                                statusDiv.innerHTML = '';
+                            }, 2000);
+                        }
+                    } catch (err) {
+                        // Final fallback
+                        statusDiv.innerHTML = 'Press Ctrl+C to copy';
+                        setTimeout(function() {
+                            statusDiv.innerHTML = '';
+                        }, 3000);
+                    }
+                }
+            }
+        }, {
+            text: TR.close,
+            handler: function() {
+                PermaLinkWin.close();
+            }
         }]
     }).show();
 }
@@ -2845,8 +2876,23 @@ function sendMail(to, subject, body, silent, template) {
 
 
 function receiveShortPermalinkFromDB(result, request) {
-    var result = eval("("+result.responseText+")");
-    openPermaLink(result.shortUrl);
+    try {
+        var response = JSON.parse(result.responseText);
+        if (response.success && response.shortUrl) {
+            openPermaLink(response.shortUrl);
+        } else {
+            console.error('URL shortener error:', response.error || 'Unknown error');
+            // Fallback to original permalink
+            var permalink = createPermalink();
+            openPermaLink(permalink);
+        }
+    } catch (e) {
+        console.error('Failed to parse URL shortener response:', e);
+        console.error('Response text:', result.responseText);
+        // Fallback to original permalink
+        var permalink = createPermalink();
+        openPermaLink(permalink);
+    }
 }
 
 // get best image format for a list of layers

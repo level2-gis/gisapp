@@ -82,7 +82,10 @@ var TR = {
     bookmarkEmptyGroupText: "brez skupine",
     link: "POVEZAVA",
     trueText: 'da',
-    falseText: 'ne'
+    falseText: 'ne',
+    close: 'zapri',
+    copyLink: 'kopiraj',
+    copied: 'Kopirano'
 };
 
 /**
