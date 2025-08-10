@@ -123,6 +123,10 @@
 	margin-bottom: 1px !important;
 }
 
+.x-tree-node a span, .x-dd-drag-ghost a span {
+    padding: 1px 3px 1px 3px !important;
+}
+
 /* Group nodes (non-leaf) spacing */
 /*.x-tree-node-el:not(.x-tree-node-leaf) {*/
 /*	padding-top: 2px !important;*/
