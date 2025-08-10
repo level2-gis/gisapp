@@ -1,64 +1,55 @@
-/* ===== CHECKBOX COLOR SCHEMES ===== */
-/* Uncomment one of the color schemes below */
+/* ===== WORKING CHECKBOX SOLUTION WITH EASY COLOR MANAGEMENT ===== */
 
-/* Gray Color Scheme (Current) */
-/*:root {
-	--checkbox-border: #AAA;
-	--checkbox-border-hover: #777;
-	--checkbox-border-active: #555;
-	--checkbox-checked-fill: #888;
-	--checkbox-checked-fill-hover: #666;
-	--checkbox-checked-fill-active: #444;
-	--checkbox-grayed-fill: #BBB;
-	--checkbox-grayed-fill-hover: #999;
-	--checkbox-grayed-fill-active: #777;
-	--checkbox-symbol: white;
-}*/
+/* Choose your color scheme by uncommenting one section below */
 
-/* Yellow Color Scheme (Alternative) - Uncomment to use */
+/* === YELLOW SCHEME (CURRENT) === */
 :root {
-	--checkbox-border: #DDD;
-	--checkbox-border-hover: #BBB;
-	--checkbox-border-active: #999;
-	--checkbox-checked-fill: #FFD700;
-	--checkbox-checked-fill-hover: #FFC107;
-	--checkbox-checked-fill-active: #FF9800;
-	--checkbox-grayed-fill: #FFF8DC;
-	--checkbox-grayed-fill-hover: #FFEB99;
-	--checkbox-grayed-fill-active: #FFE066;
-	--checkbox-symbol: #8B4513;
+	--border-color: #DDD;
+	--checked-bg: #FFD700;
+	--checked-symbol: #8B4513;
+	--grayed-bg: #FFF8DC;
+	--grayed-symbol: #8B4513;
+	--hover-checked: #FFC107;
+	--hover-grayed: #FFEB99;
 }
 
-/* Blue Color Scheme (Alternative) - Uncomment to use
+/* === BLUE SCHEME === */
+/* :root {
+	--border-color: #CCC;
+	--checked-bg: #2196F3;
+	--checked-symbol: white;
+	--grayed-bg: #E3F2FD;
+	--grayed-symbol: #1976D2;
+	--hover-checked: #1976D2;
+	--hover-grayed: #BBDEFB;
+} */
+
+
+/* === GREEN SCHEME === 
 :root {
-	--checkbox-border: #CCC;
-	--checkbox-border-hover: #999;
-	--checkbox-border-active: #666;
-	--checkbox-checked-fill: #2196F3;
-	--checkbox-checked-fill-hover: #1976D2;
-	--checkbox-checked-fill-active: #0D47A1;
-	--checkbox-grayed-fill: #E3F2FD;
-	--checkbox-grayed-fill-hover: #BBDEFB;
-	--checkbox-grayed-fill-active: #90CAF9;
-	--checkbox-symbol: white;
+	--border-color: #CCC;
+	--checked-bg: #4CAF50;
+	--checked-symbol: white;
+	--grayed-bg: #E8F5E8;
+	--grayed-symbol: #388E3C;
+	--hover-checked: #388E3C;
+	--hover-grayed: #C8E6C9;
 }
 */
 
-/* Green Color Scheme (Alternative) - Uncomment to use
+/* === RED SCHEME === 
 :root {
-	--checkbox-border: #CCC;
-	--checkbox-border-hover: #999;
-	--checkbox-border-active: #666;
-	--checkbox-checked-fill: #4CAF50;
-	--checkbox-checked-fill-hover: #388E3C;
-	--checkbox-checked-fill-active: #2E7D32;
-	--checkbox-grayed-fill: #E8F5E8;
-	--checkbox-grayed-fill-hover: #C8E6C9;
-	--checkbox-grayed-fill-active: #A5D6A7;
-	--checkbox-symbol: white;
+	--border-color: #CCC;
+	--checked-bg: #F44336;
+	--checked-symbol: white;
+	--grayed-bg: #FFEBEE;
+	--grayed-symbol: #E53935;
+	--hover-checked: #E53935;
+	--hover-grayed: #FFCDD2;
 }
 */
 
+/* ===== TREE STRUCTURE FIXES ===== */
 .layer-checkbox-hidden {
 	padding-left: 13px;
 	padding-top: 2px;
@@ -68,172 +59,106 @@
 .main-group-hidden {
 	padding-top: 2px;
 	padding-bottom: 2px;
-	/*display:none;*/
 }
 
-/* ===== CHECKBOX STYLES USING CURRENT COLOR SCHEME ===== */
-/* To change colors, modify the SVG URLs below with the hex values from the color schemes above */
-
-img.x-tree-checkbox {
+/* ===== WORKING CHECKBOX STYLES ===== */
+.x-tree-checkbox {
 	width: 18px !important;
 	height: 18px !important;
 	margin: 0 4px 0 1px !important;
 	vertical-align: middle;
 	cursor: pointer;
-	text-indent: 0 !important;
-	color: transparent !important;
-	background: none !important;
-	border: none !important;
-	font-size: 16px;
-	line-height: 18px;
-	text-align: center;
-	font-family: Arial, sans-serif;
 }
 
-/* === YELLOW COLOR SCHEME (CURRENT) === */
-/* Empty/unchecked state */
-img.x-tree-checkbox {
+/* Unchecked state - all checkboxes start with this */
+.x-tree-checkbox {
 	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
 }
 
-/* Checked state */
-img.x-tree-checkbox.x-tree-node-checked {
+/* Checked state - YELLOW */
+.x-tree-checkbox.x-tree-node-checked {
 	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFD700' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
 }
 
-/* Grayed/indeterminate state */
-img.x-tree-checkbox.x-tree-node-grayed {
+/* Grayed state - YELLOW */
+.x-tree-checkbox.x-tree-node-grayed {
 	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFF8DC' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%238B4513' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
 }
 
-/* === UNCOMMENT BELOW FOR GRAY COLOR SCHEME ===
-img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23AAA' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
-}
-
-img.x-tree-checkbox.x-tree-node-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23888' stroke='%23AAA' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-}
-
-img.x-tree-checkbox.x-tree-node-grayed {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23BBB' stroke='%23AAA' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-}
-*/
-
-/* === HOVER STATES - YELLOW SCHEME (CURRENT) === */
-.x-tree-checkbox-over img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23BBB' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-over img.x-tree-checkbox.x-tree-node-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFC107' stroke='%23BBB' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-over img.x-tree-checkbox.x-tree-node-grayed {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFEB99' stroke='%23BBB' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%238B4513' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-}
-
-/* === ACTIVE STATES - YELLOW SCHEME (CURRENT) === */
-.x-tree-checkbox-down img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23999' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-down img.x-tree-checkbox.x-tree-node-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FF9800' stroke='%23999' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-down img.x-tree-checkbox.x-tree-node-grayed {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFE066' stroke='%23999' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%238B4513' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-}
-
-/* === UNCOMMENT BELOW FOR GRAY SCHEME HOVER/ACTIVE STATES ===
-.x-tree-checkbox-over img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23777' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-over img.x-tree-checkbox.x-tree-node-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23666' stroke='%23777' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-over img.x-tree-checkbox.x-tree-node-grayed {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23999' stroke='%23777' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-down img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23555' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-down img.x-tree-checkbox.x-tree-node-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23444' stroke='%23555' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox-down img.x-tree-checkbox.x-tree-node-grayed {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23777' stroke='%23555' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-}
-*/
-
-/* Disabled state */
-input.x-tree-node-cb:disabled {
-	color: #ccc !important;
-}
-/* === BRANCH STATES - YELLOW SCHEME (CURRENT) === */
-.x-tree-branch-unchecked img.x-tree-checkbox {
+/* Branch states */
+.x-tree-checkbox.x-tree-branch-unchecked {
 	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
 }
 
-.x-tree-branch-checked img.x-tree-checkbox {
+.x-tree-checkbox.x-tree-branch-checked {
 	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFD700' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
 }
 
-/* === UNCOMMENT BELOW FOR GRAY SCHEME BRANCH STATES ===
-.x-tree-branch-unchecked img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23AAA' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
+/* Hover effects */
+.x-tree-checkbox.x-tree-node-checked:hover {
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFC107' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
 }
 
-.x-tree-branch-checked img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23888' stroke='%23AAA' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-}
-*/
-
-.outsidescale a span{
-    color:#AAAAAA !important;
-    font-style:italic;
+.x-tree-checkbox.x-tree-node-grayed:hover {
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFEB99' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%238B4513' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
 }
 
-.filtered a span:after {
-	content: '*';
+/* ===== TREE NODE SPACING ===== */
+.x-tree-node {
+	padding-top: 4px !important;
+	padding-bottom: 4px !important;
 }
 
-/* Fix positioning for filtered layers without geometry (prevent text alignment shift) */
-.layer-checkbox-hidden.filtered {
-	padding-left: 13px !important; /* Ensure the container keeps its left padding when filtered */
+.x-tree-node-text {
+	padding-left: 4px !important;
 }
 
-/* Increased spacing between tree nodes for better readability with larger text */
-.x-tree-node-el {
-	padding-top: 1px !important;
-	padding-bottom: 1px !important;
-	/*line-height: 1.3 !important;*/
-}
-
-/* Additional spacing for tree node anchors */
-.x-tree-node a {
-	padding-top: 1px !important;
-	padding-bottom: 1px !important;
-}
-
-/* Ensure checkbox alignment with increased spacing */
-.x-tree-checkbox {
-	margin-top: 1px !important;
-	margin-bottom: 1px !important;
-}
-
-.x-tree-node a span, .x-dd-drag-ghost a span {
+.x-tree-node-el.x-tree-node-leaf {
     padding: 1px 3px 1px 3px !important;
 }
 
-/* Group nodes (non-leaf) spacing */
-/*.x-tree-node-el:not(.x-tree-node-leaf) {*/
-/*	padding-top: 2px !important;*/
-/*	padding-bottom: 2px !important;*/
-/*}*/
+/* ===== CURSOR FIXES ===== */
+/* Remove pointer cursor from entire tree node element */
+.x-tree-node-el {
+    cursor: default !important;
+}
+
+/* Add pointer cursor only to interactive elements */
+.x-tree-checkbox {
+	cursor: pointer !important;
+}
+
+.x-tree-ec-icon {
+	cursor: pointer !important;
+}
+
+.x-tree-elbow-plus, 
+.x-tree-elbow-minus, 
+.x-tree-elbow-end-plus, 
+.x-tree-elbow-end-minus {
+	cursor: pointer !important;
+}
+
+/* ===== SIMPLE COLOR CHANGE INSTRUCTIONS ===== */
+/*
+TO CHANGE TO BLUE SCHEME:
+1. Replace the checked state SVG with blue colors:
+
+.x-tree-node-checked img.x-tree-checkbox {
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%232196F3' stroke='%23CCC' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+
+2. Replace the grayed state SVG with blue colors:
+
+.x-tree-node-grayed img.x-tree-checkbox {
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23E3F2FD' stroke='%23CCC' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%231976D2' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+3. Update branch and hover states similarly.
+
+Colors available:
+- Yellow: fill='%23FFD700' (gold), stroke='%238B4513' (brown)
+- Blue: fill='%232196F3' (blue), stroke='white' 
+- Green: fill='%234CAF50' (green), stroke='white'
+- Red: fill='%23F44336' (red), stroke='white'
+*/
