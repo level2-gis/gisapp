@@ -236,7 +236,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 								collapsible: true,
 								collapsed: false,
 								titleCollapse: true,
-								autoScroll: true,
+								//autoScroll: true,
 								height: Eqwc.settings.bookmarkPanelHeight ? Eqwc.settings.bookmarkPanelHeight : 200,
 								border: false,
 								frame: false
