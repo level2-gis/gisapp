@@ -1,51 +1,47 @@
-/* ===== WORKING CHECKBOX SOLUTION WITH EASY COLOR MANAGEMENT ===== */
-
-/* Choose your color scheme by uncommenting one section below */
+/* ===== SIMPLE CSS FILTER COLOR SYSTEM ===== */
+/* Change colors with just 4 variables! */
 
 /* === YELLOW SCHEME (CURRENT) === */
 :root {
-	--border-color: #DDD;
-	--checked-bg: #FFD700;
-	--checked-symbol: #8B4513;
-	--grayed-bg: #FFF8DC;
-	--grayed-symbol: #8B4513;
-	--hover-checked: #FFC107;
-	--hover-grayed: #FFEB99;
+	--checkbox-hue: 51deg;        /* Yellow: 51deg, Blue: 214deg, Green: 120deg, Red: 0deg */
+	--checkbox-saturation: 100%;  /* Color intensity */
+	--checkbox-brightness: 1.2;   /* Brightness multiplier */
+	--checkbox-opacity: 1;        /* Transparency */
 }
 
-/* === BLUE SCHEME === */
-/* :root {
-	--border-color: #CCC;
-	--checked-bg: #2196F3;
-	--checked-symbol: white;
-	--grayed-bg: #E3F2FD;
-	--grayed-symbol: #1976D2;
-	--hover-checked: #1976D2;
-	--hover-grayed: #BBDEFB;
-} */
-
+/* === BLUE SCHEME === 
+:root {
+	--checkbox-hue: 214deg;
+	--checkbox-saturation: 100%;
+	--checkbox-brightness: 1.0;
+	--checkbox-opacity: 1;
+}
+*/
 
 /* === GREEN SCHEME === 
 :root {
-	--border-color: #CCC;
-	--checked-bg: #4CAF50;
-	--checked-symbol: white;
-	--grayed-bg: #E8F5E8;
-	--grayed-symbol: #388E3C;
-	--hover-checked: #388E3C;
-	--hover-grayed: #C8E6C9;
+	--checkbox-hue: 120deg;
+	--checkbox-saturation: 80%;
+	--checkbox-brightness: 1.1;
+	--checkbox-opacity: 1;
 }
 */
 
 /* === RED SCHEME === 
 :root {
-	--border-color: #CCC;
-	--checked-bg: #F44336;
-	--checked-symbol: white;
-	--grayed-bg: #FFEBEE;
-	--grayed-symbol: #E53935;
-	--hover-checked: #E53935;
-	--hover-grayed: #FFCDD2;
+	--checkbox-hue: 0deg;
+	--checkbox-saturation: 90%;
+	--checkbox-brightness: 1.0;
+	--checkbox-opacity: 1;
+}
+*/
+
+/* === PURPLE SCHEME === 
+:root {
+	--checkbox-hue: 280deg;
+	--checkbox-saturation: 85%;
+	--checkbox-brightness: 1.1;
+	--checkbox-opacity: 1;
 }
 */
 
@@ -61,7 +57,7 @@
 	padding-bottom: 2px;
 }
 
-/* ===== WORKING CHECKBOX STYLES ===== */
+/* ===== SIMPLE SINGLE-COLOR SVG WITH CSS FILTERS ===== */
 .x-tree-checkbox {
 	width: 18px !important;
 	height: 18px !important;
@@ -70,52 +66,47 @@
 	cursor: pointer;
 }
 
-/* Unchecked state - all checkboxes start with this */
+/* Base unchecked state - simple gray border */
 .x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23999' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
 }
 
-/* Checked state - YELLOW */
+/* Checked state - uses bright base color that filters can modify */
 .x-tree-checkbox.x-tree-node-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFD700' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23ff6600' stroke='%23666' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	filter: hue-rotate(var(--checkbox-hue)) saturate(var(--checkbox-saturation)) brightness(var(--checkbox-brightness)) opacity(var(--checkbox-opacity)) !important;
 }
 
-/* Grayed state - YELLOW */
+/* Grayed state - uses bright base color with reduced saturation */
 .x-tree-checkbox.x-tree-node-grayed {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFF8DC' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%238B4513' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23ff6600' stroke='%23666' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+	filter: hue-rotate(var(--checkbox-hue)) saturate(20%) brightness(1.8) opacity(var(--checkbox-opacity)) !important;
 }
 
 /* Branch states */
 .x-tree-checkbox.x-tree-branch-unchecked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23999' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
 }
 
 .x-tree-checkbox.x-tree-branch-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFD700' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23ff6600' stroke='%23666' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	filter: hue-rotate(var(--checkbox-hue)) saturate(var(--checkbox-saturation)) brightness(var(--checkbox-brightness)) opacity(var(--checkbox-opacity)) !important;
 }
 
-/* Hover effects */
+/* Hover effects - just increase brightness */
 .x-tree-checkbox.x-tree-node-checked:hover {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFC107' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%238B4513' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	filter: hue-rotate(var(--checkbox-hue)) saturate(var(--checkbox-saturation)) brightness(calc(var(--checkbox-brightness) + 0.2)) opacity(var(--checkbox-opacity)) !important;
 }
 
 .x-tree-checkbox.x-tree-node-grayed:hover {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23FFEB99' stroke='%23DDD' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%238B4513' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+	filter: hue-rotate(var(--checkbox-hue)) saturate(30%) brightness(1.9) opacity(var(--checkbox-opacity)) !important;
 }
 
 /* ===== TREE NODE SPACING ===== */
-.x-tree-node {
-	padding-top: 4px !important;
-	padding-bottom: 4px !important;
-}
 
-.x-tree-node-text {
-	padding-left: 4px !important;
-}
-
-.x-tree-node-el.x-tree-node-leaf {
+/* .x-tree-node-el.x-tree-node-leaf {
     padding: 1px 3px 1px 3px !important;
-}
+} */
 
 /* ===== CURSOR FIXES ===== */
 /* Remove pointer cursor from entire tree node element */
@@ -139,26 +130,29 @@
 	cursor: pointer !important;
 }
 
-/* ===== SIMPLE COLOR CHANGE INSTRUCTIONS ===== */
+/* ===== SUPER EASY COLOR CHANGE INSTRUCTIONS ===== */
 /*
-TO CHANGE TO BLUE SCHEME:
-1. Replace the checked state SVG with blue colors:
+🎨 TO CHANGE COLORS: Just modify these 4 values in the :root section above!
 
-.x-tree-node-checked img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%232196F3' stroke='%23CCC' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-}
+EXAMPLES:
+🟡 Yellow:  --checkbox-hue: 51deg;
+🔵 Blue:    --checkbox-hue: 214deg;
+🟢 Green:   --checkbox-hue: 120deg;
+🔴 Red:     --checkbox-hue: 0deg;
+🟣 Purple:  --checkbox-hue: 280deg;
+🟠 Orange:  --checkbox-hue: 30deg;
+🩷 Pink:    --checkbox-hue: 320deg;
+🩵 Cyan:    --checkbox-hue: 180deg;
 
-2. Replace the grayed state SVG with blue colors:
+ADVANCED TWEAKS:
+- --checkbox-saturation: 100% (color intensity, 0% = grayscale)
+- --checkbox-brightness: 1.2 (brightness multiplier)
+- --checkbox-opacity: 1 (transparency, 0-1)
 
-.x-tree-node-grayed img.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23E3F2FD' stroke='%23CCC' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%231976D2' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-}
+INSTANT PREVIEW:
+1. Change --checkbox-hue value
+2. Save file 
+3. Refresh browser - colors change immediately!
 
-3. Update branch and hover states similarly.
-
-Colors available:
-- Yellow: fill='%23FFD700' (gold), stroke='%238B4513' (brown)
-- Blue: fill='%232196F3' (blue), stroke='white' 
-- Green: fill='%234CAF50' (green), stroke='white'
-- Red: fill='%23F44336' (red), stroke='white'
+SUPER EASY! 🎉
 */
