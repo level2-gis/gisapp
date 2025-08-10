@@ -1,51 +1,6 @@
-/* ===== SIMPLE CSS FILTER COLOR SYSTEM ===== */
-/* Change colors with just 4 variables! */
-
-/* === YELLOW SCHEME (CURRENT) === */
-:root {
-	--checkbox-hue: 51deg;        /* Yellow: 51deg, Blue: 214deg, Green: 120deg, Red: 0deg */
-	--checkbox-saturation: 100%;  /* Color intensity */
-	--checkbox-brightness: 1.2;   /* Brightness multiplier */
-	--checkbox-opacity: 1;        /* Transparency */
-}
-
-/* === BLUE SCHEME === 
-:root {
-	--checkbox-hue: 214deg;
-	--checkbox-saturation: 100%;
-	--checkbox-brightness: 1.0;
-	--checkbox-opacity: 1;
-}
-*/
-
-/* === GREEN SCHEME === 
-:root {
-	--checkbox-hue: 120deg;
-	--checkbox-saturation: 80%;
-	--checkbox-brightness: 1.1;
-	--checkbox-opacity: 1;
-}
-*/
-
-/* === RED SCHEME === 
-:root {
-	--checkbox-hue: 0deg;
-	--checkbox-saturation: 90%;
-	--checkbox-brightness: 1.0;
-	--checkbox-opacity: 1;
-}
-*/
-
-/* === PURPLE SCHEME === 
-:root {
-	--checkbox-hue: 280deg;
-	--checkbox-saturation: 85%;
-	--checkbox-brightness: 1.1;
-	--checkbox-opacity: 1;
-}
-*/
-
 /* ===== TREE STRUCTURE FIXES ===== */
+/* Basic tree layout improvements */
+
 .layer-checkbox-hidden {
 	padding-left: 13px;
 	padding-top: 2px;
@@ -57,102 +12,21 @@
 	padding-bottom: 2px;
 }
 
-/* ===== SIMPLE SINGLE-COLOR SVG WITH CSS FILTERS ===== */
-.x-tree-checkbox {
-	width: 18px !important;
-	height: 18px !important;
-	margin: 0 4px 0 1px !important;
-	vertical-align: middle;
-	cursor: pointer;
-}
+/* ===== CHECKBOX STYLING MOVED TO geo-portal.css ===== */
+/* 
+The x-tree-checkbox styling is now in:
+client/site/libs/ext/resources/css/geo-portal.css
 
-/* Base unchecked state - simple gray border */
-.x-tree-checkbox {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23999' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
-}
+To change colors, modify the CSS variables at the top of that file:
+--checkbox-checked-bg: #FFD700;      (Gold)
+--checkbox-checked-text: #8B4513;    (Dark goldenrod)
+--checkbox-grayed-bg: #FFFFE0;       (Light yellow)
+--checkbox-grayed-text: #8B4513;     (Dark goldenrod)
+--checkbox-border: #CCC;             (Light gray)
 
-/* Checked state - uses bright base color that filters can modify */
-.x-tree-checkbox.x-tree-node-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23ff6600' stroke='%23666' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-	filter: hue-rotate(var(--checkbox-hue)) saturate(var(--checkbox-saturation)) brightness(var(--checkbox-brightness)) opacity(var(--checkbox-opacity)) !important;
-}
-
-/* Grayed state - uses bright base color with reduced saturation */
-.x-tree-checkbox.x-tree-node-grayed {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23ff6600' stroke='%23666' stroke-width='2' rx='2'/%3E%3Cline x1='6' y1='9' x2='12' y2='9' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-	filter: hue-rotate(var(--checkbox-hue)) saturate(20%) brightness(1.8) opacity(var(--checkbox-opacity)) !important;
-}
-
-/* Branch states */
-.x-tree-checkbox.x-tree-branch-unchecked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='none' stroke='%23999' stroke-width='2' rx='2'/%3E%3C/svg%3E") !important;
-}
-
-.x-tree-checkbox.x-tree-branch-checked {
-	content: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect x='2' y='2' width='14' height='14' fill='%23ff6600' stroke='%23666' stroke-width='2' rx='2'/%3E%3Cpath d='M6 9l2 2 4-4' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-	filter: hue-rotate(var(--checkbox-hue)) saturate(var(--checkbox-saturation)) brightness(var(--checkbox-brightness)) opacity(var(--checkbox-opacity)) !important;
-}
-
-/* Hover effects - just increase brightness */
-.x-tree-checkbox.x-tree-node-checked:hover {
-	filter: hue-rotate(var(--checkbox-hue)) saturate(var(--checkbox-saturation)) brightness(calc(var(--checkbox-brightness) + 0.2)) opacity(var(--checkbox-opacity)) !important;
-}
-
-.x-tree-checkbox.x-tree-node-grayed:hover {
-	filter: hue-rotate(var(--checkbox-hue)) saturate(30%) brightness(1.9) opacity(var(--checkbox-opacity)) !important;
-}
-
-/* ===== TREE NODE SPACING ===== */
-
-/* .x-tree-node-el.x-tree-node-leaf {
-    padding: 1px 3px 1px 3px !important;
-} */
-
-/* ===== CURSOR FIXES ===== */
-/* Remove pointer cursor from entire tree node element */
-.x-tree-node-el {
-    cursor: default !important;
-}
-
-/* Add pointer cursor only to interactive elements */
-.x-tree-checkbox {
-	cursor: pointer !important;
-}
-
-.x-tree-ec-icon {
-	cursor: pointer !important;
-}
-
-.x-tree-elbow-plus, 
-.x-tree-elbow-minus, 
-.x-tree-elbow-end-plus, 
-.x-tree-elbow-end-minus {
-	cursor: pointer !important;
-}
-
-/* ===== SUPER EASY COLOR CHANGE INSTRUCTIONS ===== */
-/*
-🎨 TO CHANGE COLORS: Just modify these 4 values in the :root section above!
-
-EXAMPLES:
-🟡 Yellow:  --checkbox-hue: 51deg;
-🔵 Blue:    --checkbox-hue: 214deg;
-🟢 Green:   --checkbox-hue: 120deg;
-🔴 Red:     --checkbox-hue: 0deg;
-🟣 Purple:  --checkbox-hue: 280deg;
-🟠 Orange:  --checkbox-hue: 30deg;
-🩷 Pink:    --checkbox-hue: 320deg;
-🩵 Cyan:    --checkbox-hue: 180deg;
-
-ADVANCED TWEAKS:
-- --checkbox-saturation: 100% (color intensity, 0% = grayscale)
-- --checkbox-brightness: 1.2 (brightness multiplier)
-- --checkbox-opacity: 1 (transparency, 0-1)
-
-INSTANT PREVIEW:
-1. Change --checkbox-hue value
-2. Save file 
-3. Refresh browser - colors change immediately!
-
-SUPER EASY! 🎉
+Easy color examples:
+- Blue: #1E90FF, #ADD8E6, #FFFFFF
+- Green: #32CD32, #90EE90, #FFFFFF  
+- Red: #DC143C, #F08080, #FFFFFF
+- Purple: #9370DB, #DDA0DD, #FFFFFF
 */
