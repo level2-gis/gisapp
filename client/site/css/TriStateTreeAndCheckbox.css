@@ -103,3 +103,28 @@
 .layer-checkbox-hidden.filtered {
 	padding-left: 13px !important; /* Ensure the container keeps its left padding when filtered */
 }
+
+/* Increased spacing between tree nodes for better readability with larger text */
+.x-tree-node-el {
+	padding-top: 1px !important;
+	padding-bottom: 1px !important;
+	/*line-height: 1.3 !important;*/
+}
+
+/* Additional spacing for tree node anchors */
+.x-tree-node a {
+	padding-top: 1px !important;
+	padding-bottom: 1px !important;
+}
+
+/* Ensure checkbox alignment with increased spacing */
+.x-tree-checkbox {
+	margin-top: 1px !important;
+	margin-bottom: 1px !important;
+}
+
+/* Group nodes (non-leaf) spacing */
+/*.x-tree-node-el:not(.x-tree-node-leaf) {*/
+/*	padding-top: 2px !important;*/
+/*	padding-bottom: 2px !important;*/
+/*}*/
