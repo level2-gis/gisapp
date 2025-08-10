@@ -29,6 +29,9 @@ java -jar closurecompiler.jar \
   --js '../client/site/js/FeatureInfoDisplay.js' \
   --js '../client/site/js/LegendAndMetadataDisplay.js' \
   --js '../client/site/js/LayerActions.js' \
+  --js '../client/site/js/GridConditionalConfig.js' \
+  --js '../client/site/js/GridConditionalHelpers.js' \
+  --js '../client/site/js/GridConditionalConfigPanel.js' \
   --js '../client/site/js/WebgisInit_functions.js' \
   --js_output_file $DISTRIBUTION_NAME'.js'
 

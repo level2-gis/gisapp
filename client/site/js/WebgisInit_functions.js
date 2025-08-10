@@ -1833,16 +1833,49 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 store: searchPanelInstance.store,
                 columns: searchPanelInstance.gridColumns,
                 plugins: [filters],
-                sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+                sm: new Ext.grid.RowSelectionModel({singleSelect: false}), //disableSelection: true,  // Disable selection completely
                 autoHeight: autoHeight, // No vert. scrollbars in popup if true!!
                 viewConfig: {
-                    forceFit: horFit,
+                    forceFit: false,
+                    autoFill: false,
                     templates: {
                         cell: new Ext.Template(
                             '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
                             '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
                             '</td>'
                         )
+                    },
+
+                    // Simple column width management
+                    onLayout: function(vw, vh) {
+                        var grid = this.grid;
+                        var cm = grid.getColumnModel();
+                        var totalColumns = cm.getColumnCount();
+                        var availableWidth = vw - this.scrollOffset;
+
+                        // If we have many columns, set minimum widths and enable horizontal scrolling
+                        if (totalColumns > 6 || availableWidth / totalColumns < 120) {
+                            for (var i = 0; i < totalColumns; i++) {
+                                var colWidth = cm.getColumnWidth(i);
+                                var minWidth = 50;
+                                if (colWidth < minWidth) {
+                                    cm.setColumnWidth(i, minWidth);
+                                }
+                            }
+                            return;
+                        }
+
+                        // For fewer columns, use available space
+                        this.fitColumns(false, false, -1);
+                    },
+
+                    // Add conditional row rendering
+                    getRowClass: function(record, rowIndex, rp, ds) {
+                        // Check if GridConditionalConfig is available
+                        if (typeof GridConditionalConfig !== 'undefined') {
+                            return GridConditionalConfig.getRowClass(record);
+                        }
+                        return '';
                     }
                 },
                 // paging bar on the bottom

@@ -1,0 +1,45 @@
+/* to select and copy grid cell */
+.x-selectable, .x-selectable * {
+    -moz-user-select: text!important;
+    -khtml-user-select: text!important;
+    -webkit-user-select: text!important;
+    -ms-user-select: text!important;
+    -user-select: text!important;
+}
+
+.x-grid3-td-numberer {
+    background-image: unset!important;
+}
+
+/* Conditional Grid Row Styles */
+.grid-row-red {
+    background-color: #ffebee !important;
+    border-left: 3px solid #f44336 !important;
+}
+
+.grid-row-green {
+    background-color: #e8f5e8 !important;
+    border-left: 3px solid #4caf50 !important;
+}
+
+.grid-row-blue {
+    background-color: #e3f2fd !important;
+    border-left: 3px solid #2196f3 !important;
+}
+
+.grid-row-yellow {
+    background-color: #fffde7 !important;
+    border-left: 3px solid #ffeb3b !important;
+}
+
+.grid-row-orange {
+    background-color: #fff3e0 !important;
+    border-left: 3px solid #ff9800 !important;
+}
+
+.x-grid3-row-selected {
+    background-image: none !important;
+    border-color: initial !important;
+    /*border: 2px dotted !important;*/
+    border-left: 3px solid !important;
+}
