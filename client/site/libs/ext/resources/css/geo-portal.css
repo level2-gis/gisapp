@@ -1708,3 +1708,40 @@ body.x-body-masked .x-window-plain .x-window-mc {
 .x-small, .x-form-field-wrap .x-form-trigger {
     font-size: 12px;
 }
+
+/* Custom tree expand/collapse arrows - cleaner implementation */
+img.x-tree-elbow-plus,
+img.x-tree-elbow-end-plus {
+    width: 0 !important;
+    height: 0 !important;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 7px solid #666;
+    margin: 0px 4px 0px 2px;
+    cursor: pointer;
+    vertical-align: middle;
+    position: relative;
+    top: -3px;
+}
+
+img.x-tree-elbow-minus,
+img.x-tree-elbow-end-minus {
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #666;
+    margin: 3px 4px 3px 2px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+img.x-tree-elbow-plus:hover,
+img.x-tree-elbow-end-plus:hover {
+    border-left-color: #333;
+}
+
+img.x-tree-elbow-minus:hover,
+img.x-tree-elbow-end-minus:hover {
+    border-top-color: #333;
+}
