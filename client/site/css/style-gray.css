@@ -1,4 +1,8 @@
 /* this file contains some common styles and overriden openlayers styles */
+body, html {
+    font-size: 14px !important; /* Base font size increase from typical 12px */
+}
+
 p {
     display: block;
     margin-top: 0.5em;

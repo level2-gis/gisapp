@@ -7,6 +7,10 @@
     max-height: 400px;
 }
 
+.olPopupContent {
+    text-align: center;
+    font:normal 13px tahoma, arial, helvetica, sans-serif !important;
+}
 
 /*styles for identify icons*/
 .i-select {
@@ -63,7 +67,7 @@
     border:1px dotted #99bbe8;
     color: #15428b;
     cursor:default;
-    font:normal 11px tahoma,arial,sans-serif;
+    font:normal 13px tahoma,arial,sans-serif;
 }
 
 .i-more:before{
@@ -90,7 +94,7 @@
     border:1px dotted #99bbe8;
     color: #15428b;
     cursor:default;
-    font:normal 11px tahoma,arial,sans-serif;
+    font:normal 13px tahoma,arial,sans-serif;
     float:left;
 }
 
