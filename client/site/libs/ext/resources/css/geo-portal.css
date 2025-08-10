@@ -1750,13 +1750,11 @@ img.x-tree-elbow-end-minus:hover {
 
 /* Color variables - change these to modify all checkbox colors */
 :root {
-    --checkbox-checked-bg: #FFD700;      /* Gold */
-    --checkbox-checked-text: #8B4513;    /* Dark goldenrod */
-    --checkbox-grayed-bg: #FFFFE0;       /* Light yellow */
-    --checkbox-grayed-text: #8B4513;     /* Dark goldenrod */
-    --checkbox-border: #CCC;             /* Light gray */
-    --checkbox-unchecked-bg: #FFF;       /* White */
-    --checkbox-unchecked-border: #999;   /* Gray */
+    --checkbox-checked-bg: rgb(109, 151, 196);
+    --checkbox-grayed-bg: rgba(109, 151, 196,0.7);
+    --checkbox-border: #5b5b5b;
+    --checkbox-unchecked-bg: #FFF;
+    --checkbox-unchecked-border: #5b5b5b;
 }
 
 /* Base checkbox styling - using background images since checkboxes are <img> elements */
@@ -1766,7 +1764,7 @@ img.x-tree-elbow-end-minus:hover {
     margin: 0 4px 0 1px !important;
     vertical-align: middle;
     cursor: pointer;
-    border: 2px solid var(--checkbox-unchecked-border);
+    border: 1px solid var(--checkbox-unchecked-border);
     border-radius: 4px;
     display: inline-block;
 }
@@ -1779,13 +1777,13 @@ img.x-tree-elbow-end-minus:hover {
 
 /* Checked state - checkmark using data URI */
 .x-tree-checkbox.x-tree-node-checked {
-    background: var(--checkbox-checked-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="3" y="11.5" font-family="Arial" font-size="11" font-weight="bold" fill="%238B4513">✓</text></svg>') no-repeat center !important;
+    background: var(--checkbox-checked-bg) url('data:image/svg+xml;utf8,<svg viewBox="0 0 16 16" version="1.1" id="svg4" sodipodi:docname="svg1.svg" inkscape:version="1.1.2 (b8e25be833, 2022-02-05)" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><defs id="defs8" /> <text x="2" y="14" font-family="Arial" font-size="16px" font-weight="bold" fill="white" id="text2">✓</text></svg>') no-repeat center !important;
     border-color: var(--checkbox-border) !important;
 }
 
 /* Grayed state - dash using data URI */
 .x-tree-checkbox.x-tree-node-grayed {
-    background: var(--checkbox-grayed-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="5" y="10" font-family="Arial" font-size="12" font-weight="bold" fill="%238B4513">−</text></svg>') no-repeat center !important;
+    background: var(--checkbox-grayed-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="3" y="13.5" font-family="Arial" font-size="16" font-weight="bold" fill="white">−</text></svg>') no-repeat center !important;
     border-color: var(--checkbox-border) !important;
 }
 
@@ -1800,19 +1798,15 @@ img.x-tree-elbow-end-minus:hover {
     opacity: 0.8;
 }
 
-/* Tree node spacing improvements */
-.x-tree-node {
+/* Tree node spacing improvements - move padding to inner element for seamless hover/selection */
+.x-tree-node-el {
     padding-top: 4px !important;
     padding-bottom: 4px !important;
+    cursor: default !important;
 }
 
 .x-tree-node-text {
     padding-left: 4px !important;
-}
-
-/* Cursor fixes */
-.x-tree-node-el {
-    cursor: default !important;
 }
 
 .x-tree-checkbox,
