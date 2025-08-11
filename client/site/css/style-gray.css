@@ -141,7 +141,7 @@ div.olControlOverviewMapMaximizeButton a:hover, div.olControlOverviewMapMinimize
 
 .legend {
     margin-left: auto;
-    margin-right: 10px;
+    /*margin-right: 10px;*/
     height: 20px;
     /*min-width: 40px;*/
 }
