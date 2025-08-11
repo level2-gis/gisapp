@@ -212,7 +212,7 @@ projectData.setLayerLegend = function (layer,node) {
             LAYERS: layername,
             RULELABEL: "AUTO",
             STYLES: style,
-            DPI: 110, //screenDpi,
+            DPI: 200,
             NODE: node.id
         });
     }
