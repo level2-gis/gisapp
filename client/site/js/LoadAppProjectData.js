@@ -230,14 +230,13 @@ projectData.setLayerLegend = function (layer,node) {
                 var nodeId = Ext.urlDecode(xhr.responseURL).NODE;
                 var layerId = Ext.urlDecode(xhr.responseURL).LAYERS;
                 var node = layerTree.getNodeById(nodeId);
-                var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
 
                 var css = 'legend';
                 //TODO problem: we are taking image length in bytes, not the best way, to set legends that will be below layer name
                 if (blob.size>1000) {
                     css = 'legend_long';
                     Ext.DomHelper.insertAfter(node.getUI().getEl(),
-                        "<div class='"+css+"' id='legend_" + layerId + "'><img style='margin-top: -15px;' src=\"" + url + "\"/></div>"
+                        "<div class='"+css+"' id='legend_" + layerId + "'><img style='margin-top: -13px;' src=\"" + url + "\"/></div>"
                     );
                 } else {
                     Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
@@ -248,6 +247,22 @@ projectData.setLayerLegend = function (layer,node) {
                 var el = Ext.get('legend_' + layerId);
                 if (el) {
                     el.setVisibilityMode(Ext.Element.DISPLAY);
+                    
+                    // Add tooltip for full-size legend display
+                    var legendImg = el.child('img');
+                    if (legendImg && css === 'legend_long') {
+                        new Ext.ToolTip({
+                            target: legendImg,
+                            html: '<img src="' + url + '" style="max-width: none; max-height: none;" />',
+                            autoHide: true,
+                            autoWidth: true,
+                            dismissDelay: 0,
+                            showDelay: 500,
+                            trackMouse: false,
+                            anchorToTarget: true,
+                            anchor: 'left'
+                        });
+                    }
                 }
             }
         });
