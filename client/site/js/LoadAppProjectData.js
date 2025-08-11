@@ -381,7 +381,7 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
     
     if (css === 'legend_long') {
         Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
-            "<div class='"+css+"' id='legend_" + layerId + "'><img style='height: 20px; width: 20px;' src='./client/site/gis_icons/question.svg'/></div>"
+            "<div class='"+css+"' id='legend_" + layerId + "'><img style='height: 20px; width: 20px; transition: all 0.2s ease; opacity: 0.7;' src='./client/site/gis_icons/question.svg' onmouseover='this.style.opacity=\"1\"; this.style.transform=\"scale(1.1)\"' onmouseout='this.style.opacity=\"0.7\"; this.style.transform=\"scale(1)\"'/></div>"
         );
     } else {
         Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
