@@ -253,7 +253,7 @@ projectData.setLayerLegend = function (layer,node) {
                     if (legendImg && css === 'legend_long') {
                         new Ext.ToolTip({
                             target: legendImg,
-                            html: '<img src="' + url + '" style="max-width: none; max-height: none;" />',
+                            html: '<img src="' + url + '" style="width: 80%; height: auto;" />',
                             autoHide: true,
                             autoWidth: true,
                             dismissDelay: 0,

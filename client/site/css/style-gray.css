@@ -149,7 +149,9 @@ div.olControlOverviewMapMaximizeButton a:hover, div.olControlOverviewMapMinimize
 .legend_long {
     margin-left: 50px;
     margin-right: 10px;
-    /*min-width: 40px;*/
+    max-height: 100px;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .legend_long img {

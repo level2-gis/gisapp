@@ -138,7 +138,7 @@ function showLegendAndMetadata(layertitle) {
             ITEMFONTSIZE: 8,
             LAYERS: layername,
             RULELABEL: "AUTO",
-            DPI: screenDpi
+            DPI: 150
         });
     legendMetaTabPanel = Ext.getCmp('legendMetaTabPanel');
     //create legend image

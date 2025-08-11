@@ -115,3 +115,17 @@ img.x-tree-elbow-end-minus:hover {
 .x-tree-elbow-end-minus {
 	cursor: pointer !important;
 }
+
+.outsidescale a span{
+    color:#AAAAAA !important;
+    font-style:italic;
+}
+
+.filtered a span:after {
+	content: '*';
+}
+
+/* Fix positioning for filtered layers without geometry (prevent text alignment shift) */
+.layer-checkbox-hidden.filtered {
+	padding-left: 13px !important; /* Ensure the container keeps its left padding when filtered */
+}
