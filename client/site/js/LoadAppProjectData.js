@@ -381,7 +381,7 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
     
     if (css === 'legend_long') {
         Ext.DomHelper.insertAfter(node.getUI().getEl(),
-            "<div class='"+css+"' id='legend_" + layerId + "'><img style='margin-top: -13px;' src=\"" + url + "\"/></div>"
+            "<div class='"+css+"' id='legend_" + layerId + "'><img style='height: 20px; width: 20px;' src='./client/site/gis_icons/question.svg'/></div>"
         );
     } else {
         Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
