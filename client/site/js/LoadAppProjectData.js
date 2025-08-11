@@ -183,10 +183,10 @@ projectData.setLayerLegend = function (layer,node) {
             FORMAT: "image/png",
             EXCEPTIONS: "application/vnd.ogc.se_inimage",
             BOXSPACE: 1,
-            LAYERSPACE: 2,
+            LAYERSPACE: 0,
             SYMBOLSPACE: 1,
             SYMBOLHEIGHT: 2,
-            LAYERFONTSIZE: 8,
+            LAYERFONTSIZE: 0,
             ITEMFONTSIZE: 8,
             ICONLABELSPACE: 2,
             LAYERTITLE: "FALSE",
@@ -196,7 +196,7 @@ projectData.setLayerLegend = function (layer,node) {
             LAYERS: layername,
             RULELABEL: "AUTO",
             STYLES: style,
-            DPI: screenDpi,
+            DPI: 150,
             NODE: node.id
         });
     }
@@ -232,9 +232,18 @@ projectData.setLayerLegend = function (layer,node) {
                 var node = layerTree.getNodeById(nodeId);
                 var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
 
-                Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
-                    "<div style='overflow-x:hidden; overflow-y:auto; max-height:" + height + "px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + url + "\"/></div>"
-                );
+                var css = 'legend';
+                //TODO problem: we are taking image length in bytes, not the best way, to set legends that will be below layer name
+                if (blob.size>1000) {
+                    css = 'legend_long';
+                    Ext.DomHelper.insertAfter(node.getUI().getEl(),
+                        "<div class='"+css+"' id='legend_" + layerId + "'><img style='margin-top: -15px;' src=\"" + url + "\"/></div>"
+                    );
+                } else {
+                    Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
+                        "<div class='"+css+"' id='legend_" + layerId + "'><img style='margin-top: -10px; max-height: 30px;' src=\"" + url + "\"/></div>"
+                    );
+                }
 
                 var el = Ext.get('legend_' + layerId);
                 if (el) {

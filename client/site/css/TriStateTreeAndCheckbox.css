@@ -99,6 +99,8 @@ img.x-tree-elbow-end-minus:hover {
 	padding-top: 4px !important;
 	padding-bottom: 4px !important;
 	cursor: default !important;
+	display: flex;
+	line-height: 22px;
 }
 
 .x-tree-node-text {

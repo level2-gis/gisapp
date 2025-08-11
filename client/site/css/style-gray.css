@@ -138,4 +138,17 @@ div.olControlOverviewMapMaximizeButton a:hover, div.olControlOverviewMapMinimize
         background: rgba(60, 60, 60, 0.5);
     }
 }
+
+.legend {
+    margin-left: auto;
+    margin-right: 10px;
+    height: 20px;
+    /*min-width: 40px;*/
+}
+
+.legend_long {
+    margin-left: 50px;
+    margin-right: 10px;
+    /*min-width: 40px;*/
+}
  
