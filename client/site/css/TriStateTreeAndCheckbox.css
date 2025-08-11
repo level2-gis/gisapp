@@ -23,9 +23,9 @@ img.x-tree-elbow-plus,
 img.x-tree-elbow-end-plus {
 	width: 0 !important;
 	height: 0 !important;
-	border-top: 5px solid transparent;
-	border-bottom: 5px solid transparent;
-	border-left: 7px solid #666;
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+	border-left: 10px solid #666;
 	margin: 3px 7px 3px 2px;
 	cursor: pointer;
 	vertical-align: middle;
@@ -35,9 +35,9 @@ img.x-tree-elbow-minus,
 img.x-tree-elbow-end-minus {
 	width: 0 !important;
 	height: 0 !important;
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	border-top: 7px solid #666;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 10px solid #666;
 	margin: 3px 4px 3px 2px;
 	cursor: pointer;
 	vertical-align: middle;
