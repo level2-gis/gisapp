@@ -381,7 +381,16 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
     
     if (css === 'legend_long') {
         Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
-            "<div class='"+css+"' id='legend_" + layerId + "'><img style='height: 20px; width: 20px; transition: all 0.2s ease; opacity: 0.7;' src='./client/site/gis_icons/question.svg' onmouseover='this.style.opacity=\"1\"; this.style.transform=\"scale(1.1)\"' onmouseout='this.style.opacity=\"0.7\"; this.style.transform=\"scale(1)\"'/></div>"
+            "<div class='"+css+"' id='legend_" + layerId + "'>" +
+                "<span class='legend-toggle' style='margin-left: 5px; cursor: pointer; font-size: 12px; color: #666;' onclick='projectData.toggleLegendExpanded(\"" + layerId + "\")'>▶</span>" +
+            "</div>"
+        );
+        
+        // Add hidden expanded legend container
+        Ext.DomHelper.insertAfter(node.getUI().getEl(),
+            "<div class='legend-expanded' id='legend_expanded_" + layerId + "' style='display: none; margin-left: 20px; margin-top: 5px; padding: 5px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 3px;'>" +
+                "<img src='" + url + "' style='max-width: 400px; height: auto; width: 60%; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;'/>" +
+            "</div>"
         );
     } else {
         Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
@@ -407,6 +416,27 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
                 anchorToTarget: true,
                 anchor: 'left'
             });
+        }
+    }
+};
+
+projectData.toggleLegendExpanded = function(layerId) {
+    var expandedLegend = Ext.get('legend_expanded_' + layerId);
+    var toggleArrow = Ext.get('legend_' + layerId).query('.legend-toggle')[0];
+    
+    if (expandedLegend) {
+        if (expandedLegend.isDisplayed()) {
+            // Collapse
+            expandedLegend.setDisplayed(false);
+            if (toggleArrow) {
+                toggleArrow.innerHTML = '▶';
+            }
+        } else {
+            // Expand
+            expandedLegend.setDisplayed(true);
+            if (toggleArrow) {
+                toggleArrow.innerHTML = '▼';
+            }
         }
     }
 };
