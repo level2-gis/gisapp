@@ -212,7 +212,7 @@ projectData.setLayerLegend = function (layer,node) {
             LAYERS: layername,
             RULELABEL: "AUTO",
             STYLES: style,
-            DPI: 150,
+            DPI: 110, //screenDpi,
             NODE: node.id
         });
     }
@@ -389,7 +389,7 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
         // Add hidden expanded legend container
         Ext.DomHelper.insertAfter(node.getUI().getEl(),
             "<div class='legend-expanded' id='legend_expanded_" + layerId + "' style='display: none; margin-left: 20px; margin-top: 5px; padding: 5px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 3px;'>" +
-                "<img src='" + url + "' style='max-width: 400px; height: auto; width: 60%; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;'/>" +
+                "<img class='"+css+"_"+"img' src='" + url + "'/>" +
             "</div>"
         );
     } else {

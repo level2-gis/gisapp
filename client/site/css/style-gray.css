@@ -150,6 +150,12 @@ div.olControlOverviewMapMaximizeButton a:hover, div.olControlOverviewMapMinimize
     height: 20px;
 }
 
+.legend_long_img {
+    width: 90%;
+    height: auto;
+    display: block;
+}
+
 /*.legend_long img {*/
 /*    width: 80%;*/
 /*    height: auto;*/

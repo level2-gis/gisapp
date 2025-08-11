@@ -120,7 +120,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 				xtype: 'panel',
 				margins: '3 0 6 3',
 				cmargins: '3 3 7 3',
-				title: leftPanelTitleString[lang],
+				title: '', //leftPanelTitleString[lang],
 				height: 333,
 				width: 310,
 				collapsible: true,
