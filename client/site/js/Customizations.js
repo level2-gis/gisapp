@@ -154,8 +154,6 @@ function customActionLayerTreeCheck(n) {
             var layerEditor = activatedEditors[layerId];
         }
 
-        //TODO move legend trigger to something else then checkbox
-
         if (n.attributes.checked) {
             if (layerEditor != undefined) {
                 if (editor.editMode) {
@@ -179,6 +177,17 @@ function customActionLayerTreeCheck(n) {
             var toRemove = Ext.get("legend_"+layerId);
             if (toRemove) {
                 toRemove.hide();
+                
+                // Close any expanded legend_long containers when layer is turned off
+                var expandedLegend = Ext.get('legend_expanded_' + layerId);
+                if (expandedLegend) {
+                    expandedLegend.setDisplayed(false);
+                    // Reset arrow to collapsed state
+                    var toggleArrow = toRemove.query('.legend-toggle')[0];
+                    if (toggleArrow) {
+                        toggleArrow.innerHTML = '▶';
+                    }
+                }
             }
 
         }

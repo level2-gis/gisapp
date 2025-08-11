@@ -398,26 +398,26 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
         );
     }
 
-    var el = Ext.get('legend_' + layerId);
-    if (el) {
-        el.setVisibilityMode(Ext.Element.DISPLAY);
-        
-        // Add tooltip for full-size legend display
-        var legendImg = el.child('img');
-        if (legendImg && css === 'legend_long') {
-            new Ext.ToolTip({
-                target: legendImg,
-                html: '<img src="' + url + '" style="width: 80%; height: auto;" />',
-                autoHide: true,
-                autoWidth: true,
-                dismissDelay: 0,
-                showDelay: 500,
-                trackMouse: false,
-                anchorToTarget: true,
-                anchor: 'left'
-            });
-        }
-    }
+    // var el = Ext.get('legend_' + layerId);
+    // if (el) {
+    //     el.setVisibilityMode(Ext.Element.DISPLAY);
+    //
+    //     // Add tooltip for full-size legend display
+    //     var legendImg = el.child('img');
+    //     if (legendImg && css === 'legend_long') {
+    //         new Ext.ToolTip({
+    //             target: legendImg,
+    //             html: '<img src="' + url + '" style="width: 80%; height: auto;" />',
+    //             autoHide: true,
+    //             autoWidth: true,
+    //             dismissDelay: 0,
+    //             showDelay: 500,
+    //             trackMouse: false,
+    //             anchorToTarget: true,
+    //             anchor: 'left'
+    //         });
+    //     }
+    // }
 };
 
 projectData.toggleLegendExpanded = function(layerId) {
