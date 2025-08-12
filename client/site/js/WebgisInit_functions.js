@@ -266,16 +266,27 @@ function postLoading() {
         document.title = Eqwc.settings.gisPortalTitle ? titleBarText + ' | ' + Eqwc.settings.gisPortalTitle : titleBarText;
 
         // set header logo and link
+        var logos = [{
+            tag: 'img',
+            style: 'padding-right: 5px;',
+            src: 'admin/resources/images/header_logo.svg',
+            height: headerLogoHeight
+        }];
+        if (headerLogoImg > '') {
+            logos.push({
+                tag: 'img',
+                src: headerLogoImg,
+                title: projectData.client_display_name,
+                height: headerLogoHeight
+            });
+        }
+
         if (headerLogoLink > '') {
             Ext.select('#panel_header_link a').replaceWith({
                 tag: 'a',
                 href: headerLogoLink,
                 //target: '_blank',
-                children: [{
-                    tag: 'img',
-                    src: headerLogoImg,
-                    height: headerLogoHeight
-                }]
+                children: logos
             });
 
             // adjust title position //moved to CSS
@@ -283,7 +294,7 @@ function postLoading() {
             //var paddingTop = (headerLogoHeight - 15) / 2;
             //Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
         }
-        Ext.get('panel_header_title').update(titleBarText);
+        //Ext.get('panel_header_title').update('titleBarText');
 
         //user
         Ext.getCmp('GisBrowserPanel').tools.user.dom.qtip = projectData.user;
