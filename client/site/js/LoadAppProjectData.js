@@ -389,7 +389,7 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
         // Add hidden expanded legend container
         Ext.DomHelper.insertAfter(node.getUI().getEl(),
             "<div class='legend-expanded' id='legend_expanded_" + layerId + "' style='display: none; margin-left: 20px; margin-top: 5px; padding: 5px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 3px;'>" +
-                "<img class='"+css+"_"+"img' src='" + url + "'/>" +
+                "<img class='"+css+"_"+"img' src='" + url + "' onload='projectData.scaleLegendImage(this)'/>" +
             "</div>"
         );
     } else {
@@ -438,6 +438,23 @@ projectData.toggleLegendExpanded = function(layerId) {
                 toggleArrow.innerHTML = '▼';
             }
         }
+    }
+};
+
+projectData.scaleLegendImage = function(img) {
+    // Scale image to 50% of its natural size
+    var scaleFactor = 0.5;
+    
+    // Wait for image to load completely
+    if (img.complete && img.naturalWidth !== 0) {
+        img.style.width = Math.round(img.naturalWidth * scaleFactor) + 'px';
+        img.style.height = Math.round(img.naturalHeight * scaleFactor) + 'px';
+    } else {
+        // If image isn't loaded yet, wait for it
+        img.onload = function() {
+            img.style.width = Math.round(img.naturalWidth * scaleFactor) + 'px';
+            img.style.height = Math.round(img.naturalHeight * scaleFactor) + 'px';
+        };
     }
 };
 
