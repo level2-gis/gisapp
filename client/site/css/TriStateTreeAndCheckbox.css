@@ -61,6 +61,13 @@ img.x-tree-elbow-end-minus:hover {
 	border-top-color: #333;
 }
 
+/* Disable the plain elbow icon on leaf nodes - it interferes with selection */
+img.x-tree-ec-icon.x-tree-elbow {
+	visibility: hidden !important;
+	pointer-events: none !important;
+	cursor: default !important;
+}
+
 /* Base checkbox styling - using background images since checkboxes are <img> elements */
 .x-tree-checkbox {
 	width: 16px !important;
