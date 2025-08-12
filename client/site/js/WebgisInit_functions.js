@@ -68,11 +68,12 @@ function loadWMSConfig(topicName) {
                     attr.cls = 'main-group-hidden';
                 }
                 attr.checked = undefined;
-            }
-
-            //layer must be in projectData.layers, if not hide it!
-            if (projectData.layers[attr.layer.metadata.prefix] === undefined && attr.leaf) {
-                attr.hidden = true;
+            } else {
+                //attr.checked = attr.layer.metadata.visible;
+                // Handle Groups
+                if(!attr.leaf) {
+                    attr.cls = 'group';
+                }
             }
 
             //dont' create node for hidden elements
@@ -443,12 +444,16 @@ function postLoading() {
                 n.on('checkchange', leafsChangeFunction);
             }
             else {
+                if (n.isFirst()) {
+                    //disable contextmenu on first node
+                    n.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+                } else {
+                    //create menu and filter properties from json configuration
+                    buildGroupContextMenu(n);
 
-                //create menu and filter properties from json configuration
-                buildGroupContextMenu(n);
-
-                n.on ('contextMenu', contextMenuHandler);
-                n.on('checkchange', leafsChangeFunction);
+                    n.on('contextMenu', contextMenuHandler);
+                    n.on('checkchange', leafsChangeFunction);
+                }
             }
         }
     );
@@ -1241,6 +1246,7 @@ function postLoading() {
 
         //update layout of left panel and adds a listener to automatically adjust layout after resizing
         var leftPanel = Ext.getCmp('LeftPanel');
+        leftPanel.setTitle(Ext.decode(Eqwc.settings.title));
         leftPanel.doLayout();
         leftPanel.addListener('resize', function (myPanel, adjWidth, adjHeight, rawWidth, rawHeight) {
             myPanel.items.each(function (item, index, length) {
@@ -1339,6 +1345,7 @@ function postLoading() {
         var extraLayGroup = new Ext.tree.TreeNode({
             leaf: false,
             expanded: true,
+            cls: 'group',
             text: externalLayerTitleString[lang]
         });
         layerTree.root.appendChild(extraLayGroup);
@@ -1363,6 +1370,7 @@ function postLoading() {
         var BgLayerList = new Ext.tree.TreeNode({
             leaf: false,
             expanded: true,
+            cls: 'group',
             text: backgroundLayerTitleString[lang]
         });
 
@@ -2533,7 +2541,7 @@ function addAbstractToLayerGroups() {
                 } else {
                     var thisAbstract = layerGroupString[lang]+ ' "' + n.text + '"';
                 }
-                var layerId = wmsLoader.layerTitleNameMapping[n.text];
+                var layerId = wmsLoader.layerTitleNameMapping[n.attributes.layer.name];
                 wmsLoader.layerProperties[layerId].abstract = thisAbstract;
             }
         }

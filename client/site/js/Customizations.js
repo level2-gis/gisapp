@@ -7,6 +7,10 @@ function customInit() {
 // called before map initialization
 function customBeforeMapInit() {
 
+    if(Eqwc.settings.qgisProjectGroupText > '') {
+        layerTree.root.firstChild.setText(Eqwc.settings.qgisProjectGroupText);
+    }
+
     var tablesOnStart = projectData.tablesOnStart();
 
     //open tables for layers from db setting

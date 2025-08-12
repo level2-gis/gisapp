@@ -388,7 +388,7 @@ projectData.displayCachedLegend = function(legendData, layerId, node) {
         
         // Add hidden expanded legend container
         Ext.DomHelper.insertAfter(node.getUI().getEl(),
-            "<div class='legend-expanded' id='legend_expanded_" + layerId + "' style='display: none; margin-left: 20px; margin-top: 5px; padding: 5px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 3px;'>" +
+            "<div class='legend-expanded' id='legend_expanded_" + layerId + "' style='display: none; margin-left: 3px; padding: 5px; padding-left: 20px;border: 1px solid #ddd; background: #f9f9f9;'>" +
                 "<img class='"+css+"_"+"img' src='" + url + "' onload='projectData.scaleLegendImage(this)'/>" +
             "</div>"
         );
