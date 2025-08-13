@@ -299,7 +299,7 @@ function postLoading() {
             //var paddingTop = (headerLogoHeight - 15) / 2;
             //Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
         }
-        //Ext.get('panel_header_title').update(titleBarText);
+        //Ext.get('panel_header_title').update(projectData.client_display_name);
 
         //user
         Ext.getCmp('GisBrowserPanel').tools.user.dom.qtip = projectData.user;

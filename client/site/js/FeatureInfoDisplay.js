@@ -143,6 +143,7 @@ function showFeatureInfo(evt) {
             maximizable: true,
             collapsible: true,
             resizable: true,
+            minWidth: 300,
             panMapIfOutOfView: false,  // Prevent automatic map panning
             keepInMap: true,           // Keep popup within map bounds
             listeners: {
@@ -213,7 +214,7 @@ function showFeatureInfo(evt) {
                     var popup = this;
                     var maxHeight = geoExtMap.getHeight() * 0.7;
                     var maxWidth = popup.maxWidth || (geoExtMap.getWidth() * 0.4);
-                    var minWidth = popup.minWidth || 300;
+                    var minWidth = popup.minWidth;
                     
                     // Set fixed dimensions and let content scroll
                     popup.setWidth(Math.max(minWidth, Math.min(popup.getWidth(), maxWidth)));
@@ -673,11 +674,30 @@ function parseFIResult(node) {
                                         if (attValue>'') {
                                             var attArr = Ext.util.JSON.decode(attValue);
                                             var newArr = [];
+                                            var hasImages = false;
+                                            
                                             Ext.each(attArr, function (item, index, array) {
                                                 var value = this;
-                                                value.push(Eqwc.common.manageFile(item, true));
+                                                var fileContent = Eqwc.common.manageFile(item, true);
+                                                
+                                                // Check if the file content contains an image tag
+                                                if (fileContent.toLowerCase().indexOf('<img') !== -1) {
+                                                    hasImages = true;
+                                                    // Add responsive styling to images for inline display
+                                                    fileContent = fileContent.replace(/<img([^>]*)>/gi, '<img$1 style="max-width: calc(50% - 5px); height: auto; display: inline-block; margin: 2px; vertical-align: top;">');
+                                                }
+                                                
+                                                value.push(fileContent);
                                             }, newArr);
-                                            attValue = newArr.join('</br>');
+                                            
+                                            // Join with different separators based on content type
+                                            if (hasImages) {
+                                                // For images, use minimal spacing
+                                                attValue = newArr.join('');
+                                            } else {
+                                                // For other files, use line breaks
+                                                attValue = newArr.join('</br>');
+                                            }
                                         }
                                     } else {
                                         if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase)) {
