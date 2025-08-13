@@ -104,6 +104,39 @@
     width: 100%;
     border-collapse: collapse;
     word-wrap: break-word;
+    margin-bottom: 10px;
+    border: 1px solid #d0d0d0;
+}
+
+/* Header row styling */
+.gx-popup .x-window-body table th {
+    background: linear-gradient(to bottom, #f8f8f8 0%, #e8e8e8 100%);
+    border: 1px solid #c0c0c0;
+    padding: 8px 10px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+    text-align: left;
+    vertical-align: middle;
+}
+
+/* Data rows styling */
+.gx-popup .x-window-body table tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Alternate row backgrounds for better readability */
+.gx-popup .x-window-body table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.gx-popup .x-window-body table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* Hover effect for data rows */
+.gx-popup .x-window-body table tbody tr:hover {
+    background-color: #f0f7ff !important;
 }
 
 .gx-popup .x-window-body td {
@@ -112,8 +145,14 @@
     overflow-wrap: break-word !important;
     hyphens: auto;
     max-width: 0;
-    /* padding: 4px 6px; */
+    padding: 6px 10px;
     vertical-align: top;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* Remove right border from last cell */
+.gx-popup .x-window-body td:last-child {
+    border-right: none;
 }
 
 /* Override inline styles that prevent text wrapping */
@@ -123,10 +162,11 @@
     white-space: normal !important;
 }
 
-/* Ensure first column (field names) has reasonable width */
+/* Ensure first column (field names) has reasonable width and is bold */
 .gx-popup .x-window-body td:first-child {
     width: 30%;
     /* font-weight: bold; */
+    background-color: #f5f5f5;
 }
 
 /* Second column (values) takes remaining space */
