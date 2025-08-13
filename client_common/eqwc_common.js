@@ -34,13 +34,18 @@ Eqwc.geolocationErrors = {
 Eqwc.tooltips = {};
 Eqwc.common = {};
 
-Eqwc.common.createHyperlink = function(att, val, pattern) {
+Eqwc.common.createHyperlink = function(att, val, pattern, createTooltips) {
     if(att == null || att == '' || typeof att == 'number') {
         return att;
     }
 
     if (val == null) {
         val = att;
+    }
+    
+    // Default to true for backward compatibility (grid tables need tooltips)
+    if (createTooltips === undefined) {
+        createTooltips = true;
     }
 
     try {
@@ -54,9 +59,9 @@ Eqwc.common.createHyperlink = function(att, val, pattern) {
         } else if (val.indexOf('href=') > -1 && val.indexOf(' target=') == -1) {
             //add target blank if contains href and not target
             att = val.replaceAll('<a ', '<a target="_blank"');
-        } else if (val.length > 10 && typeof Ext != 'undefined') {
-            //create tooltip for longer texts
-            att = "<div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' ext:qtip='" + val + "'>" + val + "</div>";
+        } else if (createTooltips && typeof Ext != 'undefined') {
+            //create conditional tooltip - only shows when text is actually truncated
+            att = "<div class='overflow-tooltip' data-full-text='" + val.replace(/'/g, "&apos;") + "'>" + val + "</div>";
         }
         // add hyperlinks for URLs containing mediaurl pattern
         if (pattern > '') {
@@ -73,6 +78,102 @@ Eqwc.common.createHyperlink = function(att, val, pattern) {
         return att;
     }
 };
+
+// Initialize overflow tooltip detection
+Eqwc.common.initOverflowTooltips = function() {
+    if (typeof Ext !== 'undefined') {
+        var tooltipEl = null;
+        
+        // Create tooltip element
+        function createTooltip() {
+            if (!tooltipEl) {
+                tooltipEl = document.createElement('div');
+                tooltipEl.className = 'grid-tooltip-overlay';
+                document.body.appendChild(tooltipEl);
+            }
+            return tooltipEl;
+        }
+        
+        // Show tooltip
+        function showTooltip(element, text) {
+            var tooltip = createTooltip();
+            tooltip.textContent = text;
+            tooltip.style.display = 'block';
+            
+            // Position tooltip near the element
+            var rect = element.getBoundingClientRect();
+            var tooltipX = rect.left;
+            var tooltipY = rect.bottom + 2;
+            
+            // Ensure tooltip doesn't go off screen
+            var viewportWidth = window.innerWidth;
+            var viewportHeight = window.innerHeight;
+            
+            if (tooltipX + 300 > viewportWidth) {
+                tooltipX = viewportWidth - 310;
+            }
+            if (tooltipX < 5) {
+                tooltipX = 5;
+            }
+            if (tooltipY + 50 > viewportHeight) {
+                tooltipY = rect.top - 25;
+            }
+            
+            tooltip.style.left = tooltipX + 'px';
+            tooltip.style.top = tooltipY + 'px';
+        }
+        
+        // Hide tooltip
+        function hideTooltip() {
+            if (tooltipEl) {
+                tooltipEl.style.display = 'none';
+            }
+        }
+        
+        // Use ExtJS to set up event delegation for overflow detection
+        Ext.getBody().on('mouseover', function(e, target) {
+            var el = Ext.fly(target);
+            if (el && el.hasClass('overflow-tooltip')) {
+                // Check if text is actually overflowing
+                var element = el.dom;
+                // Force a reflow to ensure accurate measurements
+                element.offsetHeight;
+                
+                if (element.scrollWidth > element.clientWidth + 1) { // +1 for rounding errors
+                    el.addClass('text-overflowing');
+                    var fullText = el.getAttribute('data-full-text');
+                    if (fullText) {
+                        showTooltip(element, fullText);
+                    }
+                } else {
+                    el.removeClass('text-overflowing');
+                    hideTooltip();
+                }
+            }
+        }, null, {delegate: '.overflow-tooltip'});
+        
+        // Clean up on mouse out
+        Ext.getBody().on('mouseout', function(e, target) {
+            var el = Ext.fly(target);
+            if (el && el.hasClass('overflow-tooltip')) {
+                el.removeClass('text-overflowing');
+                hideTooltip();
+            }
+        }, null, {delegate: '.overflow-tooltip'});
+        
+        // Hide tooltip on scroll to prevent positioning issues
+        Ext.getBody().on('scroll', function() {
+            hideTooltip();
+        });
+    }
+};
+
+// Initialize when ExtJS is ready
+if (typeof Ext !== 'undefined') {
+    Ext.onReady(function() {
+        Eqwc.common.initOverflowTooltips();
+    });
+}
 
 Eqwc.common.manageFile = function(fn, handleImages) {
 

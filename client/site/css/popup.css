@@ -98,6 +98,42 @@
     float:left;
 }
 
+/* Feature Info popup table styles - prevent horizontal scrolling */
+.gx-popup .x-window-body table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    word-wrap: break-word;
+}
+
+.gx-popup .x-window-body td {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto;
+    max-width: 0;
+    /* padding: 4px 6px; */
+    vertical-align: top;
+}
+
+/* Override inline styles that prevent text wrapping */
+.gx-popup .x-window-body td div[style*="overflow: hidden"] {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
+
+/* Ensure first column (field names) has reasonable width */
+.gx-popup .x-window-body td:first-child {
+    width: 30%;
+    /* font-weight: bold; */
+}
+
+/* Second column (values) takes remaining space */
+.gx-popup .x-window-body td:last-child {
+    width: 70%;
+}
+
 
 /*
 a:link, a:visited
