@@ -321,6 +321,7 @@ Eqwc.settings.measurementsUnitSystem = 'metric';
  * Maximum allowed height in pixels for layer legend. If legend height is larger, vertical scroller will be used
  * @type {number}
  * @default 200
+ * @deprecated since release 1.12.0 (setting in CSS)
  */
 Eqwc.settings.layerLegendMaxHeightPx = 200;
 
