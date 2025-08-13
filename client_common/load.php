@@ -82,7 +82,7 @@ if (!property_exists($data, "link3")) {
 }
 
 if (file_exists($client_path . 'admin/resources/images/' . $data->client_name . '.png')) {
-    $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png?v=5';
+    $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png?v=8';
 } else {
     $data->client_logo = '';
 }
