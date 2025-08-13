@@ -76,6 +76,11 @@ function loadWMSConfig(topicName) {
                 }
             }
 
+            //layer must be in projectData.layers, if not hide it!
+            if (projectData.layers[attr.layer.metadata.prefix] === undefined && attr.leaf) {
+                attr.hidden = true;
+            }
+
             //dont' create node for hidden elements
             if (!attr.hidden) {
                 return QGIS.WMSCapabilitiesLoader.prototype.createNode.apply(this, [attr]);
@@ -294,7 +299,7 @@ function postLoading() {
             //var paddingTop = (headerLogoHeight - 15) / 2;
             //Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
         }
-        //Ext.get('panel_header_title').update('titleBarText');
+        //Ext.get('panel_header_title').update(titleBarText);
 
         //user
         Ext.getCmp('GisBrowserPanel').tools.user.dom.qtip = projectData.user;
@@ -1257,7 +1262,7 @@ function postLoading() {
 
         //update layout of left panel and adds a listener to automatically adjust layout after resizing
         var leftPanel = Ext.getCmp('LeftPanel');
-        leftPanel.setTitle(Ext.decode(Eqwc.settings.title));
+        leftPanel.setTitle('<span class="left-panel-title">' + Ext.decode(Eqwc.settings.title) + '</span>');
         leftPanel.doLayout();
         leftPanel.addListener('resize', function (myPanel, adjWidth, adjHeight, rawWidth, rawHeight) {
             myPanel.items.each(function (item, index, length) {

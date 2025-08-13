@@ -81,6 +81,32 @@ p {
     right: 42x;
     cursor: pointer;}
 
+/* Enhanced LeftPanel title styling - only affects the title text */
+.left-panel-title {
+    color: white !important;
+    font-weight: normal !important;
+    /* font-size: 12px !important; */
+    background-color: rgb(69, 111, 176) !important;
+    padding: 5px 0px !important;
+    /* text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important; */
+    letter-spacing: 0.5px !important;
+    /* display: inline-block !important; */
+}
+
+/* LeftPanel main header background - only the top title, not accordion headers */
+#LeftPanel > .x-panel-header {
+    background-color: rgb(69, 111, 176) !important; /* Darker blue */
+    background-image: none !important;
+    border-color: rgb(69, 111, 156) !important; /* Even darker blue for border */
+}
+
+/* #LeftPanel > .x-panel-header .x-panel-header-text,
+#LeftPanel > .x-panel-tl > .x-panel-header {
+	color: white !important;
+	font-weight: bold !important;
+	font-size: 15px !important;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
+} */
 
 .olTileImage.olImageLoadError {
     display: none !important;

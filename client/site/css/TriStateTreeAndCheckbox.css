@@ -17,13 +17,13 @@
 	text-transform: uppercase;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	font-weight: 600;
+	/*font-weight: 600;*/
 }
 
 .group {
 	text-transform: uppercase;
 	/*font-style: italic;*/
-	font-weight: 600;
+	/*font-weight: 600;*/
 }
 
 /* Custom tree expand/collapse arrows - cleaner implementation */
