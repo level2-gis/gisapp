@@ -470,7 +470,7 @@ projectData.determineLegendCssClass = function(layername, style, callback) {
     };
     
     // Only include STYLES parameter if style is not 'default'
-    if (style && style !== 'default') {
+    if (style && style[0] !== 'default') {
         urlParams.STYLES = style;
     }
     
