@@ -104,12 +104,17 @@
     width: 100%;
     border-collapse: collapse;
     word-wrap: break-word;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     border: 1px solid #d0d0d0;
 }
 
-/* Header row styling */
-.gx-popup .x-window-body table th {
+/* Collapsible table wrapper */
+.collapsible-table {
+    position: relative;
+}
+
+/* Header row styling - base styling for all headers */
+.gx-popup .x-window-body table thead th {
     background: linear-gradient(to bottom, #f8f8f8 0%, #e8e8e8 100%);
     border: 1px solid #c0c0c0;
     padding: 8px 10px;
@@ -118,6 +123,62 @@
     color: #333;
     text-align: left;
     vertical-align: middle;
+    position: relative;
+}
+
+/* Clickable styling only for first header cell (with collapsible functionality) */
+.gx-popup .x-window-body table thead th:first-child {
+    cursor: pointer;
+    user-select: none;
+    padding-left: 30px; /* Left padding for arrow */
+}
+
+/* Non-clickable styling for other header cells (allow text selection) */
+.gx-popup .x-window-body table thead th:not(:first-child) {
+    cursor: text;
+    user-select: text;
+}
+
+/* Collapse/Expand arrow */
+.gx-popup .x-window-body table thead th:first-child::before {
+    content: '▼';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #666;
+    transition: transform 0.2s ease;
+}
+
+/* Collapsed state arrow */
+.gx-popup .x-window-body table.collapsed thead th:first-child::before {
+    content: '▶';
+    transform: translateY(-50%) rotate(0deg);
+}
+
+/* Hide table body when collapsed, but keep thead visible */
+.gx-popup .x-window-body table.collapsed tbody {
+    display: none;
+}
+
+/* Visual indicator for collapsed state */
+.gx-popup .x-window-body table.collapsed {
+    border-bottom: 2px solid #d0d0d0;
+}
+
+/* Hover effect only for clickable first header cell */
+.gx-popup .x-window-body table thead th:first-child:hover {
+    background: linear-gradient(to bottom, #e8e8e8 0%, #d8d8d8 100%);
+}
+
+/* Add subtle animation for smooth collapse/expand */
+.gx-popup .x-window-body table tbody {
+    transition: opacity 0.2s ease;
+}
+
+.gx-popup .x-window-body table.collapsed tbody {
+    opacity: 0;
 }
 
 /* Data rows styling */

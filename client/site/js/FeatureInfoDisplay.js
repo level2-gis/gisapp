@@ -541,6 +541,22 @@ function parseFIResult(node) {
             var countRelations = 0;
             var layerTitle = layer.title;
 
+            // Count total features for this layer to show "x/y" notation
+            var totalFeatures = 0;
+            var tempNode = node.firstChild;
+            while (tempNode) {
+                if (tempNode.hasChildNodes() && tempNode.nodeName === "Feature") {
+                    totalFeatures++;
+                } else if (tempNode.nodeName === "Attribute") {
+                    // For raster data, we typically have one "feature" per set of attributes
+                    totalFeatures = 1;
+                    break; // Raster typically has one result
+                }
+                tempNode = tempNode.nextSibling;
+            }
+
+            var currentFeatureIndex = 0; // Track current feature number
+
             if(projectData.relations && projectData.relations[layerName]) {
                 countRelations = projectData.relations[layerName].length;
             }
@@ -555,12 +571,22 @@ function parseFIResult(node) {
                 var fid = layerTitle+"."+id;
 
                 if (layerChildNode.hasChildNodes() && layerChildNode.nodeName === "Feature") {
+                    currentFeatureIndex++; // Increment feature counter
                     var attributeNode = layerChildNode.firstChild;
 
-                    htmlText += '<table><tbody><tr>';
+                    // Generate unique table ID for collapsible functionality
+                    var tableId = 'table_' + layerId + '_' + id + '_' + Math.random().toString(36).substr(2, 9);
+                    
+                    htmlText += '<div class="collapsible-table">';
+                    htmlText += '<table id="' + tableId + '">';
+                    htmlText += '<thead><tr>';
 
                     //we add table header row with tools
-                    htmlText += "<th>" + layerTitle;
+                    var displayTitle = layerTitle;
+                    if (totalFeatures > 1) {
+                        displayTitle += " " + currentFeatureIndex + "/" + totalFeatures;
+                    }
+                    htmlText += "<th onclick=\"toggleTable('" + tableId + "')\">" + displayTitle;
                     if(layer.abstract) {
                         //htmlText += " <div class='i-more' ext:qtip='"+layer.abstract+"'></div>";
                         var layerAbEl = layerId+"___abstract";
@@ -568,7 +594,7 @@ function parseFIResult(node) {
                         Eqwc._temp_ids.push(layerAbEl);
                     }
                     htmlText += "</th>";
-                    htmlText += '<th>' + id + '</th></tr>';
+                    htmlText += '<th>' + id + '</th></tr></thead><tbody>';
 
                     //tools
                     htmlText += '<tr><td colspan=2>';
@@ -708,12 +734,21 @@ function parseFIResult(node) {
                         }
                         attributeNode = attributeNode.nextSibling;
                     }
-                    htmlText += "\n  </tbody>\n </table></br>";
+                    htmlText += "\n  </tbody>\n </table></div></br>";
                 }
                 else if (layerChildNode.nodeName === "Attribute") {
                     //case raster data
                     if (rasterData == false) {
-                        htmlText += "\n <p></p>\n <table>\n  <tbody>";
+                        // For raster data, increment counter as if it's a feature
+                        currentFeatureIndex++;
+                        // Generate unique table ID for raster table
+                        var rasterTableId = 'raster_table_' + layerId + '_' + Math.random().toString(36).substr(2, 9);
+                        var rasterDisplayTitle = layerTitle;
+                        if (totalFeatures > 1) {
+                            rasterDisplayTitle += " " + currentFeatureIndex + "/" + totalFeatures;
+                        }
+                        htmlText += "\n <p></p>\n <div class='collapsible-table'><table id='" + rasterTableId + "'>";
+                        htmlText += "<thead><tr><th colspan='2' onclick=\"toggleTable('" + rasterTableId + "')\">" + rasterDisplayTitle + "</th></tr></thead><tbody>";
                     }
                     htmlText += '\n<tr><td>' + Eqwc.common.getRasterFieldName(layerTitle, layerChildNode.getAttribute("name")) + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
                     hasAttributes = true;
@@ -724,7 +759,7 @@ function parseFIResult(node) {
             //htmlText += "\n</ul>";
             if (hasAttributes) {
                 if (rasterData) {
-                    htmlText += "\n  </tbody>\n </table></br>";
+                    htmlText += "\n  </tbody>\n </table></div></br>";
                 }
                 //alert(htmlText);
                 featureInfoResultLayers.push(htmlText);
@@ -986,4 +1021,16 @@ function identifyAction(type, id, extra) {
 
     }
 
+}
+
+// Function to toggle table collapse/expand
+function toggleTable(tableId) {
+    var table = document.getElementById(tableId);
+    if (table) {
+        if (table.classList.contains('collapsed')) {
+            table.classList.remove('collapsed');
+        } else {
+            table.classList.add('collapsed');
+        }
+    }
 }
