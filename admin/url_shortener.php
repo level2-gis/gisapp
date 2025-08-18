@@ -38,7 +38,7 @@ function cleanupOldUrls($maxAge = 31536000) { // Default: 1 year
 // Dynamically determine the base URL
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
 $host = $_SERVER['HTTP_HOST'];
-$scriptDir = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/\\');
+$scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 define('URL_BASE', $protocol . $host . $scriptDir);
 define('DATA_DIR', __DIR__ . '/short_urls/');
 
