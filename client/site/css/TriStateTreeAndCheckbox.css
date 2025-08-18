@@ -8,7 +8,7 @@
 }
 
 .layer-checkbox-hidden {
-	padding-left: 13px;
+	padding-left: 23px;
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
@@ -142,5 +142,5 @@ img.x-tree-ec-icon.x-tree-elbow {
 
 /* Fix positioning for filtered layers without geometry (prevent text alignment shift) */
 .layer-checkbox-hidden.filtered {
-	padding-left: 13px !important; /* Ensure the container keeps its left padding when filtered */
+	padding-left: 23px !important; /* Ensure the container keeps its left padding when filtered */
 }

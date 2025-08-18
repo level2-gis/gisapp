@@ -332,7 +332,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/geo-portal.css?v=20250813"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20250813"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20250818"/>
 <!--    <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>-->
     <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20250813"/>
 <!--    <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>-->
