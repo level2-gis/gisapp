@@ -253,7 +253,9 @@ function postLoading() {
     customBeforeMapInit();
 
     //set root node to active layer of layertree
-    layerTree.selectPath(layerTree.root.getPath());
+    if (layerTree && layerTree.root) {
+        layerTree.selectPath(layerTree.root.getPath());
+    }
 
     applyPermalinkParams();
 
@@ -380,6 +382,146 @@ function postLoading() {
     }
     layerTree.checkedLeafs = [];
     layerTree.resumeEvents();
+
+    // Calculate and set dynamic width for LeftPanel based on LayerTree content
+    function calculateOptimalLeftPanelWidth() {
+        var maxWidth = 300; // Start with a higher minimum width
+        var testDiv = document.createElement('div');
+        testDiv.style.position = 'absolute';
+        testDiv.style.visibility = 'hidden';
+        testDiv.style.whiteSpace = 'nowrap';
+        testDiv.style.fontSize = '11px'; // Match TreePanel font size
+        testDiv.style.fontFamily = 'tahoma,arial,verdana,sans-serif'; // Match Ext JS default font
+        testDiv.style.fontWeight = 'normal'; // Ensure normal font weight
+        document.body.appendChild(testDiv);
+
+        // Function to measure text width including indentation
+        function measureNodeWidth(node, depth) {
+            var indentWidth = depth * 18; // Ext JS tree indentation is about 18px per level
+            var iconWidth = 20; // Icon width (increased)
+            var checkboxWidth = 20; // Checkbox width (increased)
+            var padding = 60; // Additional padding for scrollbar, margins, and safety buffer (doubled)
+
+            testDiv.innerHTML = node.text;
+            var textWidth = testDiv.offsetWidth;
+            
+            // Add extra buffer for long text to ensure no horizontal scrolling
+            var safetyBuffer = Math.max(20, textWidth * 0.1); // 10% of text width or 20px minimum
+            
+            return indentWidth + iconWidth + checkboxWidth + textWidth + padding + safetyBuffer;
+        }
+
+        // Recursive function to check all nodes
+        function checkAllNodes(node, depth) {
+            if (node.text) {
+                var nodeWidth = measureNodeWidth(node, depth);
+                if (nodeWidth > maxWidth) {
+                    maxWidth = nodeWidth;
+                }
+            }
+            
+            if (node.childNodes) {
+                for (var i = 0; i < node.childNodes.length; i++) {
+                    checkAllNodes(node.childNodes[i], depth + 1);
+                }
+            }
+        }
+
+        // Check all nodes in the tree
+        if (layerTree.root && layerTree.root.childNodes) {
+            for (var i = 0; i < layerTree.root.childNodes.length; i++) {
+                checkAllNodes(layerTree.root.childNodes[i], 0);
+            }
+        }
+
+        document.body.removeChild(testDiv);
+        
+        // Apply constraints with higher minimum
+        maxWidth = Math.max(300, Math.min(700, maxWidth)); // Between 300 and 700px (increased range)
+        
+        console.log('Calculated optimal width:', maxWidth, 'px');
+        
+        return maxWidth;
+    }
+
+    // Set the calculated width
+    var optimalWidth = calculateOptimalLeftPanelWidth();
+    var leftPanel = Ext.getCmp('LeftPanel');
+    
+    if (leftPanel) {
+        console.log('Before width update - Current width:', leftPanel.getWidth(), 'Setting to:', optimalWidth);
+        
+        // Set width on the panel
+        leftPanel.setWidth(optimalWidth);
+        
+        // Force layout updates on all child components to use full width
+        var collapsiblePanels = leftPanel.items;
+        if (collapsiblePanels) {
+            collapsiblePanels.each(function(childPanel) {
+                if (childPanel.setWidth) {
+                    childPanel.setWidth(optimalWidth);
+                }
+                if (childPanel.doLayout) {
+                    childPanel.doLayout();
+                }
+                
+                // Handle nested components within each child panel
+                if (childPanel.items) {
+                    childPanel.items.each(function(nestedItem) {
+                        if (nestedItem.setWidth) {
+                            nestedItem.setWidth(optimalWidth);
+                        }
+                        if (nestedItem.doLayout) {
+                            nestedItem.doLayout();
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Force layout on specific known child components
+        var descPanel = Ext.getCmp('DescriptionPanel');
+        if (descPanel) {
+            descPanel.setWidth(optimalWidth);
+            descPanel.doLayout();
+        }
+        
+        var searchPanel = Ext.getCmp('SearchPanel');
+        if (searchPanel) {
+            searchPanel.setWidth(optimalWidth);
+            searchPanel.doLayout();
+        }
+        
+        var leftPanelMap = Ext.getCmp('leftPanelMap');
+        if (leftPanelMap) {
+            leftPanelMap.setWidth(optimalWidth);
+            leftPanelMap.doLayout();
+            
+            // Force LayerTree to use full width within leftPanelMap
+            if (layerTree) {
+                layerTree.setWidth(optimalWidth);
+                if (layerTree.doLayout) {
+                    layerTree.doLayout();
+                }
+            }
+        }
+        
+        // Force the parent container to update layout
+        if (leftPanel.ownerCt) {
+            leftPanel.ownerCt.doLayout();
+        }
+        
+        // Also trigger layout on the panel itself
+        leftPanel.doLayout();
+        
+        // For border layout, we may need to update the region size
+        var viewport = Ext.getCmp('GisBrowserPanel');
+        if (viewport) {
+            viewport.doLayout();
+        }
+        
+        console.log('After width update - Panel width:', leftPanel.getWidth());
+    }
 
     if (!initialLoadDone) {
         //deal with myTopToolbar (map tools)
