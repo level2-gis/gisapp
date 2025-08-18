@@ -48,6 +48,37 @@ function customBeforeMapInit() {
 // called after map initialization
 function customAfterMapInit() {
 
+    // Apply permalink styles to layers BEFORE setting initial legends
+    if (urlParams.styles) {
+        var styles = urlParams.styles.split(",");
+        // Get the current visible layers from the thematic layer
+        var visibleLayers = [];
+        if (thematicLayer && thematicLayer.params && thematicLayer.params.LAYERS) {
+            visibleLayers = thematicLayer.params.LAYERS.split(',');
+        }
+        
+        // Apply styles to layer properties before legends are created
+        if (visibleLayers.length === styles.length) {
+            for (var i = 0; i < visibleLayers.length; i++) {
+                var layerId = visibleLayers[i];
+                var styleName = styles[i];
+                
+                if (layerId && styleName && styleName !== 'default' && wmsLoader.layerProperties[layerId]) {
+                    var layer = wmsLoader.layerProperties[layerId];
+                    // Check if the style exists for this layer
+                    var styleExists = layer.styles.some(function(style) {
+                        return style.name === styleName;
+                    });
+                    
+                    if (styleExists) {
+                        // Set the current style BEFORE legends are created
+                        layer.currentStyle = styleName;
+                    }
+                }
+            }
+        }
+    }
+
     // Add legend symbols to the toc for initially visible layers
     // Also trigger prepareEdit in case of Editor plugin
     var treeRoot = layerTree.getNodeById("wmsNode");
@@ -73,10 +104,38 @@ function customAfterMapInit() {
         }
     );
     
-    // Apply permalink styles to legends after initial legends are set
+    // Update context menu style selections after legends are set
     if (urlParams.styles) {
         var styles = urlParams.styles.split(",");
-        updateLayerStylesAndLegends(styles);
+        var visibleLayers = [];
+        if (thematicLayer && thematicLayer.params && thematicLayer.params.LAYERS) {
+            visibleLayers = thematicLayer.params.LAYERS.split(',');
+        }
+        
+        // Update context menu style selections
+        if (visibleLayers.length === styles.length) {
+            for (var i = 0; i < visibleLayers.length; i++) {
+                var layerId = visibleLayers[i];
+                var styleName = styles[i];
+                
+                if (layerId && styleName && styleName !== 'default') {
+                    // Find the layer node in the tree
+                    var layerNode = null;
+                    if (layerTree && layerTree.root) {
+                        layerTree.root.cascade(function(node) {
+                            if (node.isLeaf() && wmsLoader.layerTitleNameMapping[node.text] === layerId) {
+                                layerNode = node;
+                                return false; // Stop iteration
+                            }
+                        });
+                    }
+                    
+                    if (layerNode) {
+                        updateLayerContextMenuStyle(layerNode, layerId, styleName);
+                    }
+                }
+            }
+        }
     }
 }
 
