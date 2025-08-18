@@ -336,6 +336,7 @@ function postLoading() {
 
         layerTree.root.firstChild.expand(true, false);
         // expand all nodes in order to allow toggling checkboxes on deeper levels
+        // Do this silently to prevent visual flashing
         layerTree.root.findChildBy(function () {
             var layerId = this.attributes.layer.metadata.name;
             if (this.isExpandable()) {
@@ -352,20 +353,6 @@ function postLoading() {
             }
             return false;
         }, null, true);
-        // for (var index = 0; index < visibleLayers.length; index++) {
-        //     // toggle checkboxes of visible layers
-        //     layerTree.root.findChildBy(function () {
-        //         if (wmsLoader.layerTitleNameMapping[this.attributes["text"]] == visibleLayers[index]) {
-        //             this.getUI().toggleCheck(true);
-        //             // FIXME: never return true even if node is found to avoid TypeError
-        //             //				return true;
-        //         }
-        //         return false;
-        //     }, null, true);
-        // }
-
-        //we need to get a flat list of visible layers so we can set the layerOrderPanel
-        //getVisibleFlatLayers(layerTree.root.firstChild);
 
         // add abstracts to project node and group nodes
         addAbstractToLayerGroups();
@@ -374,7 +361,7 @@ function postLoading() {
         // info buttons in layer tree
         //addInfoButtonsToLayerTree();
 
-        //expand first level depending on the setting
+        //expand first level depending on the setting - do this before resuming events
         if (!projectData.expandAllGroups) {
             layerTree.root.firstChild.collapseChildNodes(true);
             layerTree.root.firstChild.expand(false, false);
@@ -439,7 +426,7 @@ function postLoading() {
         // Apply constraints with higher minimum
         maxWidth = Math.max(300, Math.min(700, maxWidth)); // Between 300 and 700px (increased range)
         
-        console.log('Calculated optimal width:', maxWidth, 'px');
+        // console.log('Calculated optimal width:', maxWidth, 'px');
         
         return maxWidth;
     }
@@ -449,7 +436,7 @@ function postLoading() {
     var leftPanel = Ext.getCmp('LeftPanel');
     
     if (leftPanel) {
-        console.log('Before width update - Current width:', leftPanel.getWidth(), 'Setting to:', optimalWidth);
+        // console.log('Before width update - Current width:', leftPanel.getWidth(), 'Setting to:', optimalWidth);
         
         // Set width on the panel
         leftPanel.setWidth(optimalWidth);
@@ -520,7 +507,7 @@ function postLoading() {
             viewport.doLayout();
         }
         
-        console.log('After width update - Panel width:', leftPanel.getWidth());
+        // console.log('After width update - Panel width:', leftPanel.getWidth());
     }
 
     if (!initialLoadDone) {
