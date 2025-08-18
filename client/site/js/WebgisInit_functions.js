@@ -1389,24 +1389,7 @@ function postLoading() {
             searchPanel.hide();
         }
 
-        //update layout of left panel and adds a listener to automatically adjust layout after resizing
-        var leftPanel = Ext.getCmp('LeftPanel');
         leftPanel.setTitle('<span class="left-panel-title">' + Ext.decode(Eqwc.settings.title) + '</span>');
-        leftPanel.doLayout();
-        leftPanel.addListener('resize', function (myPanel, adjWidth, adjHeight, rawWidth, rawHeight) {
-            myPanel.items.each(function (item, index, length) {
-                item.width = adjWidth;
-            });
-            myPanel.doLayout();
-
-            geoExtMap.map.updateSize();
-        });
-        leftPanel.addListener('collapse', function (myPanel) {
-            geoExtMap.map.updateSize();
-        });
-        leftPanel.addListener('expand', function (myPanel) {
-            geoExtMap.map.updateSize();
-        });
 
         //measure-controls (distance and area)
         var styleMeasureControls = new OpenLayers.Style();
