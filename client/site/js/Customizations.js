@@ -72,6 +72,12 @@ function customAfterMapInit() {
             }
         }
     );
+    
+    // Apply permalink styles to legends after initial legends are set
+    if (urlParams.styles) {
+        var styles = urlParams.styles.split(",");
+        updateLayerStylesAndLegends(styles);
+    }
 }
 
 // called at the end of GetMapUrls

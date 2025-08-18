@@ -872,6 +872,13 @@ function postLoading() {
                 "SELECTION": urlParams.selection
             });
         }
+        //styles from permalink
+        if (urlParams.styles) {
+            var styles = urlParams.styles.split(",");
+            thematicLayer.mergeNewParams({
+                "STYLES": styles.join(",")
+            });
+        }
 
         //scale listener to write current scale to numberfield
         geoExtMap.map.events.register('zoomend', this, function () {
@@ -2583,12 +2590,12 @@ function scrollToHelpItem(targetId) {
 
 //function that creates a permalink
 function createPermalink() {
-    var visibleLayers = [];
+    var visibleLayers = thematicLayer.params.LAYERS;
     var permalink;
     var permalinkParams = {};
     //visibleLayers = getVisibleLayers(visibleLayers, layerTree.root.firstChild);
     //visibleLayers = uniqueLayersInLegend(visibleLayers);
-    var visibleLayers = thematicLayer.params.LAYERS;
+    var styles = thematicLayer.params.STYLES;
     var visibleBackgroundLayer = getVisibleBackgroundLayer();
     var startExtent = geoExtMap.map.getExtent().toBBOX(1, OpenLayers.Projection.defaults[authid].yx);
 
@@ -2613,6 +2620,10 @@ function createPermalink() {
     }
 
     permalinkParams.e = startExtent;  // startExtent -> e
+
+    if (styles>'') {
+        permalinkParams.t = styles;  // styles -> t
+    }
 
     // visible BackgroundLayer
     //TODO FIX THIS
@@ -3357,6 +3368,141 @@ function layerStyles(layerIds) {
         }
     }
     return styles;
+}
+
+function updateLayerStylesAndLegends(styles) {
+    // Get the current visible layers from the thematic layer
+    var visibleLayers = [];
+    if (thematicLayer && thematicLayer.params && thematicLayer.params.LAYERS) {
+        visibleLayers = thematicLayer.params.LAYERS.split(',');
+    }
+    
+    if (!visibleLayers || visibleLayers.length !== styles.length) {
+        console.warn('Styles array length (' + styles.length + ') does not match visible layers (' + visibleLayers.length + ')');
+        return;
+    }
+    
+    // Update currentStyle for each layer and refresh legends
+    for (var i = 0; i < visibleLayers.length; i++) {
+        var layerId = visibleLayers[i];
+        var styleName = styles[i];
+        
+        if (layerId && styleName && wmsLoader.layerProperties[layerId]) {
+            var layer = wmsLoader.layerProperties[layerId];
+            
+            // Always update the style, even if it's the same (to ensure legend refreshes)
+            if (styleName !== 'default') {
+                // Check if the style exists for this layer
+                var styleExists = layer.styles.some(function(style) {
+                    return style.name === styleName;
+                });
+                
+                if (styleExists) {
+                    // Update the current style
+                    layer.currentStyle = styleName;
+                    
+                    // Find the layer node in the tree
+                    var layerNode = null;
+                    if (layerTree && layerTree.root) {
+                        layerTree.root.cascade(function(node) {
+                            if (node.isLeaf() && wmsLoader.layerTitleNameMapping[node.text] === layerId) {
+                                layerNode = node;
+                                return false; // Stop iteration
+                            }
+                        });
+                    }
+                    
+                    // Refresh legend if layer is visible and node exists
+                    if (layerNode && layerNode.attributes.checked && projectData.layers[layerId]) {
+                        // Remove existing legend
+                        var existingLegend = Ext.get("legend_" + layerId);
+                        if (existingLegend) {
+                            existingLegend.remove();
+                        }
+                        
+                        // Remove expanded legend if exists
+                        var expandedLegend = Ext.get("legend_expanded_" + layerId);
+                        if (expandedLegend) {
+                            expandedLegend.remove();
+                        }
+                        
+                        // Clear from cache to force refresh
+                        projectData.clearLegendCache(layerId);
+                        
+                        // Set new legend with updated style
+                        projectData.setLayerLegend(projectData.layers[layerId], layerNode);
+                        
+                        // Update context menu style selection if menu exists
+                        updateLayerContextMenuStyle(layerNode, layerId, styleName);
+                    }
+                } else {
+                    console.warn('Style "' + styleName + '" not found for layer "' + layerId + '"');
+                }
+            }
+        }
+    }
+}
+
+// Debug function to check layer styles - call from browser console
+function debugLayerStyles() {
+    console.log('=== Debug Layer Styles ===');
+    if (thematicLayer && thematicLayer.params && thematicLayer.params.LAYERS) {
+        var visibleLayers = thematicLayer.params.LAYERS.split(',');
+        for (var i = 0; i < visibleLayers.length; i++) {
+            var layerId = visibleLayers[i];
+            if (wmsLoader.layerProperties[layerId]) {
+                var layer = wmsLoader.layerProperties[layerId];
+                console.log('Layer:', layerId);
+                console.log('  currentStyle:', layer.currentStyle);
+                console.log('  available styles:', layer.styles.map(function(s) { return s.name; }));
+            }
+        }
+    }
+    console.log('=========================');
+}
+
+function updateLayerContextMenuStyle(layerNode, layerId, styleName) {
+    // Update existing context menu style selection without destroying it
+    if (layerNode && layerNode.menu) {
+        try {
+            // Find the style submenu
+            var styleMenu = layerNode.menu.getComponent('contextStyle');
+            if (styleMenu && styleMenu.menu) {
+                // Get all style radio items in the submenu
+                var styleItems = styleMenu.menu.items;
+                if (styleItems) {
+                    styleItems.each(function(item) {
+                        if (item.xtype === 'radio') {
+                            // Check the radio button that matches the new style
+                            var shouldBeChecked = (item.itemId === styleName);
+                            if (item.checked !== shouldBeChecked) {
+                                // Temporarily suspend events to prevent handler errors
+                                var originalHandler = item.handler;
+                                item.handler = null;
+                                
+                                try {
+                                    // Try different methods to set checked state
+                                    if (typeof item.setChecked === 'function') {
+                                        item.setChecked(shouldBeChecked, true); // true = suppress event
+                                    } else if (typeof item.setValue === 'function') {
+                                        item.setValue(shouldBeChecked);
+                                    } else {
+                                        // Direct property setting as fallback
+                                        item.checked = shouldBeChecked;
+                                    }
+                                } finally {
+                                    // Restore the original handler
+                                    item.handler = originalHandler;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            // Silently ignore errors during programmatic updates
+        }
+    }
 }
 
 function addBookmarks() {

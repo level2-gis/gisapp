@@ -159,7 +159,12 @@ if (urlArray.length > 1) {
 			alert(errMessageExtentParamWrongPart1[lang] + "maxExtent" + errMessageExtentParamWrongPart2[lang]);
 		}
 	}
-	
+
+	var styles = urlParams.t;
+	if (styles) {
+		urlParams.styles = styles;
+	}
+
 	// Support single character parameter 's' for selection, fallback to full name
 	var selectionParam = urlParams.s || urlParams.selection;
 	if (selectionParam) {
