@@ -1539,7 +1539,7 @@ function postLoading() {
 
         layerTree.root.appendChild(BgLayerList);
 
-        if (visibleBackgroundLayer != null) {
+        if (visibleBackgroundLayer != null && visibleBackgroundLayer !== '') {
             //initialBGMap = -1;
             // do not show any baseLayer if passed visibleBackgroundLayer is not found
             for (var i = 0; i < baseLayers.length; i++) {
@@ -1548,6 +1548,9 @@ function postLoading() {
                     break;
                 }
             }
+        } else if (visibleBackgroundLayer === '' || urlParams.hasOwnProperty('b')) {
+            // If 'b' parameter is explicitly provided but empty, turn off all base layers
+            initialBGMap = -1;
         }
 
         for (var i = 0; i < baseLayers.length; i++) {
@@ -1567,6 +1570,11 @@ function postLoading() {
 
             bgnode.on('contextMenu', contextMenuHandler);
             bgnode.on('checkchange', baseChangeFunction);
+        }
+        
+        // If no base layer is selected, set currentlyVisibleBaseLayer to null
+        if (initialBGMap === -1) {
+            currentlyVisibleBaseLayer = null;
         }
     }
 
@@ -2653,9 +2661,12 @@ function createPermalink() {
         permalinkParams.t = styles;  // styles -> t
     }
 
-    // visible BackgroundLayer
-    //TODO FIX THIS
-    //permalinkParams.visibleBackgroundLayer = visibleBackgroundLayer;
+    // visible BackgroundLayer (always include 'b' parameter)
+    if (currentlyVisibleBaseLayer) {
+        permalinkParams.b = currentlyVisibleBaseLayer;  // visibleBackgroundLayer -> b
+    } else {
+        permalinkParams.b = '';  // empty 'b' parameter means no base layer
+    }
 
     // visible layers and layer order
     permalinkParams.v = visibleLayers.toString();  // visibleLayers -> v

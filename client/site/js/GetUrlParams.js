@@ -87,8 +87,13 @@ if (urlArray.length > 1) {
 			visibleLayers = visibleLayersParam.split(",");
 		}
 	}
-	if (enableBGMaps && (urlParams.visibleBackgroundLayer != null)) {
-		visibleBackgroundLayer = urlParams.visibleBackgroundLayer;
+	
+	// Support single character parameter 'b' for visibleBackgroundLayer, fallback to full name
+	var visibleBackgroundLayerParam = urlParams.hasOwnProperty('b') ? urlParams.b : urlParams.visibleBackgroundLayer;
+	if (enableBGMaps && (visibleBackgroundLayerParam !== undefined)) {
+		// Store in both short and long form for backward compatibility
+		urlParams.visibleBackgroundLayer = visibleBackgroundLayerParam;
+		visibleBackgroundLayer = visibleBackgroundLayerParam;
 	}
 	
 	// Support single character parameter 'o' for initialLayerOrder, fallback to full name
