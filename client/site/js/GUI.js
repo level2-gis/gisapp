@@ -196,7 +196,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 					}, {
 						xtype: 'panel',
 						title: layerTreeTitleString[lang],  //mapPanelTitleString[lang],
-						layout: 'fit',  // Use fit layout to make TreePanel fill the container
+						layout: 'border',  // Use fit layout to make TreePanel fill the container
 						id: 'leftPanelMap',
                         //iconCls: 'x-cols-icon',
 						border: false,
@@ -208,6 +208,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							frame: false,
 							title: '', //layerTreeTitleString[lang],
 							height: 159,
+							region: 'center',
 							collapsible: false,
 							rootVisible: false,
 							autoScroll: true,   // Enable horizontal scrolling for long text
