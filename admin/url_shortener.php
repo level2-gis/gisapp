@@ -49,7 +49,7 @@ if (!is_dir(DATA_DIR)) {
 
 // Occasionally clean up old URLs (1% chance on each request)
 if (rand(1, 100) === 1) {
-    cleanupOldUrls(2592000); // Delete URLs not accessed for 30 days
+    cleanupOldUrls(31536000); // Delete URLs not accessed for 1 year
 }
 
 /**
