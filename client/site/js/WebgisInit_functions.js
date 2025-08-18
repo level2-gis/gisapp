@@ -845,7 +845,35 @@ function postLoading() {
             var startExtentParams = urlParams.startExtent.split(",");
             var startExtent = new OpenLayers.Bounds(parseFloat(startExtentParams[0]), parseFloat(startExtentParams[1]), parseFloat(startExtentParams[2]), parseFloat(startExtentParams[3]));
             //alert("startExtentOL="+startExtent.toString());
-            geoExtMap.map.zoomToExtent(startExtent,false);
+            
+            // Use zoomToExtent with closest=true to preserve zoom level as closely as possible
+            // This will find the closest zoom level that encompasses the extent
+            geoExtMap.map.zoomToExtent(startExtent, true);
+            
+            // Alternative approach: set the extent more precisely by using setCenter and calculated zoom
+            // Get the center of the desired extent
+            var centerLon = (startExtent.left + startExtent.right) / 2;
+            var centerLat = (startExtent.bottom + startExtent.top) / 2;
+            var center = new OpenLayers.LonLat(centerLon, centerLat);
+            
+            // Calculate the appropriate zoom level based on extent size
+            var extentWidth = startExtent.right - startExtent.left;
+            var extentHeight = startExtent.top - startExtent.bottom;
+            var mapSize = geoExtMap.map.getSize();
+            
+            if (mapSize && mapSize.w > 0 && mapSize.h > 0) {
+                // Calculate resolution needed to fit the extent
+                var resolutionX = extentWidth / mapSize.w;
+                var resolutionY = extentHeight / mapSize.h;
+                var targetResolution = Math.max(resolutionX, resolutionY);
+                
+                // Find the closest zoom level for this resolution
+                var targetZoom = geoExtMap.map.getZoomForResolution(targetResolution, true);
+                
+                // Set center and zoom to match the original extent as closely as possible
+                geoExtMap.map.setCenter(center, targetZoom);
+            }
+            
             //alert(geoExtMap.map.getExtent().toString());
         } //else {
         //why this?, map is already loaded, commenting
