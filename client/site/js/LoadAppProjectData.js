@@ -460,21 +460,15 @@ projectData.scaleLegendImage = function(img) {
 
 projectData.determineLegendCssClass = function(layername, style, callback) {
     // Create JSON request to get legend details
-    var urlParams = {
+    var legendJsonUrl = wmsURI + Ext.urlEncode({
         SERVICE: "WMS",
         VERSION: "1.3.0",
         REQUEST: "GetLegendGraphics",
         FORMAT: "application/json",
         SHOWRULEDETAILS: "TRUE",
-        LAYERS: layername
-    };
-    
-    // Only include STYLES parameter if style is not 'default'
-    if (style && style[0] !== 'default') {
-        urlParams.STYLES = style;
-    }
-    
-    var legendJsonUrl = wmsURI + Ext.urlEncode(urlParams);
+        LAYERS: layername,
+        STYLES: style || ''
+    });
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", legendJsonUrl, true);
