@@ -394,3 +394,20 @@ Eqwc.settings.fieldTemplates = {};
  * @type {string}
  */
 Eqwc.settings.toolTipEmptyText = 'no data';
+
+/**
+ * Text for main group in Web Client. Leave empty to display Project Title from QGIS project.
+ * Set it to fixed text, like "project layers", since title is already visible in Web Client.
+ * @type {string}
+ * @default ''
+ */
+Eqwc.settings.qgisProjectGroupText = '';
+
+/**
+ * Enable URL shortener service for permalink generation.
+ * > Note: To use prepared url_shortener that stores long url in text files enable it with: '/gisapp/admin/url_shortener.php'.
+ * Check if folder short_urls is created in gisapp/admin/ and that is writable.
+ * @type {string}
+ * @default ''
+ */
+Eqwc.settings.permaLinkURLShortener = '';
