@@ -291,6 +291,11 @@ Eqwc.plugins["geoportal_support"].customToolbarLoad = function () {
         html += '<h3 style="color: #1976D2; border-bottom: 2px solid #2196F3; padding-bottom: 5px; margin-bottom: 15px; font-size: 18px;">📖 <a href="javascript:void(0)" onclick="window.open(\'https://site.geo-portal.si/sv_zacetek.html\')" style="color: #1976D2; text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">Uporabniška navodila</a></h3>';
         html += '</div>';
         
+        // Stanje podatkov section
+        html += '<div style="margin-bottom: 20px;">';
+        html += '<h3 style="color: #C62828; border-bottom: 2px solid #E53935; padding-bottom: 5px; margin-bottom: 15px; font-size: 18px;">🔄 <a href="javascript:void(0)" onclick="window.open(\'https://site.geo-portal.si/podatki.html\')" style="color: #C62828; text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">Stanje podatkov</a></h3>';
+        html += '</div>';
+
         // Zadnje novice section
         html += '<div style="margin-bottom: 20px;">';
         html += '<h3 style="color: #2E7D32; border-bottom: 2px solid #4CAF50; padding-bottom: 5px; margin-bottom: 15px; font-size: 18px;">📰 Zadnje novice</h3>';
@@ -352,7 +357,7 @@ Eqwc.plugins["geoportal_support"].customToolbarLoad = function () {
         
         // Contact section
         html += '<div style="margin-bottom: 20px;">';
-        html += '<h3 style="color: #7B1FA2; border-bottom: 2px solid #9C27B0; padding-bottom: 5px; margin-bottom: 15px; font-size: 18px;">📧 <a href="javascript:void(0)" onclick="window.open(\'https://site.geo-portal.si/podpora.html\')" style="color: #7B1FA2; text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">Podpora</a></h3>';
+        html += '<h3 style="color: #7B1FA2; border-bottom: 2px solid #9C27B0; padding-bottom: 5px; margin-bottom: 15px; font-size: 18px;">🎧 <a href="javascript:void(0)" onclick="window.open(\'https://site.geo-portal.si/podpora.html\')" style="color: #7B1FA2; text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">Podpora</a></h3>';
         //html += '<div style="padding: 15px; background-color: #f3e5f5; border-left: 3px solid #9C27B0; border-radius: 4px;">';
         //html += '<div style="font-weight: bold; margin-bottom: 8px;">GEO-PORTAL podpora</div>';
         //html += '<div style="margin-bottom: 4px;">📧 Email: <a href="mailto:info@geo-portal.si" style="color: #1976D2;">info@geo-portal.si</a></div>';
