@@ -639,8 +639,9 @@ function parseFIResult(node) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
 
-                            //skip primary key
-                            if (attName == projectData.layers[layerId].key) {
+                            //skip primary key unless it exists in fieldTemplates
+                            var key = projectData.layers[layerId].key;
+                            if (attName == key && !Eqwc.settings.fieldTemplates[key.toUpperCase()]) {
                                 attributeNode = attributeNode.nextSibling;
                                 continue;
                             }
