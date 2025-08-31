@@ -33,6 +33,73 @@
     padding: 4px 12px;
 }
 
+/* Typeahead styles */
+.typeahead-container {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 9999;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.typeahead-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.typeahead-category {
+    padding: 8px 12px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-size: 14px;
+}
+
+.typeahead-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    background-color: white;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.typeahead-item:hover {
+    background-color: #e6f3ff !important;
+}
+
+.typeahead-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .typeahead-container {
+        max-height: 250px;
+    }
+    
+    .typeahead-item {
+        padding: 12px 15px;
+        font-size: 16px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .typeahead-category {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
+
 
 /*.ui-icon-logo {
   background-image: url("../img/glarus_logo.png");
