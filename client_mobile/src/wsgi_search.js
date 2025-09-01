@@ -2,7 +2,7 @@
  * WSGI search from QGIS Web Client with jQuery Mobile Autocomplete
  */
 
-function WsgiSearch(url, geomUrl, showHighlightLabel, searchTables) {
+function WsgiSearch(url, geomUrl, showHighlightLabel, searchTables, filter, connect) {
     // search URL
     this.url = url;
     // geometry URL for highlighting
@@ -10,6 +10,8 @@ function WsgiSearch(url, geomUrl, showHighlightLabel, searchTables) {
     // show highlight label
     this.showHighlightLabel = showHighlightLabel;
     this.searchTables = searchTables;
+    this.filter = filter;
+    this.connect = connect;
     
     // Autocomplete settings
     this.autocompleteSettings = {
@@ -249,13 +251,21 @@ WsgiSearch.prototype.jumpToResult = function(result) {
  */
 WsgiSearch.prototype.submitAutocomplete = function(searchParams, callback) {
 
+    var data = {
+        query: $.trim(searchParams),
+        searchtables: this.searchTables,
+        srs: projectData.crs.split(':')[1]
+    };
+    if (this.filter) {
+        data.filter = this.filter;
+    }
+    if (this.connect) {
+        data.connect = this.connect;
+    }
+
     var request = $.ajax({
         url: this.url,
-        data: {
-            query: $.trim(searchParams),
-            searchtables: this.searchTables,
-            srs: projectData.crs.split(':')[1]
-        },
+        data: data,
         dataType: 'json',
         context: this,
         timeout: 8000
