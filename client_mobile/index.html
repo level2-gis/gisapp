@@ -169,8 +169,9 @@
         <div class="panel-content">
           <b>Adresssuche</b>
           <form id="searchForm" action=".">
-            <input id="searchInput" type="search" name="search" value="">
+            <input id="searchInput" type="search" name="search" value="" placeholder="Search places...">
           </form>
+          <ul id="searchAutocomplete" data-role="listview" data-inset="true" data-filter="false"></ul>
           <div id="searchResults" hidden>
             <b>Suchresultat</b>
             <ul id="searchResultsList" data-role="listview" class="scrollable"></ul>

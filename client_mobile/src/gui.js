@@ -1587,7 +1587,17 @@ Gui.initViewer = function () {
     // search
     if (!Config.search) {
         $("#btnSearching").addClass('ui-disabled');
+    } else {
+        // Initialize jQuery Mobile autocomplete
+        if (Config.search.initAutocomplete) {
+            Config.search.initAutocomplete('#searchInput', '#searchAutocomplete', {
+                minLength: 2,
+                delay: 300,
+                maxResults: 15
+            });
+        }
     }
+    
     var resetSearchResults = function () {
         // reset search panel
         $('#searchResults').hide();
@@ -1595,7 +1605,10 @@ Gui.initViewer = function () {
         Map.setHighlightLayer(null);
         //reset marker
         Map.searchMarker.setPosition(undefined);
-
+        // clear autocomplete
+        if ($('#searchAutocomplete').length) {
+            $('#searchAutocomplete').empty().listview('refresh');
+        }
     };
     $('#searchInput').bind('change', function (e) {
         if ($(this).val() == "") {
@@ -1603,20 +1616,13 @@ Gui.initViewer = function () {
             resetSearchResults();
         }
     });
+    
+    // Keep original form submit for backward compatibility (optional)
     $('#searchForm').bind('submit', function (e) {
-        resetSearchResults();
-
-        var searchString = $('#searchInput').val();
-        if (searchString != "") {
-            // submit search
-            Config.search.submit(searchString, Gui.showSearchResults);
-            // close virtual keyboard
-            $('#searchInput').blur();
-        }
-
-        // block form submit
+        // block form submit - we only use autocomplete now
         e.preventDefault();
         e.stopPropagation();
+        return false;
     });
     $('#searchResultsList').delegate('li', 'vclick', function () {
         if ($(this).data('point') != null) {

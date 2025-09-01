@@ -1,5 +1,5 @@
 /**
- * WSGI search from QGIS Web Client
+ * WSGI search from QGIS Web Client with jQuery Mobile Autocomplete
  */
 
 function WsgiSearch(url, geomUrl, showHighlightLabel, searchTables) {
@@ -9,12 +9,200 @@ function WsgiSearch(url, geomUrl, showHighlightLabel, searchTables) {
     this.geomUrl = geomUrl;
     // show highlight label
     this.showHighlightLabel = showHighlightLabel;
-
     this.searchTables = searchTables;
+    
+    // Autocomplete settings
+    this.autocompleteSettings = {
+        minLength: 2,
+        delay: 300,
+        maxResults: 20
+    };
 }
 
 // inherit from Search
 WsgiSearch.prototype = new Search();
+
+/**
+ * Initialize jQuery Mobile autocomplete on a listview element
+ */
+WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector, options) {
+    var self = this;
+    var $input = $(inputSelector);
+    var $listview = $(listviewSelector);
+    var settings = $.extend({}, this.autocompleteSettings, options || {});
+    
+    var searchTimeout;
+    var currentRequest;
+    
+    // Function to populate autocomplete results
+    var populateResults = function(results) {
+        $listview.empty();
+        
+        if (!results || results.length === 0) {
+            $listview.append('<li data-role="list-divider">No results found</li>');
+            $listview.listview('refresh');
+            return;
+        }
+        
+        var totalItems = 0;
+        
+        for (var i = 0; i < results.length && totalItems < settings.maxResults; i++) {
+            var categoryResults = results[i];
+            
+            // Add category divider
+            if (categoryResults.category != null) {
+                $listview.append('<li data-role="list-divider">' + categoryResults.category + '</li>');
+            }
+            
+            // Add results
+            for (var j = 0; j < categoryResults.results.length && totalItems < settings.maxResults; j++) {
+                var result = categoryResults.results[j];
+                var $item = $('<li><a href="#">' + result.name + '</a></li>');
+                
+                // Store result data
+                $item.data('result', result);
+                
+                // Click handler
+                $item.find('a').click(function(e) {
+                    e.preventDefault();
+                    var selectedResult = $(this).parent().data('result');
+                    
+                    // Set input value
+                    $input.val(selectedResult.name);
+                    
+                    // Clear autocomplete
+                    $listview.empty().listview('refresh');
+                    
+                    // Hide the input (close virtual keyboard)
+                    $input.blur();
+                    
+                    // Handle selection
+                    self.handleSelection(selectedResult);
+                });
+                
+                $listview.append($item);
+                totalItems++;
+            }
+        }
+        
+        $listview.listview('refresh');
+    };
+    
+    // Search function with debouncing
+    var performSearch = function(query) {
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        
+        searchTimeout = setTimeout(function() {
+            if (currentRequest) {
+                currentRequest.abort();
+            }
+            
+            if (query.length >= settings.minLength) {
+                currentRequest = self.submitAutocomplete(query, populateResults);
+            } else {
+                $listview.empty().listview('refresh');
+            }
+        }, settings.delay);
+    };
+    
+    // Bind input events
+    $input.on('input keyup', function() {
+        var query = $.trim($(this).val());
+        performSearch(query);
+    });
+    
+    // Clear results when input is cleared
+    $input.on('change', function() {
+        if ($(this).val() === '') {
+            $listview.empty().listview('refresh');
+        }
+    });
+    
+    return this;
+};
+
+/**
+ * Handle autocomplete selection
+ */
+WsgiSearch.prototype.handleSelection = function(result) {
+    // Close search panel if it exists
+    if ($('#panelSearch').length) {
+        $('#panelSearch').panel('close');
+    }
+    
+    // Jump to result if bbox is available
+    if (result.bbox) {
+        this.jumpToResult(result);
+    }
+    
+    // Highlight geometry if available
+    if (result.highlight) {
+        this.highlight(result.highlight, function(layer) {
+            if (typeof Map !== 'undefined' && Map.setHighlightLayer) {
+                Map.setHighlightLayer(layer);
+            }
+        });
+    }
+    
+    // Reset search marker and set new position
+    if (typeof Map !== 'undefined' && Map.searchMarker) {
+        Map.searchMarker.setPosition(undefined);
+        if (result.bbox) {
+            var centerX = (result.bbox[0] + result.bbox[2]) / 2;
+            var centerY = (result.bbox[1] + result.bbox[3]) / 2;
+            Map.searchMarker.setPosition([centerX, centerY]);
+        }
+    }
+};
+
+/**
+ * Jump to search result
+ */
+WsgiSearch.prototype.jumpToResult = function(result) {
+    if (result.bbox && typeof Map !== 'undefined') {
+        var extent = result.bbox;
+        if (Map.zoomToExtent) {
+            Map.zoomToExtent(extent, Config.map.minScaleDenom.search);
+        }
+        
+        // Disable following if available
+        if (Map.toggleFollowing) {
+            Map.toggleFollowing(false);
+        }
+    }
+};
+
+/**
+ * Submit autocomplete search query (optimized for autocomplete)
+ */
+WsgiSearch.prototype.submitAutocomplete = function(searchParams, callback) {
+    var request = $.ajax({
+        url: this.url,
+        data: {
+            query: $.trim(searchParams),
+            searchtables: this.searchTables,
+            srs: projectData.crs.split(':')[1]
+        },
+        dataType: 'json',
+        context: this,
+        timeout: 8000
+    });
+
+    request.done(function(data, status) {
+        this.parseResults(data, status, callback);
+    });
+
+    request.fail(function(jqXHR, status) {
+        if (status !== 'abort') {
+            console.warn('Autocomplete search failed:', jqXHR.status, jqXHR.statusText);
+        }
+        callback([]);
+    });
+    
+    return request;
+};
 
 /**
  * submit search query

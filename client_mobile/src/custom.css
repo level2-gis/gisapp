@@ -33,6 +33,29 @@
     padding: 4px 12px;
 }
 
+/* Autocomplete search styling */
+#searchAutocomplete {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#searchAutocomplete .ui-li-divider {
+    background: #e0e0e0;
+    border: 1px solid #ccc;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#searchAutocomplete .ui-li a {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#searchAutocomplete .ui-li:last-child a {
+    border-bottom: none;
+}
+
 
 /*.ui-icon-logo {
   background-image: url("../img/glarus_logo.png");
