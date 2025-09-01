@@ -1587,46 +1587,7 @@ Gui.initViewer = function () {
     // search
     if (!Config.search) {
         $("#btnSearching").addClass('ui-disabled');
-    } else {
-        // Initialize typeahead functionality if available
-        if (Config.search.initTypeahead) {
-            Config.search.initTypeahead('#searchInput', {
-                minLength: 2,
-                delay: 300,
-                maxResults: 10
-            });
-            
-            // Handle typeahead selection
-            $('#searchInput').on('typeahead:select', function(event, result) {
-                console.log('Typeahead selected:', result);
-                
-                // Reset existing search results
-                resetSearchResults();
-                
-                // Close search panel
-                $('#panelSearch').panel('close');
-                
-                // Jump to result if bbox is available
-                if (result.bbox) {
-                    var point = {
-                        getCoordinates: function() {
-                            return [(result.bbox[0] + result.bbox[2]) / 2, (result.bbox[1] + result.bbox[3]) / 2];
-                        },
-                        getExtent: function() {
-                            return result.bbox;
-                        }
-                    };
-                    Gui.jumpToSearchResult(point);
-                }
-                
-                // Highlight geometry if available
-                if (result.highlight) {
-                    Config.search.highlight(result.highlight, Map.setHighlightLayer);
-                }
-            });
-        }
     }
-    
     var resetSearchResults = function () {
         // reset search panel
         $('#searchResults').hide();
