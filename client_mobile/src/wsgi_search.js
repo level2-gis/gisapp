@@ -382,7 +382,8 @@ WsgiSearch.prototype.highlight = function (highlight, callback) {
             searchtable: highlight.searchtable,
             displaytext: highlight.displaytext,
             showlayer: highlight.showlayer,
-            srs: projectData.crs.split(':')[1]
+            srs: projectData.crs.split(':')[1],
+            connect: highlight.connect
         },
         dataType: 'text'
     });
