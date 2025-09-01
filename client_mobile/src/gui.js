@@ -1630,7 +1630,7 @@ Gui.initViewer = function () {
                 // Initialize overlay version
                 if ($('#searchInputOverlay').length > 0) {
 
-                    $('#searchInputOverlay').attr('placeholder', projectData.wsgi.emptytext || I18n.search.placeholder);
+                    $('#searchInputOverlay').attr('placeholder', Config.search.emptyText);
 
                     Config.search.initAutocomplete('#searchInputOverlay', '#searchAutocompleteOverlay');
                 }
