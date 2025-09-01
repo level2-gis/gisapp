@@ -96,7 +96,9 @@ I18n.title = "Mobilversion";
 I18n.search = {
     header: "Adresssuche",
     results: "Suchergebnis",
-    failed: "Suche fehlgeschlagen:"
+    failed: "Suche fehlgeschlagen:",
+    placeholder: "Search...",
+    noResults: "No results found"
 };
 
 I18n.properties = {

@@ -33,14 +33,48 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
     
     var searchTimeout;
     var currentRequest;
+
+    // If listview doesn't exist, create it
+    if ($listview.length === 0) {
+        var listviewId = listviewSelector.replace('#', '');
+        var $newListview = $('<ul id="' + listviewId + '" data-role="listview" data-inset="true" data-filter="false"></ul>');
+        
+        // Insert after the search input's form
+        $input.closest('form').after($newListview);
+        $listview = $newListview;
+    }
+    
+    // Ensure listview is properly initialized
+    if ($listview.length > 0) {
+        try {
+            if (!$listview.hasClass('ui-listview')) {
+                $listview.listview();
+                console.log('Listview initialized');
+            } else {
+                //console.log('Listview already initialized');
+            }
+        } catch (e) {
+            console.log('Listview initialization error:', e);
+        }
+    }
     
     // Function to populate autocomplete results
     var populateResults = function(results) {
+
+        if (!$listview || $listview.length === 0) {
+            console.error('Listview not available for populating results');
+            return;
+        }
+        
         $listview.empty();
         
         if (!results || results.length === 0) {
-            $listview.append('<li data-role="list-divider">No results found</li>');
-            $listview.listview('refresh');
+            $listview.append('<li data-role="list-divider">'+I18n.search.noResults+'</li>');
+            try {
+                $listview.listview('refresh');
+            } catch (e) {
+                console.log('Error refreshing empty listview:', e);
+            }
             return;
         }
         
@@ -65,13 +99,26 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
                 // Click handler
                 $item.find('a').click(function(e) {
                     e.preventDefault();
-                    var selectedResult = $(this).parent().data('result');
+                    
+                    // Get the selected result from the parent li element
+                    var $li = $(this).closest('li');
+                    var selectedResult = $li.data('result');
+
+                    if (!selectedResult) {
+                        console.error('No result data found on clicked item');
+                        return;
+                    }
                     
                     // Set input value
                     $input.val(selectedResult.name);
                     
                     // Clear autocomplete
-                    $listview.empty().listview('refresh');
+                    $listview.empty();
+                    try {
+                        $listview.listview('refresh');
+                    } catch (e) {
+                        console.log('Error refreshing listview after selection:', e);
+                    }
                     
                     // Hide the input (close virtual keyboard)
                     $input.blur();
@@ -85,11 +132,24 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
             }
         }
         
-        $listview.listview('refresh');
+        // Refresh listview to apply jQuery Mobile styling
+        try {
+            $listview.listview('refresh');
+        } catch (e) {
+            console.log('Error refreshing listview:', e);
+            // Try to reinitialize if refresh fails
+            try {
+                $listview.listview();
+                console.log('Listview reinitialized');
+            } catch (e2) {
+                console.log('Error reinitializing listview:', e2);
+            }
+        }
     };
     
     // Search function with debouncing
     var performSearch = function(query) {
+
         if (searchTimeout) {
             clearTimeout(searchTimeout);
         }
@@ -102,7 +162,12 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
             if (query.length >= settings.minLength) {
                 currentRequest = self.submitAutocomplete(query, populateResults);
             } else {
-                $listview.empty().listview('refresh');
+                $listview.empty();
+                try {
+                    $listview.listview('refresh');
+                } catch (e) {
+                    console.log('Error clearing listview:', e);
+                }
             }
         }, settings.delay);
     };
@@ -116,7 +181,12 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
     // Clear results when input is cleared
     $input.on('change', function() {
         if ($(this).val() === '') {
-            $listview.empty().listview('refresh');
+            $listview.empty();
+            try {
+                $listview.listview('refresh');
+            } catch (e) {
+                console.log('Error clearing listview on change:', e);
+            }
         }
     });
     
@@ -127,10 +197,10 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
  * Handle autocomplete selection
  */
 WsgiSearch.prototype.handleSelection = function(result) {
-    // Close search panel if it exists
-    if ($('#panelSearch').length) {
-        $('#panelSearch').panel('close');
-    }
+    // Close search overlay and clear input
+    $('#searchOverlay').hide();
+    $('#searchInputOverlay').val('');
+    $('#searchAutocompleteOverlay').empty();
     
     // Jump to result if bbox is available
     if (result.bbox) {
@@ -147,14 +217,14 @@ WsgiSearch.prototype.handleSelection = function(result) {
     }
     
     // Reset search marker and set new position
-    if (typeof Map !== 'undefined' && Map.searchMarker) {
-        Map.searchMarker.setPosition(undefined);
-        if (result.bbox) {
-            var centerX = (result.bbox[0] + result.bbox[2]) / 2;
-            var centerY = (result.bbox[1] + result.bbox[3]) / 2;
-            Map.searchMarker.setPosition([centerX, centerY]);
-        }
-    }
+    // if (typeof Map !== 'undefined' && Map.searchMarker) {
+    //     Map.searchMarker.setPosition(undefined);
+    //     if (result.bbox) {
+    //         var centerX = (result.bbox[0] + result.bbox[2]) / 2;
+    //         var centerY = (result.bbox[1] + result.bbox[3]) / 2;
+    //         Map.searchMarker.setPosition([centerX, centerY]);
+    //     }
+    // }
 };
 
 /**
@@ -178,6 +248,7 @@ WsgiSearch.prototype.jumpToResult = function(result) {
  * Submit autocomplete search query (optimized for autocomplete)
  */
 WsgiSearch.prototype.submitAutocomplete = function(searchParams, callback) {
+
     var request = $.ajax({
         url: this.url,
         data: {
@@ -195,6 +266,7 @@ WsgiSearch.prototype.submitAutocomplete = function(searchParams, callback) {
     });
 
     request.fail(function(jqXHR, status) {
+        console.error('AJAX request failed:', jqXHR.status, jqXHR.statusText, status);
         if (status !== 'abort') {
             console.warn('Autocomplete search failed:', jqXHR.status, jqXHR.statusText);
         }

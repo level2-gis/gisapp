@@ -33,29 +33,55 @@
     padding: 4px 12px;
 }
 
-/* Autocomplete search styling */
-#searchAutocomplete {
-    max-height: 300px;
+/* Search Overlay Styles */
+#searchOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+}
+
+.search-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    max-height: calc(100vh - 40px);
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    /*box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);*/
+}
+
+.search-header {
+    display: block;
+    align-items: center;
+    padding: 15px 20px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-header #searchInputOverlay {
+    flex: 1;
+    margin: 2px;
+    /*border: 1px solid #ccc;*/
+    /*border-radius: 4px;*/
+    padding: 12px 0 12px 15px;
+    font-size: 16px;
+    background: #f8f8f8;
+}
+
+/* Autocomplete search styling for overlay */
+#searchAutocompleteOverlay {
+    max-height: calc(100vh - 140px);
     overflow-y: auto;
+    margin: 0;
+    background: white;
+    padding: 0;
 }
-
-#searchAutocomplete .ui-li-divider {
-    background: #e0e0e0;
-    border: 1px solid #ccc;
-    color: #333;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-#searchAutocomplete .ui-li a {
-    padding: 12px 15px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-#searchAutocomplete .ui-li:last-child a {
-    border-bottom: none;
-}
-
 
 /*.ui-icon-logo {
   background-image: url("../img/glarus_logo.png");

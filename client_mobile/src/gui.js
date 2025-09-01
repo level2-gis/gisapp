@@ -34,7 +34,6 @@ Gui.updateLayout = function () {
     $('#panelLayerAll').height(window.innerHeight - 100);
     $('#panelLayerOrder').height(window.innerHeight - 100);
     $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 80);
-    $('#panelSearch .ui-listview').height(window.innerHeight);
     $('#panelPropertiesMap').height(window.innerHeight - 100);
     $('#panelPropertiesEditor').height(window.innerHeight - 100);
 };
@@ -1066,7 +1065,7 @@ Gui.jumpToSearchResult = function (point) {
     //$('#switchFollow').slider('refresh');
     Map.toggleFollowing(false);
 
-    $('#panelSearch').panel('close');
+    $('#searchOverlay').hide(); // Hide search overlay
 };
 
 // binds the reorder functionality to the visible layer list
@@ -1080,8 +1079,7 @@ Gui.updateTranslations = function () {
     var titleBarText = projectData.title;
     document.title = Eqwc.settings.gisPortalTitle ? titleBarText + ' | ' + Eqwc.settings.gisPortalTitle : titleBarText;
 
-    $('#panelSearch b').html(I18n.search.header);
-    $('#panelSearch #searchResults b').html(I18n.search.results);
+    // Search panel no longer used - all text is in overlay
 
     $('#panelProperties #buttonPropertiesMap .ui-btn-text').html(I18n.properties.header);
 
@@ -1588,42 +1586,61 @@ Gui.initViewer = function () {
     if (!Config.search) {
         $("#btnSearching").addClass('ui-disabled');
     } else {
-        // Initialize jQuery Mobile autocomplete
-        if (Config.search.initAutocomplete) {
-            Config.search.initAutocomplete('#searchInput', '#searchAutocomplete', {
-                minLength: 2,
-                delay: 300,
-                maxResults: 15
-            });
-        }
+        // Handle search button click to show overlay and reset previous search
+        $('#btnSearching').click(function(e) {
+            e.preventDefault();
+            
+            // Reset previous search results and markers
+            Map.setHighlightLayer(null);
+            Map.searchMarker.setPosition(undefined);
+            
+            // Clear any existing search input and results
+            $('#searchInputOverlay').val('');
+            $('#searchAutocompleteOverlay').empty();
+            
+            // Show overlay and focus input
+            $('#searchOverlay').show();
+            setTimeout(function() {
+                $('#searchInputOverlay').focus();
+            }, 100);
+        });
+        
+        // Close search overlay when clicking outside
+        $('#searchOverlay').click(function(e) {
+            if (e.target === this) {
+                $(this).hide();
+                $('#searchInputOverlay').val('');
+                $('#searchAutocompleteOverlay').empty();
+            }
+        });
+        
+        // Close search overlay on Escape key
+        $(document).keyup(function(e) {
+            if (e.keyCode === 27 && $('#searchOverlay').is(':visible')) { // ESC key
+                $('#searchOverlay').hide();
+                $('#searchInputOverlay').val('');
+                $('#searchAutocompleteOverlay').empty();
+            }
+        });
+        
+        // Initialize autocomplete for overlay
+        setTimeout(function() {
+
+            if (Config.search.initAutocomplete) {
+                // Initialize overlay version
+                if ($('#searchInputOverlay').length > 0) {
+
+                    $('#searchInputOverlay').attr('placeholder', projectData.wsgi.emptytext || I18n.search.placeholder);
+
+                    Config.search.initAutocomplete('#searchInputOverlay', '#searchAutocompleteOverlay');
+                }
+            } else {
+                console.error('initAutocomplete method not found on Config.search');
+            }
+        }, 100);
     }
     
-    var resetSearchResults = function () {
-        // reset search panel
-        $('#searchResults').hide();
-        // reset highlight
-        Map.setHighlightLayer(null);
-        //reset marker
-        Map.searchMarker.setPosition(undefined);
-        // clear autocomplete
-        if ($('#searchAutocomplete').length) {
-            $('#searchAutocomplete').empty().listview('refresh');
-        }
-    };
-    $('#searchInput').bind('change', function (e) {
-        if ($(this).val() == "") {
-            // clear search
-            resetSearchResults();
-        }
-    });
-    
-    // Keep original form submit for backward compatibility (optional)
-    $('#searchForm').bind('submit', function (e) {
-        // block form submit - we only use autocomplete now
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    });
+    // Old panel-related search code removed since we only use overlay now
     $('#searchResultsList').delegate('li', 'vclick', function () {
         if ($(this).data('point') != null) {
             Gui.jumpToSearchResult($(this).data('point'));
@@ -1720,10 +1737,10 @@ Gui.initViewer = function () {
     }
 
     // workaround for erroneus map click despite open panels on iOS
-    $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelopen', function () {
+    $('#panelFeatureInfo, #panelLayer').on('panelopen', function () {
         Map.toggleClickHandling(false);
     });
-    $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function () {
+    $('#panelFeatureInfo, #panelLayer').on('panelclose', function () {
         if (!Map.measurementActive) {
             Map.toggleClickHandling(true);
         }

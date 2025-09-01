@@ -99,7 +99,9 @@ I18n.title = "Mobile Viewer";
 I18n.search = {
     header: "Cerca",
     results: "Risultati",
-    failed: "Ricerca fallita:"
+    failed: "Ricerca fallita:",
+    placeholder: "Search...",
+    noResults: "No results found"
 };
 
 I18n.properties = {
