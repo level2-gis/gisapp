@@ -99,7 +99,7 @@ function goMobile($lang, $scanner) {
         <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
         <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20241119"/>
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20250901"/>
     </head>
     <body>
     <div data-role="page" id="mappage" data-theme="c">
