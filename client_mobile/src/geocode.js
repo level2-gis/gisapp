@@ -31,13 +31,8 @@ Geocode.prototype.initAutocomplete = function(inputSelector, listviewSelector, o
     var searchTimeout;
     var currentRequest;
     
-    console.log('Initializing Geocode autocomplete for:', inputSelector, listviewSelector);
-    console.log('Input element found:', $input.length > 0);
-    console.log('Listview element found:', $listview.length > 0);
-    
     // If listview doesn't exist, create it
     if ($listview.length === 0) {
-        console.log('Creating listview element:', listviewSelector);
         var listviewId = listviewSelector.replace('#', '');
         var $newListview = $('<ul id="' + listviewId + '" data-role="listview" data-inset="true" data-filter="false"></ul>');
         
@@ -45,13 +40,11 @@ Geocode.prototype.initAutocomplete = function(inputSelector, listviewSelector, o
         $input.closest('form').after($newListview);
         $listview = $newListview;
         
-        console.log('Listview created, length:', $listview.length);
-        
         // Initialize jQuery Mobile listview
         try {
             $listview.listview();
         } catch (e) {
-            console.log('Error initializing new listview:', e);
+            console.error('Error initializing new listview:', e);
         }
     }
     
@@ -72,7 +65,6 @@ Geocode.prototype.initAutocomplete = function(inputSelector, listviewSelector, o
         
         if (query.length >= settings.minLength) {
             searchTimeout = setTimeout(function() {
-                console.log('Geocode search triggered for:', query);
                 currentRequest = self.submitAutocomplete(query, $listview, settings);
             }, settings.delay);
         } else {
@@ -87,7 +79,6 @@ Geocode.prototype.initAutocomplete = function(inputSelector, listviewSelector, o
         var selectedResult = $li.data('result');
         
         if (selectedResult) {
-            console.log('Geocode result selected:', selectedResult);
             self.handleSelection(selectedResult);
         } else {
             console.error('No Geocode result data found on clicked item');
@@ -103,12 +94,10 @@ Geocode.prototype.initAutocomplete = function(inputSelector, listviewSelector, o
                     $listview.listview('refresh');
                 }
             } catch (e) {
-                console.log('Error refreshing cleared listview:', e);
+                console.error('Error refreshing cleared listview:', e);
             }
         }
     });
-    
-    console.log('Geocode autocomplete initialized successfully');
 };
 
 /**
@@ -117,11 +106,7 @@ Geocode.prototype.initAutocomplete = function(inputSelector, listviewSelector, o
 Geocode.prototype.submitAutocomplete = function(query, $listview, settings) {
     var self = this;
     
-    console.log('Submitting Geocode autocomplete search:', query);
-    
     return this.submit(query, function(results) {
-        console.log('Geocode autocomplete results received:', results);
-        
         // Limit results based on settings
         var limitedResults = [];
         var totalCount = 0;
@@ -159,7 +144,7 @@ Geocode.prototype.populateResults = function($listview, results) {
         try {
             $listview.listview('refresh');
         } catch (e) {
-            console.log('Error refreshing empty Geocode listview:', e);
+            console.error('Error refreshing empty Geocode listview:', e);
         }
         return;
     }
@@ -191,10 +176,8 @@ Geocode.prototype.populateResults = function($listview, results) {
             $listview.listview();
         }
     } catch (e) {
-        console.log('Error refreshing Geocode listview:', e);
+        console.error('Error refreshing Geocode listview:', e);
     }
-    
-    console.log('Geocode results populated:', totalItems, 'items');
 };
 
 /**

@@ -53,12 +53,9 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
         try {
             if (!$listview.hasClass('ui-listview')) {
                 $listview.listview();
-                console.log('Listview initialized');
-            } else {
-                //console.log('Listview already initialized');
             }
         } catch (e) {
-            console.log('Listview initialization error:', e);
+            console.error('Listview initialization error:', e);
         }
     }
     
@@ -77,7 +74,7 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
             try {
                 $listview.listview('refresh');
             } catch (e) {
-                console.log('Error refreshing empty listview:', e);
+                console.error('Error refreshing empty listview:', e);
             }
             return;
         }
@@ -121,7 +118,7 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
                     try {
                         $listview.listview('refresh');
                     } catch (e) {
-                        console.log('Error refreshing listview after selection:', e);
+                        console.error('Error refreshing listview after selection:', e);
                     }
                     
                     // Hide the input (close virtual keyboard)
@@ -140,13 +137,12 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
         try {
             $listview.listview('refresh');
         } catch (e) {
-            console.log('Error refreshing listview:', e);
+            console.error('Error refreshing listview:', e);
             // Try to reinitialize if refresh fails
             try {
                 $listview.listview();
-                console.log('Listview reinitialized');
             } catch (e2) {
-                console.log('Error reinitializing listview:', e2);
+                console.error('Error reinitializing listview:', e2);
             }
         }
     };
@@ -170,7 +166,7 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
                 try {
                     $listview.listview('refresh');
                 } catch (e) {
-                    console.log('Error clearing listview:', e);
+                    console.error('Error clearing listview:', e);
                 }
             }
         }, settings.delay);
@@ -189,7 +185,7 @@ WsgiSearch.prototype.initAutocomplete = function(inputSelector, listviewSelector
             try {
                 $listview.listview('refresh');
             } catch (e) {
-                console.log('Error clearing listview on change:', e);
+                console.error('Error clearing listview on change:', e);
             }
         }
     });
