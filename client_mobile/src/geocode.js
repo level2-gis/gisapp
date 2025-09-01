@@ -68,7 +68,15 @@ Geocode.prototype.initAutocomplete = function(inputSelector, listviewSelector, o
                 currentRequest = self.submitAutocomplete(query, $listview, settings);
             }, settings.delay);
         } else {
-            self.populateResults($listview, []);
+            // Clear results when input is too short, but don't show "no results"
+            $listview.empty();
+            try {
+                if ($listview.hasClass('ui-listview')) {
+                    $listview.listview('refresh');
+                }
+            } catch (e) {
+                console.error('Error clearing listview for short input:', e);
+            }
         }
     });
     
