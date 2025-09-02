@@ -683,7 +683,7 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
             }),
             baseParams: params,
             root: 'results',
-            fields: ['searchtable', 'searchtext', 'displaytext', 'bbox', 'showlayer', 'selectable']
+            fields: ['searchtable', 'searchtext', 'displaytext', 'bbox', 'showlayer', 'selectable', 'geometry']
         });
         this.tpl = new Ext.XTemplate(
             '<tpl for="."><div class="x-combo-list-item {service}">',
@@ -799,22 +799,38 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
             this.map.zoomToExtent(extent);
         }
         if (this.highlightLayer) {
-            //network request to get real wkt geometry of search object
-            Ext.Ajax.request({
-                url: this.geomUrl,
-                success: this.showSearchGeometry,
-                failure: function (result, request) {
-                    Ext.MessageBox.alert(errMessageSearchComboNetworkRequestFailureTitleString[lang], errMessageSearchComboNetworkRequestFailureString + result.responseText);
-                },
-                method: 'GET',
-                params: {
-                    searchtable: record.get('searchtable'),
-                    showlayer: record.get('showlayer'),
-                    displaytext: record.get('displaytext'),
-                    srs: this.srs,
-                    connect: this.connect
-                }
-            });
+            // Check if we have geometry data directly (for points)
+            var geometry = record.get('geometry');
+            if (geometry && geometry !== null) {
+                // Use the geometry directly without making a server call
+                // Create a mock response and request object to reuse existing showSearchGeometry method
+                var mockResult = { responseText: geometry };
+                var mockRequest = {
+                    params: {
+                        showlayer: record.get('showlayer'),
+                        searchtable: record.get('searchtable')
+                    }
+                };
+                this.showSearchGeometry(mockResult, mockRequest);
+            } else {
+                // Fall back to server call for non-point geometries (when geometry is null)
+                //network request to get real wkt geometry of search object
+                Ext.Ajax.request({
+                    url: this.geomUrl,
+                    success: this.showSearchGeometry,
+                    failure: function (result, request) {
+                        Ext.MessageBox.alert(errMessageSearchComboNetworkRequestFailureTitleString[lang], errMessageSearchComboNetworkRequestFailureString + result.responseText);
+                    },
+                    method: 'GET',
+                    params: {
+                        searchtable: record.get('searchtable'),
+                        showlayer: record.get('showlayer'),
+                        displaytext: record.get('displaytext'),
+                        srs: this.srs,
+                        connect: this.connect
+                    }
+                });
+            }
         }
     },
     // This event is called after a successfull retrieval of the geometry
