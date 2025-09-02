@@ -480,7 +480,7 @@ WsgiSearch.prototype.highlight = function (highlight, callback) {
             displaytext: highlight.displaytext,
             showlayer: highlight.showlayer,
             srs: projectData.crs.split(':')[1],
-            connect: highlight.connect
+            connect: this.connect
         },
         dataType: 'text'
     });
