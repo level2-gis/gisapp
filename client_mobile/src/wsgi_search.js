@@ -346,7 +346,8 @@ WsgiSearch.prototype.parseResults = function (data, status, callback) {
                 highlight: {
                     searchtable: result.searchtable,
                     displaytext: result.displaytext,
-                    showlayer: result.showlayer
+                    showlayer: result.showlayer,
+                    geometry: result.geometry
                 },
                 bbox: result.bbox
             });
@@ -364,6 +365,86 @@ WsgiSearch.prototype.parseResults = function (data, status, callback) {
 };
 
 /**
+ * Create highlight layer style function
+ */
+WsgiSearch.prototype.createHighlightStyle = function() {
+    return function (feature, resolution) {
+        var stroke = new ol.style.Stroke({
+            color: Eqwc.settings.symbolizersHighLightLayer.Line.strokeColor,
+            width: Eqwc.settings.symbolizersHighLightLayer.Line.strokeWidth
+        });
+        var fill = new ol.style.Fill({
+            //transparent
+            color: 'rgba(255, 140, 0, 0)'
+        });
+
+        var text = null;
+        if (feature.get('labelstring')) {
+            // label (NOTE: every subgeometry of a multigeometry is labeled)
+            text = new ol.style.Text({
+                text: feature.get('labelstring'),
+                textAlign: 'center',
+                textBaseline: 'bottom',
+                offsetY: -5,
+                font: 'normal 16px Helvetica,Arial,sans-serif',
+                fill: new ol.style.Fill({
+                    color: 'rgba(0, 0, 0, 1.0)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(255, 255, 255, 1.0)',
+                    width: 2
+                })
+            });
+        }
+
+        return [new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 4,
+                fill: fill,
+                stroke: stroke
+            }),
+            fill: fill,
+            stroke: stroke,
+            text: text
+        })];
+    };
+};
+
+/**
+ * Create highlight layer from features
+ */
+WsgiSearch.prototype.createHighlightLayer = function(features, callback) {
+    // add highlight layer
+    var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            features: features
+        }),
+        style: this.createHighlightStyle()
+    });
+    layer.name = 'highlight';
+
+    //zoomTo
+    var extent = features[0].getGeometry().getExtent();
+    Map.zoomToExtent(extent, Config.map.minScaleDenom.search);
+
+    callback(layer);
+};
+
+/**
+ * Process features for highlighting (add labels if needed)
+ */
+WsgiSearch.prototype.processHighlightFeatures = function(features, displaytext) {
+    if (this.showHighlightLabel && displaytext != null) {
+        for (var featureIndex in features) {
+            // adjust label text (remove last part in brackets)
+            var labelstring = displaytext.replace(/ \([^\)]+\)$/, '');
+            features[featureIndex].set('labelstring', labelstring);
+        }
+    }
+    return features;
+};
+
+/**
  * create and add a highlight layer for the selected search result
  *
  * request geometry and add vector layer for highlighting
@@ -375,6 +456,22 @@ WsgiSearch.prototype.parseResults = function (data, status, callback) {
  * callback(<OL3 layer>): add highlight layer to map
  */
 WsgiSearch.prototype.highlight = function (highlight, callback) {
+    // Check if we have geometry data directly (for points)
+    if (highlight.geometry && highlight.geometry !== null) {
+        // Use the geometry directly without making a server call
+        this.highlightWithGeometry(highlight.geometry, highlight.displaytext, callback);
+        
+        // Switch on layer if needed
+        var layer = Eqwc.common.getLayerId(highlight.showlayer);
+        if (layer) {
+            if (!Map.layers[layer].visible) {
+                Map.setLayerVisible(layer, true, true);
+            }
+        }
+        return;
+    }
+    
+    // Fall back to server call for non-point geometries (when geometry is null)
     // get geometry
     var request = $.ajax({
         url: this.geomUrl,
@@ -396,75 +493,31 @@ WsgiSearch.prototype.highlight = function (highlight, callback) {
         }
     }
 
-    var showHighlightLabel = this.showHighlightLabel;
+    var self = this;
     request.done(function (data, status) {
         // convert WKT to features
         var format = new ol.format.WKT({splitCollection: true});
         var features = format.readFeatures(data);
 
-        if (showHighlightLabel && highlight.displaytext != null) {
-            for (var featureIndex in features) {
-                // adjust label text (remove last part in brackets)
-                var labelstring = highlight.displaytext.replace(/ \([^\)]+\)$/, '');
-                features[featureIndex].set('labelstring', labelstring);
-            }
-        }
-
-        // feature style
-        var style = function (feature, resolution) {
-            var stroke = new ol.style.Stroke({
-                color: Eqwc.settings.symbolizersHighLightLayer.Line.strokeColor,
-                width: Eqwc.settings.symbolizersHighLightLayer.Line.strokeWidth
-            });
-            var fill = new ol.style.Fill({
-                //transparent
-                color: 'rgba(255, 140, 0, 0)'
-            });
-
-            var text = null;
-            if (feature.get('labelstring')) {
-                // label (NOTE: every subgeometry of a multigeometry is labeled)
-                text = new ol.style.Text({
-                    text: feature.get('labelstring'),
-                    textAlign: 'center',
-                    textBaseline: 'bottom',
-                    offsetY: -5,
-                    font: 'normal 16px Helvetica,Arial,sans-serif',
-                    fill: new ol.style.Fill({
-                        color: 'rgba(0, 0, 0, 1.0)'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: 'rgba(255, 255, 255, 1.0)',
-                        width: 2
-                    })
-                });
-            }
-
-            return [new ol.style.Style({
-                image: new ol.style.Circle({
-                    radius: 4,
-                    fill: fill,
-                    stroke: stroke
-                }),
-                fill: fill,
-                stroke: stroke,
-                text: text
-            })];
-        };
-
-        // add highlight layer
-        var layer = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                features: features
-            }),
-            style: style
-        });
-        layer.name = 'highlight';
-
-        //zoomTo
-        var extent = features[0].getGeometry().getExtent();
-        Map.zoomToExtent(extent, Config.map.minScaleDenom.search);
-
-        callback(layer);
+        // Process features for highlighting
+        features = self.processHighlightFeatures(features, highlight.displaytext);
+        
+        // Create and add highlight layer
+        self.createHighlightLayer(features, callback);
     });
+};
+
+/**
+ * Highlight geometry directly from WKT string (for point geometries)
+ */
+WsgiSearch.prototype.highlightWithGeometry = function(geometryWkt, displaytext, callback) {
+    // convert WKT to features
+    var format = new ol.format.WKT({splitCollection: true});
+    var features = format.readFeatures(geometryWkt);
+
+    // Process features for highlighting
+    features = this.processHighlightFeatures(features, displaytext);
+    
+    // Create and add highlight layer
+    this.createHighlightLayer(features, callback);
 };

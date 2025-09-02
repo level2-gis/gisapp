@@ -99,9 +99,11 @@ def application(environ, start_response):
       sql += "(SELECT displaytext, '"+searchtables[i]+r"' AS searchtable, search_category, substring(search_category from 4) AS searchcat_trimmed, showlayer, "
       # the following line is responsible for zooming in to the features
       # this is supposed to work in PostgreSQL since version 9.0
-      sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX\(|\)','','g'),' ',',')||']'::text AS bbox "
+      sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX\(|\)','','g'),' ',',')||']'::text AS bbox, "
       # if the above line does not work for you, deactivate it and uncomment the next line
-      #sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox "
+      #sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox, "
+      # add geometry as WKT for points, null for other geometries
+      sql += "CASE WHEN ST_GeometryType(the_geom) = 'ST_Point' THEN ST_AsText(ST_Force2D(ST_Transform(the_geom,"+srs+"))) ELSE NULL END AS geometry "
       sql += "FROM "+searchtables[i]+" WHERE "
       #for each querystring
       for j in range(0, querystringsLength):
@@ -160,9 +162,9 @@ def application(environ, start_response):
     lastSearchCategory = '';
     for row in rows:
       if lastSearchCategory != row['search_category']:
-        rowData.append({"displaytext":row['searchcat_trimmed'],"searchtable":None,"bbox":maxBbox,"showlayer":row['showlayer'],"selectable":selectable})
+        rowData.append({"displaytext":row['searchcat_trimmed'],"searchtable":None,"bbox":maxBbox,"showlayer":row['showlayer'],"selectable":selectable,"geometry":None})
         lastSearchCategory = row['search_category']
-      rowData.append({"displaytext":row['displaytext'],"searchtable":row['searchtable'],"bbox":row['bbox'],"showlayer":row['showlayer'],"selectable":"1"})
+      rowData.append({"displaytext":row['displaytext'],"searchtable":row['searchtable'],"bbox":row['bbox'],"showlayer":row['showlayer'],"selectable":"1","geometry":row['geometry']})
 
     resultString = '{"results": '+json.dumps(rowData)+'}'
     resultString = str.replace(resultString,'"bbox": "[','"bbox": [')
