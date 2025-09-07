@@ -117,9 +117,14 @@ def application(environ, start_response):
         tsquery_string = ' & '.join(tsquery_parts) if tsquery_parts else ''
         
         if tsquery_string:
-          # For tsvector tables, use PostgreSQL's built-in text search ranking (inverted for consistent sorting)
-          sql += ", (1.0 - ts_rank(searchstring_tsvector, to_tsquery(%s))) AS relevance_rank "
-          data += (tsquery_string,)
+          # For tsvector tables, use enhanced ranking that prioritizes exact matches
+          # Combine ts_rank with exact match detection for better relevance
+          sql += ", CASE "
+          sql += "WHEN lower(searchstring) = lower(%s) THEN 0.01 "  # Exact match gets highest priority
+          sql += "WHEN lower(searchstring) LIKE lower(%s) THEN 0.02 "  # Starts with match
+          sql += "ELSE (0.1 + (1.0 - ts_rank(searchstring_tsvector, to_tsquery(%s)))) END AS relevance_rank "
+          full_query = ' '.join(querystrings)
+          data += (full_query, full_query + '%', tsquery_string)
         else:
           # If no valid tsquery can be constructed, fall back to ILIKE with low relevance
           sql += ", 0.9 AS relevance_rank "
@@ -162,6 +167,12 @@ def application(environ, start_response):
       if filter>'':
         sql += " AND filter='"+filter+"'"
 
+      # Add ORDER BY within each subquery to prioritize exact matches before applying LIMIT
+      if searchtables[i].find('tsvector') > 0:
+        sql += " ORDER BY relevance_rank ASC, displaytext ASC"
+      else:
+        sql += " ORDER BY relevance_rank ASC, displaytext ASC"
+      
       sql += " LIMIT " + limit + ")"
 
       #union for next table
