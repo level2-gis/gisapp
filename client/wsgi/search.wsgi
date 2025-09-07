@@ -103,15 +103,28 @@ def application(environ, start_response):
       # if the above line does not work for you, deactivate it and uncomment the next line
       #sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox, "
       # add geometry as WKT for points, null for other geometries
-      sql += "CASE WHEN ST_GeometryType(the_geom) = 'ST_Point' THEN ST_AsText(ST_Force2D(ST_Transform(the_geom,"+srs+"))) ELSE NULL END AS geometry, "
-      # add relevance ranking for better sorting
-      sql += "CASE WHEN lower(searchstring) = lower(%s) THEN 1 "
-      sql += "WHEN lower(searchstring) LIKE lower(%s) THEN 2 "
-      sql += "ELSE 3 END AS relevance_rank "
+      sql += "CASE WHEN ST_GeometryType(the_geom) = 'ST_Point' THEN ST_AsText(ST_Force2D(ST_Transform(the_geom,"+srs+"))) ELSE NULL END AS geometry "
+      
+      # Check if this table uses tsvector search
+      if searchtables[i].find('tsvector') > 0:
+        # For tsvector tables, use PostgreSQL's built-in text search ranking (inverted for consistent sorting)
+        sql += ", (1.0 - ts_rank(searchstring_tsvector, to_tsquery(%s))) AS relevance_rank "
+      else:
+        # For regular tables, use custom relevance ranking for ILIKE search
+        sql += ", CASE WHEN lower(searchstring) = lower(%s) THEN 0.1 "
+        sql += "WHEN lower(searchstring) LIKE lower(%s) THEN 0.2 "
+        sql += "ELSE 0.3 END AS relevance_rank "
+      
       sql += "FROM "+searchtables[i]+" WHERE "
+      
       # Add query parameters for relevance ranking
       full_query = ' '.join(querystrings)
-      data += (full_query, full_query + '%')
+      if searchtables[i].find('tsvector') > 0:
+        # For tsvector: only need one parameter for ts_rank
+        data += (full_query + ':*',)
+      else:
+        # For ILIKE: need two parameters for exact and starts-with matching
+        data += (full_query, full_query + '%')
       #for each querystring
       for j in range(0, querystringsLength):
         # to implement a search method uncomment the sql and its following data line
@@ -148,7 +161,8 @@ def application(environ, start_response):
       if i < searchtableLength - 1:
         sql += " UNION "
 
-    sql += " ORDER BY relevance_rank ASC, search_category ASC, displaytext ASC;"
+    # Now both ranking systems use lower values for better matches
+    sql += " ORDER BY search_category ASC, relevance_rank ASC, displaytext ASC;"
 
     conn = qwc_connect.getConnection(environ, start_response)
     if conn == None:
