@@ -103,8 +103,15 @@ def application(environ, start_response):
       # if the above line does not work for you, deactivate it and uncomment the next line
       #sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox, "
       # add geometry as WKT for points, null for other geometries
-      sql += "CASE WHEN ST_GeometryType(the_geom) = 'ST_Point' THEN ST_AsText(ST_Force2D(ST_Transform(the_geom,"+srs+"))) ELSE NULL END AS geometry "
+      sql += "CASE WHEN ST_GeometryType(the_geom) = 'ST_Point' THEN ST_AsText(ST_Force2D(ST_Transform(the_geom,"+srs+"))) ELSE NULL END AS geometry, "
+      # add relevance ranking for better sorting
+      sql += "CASE WHEN lower(searchstring) = lower(%s) THEN 1 "
+      sql += "WHEN lower(searchstring) LIKE lower(%s) THEN 2 "
+      sql += "ELSE 3 END AS relevance_rank "
       sql += "FROM "+searchtables[i]+" WHERE "
+      # Add query parameters for relevance ranking
+      full_query = ' '.join(querystrings)
+      data += (full_query, full_query + '%')
       #for each querystring
       for j in range(0, querystringsLength):
         # to implement a search method uncomment the sql and its following data line
@@ -141,7 +148,7 @@ def application(environ, start_response):
       if i < searchtableLength - 1:
         sql += " UNION "
 
-    sql += " ORDER BY search_category ASC, displaytext ASC;"
+    sql += " ORDER BY relevance_rank ASC, search_category ASC, displaytext ASC;"
 
     conn = qwc_connect.getConnection(environ, start_response)
     if conn == None:
