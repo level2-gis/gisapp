@@ -107,25 +107,32 @@ def application(environ, start_response):
       
       # Check if this table uses tsvector search
       if searchtables[i].find('tsvector') > 0:
-        # For tsvector tables, use PostgreSQL's built-in text search ranking (inverted for consistent sorting)
-        sql += ", (1.0 - ts_rank(searchstring_tsvector, to_tsquery(%s))) AS relevance_rank "
+        # For tsvector tables, create proper tsquery for multiple words
+        # Convert "word1 word2" to "word1:* & word2:*"
+        tsquery_parts = []
+        for word in querystrings:
+          sanitized_word = sanitize_tsquery(word)
+          if sanitized_word:
+            tsquery_parts.append(sanitized_word + ':*')
+        tsquery_string = ' & '.join(tsquery_parts) if tsquery_parts else ''
+        
+        if tsquery_string:
+          # For tsvector tables, use PostgreSQL's built-in text search ranking (inverted for consistent sorting)
+          sql += ", (1.0 - ts_rank(searchstring_tsvector, to_tsquery(%s))) AS relevance_rank "
+          data += (tsquery_string,)
+        else:
+          # If no valid tsquery can be constructed, fall back to ILIKE with low relevance
+          sql += ", 0.9 AS relevance_rank "
       else:
         # For regular tables, use custom relevance ranking for ILIKE search
         sql += ", CASE WHEN lower(searchstring) = lower(%s) THEN 0.1 "
         sql += "WHEN lower(searchstring) LIKE lower(%s) THEN 0.2 "
         sql += "ELSE 0.3 END AS relevance_rank "
+        # For ILIKE: need two parameters for exact and starts-with matching
+        full_query = ' '.join(querystrings)
+        data += (full_query, full_query + '%')
       
       sql += "FROM "+searchtables[i]+" WHERE "
-      
-      # Add query parameters for relevance ranking
-      full_query = ' '.join(querystrings)
-      if searchtables[i].find('tsvector') > 0:
-        # For tsvector: only need one parameter for ts_rank
-        data += (full_query + ':*',)
-      else:
-        # For ILIKE: need two parameters for exact and starts-with matching
-        data += (full_query, full_query + '%')
-      #for each querystring
       for j in range(0, querystringsLength):
         # to implement a search method uncomment the sql and its following data line
         # for tsvector issues see the docs, use whichever version works best for you
