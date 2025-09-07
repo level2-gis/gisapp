@@ -117,14 +117,15 @@ def application(environ, start_response):
         tsquery_string = ' & '.join(tsquery_parts) if tsquery_parts else ''
         
         if tsquery_string:
-          # For tsvector tables, use enhanced ranking that prioritizes exact matches
-          # Combine ts_rank with exact match detection for better relevance
+          # For tsvector tables, use enhanced ts_rank with exact phrase detection
+          # Use both the constructed tsquery and a phrase query for better exact matching
           sql += ", CASE "
-          sql += "WHEN lower(searchstring) = lower(%s) THEN 0.01 "  # Exact match gets highest priority
-          sql += "WHEN lower(searchstring) LIKE lower(%s) THEN 0.02 "  # Starts with match
-          sql += "ELSE (0.1 + (1.0 - ts_rank(searchstring_tsvector, to_tsquery(%s)))) END AS relevance_rank "
+          # Try to detect exact phrase match using plainto_tsquery for exact phrase
+          sql += "WHEN searchstring_tsvector @@ plainto_tsquery(%s) THEN (0.1 - ts_rank_cd(searchstring_tsvector, plainto_tsquery(%s))) "
+          # Fall back to prefix matching with ts_rank
+          sql += "ELSE (0.5 - ts_rank(searchstring_tsvector, to_tsquery(%s))) END AS relevance_rank "
           full_query = ' '.join(querystrings)
-          data += (full_query, full_query + '%', tsquery_string)
+          data += (full_query, full_query, tsquery_string)
         else:
           # If no valid tsquery can be constructed, fall back to ILIKE with low relevance
           sql += ", 0.9 AS relevance_rank "
