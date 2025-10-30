@@ -11,6 +11,29 @@
     background-image: unset!important;
 }
 
+/* Grid Row Styles - Reserve space for selection and conditional styling */
+
+/* Base grid row style - reserve space for all possible borders and styling */
+.x-grid3-row {
+    border-left: 3px solid transparent !important;
+    box-sizing: border-box !important;
+}
+
+.x-grid3-row-alt {
+    border-left: 3px solid transparent !important;
+    box-sizing: border-box !important;
+}
+
+.x-grid3-row-over {
+    border-left: 3px solid transparent !important;
+    box-sizing: border-box !important;
+}
+
+/* Ensure table cells maintain proper alignment */
+.x-grid3-row td {
+    box-sizing: border-box !important;
+}
+
 /* Conditional Grid Row Styles */
 .grid-row-red {
     background-color: #ffebee !important;
@@ -37,11 +60,67 @@
     border-left: 3px solid #ff9800 !important;
 }
 
+/* Selection styles */
 .x-grid3-row-selected {
     background-image: none !important;
     border-color: initial !important;
-    /*border: 2px dotted !important;*/
-    border-left: 3px solid !important;
+    border-left: 3px solid #777777 !important;
+    box-sizing: border-box !important;
+}
+
+/* Handle selection with conditional coloring */
+.x-grid3-row-selected.grid-row-red {
+    border-left: 3px solid #d32f2f !important; /* darker red for selection */
+}
+
+.x-grid3-row-selected.grid-row-green {
+    border-left: 3px solid #388e3c !important; /* darker green for selection */
+}
+
+.x-grid3-row-selected.grid-row-blue {
+    border-left: 3px solid #1976d2 !important; /* darker blue for selection */
+}
+
+.x-grid3-row-selected.grid-row-yellow {
+    border-left: 3px solid #f57f17 !important; /* darker yellow for selection */
+}
+
+.x-grid3-row-selected.grid-row-orange {
+    border-left: 3px solid #f57c00 !important; /* darker orange for selection */
+}
+
+/* Conditional tooltip for grid cells - only shows when text is truncated */
+.overflow-tooltip {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: default;
+}
+
+/* Use a different approach - create tooltip outside the grid structure */
+.overflow-tooltip.text-overflowing {
+    position: relative;
+}
+
+/* Create tooltip using a separate overlay element instead of modifying grid structure */
+.grid-tooltip-overlay {
+    position: fixed;
+    background: #ffffe1;
+    border: 1px solid #a3bad9;
+    color: #2e2e2e;
+    padding: 2px 5px;
+    font-family: tahoma, arial, verdana, sans-serif;
+    font-size: 11px;
+    line-height: 16px;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 300px;
+    min-width: 40px;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.2);
+    pointer-events: none;
+    z-index: 50000;
+    opacity: 1;
+    display: none;
 }
 
 /* Conditional tooltip for grid cells - only shows when text is truncated */

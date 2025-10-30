@@ -569,16 +569,22 @@ ul.x-tab-strip-bottom{
 .x-grid3-row {
     border-color:#ededed;
     border-top-color:#fff;
+    border-left: 3px solid transparent !important;
+    box-sizing: border-box !important;
 }
 
 .x-grid3-row-alt{
     background-color:#fafafa;
+    border-left: 3px solid transparent !important;
+    box-sizing: border-box !important;
 }
 
 .x-grid3-row-over {
     border-color:#ddd;
     background-color:#efefef;
     background-image:url(../images/default/grid/row-over.gif);
+    border-left: 3px solid transparent !important;
+    box-sizing: border-box !important;
 }
 
 .x-grid3-resize-proxy {
@@ -652,6 +658,9 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
     background-color:#CCCCCC !important;
     background-image: none;
     border-color:#ACACAC;
+    /* Remove border styling here as it's handled in grid-styles.css */
+    border-left: none !important;
+    box-sizing: border-box !important;
 }
 
 .x-grid3-cell-selected{
@@ -805,10 +814,14 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 
 .x-grid-with-col-lines .x-grid3-row{
     border-top-color:#ededed;
+    border-left: 3px solid transparent !important;
+    box-sizing: border-box !important;
 }
 
 .x-grid-with-col-lines .x-grid3-row-selected {
     border-top-color:#B9B9B9;
+    border-left: none !important; /* Let grid-styles.css handle this */
+    box-sizing: border-box !important;
 }
 .x-pivotgrid .x-grid3-header-offset table td {
     background: url(../images/gray/grid/grid3-hrow2.gif) repeat-x 50% 100%;
