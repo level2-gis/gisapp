@@ -29,9 +29,22 @@
     box-sizing: border-box !important;
 }
 
-/* Ensure table cells maintain proper alignment */
+/* Ensure table cells maintain proper alignment and height */
 .x-grid3-row td {
     box-sizing: border-box !important;
+    line-height: 15px !important; /* Ensure proper line height */
+}
+
+/* Ensure cell text has proper spacing for descenders */
+.x-grid3-cell-text {
+    line-height: 15px !important;
+    display: block !important;
+    overflow: visible !important;
+}
+
+/* Grid cell inner content styling */
+.x-grid3-cell-inner {
+    line-height: 15px !important;
 }
 
 /* Conditional Grid Row Styles */
