@@ -1,0 +1,132 @@
+{
+    "search": [
+        {
+            "title": "Parcele",
+            "useWmsRequest": true,
+            "queryLayer": "parcele_layer",
+            "formItems": [
+                {
+                    "xtype": "combo",
+                    "fieldLabel": "Katastrska občina",
+                    "name": "ko_search",
+                    "hiddenName": "ko_id",
+                    "displayField": "display",
+                    "valueField": "ko_id",
+                    "typeAhead": true,
+                    "mode": "remote",
+                    "triggerAction": "all",
+                    "minChars": 2,
+                    "queryDelay": 100,
+                    "allowBlank": false,
+                    "blankText": "Vnesi številko ali ime k.o.",
+                    "filterOp": "=",
+                    "store": {
+                        "xtype": "jsonstore",
+                        "url": "admin/cadastre_search.php?table=parcele_layer",
+                        "root": "results",
+                        "fields": [
+                            {"name": "ko_id", "type": "string"},
+                            {"name": "imeko", "type": "string"},
+                            {"name": "display", "type": "string"}
+                        ]
+                    },
+                    "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\"><b>{ko_id}</b> - {imeko}</div></tpl>",
+                    "itemSelector": "div.x-combo-list-item",
+                    "listWidth": 300
+                },
+                {
+                    "xtype": "textfield",
+                    "name": "st_parcele",
+                    "fieldLabel": "Številka parcele",
+                    "filterOp": "=",
+                    "allowBlank": true,
+                    "blankText": "Vnesi številko parcele"
+                }
+            ],
+            "gridColumns": [
+                {
+                    "header": "K.O. ID",
+                    "dataIndex": "ko_id",
+                    "menuDisabled": "true"
+                },
+                {
+                    "header": "Ime k.o.",
+                    "dataIndex": "imeko",
+                    "menuDisabled": "true"
+                },
+                {
+                    "header": "Št. parcele",
+                    "dataIndex": "st_parcele",
+                    "menuDisabled": "true"
+                }
+            ],
+            "selectionLayer": "parcele_layer",
+            "selectionZoom": 0,
+            "doZoomToExtent": true
+        },
+        {
+            "title": "Stavbe",
+            "useWmsRequest": true,
+            "queryLayer": "stavbe_layer",
+            "formItems": [
+                {
+                    "xtype": "combo",
+                    "fieldLabel": "Katastrska občina",
+                    "name": "ko_search",
+                    "hiddenName": "ko_id",
+                    "displayField": "display",
+                    "valueField": "ko_id",
+                    "typeAhead": true,
+                    "mode": "remote",
+                    "triggerAction": "all",
+                    "minChars": 2,
+                    "queryDelay": 100,
+                    "allowBlank": false,
+                    "blankText": "Vnesi številko ali ime k.o.",
+                    "filterOp": "=",
+                    "store": {
+                        "xtype": "jsonstore",
+                        "url": "admin/cadastre_search.php?table=stavbe_layer",
+                        "root": "results",
+                        "fields": [
+                            {"name": "ko_id", "type": "string"},
+                            {"name": "imeko", "type": "string"},
+                            {"name": "display", "type": "string"}
+                        ]
+                    },
+                    "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\"><b>{ko_id}</b> - {imeko}</div></tpl>",
+                    "itemSelector": "div.x-combo-list-item",
+                    "listWidth": 300
+                },
+                {
+                    "xtype": "textfield",
+                    "name": "st_parcele",
+                    "fieldLabel": "Številka parcele",
+                    "filterOp": "=",
+                    "allowBlank": true,
+                    "blankText": "Vnesi številko parcele"
+                }
+            ],
+            "gridColumns": [
+                {
+                    "header": "K.O. ID",
+                    "dataIndex": "ko_id",
+                    "menuDisabled": "true"
+                },
+                {
+                    "header": "Ime k.o.",
+                    "dataIndex": "imeko",
+                    "menuDisabled": "true"
+                },
+                {
+                    "header": "Št. parcele",
+                    "dataIndex": "st_parcele",
+                    "menuDisabled": "true"
+                }
+            ],
+            "selectionLayer": "stavbe_layer",
+            "selectionZoom": 0,
+            "doZoomToExtent": true
+        }
+    ]
+}
