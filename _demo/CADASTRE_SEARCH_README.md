@@ -1,5 +1,7 @@
 # Cadastre Area Search with Type-Ahead Combo Box
 
+> **⚠️ SECURITY NOTICE:** Before deploying to production, you MUST update the table whitelist in `admin/cadastre_search.php` to match your database schema. See [Security Considerations](#security-considerations) for details.
+
 This document explains how to implement and use the type-ahead combo box for searching cadastre areas (katastrske občine) in QGIS Web Client.
 
 ## Overview
@@ -214,10 +216,33 @@ Modify the `display` field in the SQL query or the `tpl` template to change how 
 
 ## Security Considerations
 
+### CRITICAL: Table Name Validation
+
+**The endpoint MUST use a whitelist to validate table names.** The current implementation includes a whitelist of allowed tables:
+
+```php
+$allowed_tables = [
+    'cadastre',
+    'parcele',
+    'parcele_layer',
+    'stavbe',
+    'stavbe_layer',
+    'katastrske_obcine',
+    'cadastral_areas'
+];
+```
+
+**You MUST update this whitelist** to match your actual database tables. Remove any tables you don't use and add any tables you need.
+
+**DO NOT remove the whitelist validation** - this is essential to prevent SQL injection attacks via the table parameter.
+
+### Other Security Measures
+
 - The endpoint uses PDO prepared statements to prevent SQL injection
-- Table name should be validated against a whitelist in production
+- Error messages are generic to avoid exposing database structure
+- Detailed errors are logged server-side for administrators
 - Consider adding authentication/authorization checks if needed
-- The current implementation allows any table to be queried via the `table` parameter
+- Consider rate limiting to prevent abuse
 
 ## Troubleshooting
 
