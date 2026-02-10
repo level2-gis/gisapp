@@ -1,4 +1,6 @@
 {
+    "_comment": "Example configuration for cadastre area search with type-ahead combo box",
+    "_note": "The 'st_parcele' field in Stavbe search can be renamed to 'st_stavbe' if your database uses a different column name for building numbers",
     "search": [
         {
             "title": "Parcele",
@@ -102,6 +104,7 @@
                     "xtype": "textfield",
                     "name": "st_parcele",
                     "fieldLabel": "Številka parcele",
+                    "_note": "Change 'st_parcele' to appropriate field name for buildings (e.g., 'st_stavbe') based on your database schema",
                     "filterOp": "=",
                     "allowBlank": true,
                     "blankText": "Vnesi številko parcele"
@@ -121,6 +124,7 @@
                 {
                     "header": "Št. parcele",
                     "dataIndex": "st_parcele",
+                    "_note": "Change to appropriate field name for buildings based on your database schema",
                     "menuDisabled": "true"
                 }
             ],

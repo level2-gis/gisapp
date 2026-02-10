@@ -56,9 +56,21 @@ try {
     
     $table = $requested_table;
     
-    // Connect to database
-    $db = new PDO(DB_CONN_STRING, DB_USER, DB_PWD);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Connect to database (wrapped in try-catch)
+    try {
+        $db = new PDO(DB_CONN_STRING, DB_USER, DB_PWD);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        error_log('Cadastre search database connection error: ' . $e->getMessage());
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Database connection error. Please contact administrator.',
+            'results' => [],
+            'total' => 0
+        ]);
+        exit();
+    }
     
     // Prepare search parameters
     $search = '%' . $query . '%';
@@ -68,9 +80,10 @@ try {
     // ko_id is searched as text to support partial matches
     // imeko is searched case-insensitively using LOWER()
     // Table name is validated against whitelist before use
+    // Use double quotes for table name to handle reserved keywords
     $sql = "SELECT DISTINCT ko_id, imeko, 
                    ko_id || ' - ' || imeko AS display
-            FROM " . $table . "
+            FROM \"" . $table . "\"
             WHERE ko_id::text LIKE :search 
                OR LOWER(imeko) LIKE :search_name
             ORDER BY ko_id
