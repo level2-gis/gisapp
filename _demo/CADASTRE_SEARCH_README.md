@@ -139,7 +139,8 @@ See `_demo/cadastre_search_example.json` for complete examples of:
 
 Both examples include:
 - Type-ahead combo box for cadastre area
-- Additional textfield for parcel number (st_parcele)
+- Additional textfield for parcel/location number (st_parcele)
+  - **Note**: The field name `st_parcele` is used in both configurations as specified in the requirements. In your implementation, you may want to rename this field to match your database schema (e.g., `st_stavbe` for buildings).
 - Grid columns configuration for search results
 - Selection and zoom settings
 
