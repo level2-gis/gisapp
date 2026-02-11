@@ -109,10 +109,9 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 {
   "xtype": "combo",
   "fieldLabel": "Katastrska občina",
-  "name": "ko_search",
-  "hiddenName": "ko_id",
+  "name": "ko_id",
   "displayField": "displaytext",
-  "valueField": "ko_id",
+  "valueField": "displaytext",
   "typeAhead": true,
   "mode": "remote",
   "triggerAction": "all",
@@ -120,7 +119,7 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
   "queryDelay": 100,
   "allowBlank": false,
   "blankText": "Vnesi številko ali ime k.o.",
-  "filterOp": "=",
+  "filterOp": "ILIKE",
   "store": {
     "xtype": "jsonstore",
     "url": "wsgi/search.wsgi",
@@ -136,8 +135,7 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
       {"name": "bbox", "type": "auto"},
       {"name": "showlayer", "type": "string"},
       {"name": "selectable", "type": "string"},
-      {"name": "geometry", "type": "auto"},
-      {"name": "ko_id", "mapping": "displaytext", "convert": "function(v) { return v.split(' - ')[0]; }"}
+      {"name": "geometry", "type": "auto"}
     ]
   },
   "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\">{displaytext}</div></tpl>",
@@ -150,17 +148,16 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 
 - **xtype**: "combo" - Ext JS combo box component
 - **fieldLabel**: Label displayed next to the field
-- **name**: Field name for the search form
-- **hiddenName**: "ko_id" - The actual value submitted (extracted from displaytext)
+- **name**: "ko_id" - Field name for the search form (will contain the full displaytext)
 - **displayField**: "displaytext" - Field shown in the combo box (from WSGI response)
-- **valueField**: "ko_id" - Field used as the value (extracted via convert function)
+- **valueField**: "displaytext" - Field used as the value (full text with code and name)
 - **typeAhead**: true - Enables type-ahead functionality
 - **mode**: "remote" - Fetches data from server as user types
 - **triggerAction**: "all" - Shows all results when dropdown is triggered
 - **minChars**: 2 - Minimum characters before search starts
 - **queryDelay**: 100 - Delay in milliseconds before sending query
 - **allowBlank**: false - Field is required
-- **filterOp**: "=" - Uses equality operator for WMS filter
+- **filterOp**: "ILIKE" - Uses case-insensitive LIKE operator for WMS filter (matches the full displaytext)
 - **store**: Configuration for the JSON data store
   - **url**: Path to the WSGI search script
   - **baseParams**: Fixed parameters sent with every request
@@ -169,10 +166,12 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
     - **limit**: Maximum number of results
   - **root**: "results" - JSON array containing results
   - **fields**: Field definitions matching the WSGI response
-    - **ko_id**: Extracted from displaytext using convert function (splits on " - ")
+    - Standard fields from search.wsgi: displaytext, searchtable, bbox, showlayer, selectable, geometry
 - **tpl**: HTML template for dropdown items (shows displaytext directly)
 - **itemSelector**: CSS selector for dropdown items
 - **listWidth**: Width of the dropdown list in pixels
+
+**Note**: The combo box searches and submits the full displaytext (e.g., "964 - VELENJE"). If you need to extract just the code, you can add custom JavaScript processing in your application logic.
 
 ## Example Configuration
 
@@ -286,9 +285,9 @@ UPDATE search_ko SET displaytext = ko_id || ' - ' || imeko;
 
 The search.wsgi script includes several security measures:
 
-- **Search table validation**: Only tables matching the regex pattern `[A-Za-z,._]` are allowed
+- **Search table validation**: Only tables with names matching `[A-Za-z,._]` are allowed (the regex `[^A-Za-z,._]` rejects any name containing characters outside this set)
 - **Parameterized queries**: All user input is passed through PDO prepared statements
-- **Query sanitization**: For tsvector search, special characters are sanitized
+- **Query sanitization**: For tsvector search, special characters are sanitized to avoid tsquery syntax errors
 - **Connection security**: Uses the existing qwc_connect module for database connections
 
 ### Additional Security Measures
@@ -319,10 +318,10 @@ The search.wsgi script includes several security measures:
 
 ### Search Not Working
 
-1. Verify `filterOp` is set to "=" for the combo box
-2. Ensure `hiddenName` is "ko_id" so the correct value is submitted
+1. Verify `filterOp` is set to "ILIKE" for the combo box (case-insensitive matching)
+2. Ensure `name` is set to match your query layer's field name
 3. Check that the query layer configuration matches your QGIS project
-4. Verify the ko_id extraction logic in the convert function works with your data format
+4. Verify the displaytext format in your database matches what you expect in the filter
 
 ### Database Connection Errors
 

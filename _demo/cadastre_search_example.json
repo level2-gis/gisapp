@@ -10,10 +10,9 @@
                 {
                     "xtype": "combo",
                     "fieldLabel": "Katastrska občina",
-                    "name": "ko_search",
-                    "hiddenName": "ko_id",
+                    "name": "ko_id",
                     "displayField": "displaytext",
-                    "valueField": "ko_id",
+                    "valueField": "displaytext",
                     "typeAhead": true,
                     "mode": "remote",
                     "triggerAction": "all",
@@ -21,7 +20,7 @@
                     "queryDelay": 100,
                     "allowBlank": false,
                     "blankText": "Vnesi številko ali ime k.o.",
-                    "filterOp": "=",
+                    "filterOp": "ILIKE",
                     "store": {
                         "xtype": "jsonstore",
                         "url": "wsgi/search.wsgi",
@@ -37,8 +36,7 @@
                             {"name": "bbox", "type": "auto"},
                             {"name": "showlayer", "type": "string"},
                             {"name": "selectable", "type": "string"},
-                            {"name": "geometry", "type": "auto"},
-                            {"name": "ko_id", "mapping": "displaytext", "convert": "function(v) { return v.split(' - ')[0]; }"}
+                            {"name": "geometry", "type": "auto"}
                         ]
                     },
                     "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\">{displaytext}</div></tpl>",
@@ -56,12 +54,7 @@
             ],
             "gridColumns": [
                 {
-                    "header": "K.O. ID",
-                    "dataIndex": "ko_id",
-                    "menuDisabled": "true"
-                },
-                {
-                    "header": "Ime k.o.",
+                    "header": "Katastrska občina",
                     "dataIndex": "displaytext",
                     "menuDisabled": "true"
                 },
@@ -83,10 +76,9 @@
                 {
                     "xtype": "combo",
                     "fieldLabel": "Katastrska občina",
-                    "name": "ko_search",
-                    "hiddenName": "ko_id",
+                    "name": "ko_id",
                     "displayField": "displaytext",
-                    "valueField": "ko_id",
+                    "valueField": "displaytext",
                     "typeAhead": true,
                     "mode": "remote",
                     "triggerAction": "all",
@@ -94,7 +86,7 @@
                     "queryDelay": 100,
                     "allowBlank": false,
                     "blankText": "Vnesi številko ali ime k.o.",
-                    "filterOp": "=",
+                    "filterOp": "ILIKE",
                     "store": {
                         "xtype": "jsonstore",
                         "url": "wsgi/search.wsgi",
@@ -110,8 +102,7 @@
                             {"name": "bbox", "type": "auto"},
                             {"name": "showlayer", "type": "string"},
                             {"name": "selectable", "type": "string"},
-                            {"name": "geometry", "type": "auto"},
-                            {"name": "ko_id", "mapping": "displaytext", "convert": "function(v) { return v.split(' - ')[0]; }"}
+                            {"name": "geometry", "type": "auto"}
                         ]
                     },
                     "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\">{displaytext}</div></tpl>",
@@ -130,12 +121,7 @@
             ],
             "gridColumns": [
                 {
-                    "header": "K.O. ID",
-                    "dataIndex": "ko_id",
-                    "menuDisabled": "true"
-                },
-                {
-                    "header": "Ime k.o.",
+                    "header": "Katastrska občina",
                     "dataIndex": "displaytext",
                     "menuDisabled": "true"
                 },
