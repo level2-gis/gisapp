@@ -123,6 +123,8 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
   "xtype": "combo",
   "name": "ko_id",
   "fieldLabel": "KO",
+  "displayField": "text",
+  "valueField": "value",
   "allowBlank": true,
   "emptyText": "Izberi kat. občino",
   "editable": true,
@@ -154,6 +156,8 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 **Key Differences from Static Store:**
 - Uses `"mode": "remote"` to fetch data from server
 - Uses `"xtype": "arraystore"` for array format compatibility
+- **`"displayField": "text"`** - Specifies which field to display in combo (required for typeAhead)
+- **`"valueField": "value"`** - Specifies which field value to submit (required for typeAhead)
 - `"url": "wsgi/data.wsgi"` points to the data endpoint
 - `"baseParams"` specifies the lookup table and geometry type
 - `"id": 0` specifies which array element is the unique identifier (the code)
@@ -166,6 +170,8 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 - **xtype**: "combo" - Ext JS combo box component
 - **name**: "ko_id" - Field name for the search form (matches database field)
 - **fieldLabel**: "KO" - Label displayed next to the field
+- **displayField**: "text" - Field to display in the combo box (required for typeAhead functionality)
+- **valueField**: "value" - Field to use as the submitted value (required for typeAhead functionality)
 - **allowBlank**: true - Field is optional (can be changed to false if required)
 - **emptyText**: "Izberi kat. občino" - Placeholder text when field is empty
 - **editable**: true - Allows typing in the combo box for searching
@@ -192,16 +198,17 @@ The data.wsgi script returns simple arrays: `[[code, description], [code, descri
 
 Where `description` should include the code for proper display (e.g., "964 VELENJE").
 
-ExtJS ArrayStore automatically interprets:
-- First element (code) as the **value** (submitted to WMS filter)
-- Second element (description with code) as the **text** (shown to user)
+The `fields` array maps:
+- First element (code) → "value" field
+- Second element (description with code) → "text" field
 
 **Key Properties for WMS Filter Integration:**
+- `displayField: "text"` and `valueField: "value"` are **required** for typeAhead to work properly
 - `forceSelection: true` ensures a value from the list is selected
 - `name: "ko_id"` specifies the field name used in the WMS filter
 - `filterOp: "="` defines the filter operation used in the WMS request
 
-The combo box displays the description (e.g., "964 VELENJE") but submits only the code (e.g., 964) for filtering, ensuring clean WMS filter queries like `ko_id = 964`.
+The combo box displays the "text" field (e.g., "964 VELENJE") but submits the "value" field (e.g., 964) for filtering, ensuring clean WMS filter queries like `ko_id = 964`.
 
 ## Example Configuration
 

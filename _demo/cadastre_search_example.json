@@ -1,6 +1,6 @@
 {
     "_comment": "Example configuration for cadastre area search with type-ahead combo box using data.wsgi",
-    "_note": "The lookup table description should include the code (e.g., '1984 SELO NAD POLHOVIM GRADCEM'). ArrayStore auto-maps: first element = value, second = display.",
+    "_note": "ArrayStore with explicit field definitions. Server returns [[code, description], ...] format.",
     "search": [
         {
             "title": "Parcele",
@@ -11,6 +11,8 @@
                     "xtype": "combo",
                     "name": "ko_id",
                     "fieldLabel": "KO",
+                    "displayField": "text",
+                    "valueField": "value",
                     "allowBlank": true,
                     "emptyText": "Izberi kat. občino",
                     "editable": true,
@@ -79,6 +81,8 @@
                     "xtype": "combo",
                     "name": "ko_id",
                     "fieldLabel": "KO",
+                    "displayField": "text",
+                    "valueField": "value",
                     "allowBlank": true,
                     "emptyText": "Izberi kat. občino",
                     "editable": true,
