@@ -200,7 +200,8 @@ def application(environ, start_response):
     rows = cur.fetchall()
     lastSearchCategory = '';
     for row in rows:
-      if lastSearchCategory != row['search_category']:
+      # Only add search category header when multiple tables are used
+      if searchtableLength > 1 and lastSearchCategory != row['search_category']:
         rowData.append({"displaytext":row['searchcat_trimmed'],"searchtable":None,"bbox":maxBbox,"showlayer":row['showlayer'],"selectable":selectable,"geometry":None})
         lastSearchCategory = row['search_category']
       rowData.append({"displaytext":row['displaytext'],"searchtable":row['searchtable'],"bbox":row['bbox'],"showlayer":row['showlayer'],"selectable":"1","geometry":row['geometry']})
