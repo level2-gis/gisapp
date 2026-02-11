@@ -1,8 +1,6 @@
 # Cadastre Area Search with Type-Ahead Combo Box
 
-> **⚠️ SECURITY NOTICE:** Before deploying to production, you MUST update the table whitelist in `admin/cadastre_search.php` to match your database schema. See [Security Considerations](#security-considerations) for details.
-
-This document explains how to implement and use the type-ahead combo box for searching cadastre areas (katastrske občine) in QGIS Web Client.
+This document explains how to implement and use the type-ahead combo box for searching cadastre areas (katastrske občine) in QGIS Web Client using the existing `search.wsgi` script.
 
 ## Overview
 
@@ -15,47 +13,78 @@ The type-ahead combo box provides a better user experience compared to separate 
 
 ## Backend Implementation
 
-### File: `admin/cadastre_search.php`
+This implementation uses the existing `/client/wsgi/search.wsgi` script, which is already part of the QGIS Web Client infrastructure.
 
-This PHP endpoint handles the search queries from the combo box.
+### WSGI Search Script
 
-**Features:**
-- Accepts a `query` parameter from the search combo box
-- Searches both `ko_id` (code) and `imeko` (name) fields
-- Uses `LIKE` with wildcards for flexible matching
-- Case-insensitive search for names using `LOWER()`
-- Returns JSON response in format expected by Ext.data.JsonStore
-- Limits results to 20 by default
-- Handles errors gracefully
+**File: `client/wsgi/search.wsgi`**
 
-**Database Requirements:**
-- PostgreSQL/PostGIS database
-- Table with `ko_id` and `imeko` columns
-- Database connection configured in `admin/settings.php`
+The search.wsgi script is a Python-based search endpoint that:
+- Connects to PostgreSQL database with search tables
+- Supports full-text search using PostgreSQL tsvector or ILIKE
+- Returns results with bounding boxes for zoom functionality
+- Supports JSONP callback for cross-domain requests
 
-**URL Parameters:**
+**URL Pattern:**
+```
+/wsgi/search.wsgi?searchtables=search_ko&srs=3794&query=[SEARCH_QUERY]&limit=20
+```
+
+**Parameters:**
+- `searchtables` (required): Name of the search table (e.g., "search_ko" for cadastre areas)
+- `srs` (required): Spatial reference system ID (e.g., "3794")
 - `query` (required): Search term entered by user
-- `table` (optional): Table name to search (defaults to 'cadastre')
+- `limit` (optional): Maximum number of results (default: 10)
+- `cb` (optional): JSONP callback function name
 
 **Response Format:**
 ```json
 {
   "results": [
     {
-      "ko_id": "1234",
-      "imeko": "LJUBLJANA",
-      "display": "1234 - LJUBLJANA"
+      "displaytext": "964 - VELENJE",
+      "searchtable": "search_ko",
+      "bbox": [504879.2, 134090.29, 511105.31, 137353.88],
+      "showlayer": "Katastrske občine",
+      "selectable": "1",
+      "geometry": null
     }
-  ],
-  "total": 1
+  ]
 }
+```
+
+### Database Requirements
+
+The search.wsgi script requires a search table with the following structure:
+
+```sql
+CREATE TABLE search_ko (
+  displaytext VARCHAR(255),        -- Display text in format "CODE - NAME"
+  searchstring VARCHAR(255),       -- Searchable text (lowercase)
+  searchstring_tsvector tsvector,  -- Full-text search vector (optional)
+  search_category VARCHAR(50),     -- Category for grouping (e.g., "01-ko")
+  showlayer VARCHAR(255),          -- Layer name to show/zoom to
+  the_geom GEOMETRY                -- Geometry for bounding box calculation
+);
+
+-- Create index for better search performance
+CREATE INDEX idx_search_ko_searchstring ON search_ko(searchstring);
+CREATE INDEX idx_search_ko_tsvector ON search_ko USING gin(searchstring_tsvector);
+```
+
+**Example Data:**
+```sql
+INSERT INTO search_ko (displaytext, searchstring, search_category, showlayer, the_geom)
+VALUES 
+  ('964 - VELENJE', '964 velenje', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794)),
+  ('1964 - IHAN', '1964 ihan', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794));
 ```
 
 ## Frontend Configuration
 
 ### Combo Box Configuration
 
-Replace the two separate textfields with a single combo box:
+Replace the two separate textfields with a single combo box that uses the WSGI search script:
 
 **Old Pattern (two fields):**
 ```javascript
@@ -75,14 +104,14 @@ Replace the two separate textfields with a single combo box:
 }
 ```
 
-**New Pattern (combo box):**
+**New Pattern (combo box with WSGI):**
 ```javascript
 {
   "xtype": "combo",
   "fieldLabel": "Katastrska občina",
   "name": "ko_search",
   "hiddenName": "ko_id",
-  "displayField": "display",
+  "displayField": "displaytext",
   "valueField": "ko_id",
   "typeAhead": true,
   "mode": "remote",
@@ -94,15 +123,24 @@ Replace the two separate textfields with a single combo box:
   "filterOp": "=",
   "store": {
     "xtype": "jsonstore",
-    "url": "admin/cadastre_search.php?table=your_table_name",
+    "url": "wsgi/search.wsgi",
+    "baseParams": {
+      "searchtables": "search_ko",
+      "srs": "3794",
+      "limit": "20"
+    },
     "root": "results",
     "fields": [
-      {"name": "ko_id", "type": "string"},
-      {"name": "imeko", "type": "string"},
-      {"name": "display", "type": "string"}
+      {"name": "displaytext", "type": "string"},
+      {"name": "searchtable", "type": "string"},
+      {"name": "bbox", "type": "auto"},
+      {"name": "showlayer", "type": "string"},
+      {"name": "selectable", "type": "string"},
+      {"name": "geometry", "type": "auto"},
+      {"name": "ko_id", "mapping": "displaytext", "convert": "function(v) { return v.split(' - ')[0]; }"}
     ]
   },
-  "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\"><b>{ko_id}</b> - {imeko}</div></tpl>",
+  "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\">{displaytext}</div></tpl>",
   "itemSelector": "div.x-combo-list-item",
   "listWidth": 300
 }
@@ -113,9 +151,9 @@ Replace the two separate textfields with a single combo box:
 - **xtype**: "combo" - Ext JS combo box component
 - **fieldLabel**: Label displayed next to the field
 - **name**: Field name for the search form
-- **hiddenName**: "ko_id" - The actual value submitted (ko_id code)
-- **displayField**: "display" - Field shown in the combo box (formatted string)
-- **valueField**: "ko_id" - Field used as the value
+- **hiddenName**: "ko_id" - The actual value submitted (extracted from displaytext)
+- **displayField**: "displaytext" - Field shown in the combo box (from WSGI response)
+- **valueField**: "ko_id" - Field used as the value (extracted via convert function)
 - **typeAhead**: true - Enables type-ahead functionality
 - **mode**: "remote" - Fetches data from server as user types
 - **triggerAction**: "all" - Shows all results when dropdown is triggered
@@ -124,10 +162,15 @@ Replace the two separate textfields with a single combo box:
 - **allowBlank**: false - Field is required
 - **filterOp**: "=" - Uses equality operator for WMS filter
 - **store**: Configuration for the JSON data store
-  - **url**: Path to the search endpoint (include ?table=your_table_name)
+  - **url**: Path to the WSGI search script
+  - **baseParams**: Fixed parameters sent with every request
+    - **searchtables**: Name of the search table in database
+    - **srs**: Spatial reference system (adjust to your project's SRS)
+    - **limit**: Maximum number of results
   - **root**: "results" - JSON array containing results
-  - **fields**: Field definitions matching the JSON response
-- **tpl**: HTML template for dropdown items (shows "CODE - NAME")
+  - **fields**: Field definitions matching the WSGI response
+    - **ko_id**: Extracted from displaytext using convert function (splits on " - ")
+- **tpl**: HTML template for dropdown items (shows displaytext directly)
 - **itemSelector**: CSS selector for dropdown items
 - **listWidth**: Width of the dropdown list in pixels
 
@@ -195,78 +238,98 @@ CREATE INDEX idx_cadastre_imeko ON cadastre(imeko);
 
 ## Customization
 
-### Change Table Name
+### Change Search Table
 
-Add the table parameter to the store URL:
+Update the `searchtables` parameter in baseParams:
 
 ```javascript
-"url": "admin/cadastre_search.php?table=my_cadastre_table"
+"baseParams": {
+  "searchtables": "my_custom_search_table",
+  "srs": "3794",
+  "limit": "20"
+}
+```
+
+### Change Spatial Reference System
+
+Update the `srs` parameter to match your project:
+
+```javascript
+"baseParams": {
+  "searchtables": "search_ko",
+  "srs": "4326",  // WGS84
+  "limit": "20"
+}
 ```
 
 ### Adjust Result Limit
 
-Modify the `LIMIT` clause in `admin/cadastre_search.php` (default is 20).
+Change the `limit` parameter (default in WSGI is 10):
 
-### Change Search Behavior
-
-Edit the SQL WHERE clause in `admin/cadastre_search.php` to adjust how searches match records.
+```javascript
+"baseParams": {
+  "searchtables": "search_ko",
+  "srs": "3794",
+  "limit": "50"  // Return up to 50 results
+}
+```
 
 ### Custom Display Format
 
-Modify the `display` field in the SQL query or the `tpl` template to change how results are displayed.
+The displaytext field should be formatted in your database search table. Example:
+
+```sql
+UPDATE search_ko SET displaytext = ko_id || ' - ' || imeko;
+```
 
 ## Security Considerations
 
-### CRITICAL: Table Name Validation
+The search.wsgi script includes several security measures:
 
-**The endpoint MUST use a whitelist to validate table names.** The current implementation includes a whitelist of allowed tables:
+- **Search table validation**: Only tables matching the regex pattern `[A-Za-z,._]` are allowed
+- **Parameterized queries**: All user input is passed through PDO prepared statements
+- **Query sanitization**: For tsvector search, special characters are sanitized
+- **Connection security**: Uses the existing qwc_connect module for database connections
 
-```php
-$allowed_tables = [
-    'cadastre',
-    'parcele',
-    'parcele_layer',
-    'stavbe',
-    'stavbe_layer',
-    'katastrske_obcine',
-    'cadastral_areas'
-];
-```
+### Additional Security Measures
 
-**You MUST update this whitelist** to match your actual database tables. Remove any tables you don't use and add any tables you need.
-
-**DO NOT remove the whitelist validation** - this is essential to prevent SQL injection attacks via the table parameter.
-
-### Other Security Measures
-
-- The endpoint uses PDO prepared statements to prevent SQL injection
-- Error messages are generic to avoid exposing database structure
-- Detailed errors are logged server-side for administrators
-- Consider adding authentication/authorization checks if needed
-- Consider rate limiting to prevent abuse
+- Consider limiting access to the WSGI script via Apache/web server configuration
+- Monitor search queries for potential abuse
+- Implement rate limiting if needed
+- Keep the search table separate from production data tables
 
 ## Troubleshooting
 
 ### No Results Appearing
 
-1. Check database connection in `admin/settings.php`
-2. Verify table name is correct in the URL parameter
-3. Ensure `ko_id` and `imeko` columns exist in the table
-4. Check browser console for JavaScript errors
-5. Check server logs for PHP errors
+1. Check that the search table exists and has data: `SELECT * FROM search_ko LIMIT 5;`
+2. Verify the `searchtables` parameter matches your table name
+3. Check that the `srs` parameter matches your project's coordinate system
+4. Ensure the displaytext field is properly formatted
+5. Check browser console for JavaScript errors
+6. Check Apache error logs for WSGI errors
 
 ### Dropdown Not Showing
 
 1. Verify `minChars` is set appropriately (default: 2)
-2. Check that the store URL is correct and accessible
+2. Check that the store URL is correct: `wsgi/search.wsgi`
 3. Ensure the JSON response format matches the expected structure
 4. Check browser network tab for failed requests
+5. Verify the WSGI script has execute permissions
 
 ### Search Not Working
 
 1. Verify `filterOp` is set to "=" for the combo box
 2. Ensure `hiddenName` is "ko_id" so the correct value is submitted
 3. Check that the query layer configuration matches your QGIS project
+4. Verify the ko_id extraction logic in the convert function works with your data format
+
+### Database Connection Errors
+
+1. Check the qwc_connect.py configuration file
+2. Verify PostgreSQL connection settings
+3. Ensure the database user has SELECT permissions on search tables
+4. Check Apache error logs for detailed error messages
 
 ## Benefits Over Separate Fields
 
@@ -281,11 +344,22 @@ $allowed_tables = [
 
 To migrate from the old two-field pattern:
 
-1. Replace the two textfield configurations with the combo box
-2. Keep other form fields (like st_parcele) unchanged
-3. Update grid columns if needed
-4. Test thoroughly with your data
-5. Adjust the table parameter in the store URL to match your database
+1. **Create the search table** in your database (see Database Requirements section)
+2. **Populate the search table** with cadastre data:
+   ```sql
+   INSERT INTO search_ko (displaytext, searchstring, search_category, showlayer, the_geom)
+   SELECT 
+     ko_id || ' - ' || imeko AS displaytext,
+     lower(ko_id || ' ' || imeko) AS searchstring,
+     '01-Katastrske občine' AS search_category,
+     'Katastrske občine' AS showlayer,
+     geom AS the_geom
+   FROM your_cadastre_table;
+   ```
+3. **Replace the two textfield configurations** with the combo box (see example)
+4. **Keep other form fields** (like st_parcele) unchanged
+5. **Update baseParams** to match your SRS and table name
+6. **Test thoroughly** with your data before deploying to production
 
 ## License
 
