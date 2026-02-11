@@ -1,0 +1,34 @@
+# Cadastre Search Example Configuration Notes
+
+This JSON file provides example configurations for cadastre area search using the WSGI search script.
+
+## Field Name Consideration
+
+The configuration uses `name="ko_id"` which will be used as the field name when filtering the WMS layer. The `displaytext` from WSGI (e.g., "964 - VELENJE") will be submitted as the value.
+
+### If your database has separate ko_id and imeko columns:
+
+You have several options:
+
+1. **Add a computed column or view** (recommended):
+```sql
+ALTER TABLE parcele_layer ADD COLUMN ko_displaytext VARCHAR(255);
+UPDATE parcele_layer SET ko_displaytext = ko_id || ' - ' || imeko;
+CREATE INDEX ON parcele_layer(ko_displaytext);
+```
+
+Then update the combo configuration:
+```json
+{
+  "name": "ko_displaytext",
+  "filterOp": "="
+}
+```
+
+2. **Use JavaScript customization**: Implement custom logic in GlobalOptions.js to extract ko_id from displaytext before submitting the WMS request.
+
+3. **Use just the code**: Modify the search table to return only the ko_id in displaytext, or create a custom field that extracts it.
+
+## Testing
+
+Before deploying, test that the WMS GetFeatureInfo request works correctly with your chosen field name and filterOp combination.

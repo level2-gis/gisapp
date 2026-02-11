@@ -186,6 +186,24 @@ Both examples include:
 - Grid columns configuration for search results
 - Selection and zoom settings
 
+**Important Note about Field Mapping:**
+
+The example configuration uses `name="ko_id"` and `filterOp="ILIKE"` to filter on the full displaytext returned by WSGI. This assumes your database layer's field can match the displaytext format.
+
+If your database layer has separate `ko_id` (numeric code) and `imeko` (name) columns, you may need to:
+1. Modify your database to add a computed field matching the displaytext format, OR
+2. Customize the search panel implementation in JavaScript to extract the code from displaytext before filtering, OR
+3. Create a database view that includes the displaytext field for searching
+
+Example database view:
+```sql
+CREATE OR REPLACE VIEW parcele_view AS
+SELECT *, ko_id || ' - ' || imeko AS ko_displaytext, *
+FROM parcele_layer;
+```
+
+Then set `name="ko_displaytext"` in your combo box configuration.
+
 ## Usage in Projects
 
 ### Option 1: JSON Configuration File
