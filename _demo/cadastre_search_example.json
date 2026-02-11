@@ -1,6 +1,6 @@
 {
     "_comment": "Example configuration for cadastre area search with type-ahead combo box using search.wsgi",
-    "_note": "This configuration uses the existing /client/wsgi/search.wsgi script with searchtables parameter",
+    "_note": "The WSGI script returns both 'ko_id' (code value for filtering) and 'displaytext' (formatted display text)",
     "search": [
         {
             "title": "Parcele",
@@ -12,7 +12,7 @@
                     "fieldLabel": "Katastrska občina",
                     "name": "ko_id",
                     "displayField": "displaytext",
-                    "valueField": "displaytext",
+                    "valueField": "ko_id",
                     "typeAhead": true,
                     "mode": "remote",
                     "triggerAction": "all",
@@ -20,7 +20,7 @@
                     "queryDelay": 100,
                     "allowBlank": false,
                     "blankText": "Vnesi številko ali ime k.o.",
-                    "filterOp": "ILIKE",
+                    "filterOp": "=",
                     "store": {
                         "xtype": "jsonstore",
                         "url": "wsgi/search.wsgi",
@@ -31,6 +31,7 @@
                         },
                         "root": "results",
                         "fields": [
+                            {"name": "ko_id", "type": "string"},
                             {"name": "displaytext", "type": "string"},
                             {"name": "searchtable", "type": "string"},
                             {"name": "bbox", "type": "auto"},
@@ -78,7 +79,7 @@
                     "fieldLabel": "Katastrska občina",
                     "name": "ko_id",
                     "displayField": "displaytext",
-                    "valueField": "displaytext",
+                    "valueField": "ko_id",
                     "typeAhead": true,
                     "mode": "remote",
                     "triggerAction": "all",
@@ -86,7 +87,7 @@
                     "queryDelay": 100,
                     "allowBlank": false,
                     "blankText": "Vnesi številko ali ime k.o.",
-                    "filterOp": "ILIKE",
+                    "filterOp": "=",
                     "store": {
                         "xtype": "jsonstore",
                         "url": "wsgi/search.wsgi",
@@ -97,6 +98,7 @@
                         },
                         "root": "results",
                         "fields": [
+                            {"name": "ko_id", "type": "string"},
                             {"name": "displaytext", "type": "string"},
                             {"name": "searchtable", "type": "string"},
                             {"name": "bbox", "type": "auto"},

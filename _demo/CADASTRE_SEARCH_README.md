@@ -42,6 +42,7 @@ The search.wsgi script is a Python-based search endpoint that:
 {
   "results": [
     {
+      "ko_id": "964",
       "displaytext": "964 - VELENJE",
       "searchtable": "search_ko",
       "bbox": [504879.2, 134090.29, 511105.31, 137353.88],
@@ -53,12 +54,21 @@ The search.wsgi script is a Python-based search endpoint that:
 }
 ```
 
+The WSGI response includes:
+- **ko_id**: The cadastre area code (used as the value for filtering)
+- **displaytext**: Formatted display text showing "CODE - NAME"
+- **bbox**: Bounding box for zoom functionality
+- **showlayer**: Layer name to display
+- **selectable**: Whether the result is selectable
+- **geometry**: WKT geometry (for point features)
+
 ### Database Requirements
 
 The search.wsgi script requires a search table with the following structure:
 
 ```sql
 CREATE TABLE search_ko (
+  ko_id VARCHAR(10),               -- Cadastre area code (e.g., "964")
   displaytext VARCHAR(255),        -- Display text in format "CODE - NAME"
   searchstring VARCHAR(255),       -- Searchable text (lowercase)
   searchstring_tsvector tsvector,  -- Full-text search vector (optional)
@@ -67,18 +77,21 @@ CREATE TABLE search_ko (
   the_geom GEOMETRY                -- Geometry for bounding box calculation
 );
 
--- Create index for better search performance
+-- Create indexes for better search performance
+CREATE INDEX idx_search_ko_ko_id ON search_ko(ko_id);
 CREATE INDEX idx_search_ko_searchstring ON search_ko(searchstring);
 CREATE INDEX idx_search_ko_tsvector ON search_ko USING gin(searchstring_tsvector);
 ```
 
 **Example Data:**
 ```sql
-INSERT INTO search_ko (displaytext, searchstring, search_category, showlayer, the_geom)
+INSERT INTO search_ko (ko_id, displaytext, searchstring, search_category, showlayer, the_geom)
 VALUES 
-  ('964 - VELENJE', '964 velenje', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794)),
-  ('1964 - IHAN', '1964 ihan', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794));
+  ('964', '964 - VELENJE', '964 velenje', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794)),
+  ('1964', '1964 - IHAN', '1964 ihan', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794));
 ```
+
+**Note:** The `ko_id` field should contain just the cadastre area code, while `displaytext` contains the formatted display text. The WSGI script returns both fields, allowing the combo box to display the full text while submitting only the code for filtering.
 
 ## Frontend Configuration
 
@@ -111,7 +124,7 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
   "fieldLabel": "Katastrska občina",
   "name": "ko_id",
   "displayField": "displaytext",
-  "valueField": "displaytext",
+  "valueField": "ko_id",
   "typeAhead": true,
   "mode": "remote",
   "triggerAction": "all",
@@ -119,7 +132,7 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
   "queryDelay": 100,
   "allowBlank": false,
   "blankText": "Vnesi številko ali ime k.o.",
-  "filterOp": "ILIKE",
+  "filterOp": "=",
   "store": {
     "xtype": "jsonstore",
     "url": "wsgi/search.wsgi",
@@ -130,6 +143,7 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
     },
     "root": "results",
     "fields": [
+      {"name": "ko_id", "type": "string"},
       {"name": "displaytext", "type": "string"},
       {"name": "searchtable", "type": "string"},
       {"name": "bbox", "type": "auto"},
@@ -148,16 +162,16 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 
 - **xtype**: "combo" - Ext JS combo box component
 - **fieldLabel**: Label displayed next to the field
-- **name**: "ko_id" - Field name for the search form (will contain the full displaytext)
-- **displayField**: "displaytext" - Field shown in the combo box (from WSGI response)
-- **valueField**: "displaytext" - Field used as the value (full text with code and name)
+- **name**: "ko_id" - Field name for the search form (matches database field)
+- **displayField**: "displaytext" - Field shown in the combo box (formatted text from WSGI)
+- **valueField**: "ko_id" - Field used as the value (cadastre code from WSGI)
 - **typeAhead**: true - Enables type-ahead functionality
 - **mode**: "remote" - Fetches data from server as user types
 - **triggerAction**: "all" - Shows all results when dropdown is triggered
 - **minChars**: 2 - Minimum characters before search starts
 - **queryDelay**: 100 - Delay in milliseconds before sending query
 - **allowBlank**: false - Field is required
-- **filterOp**: "ILIKE" - Uses case-insensitive LIKE operator for WMS filter (matches the full displaytext)
+- **filterOp**: "=" - Uses equality operator for WMS filter (exact match on ko_id)
 - **store**: Configuration for the JSON data store
   - **url**: Path to the WSGI search script
   - **baseParams**: Fixed parameters sent with every request
@@ -166,12 +180,14 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
     - **limit**: Maximum number of results
   - **root**: "results" - JSON array containing results
   - **fields**: Field definitions matching the WSGI response
-    - Standard fields from search.wsgi: displaytext, searchtable, bbox, showlayer, selectable, geometry
-- **tpl**: HTML template for dropdown items (shows displaytext directly)
+    - **ko_id**: Cadastre area code (e.g., "964")
+    - **displaytext**: Formatted display text (e.g., "964 - VELENJE")
+    - Standard WSGI fields: searchtable, bbox, showlayer, selectable, geometry
+- **tpl**: HTML template for dropdown items (shows displaytext)
 - **itemSelector**: CSS selector for dropdown items
 - **listWidth**: Width of the dropdown list in pixels
 
-**Note**: The combo box searches and submits the full displaytext (e.g., "964 - VELENJE"). If you need to extract just the code, you can add custom JavaScript processing in your application logic.
+**Key Point:** The combo box displays `displaytext` (e.g., "964 - VELENJE") but submits `ko_id` (e.g., "964") for filtering. This provides a user-friendly display while ensuring clean, exact matching on the database field.
 
 ## Example Configuration
 
@@ -186,23 +202,7 @@ Both examples include:
 - Grid columns configuration for search results
 - Selection and zoom settings
 
-**Important Note about Field Mapping:**
-
-The example configuration uses `name="ko_id"` and `filterOp="ILIKE"` to filter on the full displaytext returned by WSGI. This assumes your database layer's field can match the displaytext format.
-
-If your database layer has separate `ko_id` (numeric code) and `imeko` (name) columns, you may need to:
-1. Modify your database to add a computed field matching the displaytext format, OR
-2. Customize the search panel implementation in JavaScript to extract the code from displaytext before filtering, OR
-3. Create a database view that includes the displaytext field for searching
-
-Example database view:
-```sql
-CREATE OR REPLACE VIEW parcele_view AS
-SELECT *, ko_id || ' - ' || imeko AS ko_displaytext, *
-FROM parcele_layer;
-```
-
-Then set `name="ko_displaytext"` in your combo box configuration.
+The combo box displays formatted text (e.g., "964 - VELENJE") from the `displaytext` field while submitting only the cadastre code (e.g., "964") from the `ko_id` field for filtering. This ensures user-friendly display with precise database filtering.
 
 ## Usage in Projects
 
@@ -336,10 +336,11 @@ The search.wsgi script includes several security measures:
 
 ### Search Not Working
 
-1. Verify `filterOp` is set to "ILIKE" for the combo box (case-insensitive matching)
-2. Ensure `name` is set to match your query layer's field name
-3. Check that the query layer configuration matches your QGIS project
-4. Verify the displaytext format in your database matches what you expect in the filter
+1. Verify `filterOp` is set to "=" for exact matching on ko_id
+2. Ensure `name` is "ko_id" to match the database field
+3. Verify `valueField` is "ko_id" so the code value is submitted
+4. Check that the query layer configuration matches your QGIS project
+5. Ensure the database layer has a `ko_id` field that matches the values from search_ko table
 
 ### Database Connection Errors
 
@@ -364,8 +365,9 @@ To migrate from the old two-field pattern:
 1. **Create the search table** in your database (see Database Requirements section)
 2. **Populate the search table** with cadastre data:
    ```sql
-   INSERT INTO search_ko (displaytext, searchstring, search_category, showlayer, the_geom)
+   INSERT INTO search_ko (ko_id, displaytext, searchstring, search_category, showlayer, the_geom)
    SELECT 
+     ko_id AS ko_id,
      ko_id || ' - ' || imeko AS displaytext,
      lower(ko_id || ' ' || imeko) AS searchstring,
      '01-Katastrske občine' AS search_category,
@@ -376,7 +378,8 @@ To migrate from the old two-field pattern:
 3. **Replace the two textfield configurations** with the combo box (see example)
 4. **Keep other form fields** (like st_parcele) unchanged
 5. **Update baseParams** to match your SRS and table name
-6. **Test thoroughly** with your data before deploying to production
+6. **Ensure your database layers** have a `ko_id` field matching the codes in search_ko
+7. **Test thoroughly** with your data before deploying to production
 
 ## License
 
