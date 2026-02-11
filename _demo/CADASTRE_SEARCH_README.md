@@ -73,15 +73,25 @@ CREATE INDEX idx_lookup_ko_description ON lookup.ko(description);
 
 **Example Data:**
 ```sql
+-- The description should include the code for proper display
 INSERT INTO lookup.ko (code, description, geom_type, category)
 VALUES 
-  (964, 'VELENJE', 3, 'ko'),
-  (1964, 'IHAN', 3, 'ko'),
-  (1982, 'ŠUJICA', 3, 'ko'),
-  (1983, 'BABNA GORA', 3, 'ko');
+  (964, '964 VELENJE', 3, 'ko'),
+  (1964, '1964 IHAN', 3, 'ko'),
+  (1982, '1982 ŠUJICA', 3, 'ko'),
+  (1983, '1983 BABNA GORA', 3, 'ko');
+
+-- Or use a view to automatically format:
+CREATE OR REPLACE VIEW lookup.ko AS
+SELECT 
+  code,
+  code || ' ' || name AS description,
+  geom_type,
+  category
+FROM cadastre_base_table;
 ```
 
-**Note:** The data.wsgi script queries the `code` and `description` columns and returns them as a simple array `[code, description]`. The code becomes the value and description becomes the display text in the combo box.
+**Important:** The `description` column should contain the formatted display text including the code (e.g., "964 VELENJE"). This ensures the combo box displays properly when a value is selected. The data.wsgi script returns `[[code, description], ...]` and ExtJS uses the first element as the value and the second as the display text.
 
 ## Frontend Configuration
 
@@ -125,23 +135,31 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
   "queryDelay": 100,
   "filterOp": "=",
   "store": {
-    "xtype": "jsonstore",
+    "xtype": "arraystore",
     "url": "wsgi/data.wsgi",
     "baseParams": {
       "table": "lookup.ko",
       "gtype": ""
     },
-    "root": "results"
+    "root": "results",
+    "id": 0,
+    "fields": [
+      "value",
+      "text"
+    ]
   }
 }
 ```
 
 **Key Differences from Static Store:**
 - Uses `"mode": "remote"` to fetch data from server
+- Uses `"xtype": "arraystore"` for array format compatibility
 - `"url": "wsgi/data.wsgi"` points to the data endpoint
 - `"baseParams"` specifies the lookup table and geometry type
-- Response format `[[code, description], ...]` matches static array format
-- No need to define `displayField`, `valueField`, or `fields` - ExtJS automatically uses first array element as value and second as display
+- `"id": 0` specifies which array element is the unique identifier (the code)
+- `"fields": ["value", "text"]` maps array elements to field names
+- Response format `[[code, description], ...]` where description includes code (e.g., "964 VELENJE")
+- ExtJS automatically uses first array element as value and second as display text
 
 ### Configuration Properties Explained
 
@@ -159,29 +177,31 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 - **minChars**: 2 - Minimum characters before search starts
 - **queryDelay**: 100 - Delay in milliseconds before sending query
 - **filterOp**: "=" - Uses equality operator for WMS filter (exact match on ko_id)
-- **store**: Configuration for the JSON data store
-  - **xtype**: "jsonstore" - ExtJS JSON store
+- **store**: Configuration for the array data store
+  - **xtype**: "arraystore" - ExtJS array store for array format data
   - **url**: "wsgi/data.wsgi" - Path to the data.wsgi endpoint
   - **baseParams**: Fixed parameters sent with every request
     - **table**: "lookup.ko" - Name of the lookup table in database
     - **gtype**: "" - Geometry type filter (empty for all types)
   - **root**: "results" - JSON array containing results
+  - **id**: 0 - Index of the unique identifier field (the code)
+  - **fields**: ["value", "text"] - Maps array elements to named fields
 
 **Array Store Format:**
 The data.wsgi script returns simple arrays: `[[code, description], [code, description], ...]`
 
-ExtJS automatically interprets:
-- First element (code) as the **value** (submitted to WMS filter)
-- Second element (description) as the **display text** (shown to user)
+Where `description` should include the code for proper display (e.g., "964 VELENJE").
 
-This matches the static array store format, so no need to define `displayField`, `valueField`, `fields`, `tpl`, or `itemSelector`.
+ExtJS ArrayStore automatically interprets:
+- First element (code) as the **value** (submitted to WMS filter)
+- Second element (description with code) as the **text** (shown to user)
 
 **Key Properties for WMS Filter Integration:**
 - `forceSelection: true` ensures a value from the list is selected
 - `name: "ko_id"` specifies the field name used in the WMS filter
 - `filterOp: "="` defines the filter operation used in the WMS request
 
-The combo box displays the description (e.g., "VELENJE") but submits the code (e.g., "964") for filtering, ensuring clean WMS filter queries like `ko_id = 964`.
+The combo box displays the description (e.g., "964 VELENJE") but submits only the code (e.g., 964) for filtering, ensuring clean WMS filter queries like `ko_id = 964`.
 
 ## Example Configuration
 
@@ -285,11 +305,24 @@ Set the gtype parameter (1=point, 2=line, 3=polygon):
 
 ### Customize Display Format
 
-The display format comes directly from the database `description` column. To customize, update your database:
+The display format comes directly from the database `description` column. To show "CODE DESCRIPTION" format:
 
 ```sql
-UPDATE lookup.ko SET description = code || ' - ' || UPPER(description);
+-- Option 1: Update existing data
+UPDATE lookup.ko SET description = code || ' ' || description 
+WHERE description NOT LIKE code || '%';
+
+-- Option 2: Create a view with formatted description
+CREATE OR REPLACE VIEW lookup.ko AS
+SELECT 
+  code,
+  code || ' ' || name AS description,
+  geom_type,
+  category
+FROM cadastre_base_table;
 ```
+
+The combo box will then display "964 VELENJE", "1964 IHAN", etc.
 
 ## Security Considerations
 
@@ -358,12 +391,12 @@ The data.wsgi script includes several security measures:
 To migrate from the old two-field pattern:
 
 1. **Create the lookup table** in your database (see Database Requirements section)
-2. **Populate the lookup table** with cadastre data:
+2. **Populate the lookup table** with cadastre data - **important**: format description to include code:
    ```sql
    INSERT INTO lookup.ko (code, description, geom_type, category)
    SELECT 
      ko_id::integer AS code,
-     imeko AS description,
+     ko_id || ' ' || imeko AS description,  -- Format as "CODE NAME"
      3 AS geom_type,
      'ko' AS category
    FROM your_cadastre_table;
@@ -373,7 +406,8 @@ To migrate from the old two-field pattern:
 5. **Update baseParams** to match your table name
 6. **Ensure your database layers** have a `ko_id` field matching the codes in lookup.ko
 7. **Test the data.wsgi endpoint** directly: `wsgi/data.wsgi?table=lookup.ko&gtype=&query=test`
-8. **Test thoroughly** with your data before deploying to production
+8. **Verify the response format** includes properly formatted descriptions
+9. **Test thoroughly** with your data before deploying to production
 
 ## License
 

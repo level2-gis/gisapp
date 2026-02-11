@@ -1,6 +1,6 @@
 {
     "_comment": "Example configuration for cadastre area search with type-ahead combo box using data.wsgi",
-    "_note": "The data.wsgi script returns simple array format matching static array store: [[code, description], ...]",
+    "_note": "The lookup table description should include the code (e.g., '1984 SELO NAD POLHOVIM GRADCEM'). ArrayStore auto-maps: first element = value, second = display.",
     "search": [
         {
             "title": "Parcele",
@@ -23,13 +23,18 @@
                     "queryDelay": 100,
                     "filterOp": "=",
                     "store": {
-                        "xtype": "jsonstore",
+                        "xtype": "arraystore",
                         "url": "wsgi/data.wsgi",
                         "baseParams": {
                             "table": "lookup.ko",
                             "gtype": ""
                         },
-                        "root": "results"
+                        "root": "results",
+                        "id": 0,
+                        "fields": [
+                            "value",
+                            "text"
+                        ]
                     }
                 },
                 {
@@ -86,13 +91,18 @@
                     "queryDelay": 100,
                     "filterOp": "=",
                     "store": {
-                        "xtype": "jsonstore",
+                        "xtype": "arraystore",
                         "url": "wsgi/data.wsgi",
                         "baseParams": {
                             "table": "lookup.ko",
                             "gtype": ""
                         },
-                        "root": "results"
+                        "root": "results",
+                        "id": 0,
+                        "fields": [
+                            "value",
+                            "text"
+                        ]
                     }
                 },
                 {
