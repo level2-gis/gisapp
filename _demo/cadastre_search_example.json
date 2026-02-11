@@ -1,6 +1,6 @@
 {
-    "_comment": "Example configuration for cadastre area search with type-ahead combo box using search.wsgi",
-    "_note": "The WSGI script returns both 'ko_id' (code value for filtering) and 'displaytext' (formatted display text)",
+    "_comment": "Example configuration for cadastre area search with type-ahead combo box using data.wsgi",
+    "_note": "The data.wsgi script returns simple array format matching static array store: [[code, description], ...]",
     "search": [
         {
             "title": "Parcele",
@@ -11,8 +11,6 @@
                     "xtype": "combo",
                     "name": "ko_id",
                     "fieldLabel": "KO",
-                    "displayField": "displaytext",
-                    "valueField": "ko_id",
                     "allowBlank": true,
                     "emptyText": "Izberi kat. občino",
                     "editable": true,
@@ -26,26 +24,13 @@
                     "filterOp": "=",
                     "store": {
                         "xtype": "jsonstore",
-                        "url": "wsgi/search.wsgi",
+                        "url": "wsgi/data.wsgi",
                         "baseParams": {
-                            "searchtables": "search_ko",
-                            "srs": "3794",
-                            "limit": "20"
+                            "table": "lookup.ko",
+                            "gtype": ""
                         },
-                        "root": "results",
-                        "fields": [
-                            {"name": "ko_id", "type": "string"},
-                            {"name": "displaytext", "type": "string"},
-                            {"name": "searchtable", "type": "string"},
-                            {"name": "bbox", "type": "auto"},
-                            {"name": "showlayer", "type": "string"},
-                            {"name": "selectable", "type": "string"},
-                            {"name": "geometry", "type": "auto"}
-                        ]
-                    },
-                    "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\">{displaytext}</div></tpl>",
-                    "itemSelector": "div.x-combo-list-item",
-                    "listWidth": 300
+                        "root": "results"
+                    }
                 },
                 {
                     "xtype": "textfield",
@@ -89,8 +74,6 @@
                     "xtype": "combo",
                     "name": "ko_id",
                     "fieldLabel": "KO",
-                    "displayField": "displaytext",
-                    "valueField": "ko_id",
                     "allowBlank": true,
                     "emptyText": "Izberi kat. občino",
                     "editable": true,
@@ -104,26 +87,13 @@
                     "filterOp": "=",
                     "store": {
                         "xtype": "jsonstore",
-                        "url": "wsgi/search.wsgi",
+                        "url": "wsgi/data.wsgi",
                         "baseParams": {
-                            "searchtables": "search_ko",
-                            "srs": "3794",
-                            "limit": "20"
+                            "table": "lookup.ko",
+                            "gtype": ""
                         },
-                        "root": "results",
-                        "fields": [
-                            {"name": "ko_id", "type": "string"},
-                            {"name": "displaytext", "type": "string"},
-                            {"name": "searchtable", "type": "string"},
-                            {"name": "bbox", "type": "auto"},
-                            {"name": "showlayer", "type": "string"},
-                            {"name": "selectable", "type": "string"},
-                            {"name": "geometry", "type": "auto"}
-                        ]
-                    },
-                    "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\">{displaytext}</div></tpl>",
-                    "itemSelector": "div.x-combo-list-item",
-                    "listWidth": 300
+                        "root": "results"
+                    }
                 },
                 {
                     "xtype": "textfield",

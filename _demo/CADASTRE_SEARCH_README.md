@@ -13,85 +13,75 @@ The type-ahead combo box provides a better user experience compared to separate 
 
 ## Backend Implementation
 
-This implementation uses the existing `/client/wsgi/search.wsgi` script, which is already part of the QGIS Web Client infrastructure.
+This implementation uses the existing `/client/wsgi/data.wsgi` script, which provides a simple array-based response format compatible with ExtJS array stores.
 
-### WSGI Search Script
+### WSGI Data Script
 
-**File: `client/wsgi/search.wsgi`**
+**File: `client/wsgi/data.wsgi`**
 
-The search.wsgi script is a Python-based search endpoint that:
-- Connects to PostgreSQL database with search tables
-- Supports full-text search using PostgreSQL tsvector or ILIKE
-- Returns results with bounding boxes for zoom functionality
+The data.wsgi script is a Python-based lookup endpoint that:
+- Connects to PostgreSQL database lookup tables
+- Supports filtering by query string (searches both code and description)
+- Returns results as simple arrays matching static store format
 - Supports JSONP callback for cross-domain requests
 
 **URL Pattern:**
 ```
-/wsgi/search.wsgi?searchtables=search_ko&srs=3794&query=[SEARCH_QUERY]&limit=20
+/wsgi/data.wsgi?table=lookup.ko&gtype=&query=[SEARCH_QUERY]
 ```
 
 **Parameters:**
-- `searchtables` (required): Name of the search table (e.g., "search_ko" for cadastre areas)
-- `srs` (required): Spatial reference system ID (e.g., "3794")
-- `query` (required): Search term entered by user
-- `limit` (optional): Maximum number of results (default: 10)
+- `table` (required): Name of the lookup table (e.g., "lookup.ko" for cadastre areas)
+- `gtype` (required): Geometry type filter (can be empty string)
+- `query` (optional): Search term entered by user
+- `category` (optional): Category filter
 - `cb` (optional): JSONP callback function name
 
 **Response Format:**
 ```json
 {
   "results": [
-    {
-      "ko_id": "964",
-      "displaytext": "964 - VELENJE",
-      "searchtable": "search_ko",
-      "bbox": [504879.2, 134090.29, 511105.31, 137353.88],
-      "showlayer": "Katastrske občine",
-      "selectable": "1",
-      "geometry": null
-    }
+    [964, "VELENJE"],
+    [1964, "IHAN"]
   ]
 }
 ```
 
-The WSGI response includes:
-- **ko_id**: The cadastre area code (used as the value for filtering)
-- **displaytext**: Formatted display text showing "CODE - NAME"
-- **bbox**: Bounding box for zoom functionality
-- **showlayer**: Layer name to display
-- **selectable**: Whether the result is selectable
-- **geometry**: WKT geometry (for point features)
+The response is a simple array where each element is `[code, description]`. This format matches the static array store format used in ExtJS, making the remote store behave identically to a static store.
 
 ### Database Requirements
 
-The search.wsgi script requires a search table with the following structure:
+The data.wsgi script requires a lookup table with the following structure:
 
 ```sql
-CREATE TABLE search_ko (
-  ko_id VARCHAR(10),               -- Cadastre area code (e.g., "964")
-  displaytext VARCHAR(255),        -- Display text in format "CODE - NAME"
-  searchstring VARCHAR(255),       -- Searchable text (lowercase)
-  searchstring_tsvector tsvector,  -- Full-text search vector (optional)
-  search_category VARCHAR(50),     -- Category for grouping (e.g., "01-ko")
-  showlayer VARCHAR(255),          -- Layer name to show/zoom to
-  the_geom GEOMETRY                -- Geometry for bounding box calculation
+CREATE TABLE lookup.ko (
+  id serial PRIMARY KEY,
+  code integer,
+  description text,
+  geom_type integer NOT NULL,
+  category text,
+  CONSTRAINT "uc_lookup_ko" UNIQUE (code, geom_type)
 );
 
--- Create indexes for better search performance
-CREATE INDEX idx_search_ko_ko_id ON search_ko(ko_id);
-CREATE INDEX idx_search_ko_searchstring ON search_ko(searchstring);
-CREATE INDEX idx_search_ko_tsvector ON search_ko USING gin(searchstring_tsvector);
+-- geom_type: 1=point, 2=line, 3=polygon
+-- For cadastre areas, geom_type is typically 3 (polygon)
+
+-- Create index for better search performance
+CREATE INDEX idx_lookup_ko_code ON lookup.ko(code);
+CREATE INDEX idx_lookup_ko_description ON lookup.ko(description);
 ```
 
 **Example Data:**
 ```sql
-INSERT INTO search_ko (ko_id, displaytext, searchstring, search_category, showlayer, the_geom)
+INSERT INTO lookup.ko (code, description, geom_type, category)
 VALUES 
-  ('964', '964 - VELENJE', '964 velenje', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794)),
-  ('1964', '1964 - IHAN', '1964 ihan', '01-Katastrske občine', 'Katastrske občine', ST_GeomFromText('POLYGON(...)', 3794));
+  (964, 'VELENJE', 3, 'ko'),
+  (1964, 'IHAN', 3, 'ko'),
+  (1982, 'ŠUJICA', 3, 'ko'),
+  (1983, 'BABNA GORA', 3, 'ko');
 ```
 
-**Note:** The `ko_id` field should contain just the cadastre area code, while `displaytext` contains the formatted display text. The WSGI script returns both fields, allowing the combo box to display the full text while submitting only the code for filtering.
+**Note:** The data.wsgi script queries the `code` and `description` columns and returns them as a simple array `[code, description]`. The code becomes the value and description becomes the display text in the combo box.
 
 ## Frontend Configuration
 
@@ -117,14 +107,12 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 }
 ```
 
-**New Pattern (combo box with WSGI):**
+**New Pattern (combo box with data.wsgi):**
 ```javascript
 {
   "xtype": "combo",
   "name": "ko_id",
   "fieldLabel": "KO",
-  "displayField": "displaytext",
-  "valueField": "ko_id",
   "allowBlank": true,
   "emptyText": "Izberi kat. občino",
   "editable": true,
@@ -138,36 +126,28 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
   "filterOp": "=",
   "store": {
     "xtype": "jsonstore",
-    "url": "wsgi/search.wsgi",
+    "url": "wsgi/data.wsgi",
     "baseParams": {
-      "searchtables": "search_ko",
-      "srs": "3794",
-      "limit": "20"
+      "table": "lookup.ko",
+      "gtype": ""
     },
-    "root": "results",
-    "fields": [
-      {"name": "ko_id", "type": "string"},
-      {"name": "displaytext", "type": "string"},
-      {"name": "searchtable", "type": "string"},
-      {"name": "bbox", "type": "auto"},
-      {"name": "showlayer", "type": "string"},
-      {"name": "selectable", "type": "string"},
-      {"name": "geometry", "type": "auto"}
-    ]
-  },
-  "tpl": "<tpl for=\".\"><div class=\"x-combo-list-item\">{displaytext}</div></tpl>",
-  "itemSelector": "div.x-combo-list-item",
-  "listWidth": 300
+    "root": "results"
+  }
 }
 ```
+
+**Key Differences from Static Store:**
+- Uses `"mode": "remote"` to fetch data from server
+- `"url": "wsgi/data.wsgi"` points to the data endpoint
+- `"baseParams"` specifies the lookup table and geometry type
+- Response format `[[code, description], ...]` matches static array format
+- No need to define `displayField`, `valueField`, or `fields` - ExtJS automatically uses first array element as value and second as display
 
 ### Configuration Properties Explained
 
 - **xtype**: "combo" - Ext JS combo box component
 - **name**: "ko_id" - Field name for the search form (matches database field)
 - **fieldLabel**: "KO" - Label displayed next to the field
-- **displayField**: "displaytext" - Field shown in the combo box (formatted text from WSGI)
-- **valueField**: "ko_id" - Field used as the value (cadastre code from WSGI)
 - **allowBlank**: true - Field is optional (can be changed to false if required)
 - **emptyText**: "Izberi kat. občino" - Placeholder text when field is empty
 - **editable**: true - Allows typing in the combo box for searching
@@ -180,26 +160,28 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 - **queryDelay**: 100 - Delay in milliseconds before sending query
 - **filterOp**: "=" - Uses equality operator for WMS filter (exact match on ko_id)
 - **store**: Configuration for the JSON data store
-  - **url**: Path to the WSGI search script
+  - **xtype**: "jsonstore" - ExtJS JSON store
+  - **url**: "wsgi/data.wsgi" - Path to the data.wsgi endpoint
   - **baseParams**: Fixed parameters sent with every request
-    - **searchtables**: Name of the search table in database
-    - **srs**: Spatial reference system (adjust to your project's SRS)
-    - **limit**: Maximum number of results
+    - **table**: "lookup.ko" - Name of the lookup table in database
+    - **gtype**: "" - Geometry type filter (empty for all types)
   - **root**: "results" - JSON array containing results
-  - **fields**: Field definitions matching the WSGI response
-    - **ko_id**: Cadastre area code (e.g., "964")
-    - **displaytext**: Formatted display text (e.g., "964 - VELENJE")
-    - Standard WSGI fields: searchtable, bbox, showlayer, selectable, geometry
-- **tpl**: HTML template for dropdown items (shows displaytext)
-- **itemSelector**: CSS selector for dropdown items
-- **listWidth**: Width of the dropdown list in pixels
+
+**Array Store Format:**
+The data.wsgi script returns simple arrays: `[[code, description], [code, description], ...]`
+
+ExtJS automatically interprets:
+- First element (code) as the **value** (submitted to WMS filter)
+- Second element (description) as the **display text** (shown to user)
+
+This matches the static array store format, so no need to define `displayField`, `valueField`, `fields`, `tpl`, or `itemSelector`.
 
 **Key Properties for WMS Filter Integration:**
 - `forceSelection: true` ensures a value from the list is selected
-- `valueField: "ko_id"` specifies which field value is submitted to the WMS filter
+- `name: "ko_id"` specifies the field name used in the WMS filter
 - `filterOp: "="` defines the filter operation used in the WMS request
 
-The combo box displays `displaytext` (e.g., "964 - VELENJE") but submits `ko_id` (e.g., "964") for filtering, ensuring clean WMS filter queries like `ko_id = '964'`.
+The combo box displays the description (e.g., "VELENJE") but submits the code (e.g., "964") for filtering, ensuring clean WMS filter queries like `ko_id = 964`.
 
 ## Example Configuration
 
@@ -267,92 +249,93 @@ CREATE INDEX idx_cadastre_imeko ON cadastre(imeko);
 
 ## Customization
 
-### Change Search Table
+### Change Lookup Table
 
-Update the `searchtables` parameter in baseParams:
-
-```javascript
-"baseParams": {
-  "searchtables": "my_custom_search_table",
-  "srs": "3794",
-  "limit": "20"
-}
-```
-
-### Change Spatial Reference System
-
-Update the `srs` parameter to match your project:
+Update the `table` parameter in baseParams:
 
 ```javascript
 "baseParams": {
-  "searchtables": "search_ko",
-  "srs": "4326",  // WGS84
-  "limit": "20"
+  "table": "lookup.my_custom_table",
+  "gtype": ""
 }
 ```
 
-### Adjust Result Limit
+### Filter by Category
 
-Change the `limit` parameter (default in WSGI is 10):
+Add a category parameter to filter results:
 
 ```javascript
 "baseParams": {
-  "searchtables": "search_ko",
-  "srs": "3794",
-  "limit": "50"  // Return up to 50 results
+  "table": "lookup.ko",
+  "gtype": "",
+  "category": "cadastre"
 }
 ```
 
-### Custom Display Format
+### Adjust Geometry Type Filter
 
-The displaytext field should be formatted in your database search table. Example:
+Set the gtype parameter (1=point, 2=line, 3=polygon):
+
+```javascript
+"baseParams": {
+  "table": "lookup.ko",
+  "gtype": "3"  // Only polygons
+}
+```
+
+### Customize Display Format
+
+The display format comes directly from the database `description` column. To customize, update your database:
 
 ```sql
-UPDATE search_ko SET displaytext = ko_id || ' - ' || imeko;
+UPDATE lookup.ko SET description = code || ' - ' || UPPER(description);
 ```
 
 ## Security Considerations
 
-The search.wsgi script includes several security measures:
+The data.wsgi script includes several security measures:
 
-- **Search table validation**: Only tables with names matching `[A-Za-z,._]` are allowed (the regex `[^A-Za-z,._]` rejects any name containing characters outside this set)
+- **Table name validation**: Implicitly validated through database schema (table must exist)
 - **Parameterized queries**: All user input is passed through PDO prepared statements
-- **Query sanitization**: For tsvector search, special characters are sanitized to avoid tsquery syntax errors
+- **Query sanitization**: Uses parameterized queries for search terms
 - **Connection security**: Uses the existing qwc_connect module for database connections
 
 ### Additional Security Measures
 
+- Keep lookup tables in a separate schema (e.g., `lookup.ko`)
+- Limit database user permissions to SELECT only on lookup tables
 - Consider limiting access to the WSGI script via Apache/web server configuration
 - Monitor search queries for potential abuse
 - Implement rate limiting if needed
-- Keep the search table separate from production data tables
 
 ## Troubleshooting
 
 ### No Results Appearing
 
-1. Check that the search table exists and has data: `SELECT * FROM search_ko LIMIT 5;`
-2. Verify the `searchtables` parameter matches your table name
-3. Check that the `srs` parameter matches your project's coordinate system
-4. Ensure the displaytext field is properly formatted
+1. Check that the lookup table exists: `SELECT * FROM lookup.ko LIMIT 5;`
+2. Verify the `table` parameter matches your table name exactly (including schema)
+3. Check that the table has `code` and `description` columns
+4. Ensure data exists in the table
 5. Check browser console for JavaScript errors
 6. Check Apache error logs for WSGI errors
 
 ### Dropdown Not Showing
 
 1. Verify `minChars` is set appropriately (default: 2)
-2. Check that the store URL is correct: `wsgi/search.wsgi`
+2. Check that the store URL is correct: `wsgi/data.wsgi`
 3. Ensure the JSON response format matches the expected structure
 4. Check browser network tab for failed requests
 5. Verify the WSGI script has execute permissions
+6. Test the URL directly in browser: `wsgi/data.wsgi?table=lookup.ko&gtype=&query=test`
 
 ### Search Not Working
 
 1. Verify `filterOp` is set to "=" for exact matching on ko_id
 2. Ensure `name` is "ko_id" to match the database field
-3. Verify `valueField` is "ko_id" so the code value is submitted
+3. Verify `forceSelection` is true so a value is selected
 4. Check that the query layer configuration matches your QGIS project
-5. Ensure the database layer has a `ko_id` field that matches the values from search_ko table
+5. Ensure the database layer has a `ko_id` field that matches the codes from lookup.ko table
+6. Test the data.wsgi URL with a query parameter to ensure it returns results
 
 ### Database Connection Errors
 
@@ -374,24 +357,23 @@ The search.wsgi script includes several security measures:
 
 To migrate from the old two-field pattern:
 
-1. **Create the search table** in your database (see Database Requirements section)
-2. **Populate the search table** with cadastre data:
+1. **Create the lookup table** in your database (see Database Requirements section)
+2. **Populate the lookup table** with cadastre data:
    ```sql
-   INSERT INTO search_ko (ko_id, displaytext, searchstring, search_category, showlayer, the_geom)
+   INSERT INTO lookup.ko (code, description, geom_type, category)
    SELECT 
-     ko_id AS ko_id,
-     ko_id || ' - ' || imeko AS displaytext,
-     lower(ko_id || ' ' || imeko) AS searchstring,
-     '01-Katastrske občine' AS search_category,
-     'Katastrske občine' AS showlayer,
-     geom AS the_geom
+     ko_id::integer AS code,
+     imeko AS description,
+     3 AS geom_type,
+     'ko' AS category
    FROM your_cadastre_table;
    ```
 3. **Replace the two textfield configurations** with the combo box (see example)
 4. **Keep other form fields** (like st_parcele) unchanged
-5. **Update baseParams** to match your SRS and table name
-6. **Ensure your database layers** have a `ko_id` field matching the codes in search_ko
-7. **Test thoroughly** with your data before deploying to production
+5. **Update baseParams** to match your table name
+6. **Ensure your database layers** have a `ko_id` field matching the codes in lookup.ko
+7. **Test the data.wsgi endpoint** directly: `wsgi/data.wsgi?table=lookup.ko&gtype=&query=test`
+8. **Test thoroughly** with your data before deploying to production
 
 ## License
 
