@@ -5,21 +5,24 @@
         {
             "title": "Parcele",
             "useWmsRequest": true,
-            "queryLayer": "parcele_layer",
+            "queryLayer": "Parcele",
             "formItems": [
                 {
                     "xtype": "combo",
-                    "fieldLabel": "Katastrska občina",
                     "name": "ko_id",
+                    "fieldLabel": "KO",
                     "displayField": "displaytext",
                     "valueField": "ko_id",
+                    "allowBlank": true,
+                    "emptyText": "Izberi kat. občino",
+                    "editable": true,
                     "typeAhead": true,
+                    "forceSelection": true,
+                    "selectOnFocus": true,
                     "mode": "remote",
                     "triggerAction": "all",
                     "minChars": 2,
                     "queryDelay": 100,
-                    "allowBlank": false,
-                    "blankText": "Vnesi številko ali ime k.o.",
                     "filterOp": "=",
                     "store": {
                         "xtype": "jsonstore",
@@ -47,26 +50,34 @@
                 {
                     "xtype": "textfield",
                     "name": "st_parcele",
-                    "fieldLabel": "Številka parcele",
-                    "filterOp": "=",
-                    "allowBlank": true,
-                    "blankText": "Vnesi številko parcele"
+                    "fieldLabel": "Parcela",
+                    "allowBlank": false,
+                    "blankText": "Vnesi številko parcele",
+                    "filterOp": "ILIKE"
                 }
             ],
             "gridColumns": [
                 {
-                    "header": "Katastrska občina",
-                    "dataIndex": "displaytext",
-                    "menuDisabled": "true"
+                    "header": "KO",
+                    "dataIndex": "ko_id",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
                 },
                 {
-                    "header": "Št. parcele",
+                    "header": "IME",
+                    "dataIndex": "imeko",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                },
+                {
+                    "header": "Parcela",
                     "dataIndex": "st_parcele",
-                    "menuDisabled": "true"
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
                 }
             ],
-            "selectionLayer": "parcele_layer",
-            "selectionZoom": 0,
+            "selectionLayer": "Parcele",
+            "selectionZoom": 10,
             "doZoomToExtent": true
         },
         {
@@ -76,17 +87,20 @@
             "formItems": [
                 {
                     "xtype": "combo",
-                    "fieldLabel": "Katastrska občina",
                     "name": "ko_id",
+                    "fieldLabel": "KO",
                     "displayField": "displaytext",
                     "valueField": "ko_id",
+                    "allowBlank": true,
+                    "emptyText": "Izberi kat. občino",
+                    "editable": true,
                     "typeAhead": true,
+                    "forceSelection": true,
+                    "selectOnFocus": true,
                     "mode": "remote",
                     "triggerAction": "all",
                     "minChars": 2,
                     "queryDelay": 100,
-                    "allowBlank": false,
-                    "blankText": "Vnesi številko ali ime k.o.",
                     "filterOp": "=",
                     "store": {
                         "xtype": "jsonstore",
@@ -114,28 +128,34 @@
                 {
                     "xtype": "textfield",
                     "name": "st_parcele",
-                    "fieldLabel": "Številka parcele",
-                    "_note": "Change 'st_parcele' to appropriate field name for buildings (e.g., 'st_stavbe') based on your database schema",
-                    "filterOp": "=",
-                    "allowBlank": true,
-                    "blankText": "Vnesi številko parcele"
+                    "fieldLabel": "Parcela",
+                    "allowBlank": false,
+                    "blankText": "Vnesi številko parcele",
+                    "filterOp": "ILIKE"
                 }
             ],
             "gridColumns": [
                 {
-                    "header": "Katastrska občina",
-                    "dataIndex": "displaytext",
-                    "menuDisabled": "true"
+                    "header": "KO",
+                    "dataIndex": "ko_id",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
                 },
                 {
-                    "header": "Št. parcele",
+                    "header": "IME",
+                    "dataIndex": "imeko",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                },
+                {
+                    "header": "Parcela",
                     "dataIndex": "st_parcele",
-                    "_note": "Change to appropriate field name for buildings based on your database schema",
-                    "menuDisabled": "true"
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
                 }
             ],
             "selectionLayer": "stavbe_layer",
-            "selectionZoom": 0,
+            "selectionZoom": 10,
             "doZoomToExtent": true
         }
     ]

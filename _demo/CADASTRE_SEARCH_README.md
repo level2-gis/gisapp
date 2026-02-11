@@ -121,17 +121,20 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 ```javascript
 {
   "xtype": "combo",
-  "fieldLabel": "Katastrska občina",
   "name": "ko_id",
+  "fieldLabel": "KO",
   "displayField": "displaytext",
   "valueField": "ko_id",
+  "allowBlank": true,
+  "emptyText": "Izberi kat. občino",
+  "editable": true,
   "typeAhead": true,
+  "forceSelection": true,
+  "selectOnFocus": true,
   "mode": "remote",
   "triggerAction": "all",
   "minChars": 2,
   "queryDelay": 100,
-  "allowBlank": false,
-  "blankText": "Vnesi številko ali ime k.o.",
   "filterOp": "=",
   "store": {
     "xtype": "jsonstore",
@@ -161,16 +164,20 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 ### Configuration Properties Explained
 
 - **xtype**: "combo" - Ext JS combo box component
-- **fieldLabel**: Label displayed next to the field
 - **name**: "ko_id" - Field name for the search form (matches database field)
+- **fieldLabel**: "KO" - Label displayed next to the field
 - **displayField**: "displaytext" - Field shown in the combo box (formatted text from WSGI)
 - **valueField**: "ko_id" - Field used as the value (cadastre code from WSGI)
+- **allowBlank**: true - Field is optional (can be changed to false if required)
+- **emptyText**: "Izberi kat. občino" - Placeholder text when field is empty
+- **editable**: true - Allows typing in the combo box for searching
 - **typeAhead**: true - Enables type-ahead functionality
+- **forceSelection**: true - User must select a value from the list (cannot enter arbitrary text)
+- **selectOnFocus**: true - Automatically selects text when the field gains focus
 - **mode**: "remote" - Fetches data from server as user types
 - **triggerAction**: "all" - Shows all results when dropdown is triggered
 - **minChars**: 2 - Minimum characters before search starts
 - **queryDelay**: 100 - Delay in milliseconds before sending query
-- **allowBlank**: false - Field is required
 - **filterOp**: "=" - Uses equality operator for WMS filter (exact match on ko_id)
 - **store**: Configuration for the JSON data store
   - **url**: Path to the WSGI search script
@@ -187,7 +194,12 @@ Replace the two separate textfields with a single combo box that uses the WSGI s
 - **itemSelector**: CSS selector for dropdown items
 - **listWidth**: Width of the dropdown list in pixels
 
-**Key Point:** The combo box displays `displaytext` (e.g., "964 - VELENJE") but submits `ko_id` (e.g., "964") for filtering. This provides a user-friendly display while ensuring clean, exact matching on the database field.
+**Key Properties for WMS Filter Integration:**
+- `forceSelection: true` ensures a value from the list is selected
+- `valueField: "ko_id"` specifies which field value is submitted to the WMS filter
+- `filterOp: "="` defines the filter operation used in the WMS request
+
+The combo box displays `displaytext` (e.g., "964 - VELENJE") but submits `ko_id` (e.g., "964") for filtering, ensuring clean WMS filter queries like `ko_id = '964'`.
 
 ## Example Configuration
 
