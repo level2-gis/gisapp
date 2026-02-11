@@ -168,10 +168,9 @@ def application(environ, start_response):
       if filter>'':
         sql += " AND filter='"+filter+"'"
 
-      # Add ORDER BY within each subquery to prioritize exact matches before applying LIMIT
-      if searchtables[i].find('tsvector') > 0:
-        sql += " ORDER BY relevance_rank ASC, displaytext ASC"
-      else:
+      # Add ORDER BY within each subquery only when multiple tables (UNION) are used
+      # For single table, only the final ORDER BY will be applied
+      if searchtableLength > 1:
         sql += " ORDER BY relevance_rank ASC, displaytext ASC"
       
       sql += " LIMIT " + limit + ")"
