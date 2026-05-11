@@ -13,7 +13,7 @@ function WsgiSearch(url, geomUrl, showHighlightLabel, searchTables, filter, conn
     this.filter = filter;
     this.connect = connect;
 
-    this.emptyText =  projectData.wsgi.emptytext ?  projectData.wsgi.emptytext : I18n.search.placeholderI18n.search.placeholder;
+    this.emptyText =  projectData.wsgi.emptytext ?  projectData.wsgi.emptytext : I18n.search.placeholder;
     
     // Autocomplete settings
     this.autocompleteSettings = {
