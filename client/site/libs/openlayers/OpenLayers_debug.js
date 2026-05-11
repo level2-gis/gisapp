@@ -36483,7 +36483,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
         //PointZ(M), LineStringZ(M) and PolygonZ(M) treat as normal 2D geometries (remove Z and M)
         //without this null is returned, this way we get 2D geometry at least
         // Regular expression to find 3D/4D geometry types
-        regex = /(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON)(ZM?|M?Z)/i;
+        regex = /\b(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)\s*(?:ZM|MZ|Z|M)\b/i;
 
         // Replace function to convert 3D/4D types to 2D
         replaceFunction = function(match, p1) {

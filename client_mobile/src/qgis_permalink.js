@@ -24,8 +24,15 @@ QgisPermalink.prototype.read = function (urlParams, callback) {
     // default permalink parameters (base class now handles short parameters)
     Permalink.prototype.read.call(this, urlParams);
 
-    if (urlParams.visibleBackgroundLayer > '') {
-        this.initialBackgroundTopic = urlParams.visibleBackgroundLayer;
+    // Support single character parameter 'b' for visibleBackgroundLayer, fallback to full name
+    var visibleBackgroundLayerParam = urlParams.hasOwnProperty('b') ? urlParams.b : urlParams.visibleBackgroundLayer;
+    if (visibleBackgroundLayerParam !== undefined) {
+        if (visibleBackgroundLayerParam > '') {
+            this.initialBackgroundTopic = visibleBackgroundLayerParam;
+        } else {
+            // empty 'b' parameter means no background layer
+            this.initialBackgroundTopic = null;
+        }
     }
 
     // init viewer
@@ -37,6 +44,13 @@ QgisPermalink.prototype.create = function () {
         e: Map.map.getView().calculateExtent(),  // startExtent -> e
         v: Map.visibleLayers(),          // visibleLayers -> v
     };
+
+    // always include 'b' parameter for background layer
+    if (Map.backgroundTopic) {
+        permalinkParams.b = Map.backgroundTopic;  // visibleBackgroundLayer -> b
+    } else {
+        permalinkParams.b = '';  // empty 'b' parameter means no base layer
+    }
 
     var params = new URLSearchParams(permalinkParams).toString();
     var permalink = UrlParams.baseUrl + '?' + params;

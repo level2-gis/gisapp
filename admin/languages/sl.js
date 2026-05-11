@@ -99,7 +99,9 @@ I18n.title = "Mobilni GIS";
 I18n.search = {
     header: "Iskanje",
     results: "Rezultati",
-    failed: "Iskanje neuspešno:"
+    failed: "Iskanje neuspešno:",
+    placeholder: "išči...",
+    noResults: "Ni rezultatov"
 };
 
 I18n.properties = {

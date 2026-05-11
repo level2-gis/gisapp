@@ -288,7 +288,7 @@ Config.map.useTiledOverlayWMS = false;
 Config.map.minScaleDenom = {
     map: 5000, // if topic.minscale is not set
     geolocation: null, // on location following
-    search: 5000 // jump to search results
+    search: 1000 // jump to search results
 };
 
 // limit min zoom to this scale on the initial geolocation update (null to disable)
@@ -301,7 +301,7 @@ if (sCon != null) {
     Config.search = new Geocode(sCon.layers, sCon.country, 10, sCon.provider, projectData.lang);
 }
 if (sCon == null && projectData.wsgi) {
-    Config.search = new WsgiSearch("/wsgi/search.wsgi", "/wsgi/getSearchGeom.wsgi", false, projectData.wsgi.searchtables);
+    Config.search = new WsgiSearch("/wsgi/search.wsgi", "/wsgi/getSearchGeom.wsgi", false, projectData.wsgi.searchtables, projectData.wsgi.filter, projectData.wsgi.connect);
 }
 
 /**

@@ -120,18 +120,16 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 				xtype: 'panel',
 				margins: '3 0 6 3',
 				cmargins: '3 3 7 3',
-				title: leftPanelTitleString[lang],
+				title: '', //leftPanelTitleString[lang],
 				height: 333,
-				width: 310,
+				width: 280,       // Set initial width to match minimum
 				collapsible: true,
-				boxMinWidth: 200,
-				boxMaxWidth: 400,
 				layout: 'vbox',
 				region: 'west',
 				//floatable: false,
-				minWidth: 200,
-				maxWidth: 400,
-				split: true,
+				minWidth: 280,
+				maxWidth: 600,
+				split: false,
 				//collapseMode: 'mini',
 				id: 'LeftPanel',
 				style: {
@@ -198,7 +196,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 					}, {
 						xtype: 'panel',
 						title: layerTreeTitleString[lang],  //mapPanelTitleString[lang],
-						layout: 'border',
+						layout: 'border',  // Use fit layout to make TreePanel fill the container
 						id: 'leftPanelMap',
                         //iconCls: 'x-cols-icon',
 						border: false,
@@ -210,11 +208,11 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							frame: false,
 							title: '', //layerTreeTitleString[lang],
 							height: 159,
-							split: true,
 							region: 'center',
 							collapsible: false,
 							rootVisible: false,
-							autoScroll: true,
+							autoScroll: true,   // Enable horizontal scrolling for long text
+							autoWidth: false,   // Disable auto width
 							//containerScroll: true,
 							cls: 'x-tree-noicon',
 							id: 'LayerTree',
@@ -236,7 +234,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 								collapsible: true,
 								collapsed: false,
 								titleCollapse: true,
-								autoScroll: true,
+								//autoScroll: true,
 								height: Eqwc.settings.bookmarkPanelHeight ? Eqwc.settings.bookmarkPanelHeight : 200,
 								border: false,
 								frame: false

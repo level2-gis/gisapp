@@ -99,7 +99,9 @@ I18n.title = "Mobile Viewer";
 I18n.search = {
     header: "Cautati",
     results: "Rezultate",
-    failed: "Cautare esuata:"
+    failed: "Cautare esuata:",
+    placeholder: "Search...",
+    noResults: "No results found"
 };
 
 I18n.properties = {

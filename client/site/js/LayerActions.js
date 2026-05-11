@@ -121,11 +121,18 @@ function buildLayerContextMenu(node) {
     if(hasGeom) {
         for (var s = 0; s < layer.styles.length; s++) {
             var style = layer.styles[s];
-            //don't rename default style if there is more than one style
             var checked = false;
-            if(layer.styles.length == 1 || style.name == 'default') {
+
+            // Check if this style is the current style
+            if (layer.currentStyle && layer.currentStyle === style.name) {
                 checked = true;
+            } else if (!layer.currentStyle) {
+                // Fallback logic when no currentStyle is set
+                if(layer.styles.length == 1 || style.name == 'default') {
+                    checked = true;
+                }
             }
+
             styleItems.push({
                 xtype: 'radio',
                 name: layer.name + '_style',
@@ -341,11 +348,34 @@ function styleHandler(item) {
     var el = Ext.get('legend_'+layerId);
     if(el) {
         el.remove();
+
+        // Also remove any expanded legend_long containers when changing style
+        var expandedLegend = Ext.get('legend_expanded_' + layerId);
+        if (expandedLegend) {
+            expandedLegend.remove();
+        }
     }
 
     var layer = projectData.layers[layerId];
     if(layer) {
         projectData.setLayerLegend(layer,node);
+
+        // Ensure the new legend is visible after style change
+        var newLegend = Ext.get('legend_' + layerId);
+        if (newLegend) {
+            newLegend.show();
+
+            // If it's a legend_long, automatically expand it to show the content
+            if (newLegend.hasClass('legend_long')) {
+                var expandedLegend = Ext.get('legend_expanded_' + layerId);
+                var toggleArrow = newLegend.query('.legend-toggle')[0];
+
+                if (expandedLegend && toggleArrow) {
+                    expandedLegend.setDisplayed(true);
+                    toggleArrow.innerHTML = '▼';
+                }
+            }
+        }
     }
 
     var styles = layerStyles(selectedLayers);

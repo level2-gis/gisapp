@@ -94,7 +94,7 @@ function goMobile($lang, $scanner) {
         <!--        <script type="text/javascript" src="plugins/editing/editor_mobile_debug.js"></script>-->
 
         <link rel="stylesheet" type="text/css" href="client_mobile/src/viewer.css?v=20241119"/>
-        <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20181026"/>
+        <link rel="stylesheet" type="text/css" href="client_mobile/src/custom.css?v=20250902"/>
     </head>
     <body>
     <div data-role="page" id="mappage" data-theme="c">
@@ -105,7 +105,7 @@ function goMobile($lang, $scanner) {
                    data-icon="compass" data-iconpos="notext" class="mapicon"></a>
                 <a href="#" id="btnLocation" data-role="button" data-inline="true" data-icon="location_off"
                    data-iconpos="notext" class="mapicon"></a>
-                <a href="#panelSearch" id="btnSearching" data-role="button" data-inline="true" data-icon="searching"
+                <a href="#" id="btnSearching" data-role="button" data-inline="true" data-icon="searching"
                    data-iconpos="notext" class="mapicon"></a>
                 <a href="#panelLayer" id="btnLayers" data-role="button" data-inline="true" data-icon="layers"
                    data-iconpos="notext" class="mapicon"></a>
@@ -151,6 +151,16 @@ function goMobile($lang, $scanner) {
             </div>
             <div id="editPanel" class="ui-popup-container">EditPanel</div>
             <div id="recordPanel" class="ui-popup-container">RecordPanel</div>
+
+            <!-- Search overlay -->
+            <div id="searchOverlay" style="display: none;">
+                <div class="search-container">
+                    <div class="search-header">
+                        <input id="searchInputOverlay" type="search" name="search" value="" placeholder="" autofocus>
+                    </div>
+                    <ul id="searchAutocompleteOverlay" data-role="listview" data-inset="false" data-filter="false"></ul>
+                </div>
+            </div>
         </div>
 
         <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
@@ -226,20 +236,7 @@ function goMobile($lang, $scanner) {
                data-iconpos="notext" data-icon="arrow-l" data-inline="true">Back</a>
         </div>
 
-        <div data-role="panel" id="panelSearch" data-position="right" data-display="overlay">
-            <div class="panel-content">
-                <b>Adresssuche</b>
-                <form id="searchForm" action=".">
-                    <input id="searchInput" type="search" name="search" value="">
-                </form>
-                <div id="searchResults" hidden>
-                    <b>Suchresultat</b>
-                    <ul id="searchResultsList" data-role="listview" class="scrollable"></ul>
-                </div>
-            </div>
-            <a href="#mappage" class="backbutton" data-rel="close" data-role="button" data_mini="true"
-               data-iconpos="notext" data-icon="arrow-l" data-inline="true">Back</a>
-        </div>
+
 
     </div>
 
@@ -317,14 +314,15 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <meta name="robots" content="noindex, nofollow">
     <title></title>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
-    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/xtheme-blue.css"/>
+    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/geo-portal.css?v=20251030a"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20250807"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20250807"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20250807"/>
-    <link rel="stylesheet" type="text/css" href="client/site/css/style-blue.css?v=20230314"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20250818"/>
+<!--    <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>-->
+    <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20250813"/>
+<!--    <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>-->
+    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20250813"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/style-gray.css?v=20250813"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/grid-styles.css?v=20251030a">
 
     <?php if ($edit) {
                     echo '<link rel="stylesheet" type="text/css" href="plugins/editing/theme/geosilk/geosilk.css?v='.$editVer.'"/>';
@@ -342,7 +340,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
                 <script type="text/javascript" src="client/site/libs/ext/ux/ux-all.js?v=20180215"></script>
 
                 <script type="text/javascript" src="client/site/libs/proj4js/proj4js-1.1.0-compressed.js"></script>
-                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20250627"></script>
+                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers.js?v=20250828"></script>
 
                 <!--                FOR DEBUGGING-->
     <!--                <script type="text/javascript" src="client/site/libs/openlayers/OpenLayers_debug.js"></script>-->
@@ -356,7 +354,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <script type="text/javascript" src="client/eqwc_load.php"></script>
 
 <!--                DEBUG remove editor.js before-->
-<!--                <script type="text/javascript" src="plugins/editing/editor_debug.js"></script>-->
+                <!-- <script type="text/javascript" src="plugins/editing/editor_debug.js"></script> -->
 
 </head>
 <body>

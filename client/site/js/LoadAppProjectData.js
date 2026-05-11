@@ -162,9 +162,25 @@ projectData.setLayerLegend = function (layer,node) {
         return;
     }
 
-    var legend = '';
     var layername = wmsLoader.layerTitleNameMapping[layer.layername];
     var style = layerStyles([layer.id]);
+    var layerId = layer.id;
+
+    // Check cache first
+    var cachedLegend = projectData.getLegendFromCache(layerId, style);
+    if (cachedLegend) {
+        // Create new object URL from cached blob to avoid memory issues
+        var url = window.URL.createObjectURL(cachedLegend.blob);
+        var legendData = {
+            url: url,
+            css: cachedLegend.css,
+            size: cachedLegend.size
+        };
+        projectData.displayCachedLegend(legendData, layerId, node);
+        return;
+    }
+
+    var legend = '';
 
     //IE 11 does not support xhr.responseURL, so old way is used for IE
     var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
@@ -183,10 +199,10 @@ projectData.setLayerLegend = function (layer,node) {
             FORMAT: "image/png",
             EXCEPTIONS: "application/vnd.ogc.se_inimage",
             BOXSPACE: 1,
-            LAYERSPACE: 2,
+            LAYERSPACE: 0,
             SYMBOLSPACE: 1,
             SYMBOLHEIGHT: 2,
-            LAYERFONTSIZE: 8,
+            LAYERFONTSIZE: 0,
             ITEMFONTSIZE: 8,
             ICONLABELSPACE: 2,
             LAYERTITLE: "FALSE",
@@ -196,13 +212,12 @@ projectData.setLayerLegend = function (layer,node) {
             LAYERS: layername,
             RULELABEL: "AUTO",
             STYLES: style,
-            DPI: screenDpi,
+            DPI: 200,
             NODE: node.id
         });
     }
 
     if(isIE11) {
-        var layerId = layer.id;
         var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
         Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
             "<div style='overflow-y:auto; max-height:"+height+"px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + legend + "\"/></div>"
@@ -211,35 +226,37 @@ projectData.setLayerLegend = function (layer,node) {
         if(el) {
             el.setVisibilityMode(Ext.Element.DISPLAY);
         }
+        // For IE11, we can't easily cache the blob, so we just display directly
     } else {
         var xhr = new XMLHttpRequest();
-        //var params = 'layer='+layer.id+'&node='+node.id;
         xhr.open("GET", legend, true);
-        //Now set response type
         xhr.responseType = 'arraybuffer';
         xhr.addEventListener('load', function () {
             if (xhr.status === 200) {
-                //onsole.log(xhr.response) // ArrayBuffer
-                //console.log(new Blob([xhr.response])) // Blob
-
                 var blob = new Blob([xhr.response], {type: 'image/png'}),
                     url = window.URL.createObjectURL(blob);
-                //img = document.createElement('img');
-                //img.src = url;
 
                 var nodeId = Ext.urlDecode(xhr.responseURL).NODE;
                 var layerId = Ext.urlDecode(xhr.responseURL).LAYERS;
                 var node = layerTree.getNodeById(nodeId);
-                var height = Eqwc.settings.layerLegendMaxHeightPx ? Eqwc.settings.layerLegendMaxHeightPx : 200;
 
-                Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
-                    "<div style='overflow-x:hidden; overflow-y:auto; max-height:" + height + "px;' id='legend_" + layerId + "'><img style='vertical-align: middle; margin-left: 50px;margin-bottom: 10px;' src=\"" + url + "\"/></div>"
-                );
+                // Use smart CSS determination instead of blob size
+                projectData.determineLegendCssClass(layername, style, function(css) {
+                    // Cache the legend data
+                    projectData.cacheLegend(layerId, style, {
+                        url: url,
+                        blob: blob,
+                        size: blob.size,
+                        css: css
+                    });
 
-                var el = Ext.get('legend_' + layerId);
-                if (el) {
-                    el.setVisibilityMode(Ext.Element.DISPLAY);
-                }
+                    // Display the legend
+                    projectData.displayCachedLegend({
+                        url: url,
+                        css: css,
+                        size: blob.size
+                    }, layerId, node);
+                });
             }
         });
         xhr.send();
@@ -296,8 +313,203 @@ projectData.crsComboStore = function() {
     return ret;
 };
 
+// Legend cache functionality
+projectData.initLegendCache = function() {
+    if (!projectData.legendCache) {
+        projectData.legendCache = {};
+    }
+};
+
+projectData.getLegendFromCache = function(layerId, style) {
+    if (!projectData.legendCache) {
+        projectData.initLegendCache();
+    }
+    var cacheKey = layerId + '_' + (style || 'default');
+    return projectData.legendCache[cacheKey] || null;
+};
+
+projectData.cacheLegend = function(layerId, style, legendData) {
+    if (!projectData.legendCache) {
+        projectData.initLegendCache();
+    }
+    var cacheKey = layerId + '_' + (style || 'default');
+    projectData.legendCache[cacheKey] = {
+        url: legendData.url,
+        blob: legendData.blob,
+        size: legendData.size,
+        css: legendData.css,
+        timestamp: new Date().getTime()
+    };
+};
+
+projectData.clearLegendCache = function(layerId) {
+    if (!projectData.legendCache) {
+        return;
+    }
+
+    if (layerId) {
+        // Clear specific layer cache
+        Object.keys(projectData.legendCache).forEach(function(key) {
+            if (key.indexOf(layerId + '_') === 0) {
+                // Revoke object URL to prevent memory leaks
+                if (projectData.legendCache[key].url) {
+                    window.URL.revokeObjectURL(projectData.legendCache[key].url);
+                }
+                delete projectData.legendCache[key];
+            }
+        });
+    } else {
+        // Clear all cache
+        Object.keys(projectData.legendCache).forEach(function(key) {
+            if (projectData.legendCache[key].url) {
+                window.URL.revokeObjectURL(projectData.legendCache[key].url);
+            }
+        });
+        projectData.legendCache = {};
+    }
+};
+
+projectData.displayCachedLegend = function(legendData, layerId, node) {
+    var css = legendData.css;
+    var url = legendData.url;
+
+    // Remove existing legend if any
+    var existingLegend = Ext.get('legend_' + layerId);
+    if (existingLegend) {
+        existingLegend.remove();
+    }
+
+    if (css === 'legend_long') {
+        Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
+            "<div class='"+css+"' id='legend_" + layerId + "'>" +
+                "<span class='legend-toggle' style='margin-left: 5px; cursor: pointer; font-size: 12px; color: #666;' onclick='projectData.toggleLegendExpanded(\"" + layerId + "\")'>▶</span>" +
+            "</div>"
+        );
+
+        // Add hidden expanded legend container
+        Ext.DomHelper.insertAfter(node.getUI().getEl(),
+            "<div class='legend-expanded' id='legend_expanded_" + layerId + "' style='display: none; margin-left: 3px; padding: 5px; padding-left: 20px;border: 1px solid #ddd; background: #f9f9f9;'>" +
+                "<img class='"+css+"_"+"img' src='" + url + "' onload='projectData.scaleLegendImage(this)'/>" +
+            "</div>"
+        );
+    } else {
+        Ext.DomHelper.insertAfter(node.getUI().getAnchor(),
+            "<div class='"+css+"' id='legend_" + layerId + "'><img style='margin-top: -10px; max-height: 30px;' src=\"" + url + "\"/></div>"
+        );
+    }
+
+    // var el = Ext.get('legend_' + layerId);
+    // if (el) {
+    //     el.setVisibilityMode(Ext.Element.DISPLAY);
+    //
+    //     // Add tooltip for full-size legend display
+    //     var legendImg = el.child('img');
+    //     if (legendImg && css === 'legend_long') {
+    //         new Ext.ToolTip({
+    //             target: legendImg,
+    //             html: '<img src="' + url + '" style="width: 80%; height: auto;" />',
+    //             autoHide: true,
+    //             autoWidth: true,
+    //             dismissDelay: 0,
+    //             showDelay: 500,
+    //             trackMouse: false,
+    //             anchorToTarget: true,
+    //             anchor: 'left'
+    //         });
+    //     }
+    // }
+};
+
+projectData.toggleLegendExpanded = function(layerId) {
+    var expandedLegend = Ext.get('legend_expanded_' + layerId);
+    var toggleArrow = Ext.get('legend_' + layerId).query('.legend-toggle')[0];
+
+    if (expandedLegend) {
+        if (expandedLegend.isDisplayed()) {
+            // Collapse
+            expandedLegend.setDisplayed(false);
+            if (toggleArrow) {
+                toggleArrow.innerHTML = '▶';
+            }
+        } else {
+            // Expand
+            expandedLegend.setDisplayed(true);
+            if (toggleArrow) {
+                toggleArrow.innerHTML = '▼';
+            }
+        }
+    }
+};
+
+projectData.scaleLegendImage = function(img) {
+    // Scale image to 50% of its natural size
+    var scaleFactor = 0.5;
+
+    // Wait for image to load completely
+    if (img.complete && img.naturalWidth !== 0) {
+        img.style.width = Math.round(img.naturalWidth * scaleFactor) + 'px';
+        img.style.height = Math.round(img.naturalHeight * scaleFactor) + 'px';
+    } else {
+        // If image isn't loaded yet, wait for it
+        img.onload = function() {
+            img.style.width = Math.round(img.naturalWidth * scaleFactor) + 'px';
+            img.style.height = Math.round(img.naturalHeight * scaleFactor) + 'px';
+        };
+    }
+};
+
+projectData.determineLegendCssClass = function(layername, style, callback) {
+    // Create JSON request to get legend details
+    var legendJsonUrl = wmsURI + Ext.urlEncode({
+        SERVICE: "WMS",
+        VERSION: "1.3.0",
+        REQUEST: "GetLegendGraphics",
+        FORMAT: "application/json",
+        SHOWRULEDETAILS: "TRUE",
+        LAYERS: layername,
+        STYLES: style || ''
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", legendJsonUrl, true);
+    xhr.addEventListener('load', function () {
+        var css = 'legend'; // default
+
+        if (xhr.status === 200) {
+            try {
+                var legendData = JSON.parse(xhr.responseText);
+
+                // Check if any node has symbols property
+                if (legendData.nodes && legendData.nodes.length > 0) {
+                    for (var i = 0; i < legendData.nodes.length; i++) {
+                        if (legendData.nodes[i].symbols && legendData.nodes[i].symbols.length > 0) {
+                            css = 'legend_long';
+                            break;
+                        }
+                    }
+                }
+            } catch (e) {
+                // If JSON parsing fails, fall back to default
+                console.warn('Failed to parse legend JSON, using default CSS class');
+            }
+        }
+
+        callback(css);
+    });
+
+    xhr.addEventListener('error', function() {
+        // If request fails, fall back to default
+        callback('legend');
+    });
+
+    xhr.send();
+};
+
 //plugins
 Eqwc.plugins = {};
+
+// Initialize legend cache
+projectData.initLegendCache();
 
 var lang = projectData.lang;
 //var helpfile = "help_en.html";
@@ -384,7 +596,7 @@ var titleBarText = Ext.decode(Eqwc.settings.title);
 
 // header logo image and link
 var headerLogoImg = projectData.client_logo;
-var headerLogoHeight = 28; // logo image height in pixels
+var headerLogoHeight = 36; // logo image height in pixels
 var headerLogoLink = (Eqwc.settings.useGisPortal && projectData.user != 'guest') ? Eqwc.settings.gisPortalRoot : projectData.client_url; // logo links to this URL
 var headerTermsOfUseText = TR.logoutLabel; // set null for no link
 var headerTermsOfUseLink = "./admin/login.php?action=logout"; // URL to terms of use
@@ -569,8 +781,9 @@ OpenLayers.Renderer.symbol.arrow = [0, 4, 2, 0, 4, 4, 2, 3, 0, 4];
 
 //projection defaults from customProjections.js
 var projDef = CustomProj[authid];
-if (projDef !== undefined)
-OpenLayers.Projection.defaults[authid] = {
-    maxExtent: projDef.extent,
-    yx: projDef.yx !== undefined ? projDef.yx : false
-};
+if (projDef !== undefined) {
+    OpenLayers.Projection.defaults[authid] = {
+        maxExtent: projDef.extent,
+        yx: projDef.yx !== undefined ? projDef.yx : false
+    };
+}

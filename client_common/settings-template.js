@@ -125,9 +125,11 @@ Eqwc.settings.tableExportFormats = [
     ['TSV', 'Text TSV (tab)']
 ];
 Eqwc.settings.bookmarkPanelHeight = 200;
+
 Eqwc.settings.fieldTemplates = {};
 Eqwc.settings.toolTipEmptyText = 'no data';
-Eqwc.settings.expandAllGroups = false;
+Eqwc.settings.qgisProjectGroupText = '';
+Eqwc.settings.permaLinkURLShortener = ''; //'/gisapp/admin/url_shortener.php';
 
 Eqwc.settings.guestWinTitle = null;
 Eqwc.settings.guestWinConfirm = 'Accept and continue';

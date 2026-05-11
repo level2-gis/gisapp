@@ -33,6 +33,9 @@ $eqwc_debug = [
     "client/site/js/FeatureInfoDisplay.js?v=".$version,
     "client/site/js/LegendAndMetadataDisplay.js?v=".$version,
     "client/site/js/LayerActions.js?v=".$version,
+    "client/site/js/GridConditionalConfig.js?v=".$version,
+    "client/site/js/GridConditionalHelpers.js?v=".$version,
+    "client/site/js/GridConditionalConfigPanel.js?v=".$version,
     "client/site/js/WebgisInit_functions.js?v=".$version];
 $eqwc_mini = "client/eqwc.js?v=".$version;
 $dir = dirname(dirname(__FILE__)) . "/plugins/";

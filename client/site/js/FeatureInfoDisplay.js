@@ -142,21 +142,14 @@ function showFeatureInfo(evt) {
             items: popupItems,
             maximizable: true,
             collapsible: true,
-            resizable: false,
+            resizable: true,
+            minWidth: 300,
+            panMapIfOutOfView: false,  // Prevent automatic map panning
+            keepInMap: true,           // Keep popup within map bounds
             listeners: {
                 close: onClickPopupClosed,
                 beforeshow: function () {
 
-                    var maxHeight = geoExtMap.getHeight() * 0.75;
-                    var maxWidth = geoExtMap.getWidth() * 0.5;
-                    if (this.getHeight() > maxHeight) {
-                        this.setHeight(maxHeight);
-                    }
-                    if (this.getWidth() > maxWidth) {
-                        this.setWidth(maxWidth);
-                    }
-
-                    this.doLayout();
                     //create layer abstract and ajax tooltips defined in settings.js for each id in _temp_ids
                     function set(element) {
                         var split = element.split('___');
@@ -164,8 +157,13 @@ function showFeatureInfo(evt) {
                         var value = split[1];
                         var el_short = field+"___"+value;
 
+                        // Check if the target element actually exists in the DOM
+                        if (!Ext.get(element)) {
+                            return; // Skip if element doesn't exist
+                        }
+
                         //workaround to create layer abstract tooltip
-                        if (value == 'abstract' && wmsLoader.layerProperties[field].abstract) {
+                        if (value == 'abstract' && wmsLoader.layerProperties[field] && wmsLoader.layerProperties[field].abstract) {
 
                             new Ext.ToolTip({
                                 target: element,
@@ -185,13 +183,14 @@ function showFeatureInfo(evt) {
                                     html: Eqwc.tooltips[el_short]
                                 });
 
-                            } else {
+                            } else if (Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates[field] && Eqwc.settings.fieldTemplates[field].url) {
+                                // Only create autoLoad tooltip if fieldTemplate exists and has URL
                                 new Ext.ToolTip({
                                     target: element,
                                     anchor: 'left',
                                     width: 150,
                                     autoLoad: {
-                                        url: this[field].url + value,
+                                        url: Eqwc.settings.fieldTemplates[field].url + value,
                                         scripts: false,
                                         callback: function (el, success, response, object) {
                                             if (success) {
@@ -211,58 +210,53 @@ function showFeatureInfo(evt) {
                     Ext.iterate(Eqwc._temp_ids, set, Eqwc.settings.fieldTemplates);
                 },
                 afterrender: function() {
-                    // Handle image loading to recalculate popup size
+                    // Apply fixed sizing constraints with overflow handling
                     var popup = this;
-                    var images = popup.body.select('img');
-                    var loadedImages = 0;
-                    var totalImages = images.getCount();
+                    var maxHeight = geoExtMap.getHeight() * 0.7;
+                    var maxWidth = popup.maxWidth || (geoExtMap.getWidth() * 0.4);
+                    var minWidth = popup.minWidth;
 
-                    if (totalImages > 0) {
-                        var maxHeight = geoExtMap.getHeight() * 0.75;
-                        var maxWidth = geoExtMap.getWidth() * 0.5;
+                    // Set fixed dimensions and let content scroll
+                    popup.setWidth(Math.max(minWidth, Math.min(popup.getWidth(), maxWidth)));
+                    popup.setHeight(Math.min(popup.getHeight(), maxHeight));
 
-                        images.each(function(img) {
-                            if (img.dom.complete) {
-                                loadedImages++;
-                                if (loadedImages === totalImages) {
-                                    // All images loaded, recalculate size
-                                    popup.doLayout();
-                                    if (popup.getHeight() > maxHeight) {
-                                        popup.setHeight(maxHeight);
-                                    }
-                                    if (popup.getWidth() > maxWidth) {
-                                        popup.setWidth(maxWidth);
-                                    }
-                                }
-                            } else {
-                                img.on('load', function() {
-                                    loadedImages++;
-                                    if (loadedImages === totalImages) {
-                                        // All images loaded, recalculate size
-                                        popup.doLayout();
-                                        if (popup.getHeight() > maxHeight) {
-                                            popup.setHeight(maxHeight);
-                                        }
-                                        if (popup.getWidth() > maxWidth) {
-                                            popup.setWidth(maxWidth);
-                                        }
-                                    }
-                                });
-                                img.on('error', function() {
-                                    loadedImages++;
-                                    if (loadedImages === totalImages) {
-                                        // All images processed (loaded or errored), recalculate size
-                                        popup.doLayout();
-                                        if (popup.getHeight() > maxHeight) {
-                                            popup.setHeight(maxHeight);
-                                        }
-                                        if (popup.getWidth() > maxWidth) {
-                                            popup.setWidth(maxWidth);
-                                        }
-                                    }
-                                });
-                            }
+                    // Apply overflow styling to popup body for scrolling
+                    if (popup.body && popup.body.dom) {
+                        popup.body.setStyle({
+                            'overflow-y': 'auto',
+                            'overflow-x': 'hidden',
+                            'max-height': (maxHeight - 60) + 'px' // Account for header/borders
                         });
+                    }
+
+                    popup.doLayout();
+
+                    // Ensure popup stays within map bounds
+                    var popupBox = popup.getBox();
+                    var mapSize = popup.map.getSize();
+                    var mapDiv = popup.map.div;
+                    var mapPos = Ext.fly(mapDiv).getXY();
+
+                    var newX = popup.getPosition()[0];
+                    var newY = popup.getPosition()[1];
+
+                    // Adjust position if popup goes outside map bounds
+                    if (popupBox.x + popupBox.width > mapPos[0] + mapSize.w) {
+                        newX = mapPos[0] + mapSize.w - popupBox.width - 10;
+                    }
+                    if (popupBox.x < mapPos[0]) {
+                        newX = mapPos[0] + 10;
+                    }
+                    if (popupBox.y + popupBox.height > mapPos[1] + mapSize.h) {
+                        newY = mapPos[1] + mapSize.h - popupBox.height - 10;
+                    }
+                    if (popupBox.y < mapPos[1]) {
+                        newY = mapPos[1] + 10;
+                    }
+
+                    // Reposition if necessary
+                    if (newX !== popup.getPosition()[0] || newY !== popup.getPosition()[1]) {
+                        popup.setPosition(newX, newY);
                     }
                 }
             }
@@ -547,16 +541,22 @@ function parseFIResult(node) {
             var layer = wmsLoader.layerProperties[layerId];
             var countRelations = 0;
             var layerTitle = layer.title;
-            if (showFILayerTitle) {
-                htmlText += "<h2>" + layerTitle;
-                if(layer.abstract) {
-                    //htmlText += " <div class='i-more' ext:qtip='"+layer.abstract+"'></div>";
-                    var layerAbEl = layerId+"___abstract";
-                    htmlText += " <div class='i-more' id='"+layerAbEl+"'></div>";
-                    Eqwc._temp_ids.push(layerAbEl);
+
+            // Count total features for this layer to show "x/y" notation
+            var totalFeatures = 0;
+            var tempNode = node.firstChild;
+            while (tempNode) {
+                if (tempNode.hasChildNodes() && tempNode.nodeName === "Feature") {
+                    totalFeatures++;
+                } else if (tempNode.nodeName === "Attribute") {
+                    // For raster data, we typically have one "feature" per set of attributes
+                    totalFeatures = 1;
+                    break; // Raster typically has one result
                 }
-                htmlText += "</h2>";
+                tempNode = tempNode.nextSibling;
             }
+
+            var currentFeatureIndex = 0; // Track current feature number
 
             if(projectData.relations && projectData.relations[layerName]) {
                 countRelations = projectData.relations[layerName].length;
@@ -572,9 +572,33 @@ function parseFIResult(node) {
                 var fid = layerTitle+"."+id;
 
                 if (layerChildNode.hasChildNodes() && layerChildNode.nodeName === "Feature") {
+                    currentFeatureIndex++; // Increment feature counter
                     var attributeNode = layerChildNode.firstChild;
 
-                    htmlText += '<table><tbody><tr><td colspan=2>';
+                    // Generate unique table ID for collapsible functionality
+                    var tableId = 'table_' + layerId + '_' + id + '_' + Math.random().toString(36).substr(2, 9);
+
+                    htmlText += '<div class="collapsible-table">';
+                    htmlText += '<table id="' + tableId + '">';
+                    htmlText += '<thead><tr>';
+
+                    //we add table header row with tools
+                    var displayTitle = layerTitle;
+                    if (totalFeatures > 1) {
+                        displayTitle += " " + currentFeatureIndex + "/" + totalFeatures;
+                    }
+                    htmlText += "<th onclick=\"toggleTable('" + tableId + "')\">" + displayTitle;
+                    if(layer.abstract) {
+                        //htmlText += " <div class='i-more' ext:qtip='"+layer.abstract+"'></div>";
+                        var layerAbEl = layerId+"___abstract";
+                        htmlText += " <div class='i-more' id='"+layerAbEl+"'></div>";
+                        Eqwc._temp_ids.push(layerAbEl);
+                    }
+                    htmlText += "</th>";
+                    htmlText += '<th>' + id + '</th></tr></thead><tbody>';
+
+                    //tools
+                    htmlText += '<tr><td colspan=2>';
                     //case vector data
 
                     //add geometry actions if layer is WFS published or geometry is added to response
@@ -614,6 +638,13 @@ function parseFIResult(node) {
                     while (attributeNode) {
                         if (attributeNode.nodeName == "Attribute") {
                             var attName = attributeNode.getAttribute("name");
+
+                            //skip primary key unless it exists in fieldTemplates
+                            var key = projectData.layers[layerId].key;
+                            if (attName == key && !Eqwc.settings.fieldTemplates[key.toUpperCase()]) {
+                                attributeNode = attributeNode.nextSibling;
+                                continue;
+                            }
                             var attNameCase = attName.toUpperCase();
                             var newName = attNameCase;
                             var attValue = attributeNode.getAttribute("value").replace(/null/ig, Eqwc.settings.noDataValue);
@@ -644,11 +675,30 @@ function parseFIResult(node) {
                                         if (attValue>'') {
                                             var attArr = Ext.util.JSON.decode(attValue);
                                             var newArr = [];
+                                            var hasImages = false;
+
                                             Ext.each(attArr, function (item, index, array) {
                                                 var value = this;
-                                                value.push(Eqwc.common.manageFile(item, true));
+                                                var fileContent = Eqwc.common.manageFile(item, true);
+
+                                                // Check if the file content contains an image tag
+                                                if (fileContent.toLowerCase().indexOf('<img') !== -1) {
+                                                    hasImages = true;
+                                                    // Add responsive styling to images for inline display
+                                                    fileContent = fileContent.replace(/<img([^>]*)>/gi, '<img$1 style="max-width: calc(50% - 5px); height: auto; display: inline-block; margin: 2px; vertical-align: top;">');
+                                                }
+
+                                                value.push(fileContent);
                                             }, newArr);
-                                            attValue = newArr.join('</br>');
+
+                                            // Join with different separators based on content type
+                                            if (hasImages) {
+                                                // For images, use minimal spacing
+                                                attValue = newArr.join('');
+                                            } else {
+                                                // For other files, use line breaks
+                                                attValue = newArr.join('</br>');
+                                            }
                                         }
                                     } else {
                                         if(Eqwc.settings.fieldTemplates && Eqwc.settings.fieldTemplates.hasOwnProperty(attNameCase)) {
@@ -673,7 +723,7 @@ function parseFIResult(node) {
                                             }
                                         } else {
                                             if (attNameCase != 'MAPTIP') {
-                                                attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl);
+                                                attValue = Eqwc.common.createHyperlink(attValue, null, mediaurl, false);
                                             }
                                         }
                                         if(attValue === 'true') {
@@ -705,12 +755,21 @@ function parseFIResult(node) {
                         }
                         attributeNode = attributeNode.nextSibling;
                     }
-                    htmlText += "\n  </tbody>\n </table></br>";
+                    htmlText += "\n  </tbody>\n </table></div></br>";
                 }
                 else if (layerChildNode.nodeName === "Attribute") {
                     //case raster data
                     if (rasterData == false) {
-                        htmlText += "\n <p></p>\n <table>\n  <tbody>";
+                        // For raster data, increment counter as if it's a feature
+                        currentFeatureIndex++;
+                        // Generate unique table ID for raster table
+                        var rasterTableId = 'raster_table_' + layerId + '_' + Math.random().toString(36).substr(2, 9);
+                        var rasterDisplayTitle = layerTitle;
+                        if (totalFeatures > 1) {
+                            rasterDisplayTitle += " " + currentFeatureIndex + "/" + totalFeatures;
+                        }
+                        htmlText += "\n <p></p>\n <div class='collapsible-table'><table id='" + rasterTableId + "'>";
+                        htmlText += "<thead><tr><th colspan='2' onclick=\"toggleTable('" + rasterTableId + "')\">" + rasterDisplayTitle + "</th></tr></thead><tbody>";
                     }
                     htmlText += '\n<tr><td>' + Eqwc.common.getRasterFieldName(layerTitle, layerChildNode.getAttribute("name")) + '</td><td>' + layerChildNode.getAttribute("value") + '</td></tr>';
                     hasAttributes = true;
@@ -721,7 +780,7 @@ function parseFIResult(node) {
             //htmlText += "\n</ul>";
             if (hasAttributes) {
                 if (rasterData) {
-                    htmlText += "\n  </tbody>\n </table></br>";
+                    htmlText += "\n  </tbody>\n </table></div></br>";
                 }
                 //alert(htmlText);
                 featureInfoResultLayers.push(htmlText);
@@ -983,4 +1042,16 @@ function identifyAction(type, id, extra) {
 
     }
 
+}
+
+// Function to toggle table collapse/expand
+function toggleTable(tableId) {
+    var table = document.getElementById(tableId);
+    if (table) {
+        if (table.classList.contains('collapsed')) {
+            table.classList.remove('collapsed');
+        } else {
+            table.classList.add('collapsed');
+        }
+    }
 }

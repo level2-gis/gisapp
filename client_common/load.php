@@ -82,9 +82,9 @@ if (!property_exists($data, "link3")) {
 }
 
 if (file_exists($client_path . 'admin/resources/images/' . $data->client_name . '.png')) {
-    $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png';
+    $data->client_logo = $gis_projects->path . 'admin/resources/images/' . $data->client_name . '.png?v=8';
 } else {
-    $data->client_logo = $gis_projects->path . 'admin/resources/images/_temp.png';
+    $data->client_logo = '';
 }
 
 Header("content-type: application/x-javascript");
@@ -99,7 +99,7 @@ projectData.user = '<?php echo $user ?>';
 projectData.old_last_login = <?php echo $old_last_login ?>;
 projectData.client_id = '<?php echo $data->client_id ?>';
 projectData.client_name = '<?php echo $data->client_name ?>';
-projectData.client_display_name = '<?php echo $data->client_display_name ?>';
+projectData.client_display_name = '<?php echo htmlspecialchars($data->client_display_name) ?>';
 projectData.client_url = '<?php echo $data->client_url ?>';
 projectData.client_logo = '<?php echo $data->client_logo ?>';
 projectData.custom1 = '<?php echo $data->custom1 ?>';
@@ -140,7 +140,7 @@ projectData.crs = '<?php echo $qgs->crs ?>';
 projectData.crs_description = '<?php echo $qgs->crs_description ?>';
 projectData.crs_list = eval(<?php echo json_encode($qgs->crs_list) ?>);
 projectData.proj4 = '<?php echo $qgs->proj4 ?>';
-projectData.title = '<?php echo $data->project_display_name ?>';
+projectData.title = '<?php echo htmlspecialchars($data->project_display_name) ?>';
 projectData.extent = '<?php echo implode(',', $qgs->extent) ?>';
 projectData.layers = eval(<?php echo json_encode($qgs->layers) ?>);
 projectData.use_ids = <?php echo json_encode($qgs->use_ids) ?>;

@@ -97,7 +97,9 @@ I18n.title = "Mobile Viewer";
 I18n.search = {
     header: "Søk",
     results: "Resultater",
-    failed: "Søket mislyktes:"
+    failed: "Søket mislyktes:",
+    placeholder: "Search...",
+    noResults: "No results found"
 };
 
 I18n.properties = {

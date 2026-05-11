@@ -39,7 +39,7 @@ function cleanupOldUrls($maxAge = 31536000) { // Default: 1 year
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
 $host = $_SERVER['HTTP_HOST'];
 $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-define('URL_BASE', $protocol . $host . $scriptDir . '/'); // e.g., http://localhost/gisapp/admin/
+define('URL_BASE', $protocol . $host . $scriptDir);
 define('DATA_DIR', __DIR__ . '/short_urls/');
 
 // Ensure data directory exists
@@ -49,7 +49,7 @@ if (!is_dir(DATA_DIR)) {
 
 // Occasionally clean up old URLs (1% chance on each request)
 if (rand(1, 100) === 1) {
-    cleanupOldUrls(2592000); // Delete URLs not accessed for 30 days
+    cleanupOldUrls(31536000); // Delete URLs not accessed for 1 year
 }
 
 /**

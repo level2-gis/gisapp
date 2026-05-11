@@ -99,7 +99,9 @@ I18n.title = "Przeglądarka mobilna";
 I18n.search = {
     header: "Szukaj",
     results: "Wyniki",
-    failed: "Błąd wyszukiwania:"
+    failed: "Błąd wyszukiwania:",
+    placeholder: "Search...",
+    noResults: "No results found"
 };
 
 I18n.properties = {

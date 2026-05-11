@@ -68,6 +68,12 @@ function loadWMSConfig(topicName) {
                     attr.cls = 'main-group-hidden';
                 }
                 attr.checked = undefined;
+            } else {
+                //attr.checked = attr.layer.metadata.visible;
+                // Handle Groups
+                if(!attr.leaf) {
+                    attr.cls = 'group';
+                }
             }
 
             //layer must be in projectData.layers, if not hide it!
@@ -247,7 +253,9 @@ function postLoading() {
     customBeforeMapInit();
 
     //set root node to active layer of layertree
-    layerTree.selectPath(layerTree.root.getPath());
+    if (layerTree && layerTree.root) {
+        layerTree.selectPath(layerTree.root.getPath());
+    }
 
     applyPermalinkParams();
 
@@ -265,16 +273,27 @@ function postLoading() {
         document.title = Eqwc.settings.gisPortalTitle ? titleBarText + ' | ' + Eqwc.settings.gisPortalTitle : titleBarText;
 
         // set header logo and link
+        var logos = [{
+            tag: 'img',
+            style: 'padding-right: 5px;',
+            src: 'admin/resources/images/header_logo.svg',
+            height: headerLogoHeight
+        }];
+        if (headerLogoImg > '') {
+            logos.push({
+                tag: 'img',
+                src: headerLogoImg,
+                title: projectData.client_display_name,
+                height: headerLogoHeight
+            });
+        }
+
         if (headerLogoLink > '') {
             Ext.select('#panel_header_link a').replaceWith({
                 tag: 'a',
                 href: headerLogoLink,
                 //target: '_blank',
-                children: [{
-                    tag: 'img',
-                    src: headerLogoImg,
-                    height: headerLogoHeight
-                }]
+                children: logos
             });
 
             // adjust title position //moved to CSS
@@ -282,7 +301,7 @@ function postLoading() {
             //var paddingTop = (headerLogoHeight - 15) / 2;
             //Ext.get('panel_header_title').setStyle('padding-top', paddingTop + 'px');
         }
-        Ext.get('panel_header_title').update(titleBarText);
+        //Ext.get('panel_header_title').update(projectData.client_display_name);
 
         //user
         Ext.getCmp('GisBrowserPanel').tools.user.dom.qtip = projectData.user;
@@ -317,6 +336,7 @@ function postLoading() {
 
         layerTree.root.firstChild.expand(true, false);
         // expand all nodes in order to allow toggling checkboxes on deeper levels
+        // Do this silently to prevent visual flashing
         layerTree.root.findChildBy(function () {
             var layerId = this.attributes.layer.metadata.name;
             if (this.isExpandable()) {
@@ -333,20 +353,6 @@ function postLoading() {
             }
             return false;
         }, null, true);
-        // for (var index = 0; index < visibleLayers.length; index++) {
-        //     // toggle checkboxes of visible layers
-        //     layerTree.root.findChildBy(function () {
-        //         if (wmsLoader.layerTitleNameMapping[this.attributes["text"]] == visibleLayers[index]) {
-        //             this.getUI().toggleCheck(true);
-        //             // FIXME: never return true even if node is found to avoid TypeError
-        //             //				return true;
-        //         }
-        //         return false;
-        //     }, null, true);
-        // }
-
-        //we need to get a flat list of visible layers so we can set the layerOrderPanel
-        //getVisibleFlatLayers(layerTree.root.firstChild);
 
         // add abstracts to project node and group nodes
         addAbstractToLayerGroups();
@@ -355,7 +361,7 @@ function postLoading() {
         // info buttons in layer tree
         //addInfoButtonsToLayerTree();
 
-        //expand first level depending on the setting
+        //expand first level depending on the setting - do this before resuming events
         if (!projectData.expandAllGroups) {
             layerTree.root.firstChild.collapseChildNodes(true);
             layerTree.root.firstChild.expand(false, false);
@@ -363,6 +369,146 @@ function postLoading() {
     }
     layerTree.checkedLeafs = [];
     layerTree.resumeEvents();
+
+    // Calculate and set dynamic width for LeftPanel based on LayerTree content
+    function calculateOptimalLeftPanelWidth() {
+        var maxWidth = 300; // Start with a higher minimum width
+        var testDiv = document.createElement('div');
+        testDiv.style.position = 'absolute';
+        testDiv.style.visibility = 'hidden';
+        testDiv.style.whiteSpace = 'nowrap';
+        testDiv.style.fontSize = '11px'; // Match TreePanel font size
+        testDiv.style.fontFamily = 'tahoma,arial,verdana,sans-serif'; // Match Ext JS default font
+        testDiv.style.fontWeight = 'normal'; // Ensure normal font weight
+        document.body.appendChild(testDiv);
+
+        // Function to measure text width including indentation
+        function measureNodeWidth(node, depth) {
+            var indentWidth = depth * 18; // Ext JS tree indentation is about 18px per level
+            var iconWidth = 20; // Icon width (increased)
+            var checkboxWidth = 20; // Checkbox width (increased)
+            var padding = 60; // Additional padding for scrollbar, margins, and safety buffer (doubled)
+
+            testDiv.innerHTML = node.text;
+            var textWidth = testDiv.offsetWidth;
+
+            // Add extra buffer for long text to ensure no horizontal scrolling
+            var safetyBuffer = Math.max(20, textWidth * 0.1); // 10% of text width or 20px minimum
+
+            return indentWidth + iconWidth + checkboxWidth + textWidth + padding + safetyBuffer;
+        }
+
+        // Recursive function to check all nodes
+        function checkAllNodes(node, depth) {
+            if (node.text) {
+                var nodeWidth = measureNodeWidth(node, depth);
+                if (nodeWidth > maxWidth) {
+                    maxWidth = nodeWidth;
+                }
+            }
+
+            if (node.childNodes) {
+                for (var i = 0; i < node.childNodes.length; i++) {
+                    checkAllNodes(node.childNodes[i], depth + 1);
+                }
+            }
+        }
+
+        // Check all nodes in the tree
+        if (layerTree.root && layerTree.root.childNodes) {
+            for (var i = 0; i < layerTree.root.childNodes.length; i++) {
+                checkAllNodes(layerTree.root.childNodes[i], 0);
+            }
+        }
+
+        document.body.removeChild(testDiv);
+
+        // Apply constraints with higher minimum
+        maxWidth = Math.max(300, Math.min(700, maxWidth)); // Between 300 and 700px (increased range)
+
+        // console.log('Calculated optimal width:', maxWidth, 'px');
+
+        return maxWidth;
+    }
+
+    // Set the calculated width
+    var optimalWidth = calculateOptimalLeftPanelWidth();
+    var leftPanel = Ext.getCmp('LeftPanel');
+
+    if (leftPanel) {
+        // console.log('Before width update - Current width:', leftPanel.getWidth(), 'Setting to:', optimalWidth);
+
+        // Set width on the panel
+        leftPanel.setWidth(optimalWidth);
+
+        // Force layout updates on all child components to use full width
+        var collapsiblePanels = leftPanel.items;
+        if (collapsiblePanels) {
+            collapsiblePanels.each(function(childPanel) {
+                if (childPanel.setWidth) {
+                    childPanel.setWidth(optimalWidth);
+                }
+                if (childPanel.doLayout) {
+                    childPanel.doLayout();
+                }
+
+                // Handle nested components within each child panel
+                if (childPanel.items) {
+                    childPanel.items.each(function(nestedItem) {
+                        if (nestedItem.setWidth) {
+                            nestedItem.setWidth(optimalWidth);
+                        }
+                        if (nestedItem.doLayout) {
+                            nestedItem.doLayout();
+                        }
+                    });
+                }
+            });
+        }
+
+        // Force layout on specific known child components
+        var descPanel = Ext.getCmp('DescriptionPanel');
+        if (descPanel) {
+            descPanel.setWidth(optimalWidth);
+            descPanel.doLayout();
+        }
+
+        var searchPanel = Ext.getCmp('SearchPanel');
+        if (searchPanel) {
+            searchPanel.setWidth(optimalWidth);
+            searchPanel.doLayout();
+        }
+
+        var leftPanelMap = Ext.getCmp('leftPanelMap');
+        if (leftPanelMap) {
+            leftPanelMap.setWidth(optimalWidth);
+            leftPanelMap.doLayout();
+
+            // Force LayerTree to use full width within leftPanelMap
+            if (layerTree) {
+                layerTree.setWidth(optimalWidth);
+                if (layerTree.doLayout) {
+                    layerTree.doLayout();
+                }
+            }
+        }
+
+        // Force the parent container to update layout
+        if (leftPanel.ownerCt) {
+            leftPanel.ownerCt.doLayout();
+        }
+
+        // Also trigger layout on the panel itself
+        leftPanel.doLayout();
+
+        // For border layout, we may need to update the region size
+        var viewport = Ext.getCmp('GisBrowserPanel');
+        if (viewport) {
+            viewport.doLayout();
+        }
+
+        // console.log('After width update - Panel width:', leftPanel.getWidth());
+    }
 
     if (!initialLoadDone) {
         //deal with myTopToolbar (map tools)
@@ -443,12 +589,16 @@ function postLoading() {
                 n.on('checkchange', leafsChangeFunction);
             }
             else {
+                if (n.isFirst()) {
+                    //disable contextmenu on first node
+                    n.on("contextMenu", Ext.emptyFn, null, {preventDefault: true});
+                } else {
+                    //create menu and filter properties from json configuration
+                    buildGroupContextMenu(n);
 
-                //create menu and filter properties from json configuration
-                buildGroupContextMenu(n);
-
-                n.on ('contextMenu', contextMenuHandler);
-                n.on('checkchange', leafsChangeFunction);
+                    n.on('contextMenu', contextMenuHandler);
+                    n.on('checkchange', leafsChangeFunction);
+                }
             }
         }
     );
@@ -695,7 +845,35 @@ function postLoading() {
             var startExtentParams = urlParams.startExtent.split(",");
             var startExtent = new OpenLayers.Bounds(parseFloat(startExtentParams[0]), parseFloat(startExtentParams[1]), parseFloat(startExtentParams[2]), parseFloat(startExtentParams[3]));
             //alert("startExtentOL="+startExtent.toString());
-            geoExtMap.map.zoomToExtent(startExtent,false);
+
+            // Use zoomToExtent with closest=true to preserve zoom level as closely as possible
+            // This will find the closest zoom level that encompasses the extent
+            geoExtMap.map.zoomToExtent(startExtent, true);
+
+            // Alternative approach: set the extent more precisely by using setCenter and calculated zoom
+            // Get the center of the desired extent
+            var centerLon = (startExtent.left + startExtent.right) / 2;
+            var centerLat = (startExtent.bottom + startExtent.top) / 2;
+            var center = new OpenLayers.LonLat(centerLon, centerLat);
+
+            // Calculate the appropriate zoom level based on extent size
+            var extentWidth = startExtent.right - startExtent.left;
+            var extentHeight = startExtent.top - startExtent.bottom;
+            var mapSize = geoExtMap.map.getSize();
+
+            if (mapSize && mapSize.w > 0 && mapSize.h > 0) {
+                // Calculate resolution needed to fit the extent
+                var resolutionX = extentWidth / mapSize.w;
+                var resolutionY = extentHeight / mapSize.h;
+                var targetResolution = Math.max(resolutionX, resolutionY);
+
+                // Find the closest zoom level for this resolution
+                var targetZoom = geoExtMap.map.getZoomForResolution(targetResolution, true);
+
+                // Set center and zoom to match the original extent as closely as possible
+                geoExtMap.map.setCenter(center, targetZoom);
+            }
+
             //alert(geoExtMap.map.getExtent().toString());
         } //else {
         //why this?, map is already loaded, commenting
@@ -720,6 +898,13 @@ function postLoading() {
         if (urlParams.selection) {
             thematicLayer.mergeNewParams({
                 "SELECTION": urlParams.selection
+            });
+        }
+        //styles from permalink
+        if (urlParams.styles) {
+            var styles = urlParams.styles.split(",");
+            thematicLayer.mergeNewParams({
+                "STYLES": styles.join(",")
             });
         }
 
@@ -1239,23 +1424,7 @@ function postLoading() {
             searchPanel.hide();
         }
 
-        //update layout of left panel and adds a listener to automatically adjust layout after resizing
-        var leftPanel = Ext.getCmp('LeftPanel');
-        leftPanel.doLayout();
-        leftPanel.addListener('resize', function (myPanel, adjWidth, adjHeight, rawWidth, rawHeight) {
-            myPanel.items.each(function (item, index, length) {
-                item.width = adjWidth;
-            });
-            myPanel.doLayout();
-
-            geoExtMap.map.updateSize();
-        });
-        leftPanel.addListener('collapse', function (myPanel) {
-            geoExtMap.map.updateSize();
-        });
-        leftPanel.addListener('expand', function (myPanel) {
-            geoExtMap.map.updateSize();
-        });
+        leftPanel.setTitle('<span class="left-panel-title">' + Ext.decode(Eqwc.settings.title) + '</span>');
 
         //measure-controls (distance and area)
         var styleMeasureControls = new OpenLayers.Style();
@@ -1339,6 +1508,7 @@ function postLoading() {
         var extraLayGroup = new Ext.tree.TreeNode({
             leaf: false,
             expanded: true,
+            cls: 'group',
             text: externalLayerTitleString[lang]
         });
         layerTree.root.appendChild(extraLayGroup);
@@ -1363,12 +1533,13 @@ function postLoading() {
         var BgLayerList = new Ext.tree.TreeNode({
             leaf: false,
             expanded: true,
+            cls: 'group',
             text: backgroundLayerTitleString[lang]
         });
 
         layerTree.root.appendChild(BgLayerList);
 
-        if (visibleBackgroundLayer != null) {
+        if (visibleBackgroundLayer != null && visibleBackgroundLayer !== '') {
             //initialBGMap = -1;
             // do not show any baseLayer if passed visibleBackgroundLayer is not found
             for (var i = 0; i < baseLayers.length; i++) {
@@ -1377,6 +1548,9 @@ function postLoading() {
                     break;
                 }
             }
+        } else if (visibleBackgroundLayer === '' || urlParams.hasOwnProperty('b')) {
+            // If 'b' parameter is explicitly provided but empty, turn off all base layers
+            initialBGMap = -1;
         }
 
         for (var i = 0; i < baseLayers.length; i++) {
@@ -1396,6 +1570,11 @@ function postLoading() {
 
             bgnode.on('contextMenu', contextMenuHandler);
             bgnode.on('checkchange', baseChangeFunction);
+        }
+
+        // If no base layer is selected, set currentlyVisibleBaseLayer to null
+        if (initialBGMap === -1) {
+            currentlyVisibleBaseLayer = null;
         }
     }
 
@@ -1833,16 +2012,49 @@ function showSearchPanelResults(searchPanelInstance, features) {
                 store: searchPanelInstance.store,
                 columns: searchPanelInstance.gridColumns,
                 plugins: [filters],
-                sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+                sm: new Ext.grid.RowSelectionModel({singleSelect: false}), //disableSelection: true,  // Disable selection completely
                 autoHeight: autoHeight, // No vert. scrollbars in popup if true!!
                 viewConfig: {
-                    forceFit: horFit,
+                    forceFit: false,
+                    autoFill: false,
                     templates: {
                         cell: new Ext.Template(
                             '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
                             '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
                             '</td>'
                         )
+                    },
+
+                    // Simple column width management
+                    onLayout: function(vw, vh) {
+                        var grid = this.grid;
+                        var cm = grid.getColumnModel();
+                        var totalColumns = cm.getColumnCount();
+                        var availableWidth = vw - this.scrollOffset;
+
+                        // If we have many columns, set minimum widths and enable horizontal scrolling
+                        if (totalColumns > 6 || availableWidth / totalColumns < 120) {
+                            for (var i = 0; i < totalColumns; i++) {
+                                var colWidth = cm.getColumnWidth(i);
+                                var minWidth = 50;
+                                if (colWidth < minWidth) {
+                                    cm.setColumnWidth(i, minWidth);
+                                }
+                            }
+                            return;
+                        }
+
+                        // For fewer columns, use available space
+                        this.fitColumns(false, false, -1);
+                    },
+
+                    // Add conditional row rendering
+                    getRowClass: function(record, rowIndex, rp, ds) {
+                        // Check if GridConditionalConfig is available
+                        if (typeof GridConditionalConfig !== 'undefined') {
+                            return GridConditionalConfig.getRowClass(record);
+                        }
+                        return '';
                     }
                 },
                 // paging bar on the bottom
@@ -2414,12 +2626,12 @@ function scrollToHelpItem(targetId) {
 
 //function that creates a permalink
 function createPermalink() {
-    var visibleLayers = [];
+    var visibleLayers = thematicLayer.params.LAYERS;
     var permalink;
     var permalinkParams = {};
     //visibleLayers = getVisibleLayers(visibleLayers, layerTree.root.firstChild);
     //visibleLayers = uniqueLayersInLegend(visibleLayers);
-    var visibleLayers = thematicLayer.params.LAYERS;
+    var styles = thematicLayer.params.STYLES;
     var visibleBackgroundLayer = getVisibleBackgroundLayer();
     var startExtent = geoExtMap.map.getExtent().toBBOX(1, OpenLayers.Projection.defaults[authid].yx);
 
@@ -2445,9 +2657,16 @@ function createPermalink() {
 
     permalinkParams.e = startExtent;  // startExtent -> e
 
-    // visible BackgroundLayer
-    //TODO FIX THIS
-    //permalinkParams.visibleBackgroundLayer = visibleBackgroundLayer;
+    if (styles>'') {
+        permalinkParams.t = styles;  // styles -> t
+    }
+
+    // visible BackgroundLayer (always include 'b' parameter)
+    if (currentlyVisibleBaseLayer) {
+        permalinkParams.b = currentlyVisibleBaseLayer;  // visibleBackgroundLayer -> b
+    } else {
+        permalinkParams.b = '';  // empty 'b' parameter means no base layer
+    }
 
     // visible layers and layer order
     permalinkParams.v = visibleLayers.toString();  // visibleLayers -> v
@@ -2500,7 +2719,7 @@ function addAbstractToLayerGroups() {
                 } else {
                     var thisAbstract = layerGroupString[lang]+ ' "' + n.text + '"';
                 }
-                var layerId = wmsLoader.layerTitleNameMapping[n.text];
+                var layerId = wmsLoader.layerTitleNameMapping[n.attributes.layer.name];
                 wmsLoader.layerProperties[layerId].abstract = thisAbstract;
             }
         }
@@ -3188,6 +3407,141 @@ function layerStyles(layerIds) {
         }
     }
     return styles;
+}
+
+function updateLayerStylesAndLegends(styles) {
+    // Get the current visible layers from the thematic layer
+    var visibleLayers = [];
+    if (thematicLayer && thematicLayer.params && thematicLayer.params.LAYERS) {
+        visibleLayers = thematicLayer.params.LAYERS.split(',');
+    }
+
+    if (!visibleLayers || visibleLayers.length !== styles.length) {
+        console.warn('Styles array length (' + styles.length + ') does not match visible layers (' + visibleLayers.length + ')');
+        return;
+    }
+
+    // Update currentStyle for each layer and refresh legends
+    for (var i = 0; i < visibleLayers.length; i++) {
+        var layerId = visibleLayers[i];
+        var styleName = styles[i];
+
+        if (layerId && styleName && wmsLoader.layerProperties[layerId]) {
+            var layer = wmsLoader.layerProperties[layerId];
+
+            // Always update the style, even if it's the same (to ensure legend refreshes)
+            if (styleName !== 'default') {
+                // Check if the style exists for this layer
+                var styleExists = layer.styles.some(function(style) {
+                    return style.name === styleName;
+                });
+
+                if (styleExists) {
+                    // Update the current style
+                    layer.currentStyle = styleName;
+
+                    // Find the layer node in the tree
+                    var layerNode = null;
+                    if (layerTree && layerTree.root) {
+                        layerTree.root.cascade(function(node) {
+                            if (node.isLeaf() && wmsLoader.layerTitleNameMapping[node.text] === layerId) {
+                                layerNode = node;
+                                return false; // Stop iteration
+                            }
+                        });
+                    }
+
+                    // Refresh legend if layer is visible and node exists
+                    if (layerNode && layerNode.attributes.checked && projectData.layers[layerId]) {
+                        // Remove existing legend
+                        var existingLegend = Ext.get("legend_" + layerId);
+                        if (existingLegend) {
+                            existingLegend.remove();
+                        }
+
+                        // Remove expanded legend if exists
+                        var expandedLegend = Ext.get("legend_expanded_" + layerId);
+                        if (expandedLegend) {
+                            expandedLegend.remove();
+                        }
+
+                        // Clear from cache to force refresh
+                        projectData.clearLegendCache(layerId);
+
+                        // Set new legend with updated style
+                        projectData.setLayerLegend(projectData.layers[layerId], layerNode);
+
+                        // Update context menu style selection if menu exists
+                        updateLayerContextMenuStyle(layerNode, layerId, styleName);
+                    }
+                } else {
+                    console.warn('Style "' + styleName + '" not found for layer "' + layerId + '"');
+                }
+            }
+        }
+    }
+}
+
+// Debug function to check layer styles - call from browser console
+function debugLayerStyles() {
+    console.log('=== Debug Layer Styles ===');
+    if (thematicLayer && thematicLayer.params && thematicLayer.params.LAYERS) {
+        var visibleLayers = thematicLayer.params.LAYERS.split(',');
+        for (var i = 0; i < visibleLayers.length; i++) {
+            var layerId = visibleLayers[i];
+            if (wmsLoader.layerProperties[layerId]) {
+                var layer = wmsLoader.layerProperties[layerId];
+                console.log('Layer:', layerId);
+                console.log('  currentStyle:', layer.currentStyle);
+                console.log('  available styles:', layer.styles.map(function(s) { return s.name; }));
+            }
+        }
+    }
+    console.log('=========================');
+}
+
+function updateLayerContextMenuStyle(layerNode, layerId, styleName) {
+    // Update existing context menu style selection without destroying it
+    if (layerNode && layerNode.menu) {
+        try {
+            // Find the style submenu
+            var styleMenu = layerNode.menu.getComponent('contextStyle');
+            if (styleMenu && styleMenu.menu) {
+                // Get all style radio items in the submenu
+                var styleItems = styleMenu.menu.items;
+                if (styleItems) {
+                    styleItems.each(function(item) {
+                        if (item.xtype === 'radio') {
+                            // Check the radio button that matches the new style
+                            var shouldBeChecked = (item.itemId === styleName);
+                            if (item.checked !== shouldBeChecked) {
+                                // Temporarily suspend events to prevent handler errors
+                                var originalHandler = item.handler;
+                                item.handler = null;
+
+                                try {
+                                    // Try different methods to set checked state
+                                    if (typeof item.setChecked === 'function') {
+                                        item.setChecked(shouldBeChecked, true); // true = suppress event
+                                    } else if (typeof item.setValue === 'function') {
+                                        item.setValue(shouldBeChecked);
+                                    } else {
+                                        // Direct property setting as fallback
+                                        item.checked = shouldBeChecked;
+                                    }
+                                } finally {
+                                    // Restore the original handler
+                                    item.handler = originalHandler;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            // Silently ignore errors during programmatic updates
+        }
+    }
 }
 
 function addBookmarks() {

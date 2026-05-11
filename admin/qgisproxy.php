@@ -184,12 +184,12 @@ function doGetRequest($query_arr, $map, $client, $http_ver, $user)
                 $contentType = "text/xml";
                 break;
             case "GetLegendGraphics":
-                if (empty($query_arr['STYLES'])) {
-                    $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS']);
-                } else {
+                if ($query_arr['FORMAT'] == 'image/png') {
                     $cacheKey = $map . $sep . "PNG" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS'] . $sep . Helpers::normalize($query_arr['STYLES']));
+                } elseif ($query_arr['FORMAT'] == 'application/json') {
+                    $cacheKey = $map . $sep . "JSON" . $sep . $query_arr["REQUEST"] . $sep . Helpers::normalize($query_arr['LAYERS'] . $sep . Helpers::normalize($query_arr['STYLES']));
                 }
-                $contentType = "image/png";
+                $contentType = $query_arr["FORMAT"];
                 break;
             case "DescribeFeatureType":
                 $layer = $query_arr["TYPENAME"];

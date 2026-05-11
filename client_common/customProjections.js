@@ -25,6 +25,7 @@ CustomProj['EPSG:32633']= {extent: [166021.44, 0.00, 534994.66, 9329005.18], uni
 CustomProj['EPSG:32634']= {extent: [166021.44, 0.00, 534994.66, 9329005.18], units: 'm', yx: false, northAxis: 'N', eastAxis: 'E'};
 CustomProj['EPSG:32635']= {extent: [166021.44, 0.00, 534994.66, 9329005.18], units: 'm', yx: false, northAxis: 'N', eastAxis: 'E'};
 CustomProj['EPSG:3794'] = {extent: [373217.65,32395.09,622710.74,194645.86], units: 'm', yx: false};            //Slovenia new
+CustomProj['EPSG:3765'] = {extent: [208311.05,4608969.52,744179.92,5161549.72], units: 'm', yx: false};            //Croatia
 CustomProj['EPSG:3857'] = {extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], units: 'm', yx: false};
 CustomProj['EPSG:3909'] = {extent: [6857660.55,4550994.70,7655918.26,5194896.94], units: 'm', yx: true};        //Balkan Zone 7
 CustomProj['EPSG:3912'] = {extent: [363774.72,-475760.46,1113039.95,224384.21], units: 'm', yx: false};         //Slovenia old

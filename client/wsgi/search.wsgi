@@ -99,11 +99,46 @@ def application(environ, start_response):
       sql += "(SELECT displaytext, '"+searchtables[i]+r"' AS searchtable, search_category, substring(search_category from 4) AS searchcat_trimmed, showlayer, "
       # the following line is responsible for zooming in to the features
       # this is supposed to work in PostgreSQL since version 9.0
-      sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX\(|\)','','g'),' ',',')||']'::text AS bbox "
+      sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX\(|\)','','g'),' ',',')||']'::text AS bbox, "
       # if the above line does not work for you, deactivate it and uncomment the next line
-      #sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox "
+      #sql += "'['||replace(regexp_replace(BOX2D(ST_Transform(the_geom,"+srs+"))::text,'BOX[(]|[)]','','g'),' ',',')||']'::text AS bbox, "
+      # add geometry as WKT for points, null for other geometries
+      sql += "CASE WHEN ST_GeometryType(the_geom) = 'ST_Point' THEN ST_AsText(ST_Force2D(ST_Transform(the_geom,"+srs+"))) ELSE NULL END AS geometry "
+      
+      # Check if this table uses tsvector search
+      if searchtables[i].find('tsvector') > 0:
+        # For tsvector tables, create proper tsquery for multiple words
+        # Convert "word1 word2" to "word1:* & word2:*"
+        tsquery_parts = []
+        for word in querystrings:
+          sanitized_word = sanitize_tsquery(word)
+          if sanitized_word:
+            tsquery_parts.append(sanitized_word + ':*')
+        tsquery_string = ' & '.join(tsquery_parts) if tsquery_parts else ''
+        
+        if tsquery_string:
+          # For tsvector tables, use enhanced ts_rank with exact phrase detection
+          # Use both the constructed tsquery and a phrase query for better exact matching
+          sql += ", CASE "
+          # Try to detect exact phrase match using plainto_tsquery for exact phrase
+          sql += "WHEN searchstring_tsvector @@ plainto_tsquery(%s) THEN (0.1 - ts_rank_cd(searchstring_tsvector, plainto_tsquery(%s))) "
+          # Fall back to prefix matching with ts_rank
+          sql += "ELSE (0.5 - ts_rank(searchstring_tsvector, to_tsquery(%s))) END AS relevance_rank "
+          full_query = ' '.join(querystrings)
+          data += (full_query, full_query, tsquery_string)
+        else:
+          # If no valid tsquery can be constructed, fall back to ILIKE with low relevance
+          sql += ", 0.9 AS relevance_rank "
+      else:
+        # For regular tables, use custom relevance ranking for ILIKE search
+        sql += ", CASE WHEN lower(searchstring) = lower(%s) THEN 0.1 "
+        sql += "WHEN lower(searchstring) LIKE lower(%s) THEN 0.2 "
+        sql += "ELSE 0.3 END AS relevance_rank "
+        # For ILIKE: need two parameters for exact and starts-with matching
+        full_query = ' '.join(querystrings)
+        data += (full_query, full_query + '%')
+      
       sql += "FROM "+searchtables[i]+" WHERE "
-      #for each querystring
       for j in range(0, querystringsLength):
         # to implement a search method uncomment the sql and its following data line
         # for tsvector issues see the docs, use whichever version works best for you
@@ -133,13 +168,19 @@ def application(environ, start_response):
       if filter>'':
         sql += " AND filter='"+filter+"'"
 
+      # Add ORDER BY within each subquery only when multiple tables (UNION) are used
+      # For single table, only the final ORDER BY will be applied
+      if searchtableLength > 1:
+        sql += " ORDER BY relevance_rank ASC, displaytext ASC"
+      
       sql += " LIMIT " + limit + ")"
 
       #union for next table
       if i < searchtableLength - 1:
         sql += " UNION "
 
-    sql += " ORDER BY search_category ASC, displaytext ASC;"
+    # Now both ranking systems use lower values for better matches
+    sql += " ORDER BY search_category ASC, relevance_rank ASC, displaytext ASC;"
 
     conn = qwc_connect.getConnection(environ, start_response)
     if conn == None:
@@ -159,10 +200,11 @@ def application(environ, start_response):
     rows = cur.fetchall()
     lastSearchCategory = '';
     for row in rows:
-      if lastSearchCategory != row['search_category']:
-        rowData.append({"displaytext":row['searchcat_trimmed'],"searchtable":None,"bbox":maxBbox,"showlayer":row['showlayer'],"selectable":selectable})
+      # Only add search category header when multiple tables are used
+      if searchtableLength > 1 and lastSearchCategory != row['search_category']:
+        rowData.append({"displaytext":row['searchcat_trimmed'],"searchtable":None,"bbox":maxBbox,"showlayer":row['showlayer'],"selectable":selectable,"geometry":None})
         lastSearchCategory = row['search_category']
-      rowData.append({"displaytext":row['displaytext'],"searchtable":row['searchtable'],"bbox":row['bbox'],"showlayer":row['showlayer'],"selectable":"1"})
+      rowData.append({"displaytext":row['displaytext'],"searchtable":row['searchtable'],"bbox":row['bbox'],"showlayer":row['showlayer'],"selectable":"1","geometry":row['geometry']})
 
     resultString = '{"results": '+json.dumps(rowData)+'}'
     resultString = str.replace(resultString,'"bbox": "[','"bbox": [')

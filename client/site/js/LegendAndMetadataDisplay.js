@@ -138,7 +138,7 @@ function showLegendAndMetadata(layertitle) {
             ITEMFONTSIZE: 8,
             LAYERS: layername,
             RULELABEL: "AUTO",
-            DPI: screenDpi
+            DPI: 150
         });
     legendMetaTabPanel = Ext.getCmp('legendMetaTabPanel');
     //create legend image
@@ -172,7 +172,8 @@ function showLegendAndMetadata(layertitle) {
             'CRS': projDataLayer.crs,
             'IDENTIFY': wmsLoader.layerProperties[layername].queryable ? Ext.MessageBox.buttonText.yes : Ext.MessageBox.buttonText.no,
             'EDITABLE': projDataLayer.wfs ?  Ext.MessageBox.buttonText.yes : Ext.MessageBox.buttonText.no,
-            'ID': projDataLayer.id
+            'ID': projDataLayer.id,
+            'KEY': projDataLayer.key
         };
 
         if (type == 'No geometry') {

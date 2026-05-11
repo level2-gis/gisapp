@@ -99,7 +99,9 @@ I18n.title = "Mobil version";
 I18n.search = {
     header: "Sök",
     results: "Resultat",
-    failed: "Sökning misslyckad:"
+    failed: "Sökning misslyckad:",
+    placeholder: "Search...",
+    noResults: "No results found"
 };
 
 I18n.properties = {

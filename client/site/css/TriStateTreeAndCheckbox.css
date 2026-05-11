@@ -1,93 +1,134 @@
+/* Color variables - change these to modify all checkbox colors */
+:root {
+	--checkbox-checked-bg: rgb(109, 151, 196);
+	--checkbox-grayed-bg: rgba(109, 151, 196,0.7);
+	--checkbox-border: #5b5b5b;
+	--checkbox-unchecked-bg: #FFF;
+	--checkbox-unchecked-border: #5b5b5b;
+}
+
 .layer-checkbox-hidden {
-	padding-left: 13px;
+	padding-left: 23px;
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
 
 .main-group-hidden {
+	text-transform: uppercase;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	/*display:none;*/
+	/*font-weight: 600;*/
 }
 
+.group {
+	text-transform: uppercase;
+	/*font-style: italic;*/
+	/*font-weight: 600;*/
+}
+
+/* Custom tree expand/collapse arrows - cleaner implementation */
+img.x-tree-elbow-plus,
+img.x-tree-elbow-end-plus {
+	width: 0 !important;
+	height: 0 !important;
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+	border-left: 10px solid #666;
+	margin: 3px 5px 3px 1px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+img.x-tree-elbow-minus,
+img.x-tree-elbow-end-minus {
+	width: 0 !important;
+	height: 0 !important;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 10px solid #666;
+	margin: 3px 5px 3px -1px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+img.x-tree-elbow-plus:hover,
+img.x-tree-elbow-end-plus:hover {
+	border-left-color: #333;
+}
+
+img.x-tree-elbow-minus:hover,
+img.x-tree-elbow-end-minus:hover {
+	border-top-color: #333;
+}
+
+/* Disable the plain elbow icon on leaf nodes - it interferes with selection */
+img.x-tree-ec-icon.x-tree-elbow {
+	visibility: hidden !important;
+	pointer-events: none !important;
+	cursor: default !important;
+}
+
+/* Base checkbox styling - using background images since checkboxes are <img> elements */
 .x-tree-checkbox {
-	background:url('../libs/ext/resources/images/default/form/checkbox.gif') no-repeat 0 0;
-	height:13px;
-	width:13px;
-	vertical-align:middle;
+	width: 16px !important;
+	height: 16px !important;
+	margin: 1px 4px 1px 1px !important;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1px solid var(--checkbox-unchecked-border);
+	border-radius: 4px;
+	display: inline-block;
 }
-.x-tree-checkbox-over .x-tree-checkbox {
-	background-position:-13px 0;
+
+/* Unchecked state - empty box */
+.x-tree-checkbox {
+	background: var(--checkbox-unchecked-bg) !important;
+	border-color: var(--checkbox-unchecked-border) !important;
 }
-.x-tree-checkbox-down .x-tree-checkbox {
-	background-position:-26px 0;
+
+/* Checked state - checkmark using data URI */
+.x-tree-checkbox.x-tree-node-checked {
+	background: var(--checkbox-checked-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.5 3.5L6 11l-3.5-3.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat center !important;
+	border-color: var(--checkbox-border) !important;
 }
-.x-tree-node-disabled .x-tree-checkbox {
-	background-position:-39px 0;
+
+/* Grayed state - dash using data URI */
+.x-tree-checkbox.x-tree-node-grayed {
+	background: var(--checkbox-grayed-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="3" y="13.5" font-family="Arial" font-size="16" font-weight="bold" fill="white">−</text></svg>') no-repeat center !important;
+	border-color: var(--checkbox-border) !important;
 }
-.x-tree-node-checked {
-	background-position:0 -13px;
+
+/* Branch states */
+.x-tree-checkbox.x-tree-branch-checked {
+	background: var(--checkbox-checked-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="3" y="11.5" font-family="Arial" font-size="11" font-weight="bold" fill="%238B4513">✓</text></svg>') no-repeat center !important;
+	border-color: var(--checkbox-border) !important;
 }
-.x-tree-checkbox-over .x-tree-node-checked {
-	background-position:-13px -13px;
+
+/* Hover effects */
+.x-tree-checkbox:hover {
+	opacity: 0.8;
 }
-.x-tree-checkbox-down .x-tree-node-checked {
-	background-position:-26px -13px;
+
+/* Tree node spacing improvements - move padding to inner element for seamless hover/selection */
+.x-tree-node-el {
+	padding-top: 4px !important;
+	padding-bottom: 4px !important;
+	cursor: default !important;
+	display: flex;
+	line-height: 22px;
 }
-.x-tree-node-disabled .x-tree-node-checked {
-	background-position:-39px -13px;
+
+.x-tree-node-text {
+	padding-left: 4px !important;
 }
-.x-tree-node-grayed {
-	background-position:0 -26px;
-}
-.x-tree-checkbox-over .x-tree-node-grayed {
-	background-position:-13px -26px;
-}
-.x-tree-checkbox-down .x-tree-node-grayed {
-	background-position:-26px -26px;
-}
-.x-tree-node-disabled .x-tree-node-grayed {
-	background-position:-39px -26px;
-}
-.x-tree-branch-unchecked .x-tree-checkbox,
-.x-tree-branch-unchecked .x-tree-node-checked,
-.x-tree-branch-unchecked .x-tree-node-grayed {
-	background-position:0 0;
-}
-.x-tree-branch-unchecked .x-tree-checkbox-over .x-tree-checkbox,
-.x-tree-branch-unchecked .x-tree-checkbox-over .x-tree-node-checked,
-.x-tree-branch-unchecked .x-tree-checkbox-over .x-tree-node-grayed {
-	background-position:-13px 0;
-}
-.x-tree-branch-unchecked .x-tree-checkbox-down .x-tree-checkbox,
-.x-tree-branch-unchecked .x-tree-checkbox-down .x-tree-node-checked,
-.x-tree-branch-unchecked .x-tree-checkbox-down .x-tree-node-grayed {
-	background-position:-26px 0;
-}
-.x-tree-branch-unchecked .x-tree-node-disabled .x-tree-checkbox,
-.x-tree-branch-unchecked .x-tree-node-disabled .x-tree-node-checked,
-.x-tree-branch-unchecked .x-tree-node-disabled .x-tree-node-grayed {
-	background-position:-39px 0;
-}
-.x-tree-branch-checked .x-tree-checkbox,
-.x-tree-branch-checked .x-tree-node-checked,
-.x-tree-branch-checked .x-tree-node-grayed {
-	background-position:0 -13px;
-}
-.x-tree-branch-checked .x-tree-checkbox-over .x-tree-checkbox,
-.x-tree-branch-checked .x-tree-checkbox-over .x-tree-node-checked,
-.x-tree-branch-checked .x-tree-checkbox-over .x-tree-node-grayed {
-	background-position:-13px -13px;
-}
-.x-tree-branch-checked .x-tree-checkbox-down .x-tree-checkbox,
-.x-tree-branch-checked .x-tree-checkbox-down .x-tree-node-checked,
-.x-tree-branch-checked .x-tree-checkbox-down .x-tree-node-grayed {
-	background-position:-26px -13px;
-}
-.x-tree-branch-checked .x-tree-node-disabled .x-tree-checkbox,
-.x-tree-branch-checked .x-tree-node-disabled .x-tree-node-checked,
-.x-tree-branch-checked .x-tree-node-disabled .x-tree-node-grayed {
-	background-position:-39px -13px;
+
+.x-tree-checkbox,
+.x-tree-ec-icon,
+.x-tree-elbow-plus,
+.x-tree-elbow-minus,
+.x-tree-elbow-end-plus,
+.x-tree-elbow-end-minus {
+	cursor: pointer !important;
 }
 
 .outsidescale a span{
@@ -101,5 +142,5 @@
 
 /* Fix positioning for filtered layers without geometry (prevent text alignment shift) */
 .layer-checkbox-hidden.filtered {
-	padding-left: 13px !important; /* Ensure the container keeps its left padding when filtered */
+	padding-left: 23px !important; /* Ensure the container keeps its left padding when filtered */
 }
