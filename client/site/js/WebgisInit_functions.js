@@ -276,7 +276,7 @@ function postLoading() {
         var logos = [{
             tag: 'img',
             style: 'padding-right: 5px;',
-            src: 'admin/resources/images/header_logo.svg',
+            src: 'admin/resources/images/header_logo.png',
             height: headerLogoHeight
         }];
         if (headerLogoImg > '') {
