@@ -314,7 +314,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
     <meta name="robots" content="noindex, nofollow">
     <title></title>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/ext-all-notheme.css"/>
-    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/geo-portal.css?v=20251030a"/>
+    <link rel="stylesheet" type="text/css" href="client/site/libs/ext/resources/css/eqwc.css?v=20251030a"/>
     <link rel="stylesheet" type="text/css" href="client/site/libs/ext/ux/css/ux-all.css?v=20180219"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/TriStateTreeAndCheckbox.css?v=20250818"/>
 <!--    <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>-->
