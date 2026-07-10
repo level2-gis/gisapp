@@ -54,6 +54,16 @@ var legendTab; //a reference to the Ext tab holding the legend graphic
 var metadataTab; //a reference to the Ext tab holding the metadata information
 var propertyTab;
 var measurePopup;
+var measurementLayer;
+var measurementWindow;
+var measurementStore;
+var measurementSequence = 0;
+var measurementModifyControl;
+var activeMeasurementEditId = null;
+var measurementAreaLayer;
+var measurementAreaWindow;
+var measurementAreaStore;
+var measurementAreaSequence = 0;
 var currentlyVisibleBaseLayer = null;
 var layerImageFormats = layerImageFormats || []; // use config from GlobalOptions if any
 

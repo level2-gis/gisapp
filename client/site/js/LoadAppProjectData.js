@@ -748,10 +748,10 @@ var sketchSymbolizersMeasureControls = {
     strokeColor: "#FF0000"
   },
   "Line": {
-    strokeWidth: 3,
+    strokeWidth: 2,
     strokeOpacity: 1,
     strokeColor: "#FF0000",
-    strokeDashstyle: "dash"
+        strokeDashstyle: "solid"
   },
   "Polygon": {
     strokeWidth: 2,

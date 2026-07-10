@@ -892,6 +892,7 @@ function postLoading() {
             if (oldH < newH) {
                 geoExtMap.setHeight(newH);
             }
+            positionMeasurementWindow();
         });
 
         // selection from permalink
@@ -1426,6 +1427,9 @@ function postLoading() {
 
         leftPanel.setTitle('<span class="left-panel-title">' + Ext.decode(Eqwc.settings.title) + '</span>');
 
+        ensureMeasurementUi();
+        ensureMeasurementAreaUi();
+
         //measure-controls (distance and area)
         var styleMeasureControls = new OpenLayers.Style();
         styleMeasureControls.addRules([
@@ -1439,7 +1443,7 @@ function postLoading() {
         measureControls = {
             line: new OpenLayers.Control.Measure(
                 OpenLayers.Handler.Path, {
-                    persist: true,
+                    persist: false,
                     handlerOptions: {
                         layerOptions: {
                             styleMap: styleMapMeasureControls
@@ -1475,7 +1479,7 @@ function postLoading() {
                                 unit = 'ac';
                             }
                         } else {
-                            unit += "<sup>2</sup>";
+                            unit += '²';
                         }
 
                         return [area, unit];
@@ -2375,6 +2379,8 @@ function mapToolbarHandler(btn, evt) {
     if (btn.id == "IdentifyTool") {
         if (btn.pressed) {
             identifyToolActive = true;
+            hideMeasurementWindow();
+            hideMeasurementAreaWindow();
             activateGetFeatureInfo(true);
             mainStatusText.setText(modeObjectIdentificationString[lang]);
         } else {
@@ -2391,10 +2397,13 @@ function mapToolbarHandler(btn, evt) {
     if (btn.id == "measureDistance") {
         if (btn.pressed) {
             measureControls["line"].activate();
+            hideMeasurementAreaWindow();
+            showMeasurementWindow();
             mainStatusText.setText(modeMeasureDistanceString[lang]);
             changeCursorInMap("crosshair");
         } else {
             measureControls["line"].deactivate();
+            hideMeasurementWindow();
             mainStatusText.setText(modeNavigationString[lang]);
             changeCursorInMap("default");
         }
@@ -2402,10 +2411,13 @@ function mapToolbarHandler(btn, evt) {
     if (btn.id == "measureArea") {
         if (btn.pressed) {
             measureControls["polygon"].activate();
+            hideMeasurementWindow();
+            showMeasurementAreaWindow();
             mainStatusText.setText(modeMeasureAreaString[lang]);
             changeCursorInMap("crosshair");
         } else {
             measureControls["polygon"].deactivate();
+            hideMeasurementAreaWindow();
             mainStatusText.setText(modeNavigationString[lang]);
             changeCursorInMap("default");
         }
@@ -2562,35 +2574,1165 @@ function removeMeasurePopup() {
     }
 }
 
-function handleMeasurements(event) {
-    var geometry = event.geometry;
-    var units = event.units;
-    var order = event.order;
-    var measure = event.measure;
-    var measureFormat = OpenLayers.Number.format(Number(measure.toFixed(2)), null);
-    var out = "";
-    if (order == 1) {
-        out += measureDistanceResultPrefixString[lang] + ": " + measureFormat + units;
-    } else {
-        out += measureAreaResultPrefixString[lang] + ": " + measureFormat + units;
+function ensureMeasurementUi() {
+    ensureMeasurementLayer();
+    ensureMeasurementWindow();
+    positionMeasurementWindow();
+}
+
+function ensureMeasurementAreaUi() {
+    ensureMeasurementAreaLayer();
+    ensureMeasurementAreaWindow();
+    positionMeasurementAreaWindow();
+}
+
+function showMeasurementWindow() {
+    ensureMeasurementUi();
+
+    if (measurementWindow && measurementWindow.hidden) {
+        measurementWindow.show();
     }
-    var map = geoExtMap.map; // gets OL map object
+    positionMeasurementWindow();
+}
+
+function hideMeasurementWindow() {
+    clearMeasurementEditState();
+    if (measurementWindow && !measurementWindow.hidden) {
+        measurementWindow.hide();
+    }
+}
+
+function showMeasurementAreaWindow() {
+    ensureMeasurementAreaUi();
+
+    if (measurementAreaWindow && measurementAreaWindow.hidden) {
+        measurementAreaWindow.show();
+    }
+    positionMeasurementAreaWindow();
+}
+
+function hideMeasurementAreaWindow() {
+    if (measurementAreaWindow && !measurementAreaWindow.hidden) {
+        measurementAreaWindow.hide();
+    }
+}
+
+function ensureMeasurementLayer() {
+    if (!geoExtMap || !geoExtMap.map) {
+        return;
+    }
+
+    if (!measurementLayer) {
+        measurementLayer = new OpenLayers.Layer.Vector("Measurements", {
+            displayInLayerSwitcher: false
+        });
+    }
+
+    if (!geoExtMap.map.getLayer(measurementLayer.id)) {
+        geoExtMap.map.addLayer(measurementLayer);
+    }
+
+    ensureMeasurementModifyControl();
+}
+
+function ensureMeasurementAreaLayer() {
+    if (!geoExtMap || !geoExtMap.map) {
+        return;
+    }
+
+    if (!measurementAreaLayer) {
+        measurementAreaLayer = new OpenLayers.Layer.Vector("Measurement Areas", {
+            displayInLayerSwitcher: false
+        });
+    }
+
+    if (!geoExtMap.map.getLayer(measurementAreaLayer.id)) {
+        geoExtMap.map.addLayer(measurementAreaLayer);
+    }
+}
+
+function ensureMeasurementModifyControl() {
+    if (!geoExtMap || !geoExtMap.map || !measurementLayer || measurementModifyControl) {
+        return;
+    }
+
+    measurementModifyControl = new OpenLayers.Control.ModifyFeature(measurementLayer, {
+        mode: OpenLayers.Control.ModifyFeature.RESHAPE,
+        createVertices: true,
+        clickout: false,
+        toggle: false,
+        standalone: false
+    });
+    geoExtMap.map.addControl(measurementModifyControl);
+
+    measurementLayer.events.on({
+        featuremodified: function (evt) {
+            if (evt && evt.feature) {
+                syncMeasurementRecordAfterModify(evt.feature);
+            }
+        }
+    });
+}
+
+function ensureMeasurementWindow() {
+    if (!measurementStore) {
+        measurementStore = new Ext.data.JsonStore({
+            idProperty: 'id',
+            fields: ['id', 'name', 'distance', 'units', 'distanceDisplay', 'lineFeatureId', 'labelFeatureId'],
+            data: [],
+            listeners: {
+                datachanged: updateMeasurementSummary,
+                update: updateMeasurementSummary,
+                remove: updateMeasurementSummary,
+                add: updateMeasurementSummary,
+                clear: updateMeasurementSummary
+            }
+        });
+    }
+
+    if (measurementWindow) {
+        return;
+    }
+
+    var showMeasurementEditButton = false;
+    var editColumnId = 'editMeasurement';
+    var deleteColumnId = 'deleteMeasurement';
+    var measurementGrid = new Ext.grid.EditorGridPanel({
+        border: false,
+        store: measurementStore,
+        clicksToEdit: 1,
+        disableSelection: true,
+        columns: [{
+            header: 'element',
+            dataIndex: 'name',
+            width: 110,
+            editor: new Ext.form.TextField({
+                allowBlank: true,
+                selectOnFocus: true
+            })
+        }, {
+            header: measureDistanceResultPrefixString[lang],
+            dataIndex: 'distanceDisplay',
+            width: 120
+        }, {
+            id: editColumnId,
+            header: '',
+            width: 34,
+            hidden: !showMeasurementEditButton,
+            sortable: false,
+            menuDisabled: true,
+            renderer: function (value, metadata, record) {
+                var isEditing = record.get('id') === activeMeasurementEditId;
+                var text = isEditing ? 'On' : 'Edit';
+                return '<div style="margin: 0 auto; width: 26px; text-align: center; cursor: pointer; font-size: 10px; border: 1px solid #b5b8c8; background: ' + (isEditing ? '#d9e8fb' : '#f6f6f6') + ';">' + text + '</div>';
+            }
+        }, {
+            id: deleteColumnId,
+            header: '',
+            width: 28,
+            sortable: false,
+            menuDisabled: true,
+            renderer: function () {
+                return '<div class="x-tool x-tool-close" style="margin: 0 auto; cursor: pointer;"></div>';
+            }
+        }],
+        viewConfig: {
+            forceFit: true,
+            templates: {
+                cell: new Ext.Template(
+                    '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} {css}" style="{style}" {cellAttr}>',
+                    '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
+                    '</td>'
+                )
+            }
+        },
+        listeners: {
+            cellclick: function (grid, rowIndex, columnIndex, evt) {
+                var columnId = grid.getColumnModel().getColumnId(columnIndex);
+                if (columnId === editColumnId) {
+                    toggleMeasurementEdit(grid.getStore().getAt(rowIndex));
+                    evt.stopEvent();
+                }
+                if (columnId === deleteColumnId) {
+                    deleteMeasurementRecord(grid.getStore().getAt(rowIndex));
+                    evt.stopEvent();
+                }
+            },
+            afteredit: function (editEvent) {
+                if (editEvent.field !== 'name') {
+                    return;
+                }
+
+                var nextName = Ext.util.Format.trim(editEvent.value || '');
+                editEvent.record.set('name', nextName);
+
+                updateMeasurementFeatureLabel(editEvent.record);
+                editEvent.record.commit();
+            }
+        }
+    });
+
+    measurementWindow = new Ext.Window({
+        title: getMeasurementsWindowTitle(),
+        width: 280,
+        height: 220,
+        layout: 'fit',
+        closeAction: 'hide',
+        closable: true,
+        collapsible: true,
+        animCollapse: false,
+        shadow: false,
+        resizable: true,
+        draggable: true,
+        renderTo: 'geoExtMapPanel',
+        hidden: true,
+        bbar: [{
+            text: getMeasurementsClearButtonLabel(),
+            handler: clearAllMeasurements
+        }, '->', {
+            xtype: 'tbtext',
+            id: 'measurementSummaryText',
+            text: formatMeasurementSummary(0)
+        }],
+        items: [measurementGrid]
+    });
+}
+
+function ensureMeasurementAreaWindow() {
+    if (!measurementAreaStore) {
+        measurementAreaStore = new Ext.data.JsonStore({
+            idProperty: 'id',
+            fields: ['id', 'name', 'area', 'units', 'areaDisplay', 'polygonFeatureId', 'labelFeatureId'],
+            data: [],
+            listeners: {
+                datachanged: updateMeasurementAreaSummary,
+                update: updateMeasurementAreaSummary,
+                remove: updateMeasurementAreaSummary,
+                add: updateMeasurementAreaSummary,
+                clear: updateMeasurementAreaSummary
+            }
+        });
+    }
+
+    if (measurementAreaWindow) {
+        return;
+    }
+
+    var deleteColumnId = 'deleteMeasurementArea';
+    var measurementAreaGrid = new Ext.grid.EditorGridPanel({
+        border: false,
+        store: measurementAreaStore,
+        clicksToEdit: 1,
+        disableSelection: true,
+        columns: [{
+            header: 'element',
+            dataIndex: 'name',
+            width: 110,
+            editor: new Ext.form.TextField({
+                allowBlank: true,
+                selectOnFocus: true
+            })
+        }, {
+            header: measureAreaResultPrefixString[lang],
+            dataIndex: 'areaDisplay',
+            width: 120
+        }, {
+            id: deleteColumnId,
+            header: '',
+            width: 28,
+            sortable: false,
+            menuDisabled: true,
+            renderer: function () {
+                return '<div class="x-tool x-tool-close" style="margin: 0 auto; cursor: pointer;"></div>';
+            }
+        }],
+        viewConfig: {
+            forceFit: true,
+            templates: {
+                cell: new Ext.Template(
+                    '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} {css}" style="{style}" {cellAttr}>',
+                    '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
+                    '</td>'
+                )
+            }
+        },
+        listeners: {
+            cellclick: function (grid, rowIndex, columnIndex, evt) {
+                var columnId = grid.getColumnModel().getColumnId(columnIndex);
+                if (columnId === deleteColumnId) {
+                    deleteMeasurementAreaRecord(grid.getStore().getAt(rowIndex));
+                    evt.stopEvent();
+                }
+            },
+            afteredit: function (editEvent) {
+                if (editEvent.field !== 'name') {
+                    return;
+                }
+
+                var nextName = Ext.util.Format.trim(editEvent.value || '');
+                editEvent.record.set('name', nextName);
+
+                updateMeasurementAreaFeatureLabel(editEvent.record);
+                editEvent.record.commit();
+            }
+        }
+    });
+
+    measurementAreaWindow = new Ext.Window({
+        title: getMeasurementsWindowTitle(),
+        width: 280,
+        height: 220,
+        layout: 'fit',
+        closeAction: 'hide',
+        closable: true,
+        collapsible: true,
+        animCollapse: false,
+        shadow: false,
+        resizable: true,
+        draggable: true,
+        renderTo: 'geoExtMapPanel',
+        hidden: true,
+        bbar: [{
+            text: getMeasurementsClearButtonLabel(),
+            handler: clearAllMeasurementAreas
+        }, '->', {
+            xtype: 'tbtext',
+            id: 'measurementAreaSummaryText',
+            text: formatMeasurementAreaSummary(0)
+        }],
+        items: [measurementAreaGrid]
+    });
+}
+
+function positionMeasurementWindow() {
+    if (!measurementWindow || measurementWindow.hidden) {
+        return;
+    }
+
+    var mapContainer = Ext.get('geoExtMapPanel');
+    if (!mapContainer) {
+        return;
+    }
+
+    var box = mapContainer.getBox();
+    var x = box.x + box.width - measurementWindow.getWidth() - 12;
+    var y = box.y + 12;
+    measurementWindow.setPagePosition(x, y);
+}
+
+function positionMeasurementAreaWindow() {
+    if (!measurementAreaWindow || measurementAreaWindow.hidden) {
+        return;
+    }
+
+    var mapContainer = Ext.get('geoExtMapPanel');
+    if (!mapContainer) {
+        return;
+    }
+
+    var box = mapContainer.getBox();
+    var x = box.x + box.width - measurementAreaWindow.getWidth() - 12;
+    var y = box.y + 12;
+    measurementAreaWindow.setPagePosition(x, y);
+}
+
+function formatMeasurementDistance(measure, units) {
+    return OpenLayers.Number.format(Number(measure.toFixed(2)), null) + units;
+}
+
+function getMeasurementsWindowTitle() {
+    if (window.measurementsWindowTitleString && window.measurementsWindowTitleString[lang]) {
+        return window.measurementsWindowTitleString[lang];
+    }
+    return 'Measurements';
+}
+
+function getMeasurementsTotalLabel() {
+    if (window.measurementsTotalLabelString && window.measurementsTotalLabelString[lang]) {
+        return window.measurementsTotalLabelString[lang];
+    }
+    return 'Total';
+}
+
+function getMeasurementsClearButtonLabel() {
+    if (window.resetButtonString && window.resetButtonString[lang]) {
+        return window.resetButtonString[lang];
+    }
+    return 'Clear';
+}
+
+function getMeasurementCssVariable(name, fallback) {
+    var rootElement = document.documentElement;
+    if (!rootElement || !window.getComputedStyle) {
+        return fallback;
+    }
+
+    var value = window.getComputedStyle(rootElement).getPropertyValue(name);
+    if (!value) {
+        return fallback;
+    }
+
+    value = Ext.util.Format.trim(value);
+    return value.length > 0 ? value : fallback;
+}
+
+function isValidCompletedMeasurement(event) {
+    if (!event || event.order != 1 || event.type !== 'measure' || !event.geometry) {
+        return false;
+    }
+
+    if (!event.geometry.components || event.geometry.components.length < 2) {
+        return false;
+    }
+
+    if (!(event.measure > 0)) {
+        return false;
+    }
+
+    return event.geometry.getLength() > 0;
+}
+
+function getMeasurementLineFeature(record) {
+    if (!measurementLayer || !record) {
+        return null;
+    }
+    return measurementLayer.getFeatureById(record.get('lineFeatureId'));
+}
+
+function getMeasurementLabelFeature(record) {
+    if (!measurementLayer || !record) {
+        return null;
+    }
+    return measurementLayer.getFeatureById(record.get('labelFeatureId'));
+}
+
+function getMeasurementRecordById(recordId) {
+    if (!measurementStore) {
+        return null;
+    }
+    return measurementStore.getById(recordId);
+}
+
+function getMeasurementLabelPoint(geometry) {
+    if (!geometry || !geometry.components || geometry.components.length < 2) {
+        return geometry && geometry.getBounds ? geometry.getBounds().getCenterLonLat() : null;
+    }
+
+    var totalLength = geometry.getLength();
+    if (!totalLength || totalLength <= 0) {
+        return geometry.components[0].clone();
+    }
+
+    var halfLength = totalLength / 2;
+    var accumulatedLength = 0;
+
+    for (var i = 1; i < geometry.components.length; i++) {
+        var startPoint = geometry.components[i - 1];
+        var endPoint = geometry.components[i];
+        var segmentLength = startPoint.distanceTo(endPoint);
+
+        if (accumulatedLength + segmentLength >= halfLength) {
+            var distanceIntoSegment = halfLength - accumulatedLength;
+            var ratio = segmentLength === 0 ? 0 : distanceIntoSegment / segmentLength;
+            return new OpenLayers.Geometry.Point(
+                startPoint.x + ((endPoint.x - startPoint.x) * ratio),
+                startPoint.y + ((endPoint.y - startPoint.y) * ratio)
+            );
+        }
+
+        accumulatedLength += segmentLength;
+    }
+
+    return geometry.components[geometry.components.length - 1].clone();
+}
+
+function getMeasurementLineStyle() {
+    var style = Ext.apply({}, sketchSymbolizersMeasureControls.Line || {});
+    style.strokeColor = getMeasurementCssVariable('--measurement-line-color', '#C43D32');
+    style.strokeDashstyle = getMeasurementCssVariable('--measurement-line-dashstyle', 'solid');
+    return style;
+}
+
+function getMeasurementLineEditStyle() {
+    var style = getMeasurementLineStyle();
+    style.strokeWidth = (style.strokeWidth || 3) + 1;
+    return style;
+}
+
+function getMeasurementLabelStyle() {
+    return {
+        fontColor: getMeasurementCssVariable('--measurement-label-color', '#7A241D'),
+        fontSize: "12px",
+        fontFamily: "tahoma,arial,verdana,sans-serif",
+        fontWeight: "bold",
+        labelAlign: "cm",
+        labelOutlineColor: getMeasurementCssVariable('--measurement-label-outline-color', '#ffffff'),
+        labelOutlineWidth: parseInt(getMeasurementCssVariable('--measurement-label-outline-width', '3'), 10),
+        pointRadius: 0,
+        fillOpacity: 0,
+        strokeOpacity: 0
+    };
+}
+
+function getMeasurementAreaStyle() {
+    var style = Ext.apply({}, sketchSymbolizersMeasureControls.Polygon || {});
+    style.strokeColor = getMeasurementCssVariable('--measurement-area-stroke-color', '#C43D32');
+    style.strokeDashstyle = getMeasurementCssVariable('--measurement-area-stroke-dashstyle', 'solid');
+    style.fillColor = getMeasurementCssVariable('--measurement-area-fill-color', '#C43D32');
+    style.fillOpacity = parseFloat(getMeasurementCssVariable('--measurement-area-fill-opacity', '0.15'));
+    return style;
+}
+
+function getMeasurementAreaLabelStyle() {
+    return {
+        fontColor: getMeasurementCssVariable('--measurement-area-label-color', '#7A241D'),
+        fontSize: "12px",
+        fontFamily: "tahoma,arial,verdana,sans-serif",
+        fontWeight: "bold",
+        labelAlign: "cm",
+        labelOutlineColor: getMeasurementCssVariable('--measurement-area-label-outline-color', '#ffffff'),
+        labelOutlineWidth: parseInt(getMeasurementCssVariable('--measurement-area-label-outline-width', '3'), 10),
+        pointRadius: 0,
+        fillOpacity: 0,
+        strokeOpacity: 0
+    };
+}
+
+function sanitizeMeasurementPrintLabel(label) {
+    label = Ext.util.Format.trim(label || '');
+    return label.replace(/;/g, ',');
+}
+
+function getMeasurementPrintFont(labelStyle) {
+    var fontFamily = labelStyle && labelStyle.fontFamily ? labelStyle.fontFamily : 'tahoma';
+    return Ext.util.Format.trim(fontFamily.split(',')[0]) || 'tahoma';
+}
+
+function getMeasurementPrintLabelSize(labelStyle) {
+    var fontSize = labelStyle && labelStyle.fontSize ? parseInt(labelStyle.fontSize, 10) : NaN;
+    return isNaN(fontSize) ? 12 : fontSize;
+}
+
+function getMeasurementPrintLabelBufferSize(labelStyle) {
+    var outlineWidth = labelStyle ? parseFloat(labelStyle.labelOutlineWidth) : NaN;
+    if (isNaN(outlineWidth) || outlineWidth <= 0) {
+        return 1.5;
+    }
+    return Math.max(0.5, outlineWidth / 2);
+}
+
+function createMeasurementLineHighlightSymbol(style) {
+    style = style || {};
+    var strokeColor = style.strokeColor || '#C43D32';
+    var strokeOpacity = style.strokeOpacity != null ? style.strokeOpacity : 1;
+    var strokeWidth = style.strokeWidth != null ? style.strokeWidth : 3;
+
+    return '<StyledLayerDescriptor><UserStyle><FeatureTypeStyle><Rule><LineSymbolizer><Stroke>' +
+        '<SvgParameter name="stroke">' + strokeColor + '</SvgParameter>' +
+        '<SvgParameter name="stroke-opacity">' + strokeOpacity + '</SvgParameter>' +
+        '<SvgParameter name="stroke-width">' + strokeWidth + '</SvgParameter>' +
+        '</Stroke></LineSymbolizer></Rule></FeatureTypeStyle></UserStyle></StyledLayerDescriptor>';
+}
+
+function createMeasurementAreaHighlightSymbol(style) {
+    style = style || {};
+    var strokeColor = style.strokeColor || '#C43D32';
+    var strokeOpacity = style.strokeOpacity != null ? style.strokeOpacity : 1;
+    var strokeWidth = style.strokeWidth != null ? style.strokeWidth : 2;
+    var fillColor = style.fillColor || strokeColor;
+    var fillOpacity = style.fillOpacity != null ? style.fillOpacity : 0.15;
+
+    return '<StyledLayerDescriptor><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill>' +
+        '<SvgParameter name="fill">' + fillColor + '</SvgParameter>' +
+        '<SvgParameter name="fill-opacity">' + fillOpacity + '</SvgParameter>' +
+        '</Fill><Stroke>' +
+        '<SvgParameter name="stroke">' + strokeColor + '</SvgParameter>' +
+        '<SvgParameter name="stroke-opacity">' + strokeOpacity + '</SvgParameter>' +
+        '<SvgParameter name="stroke-width">' + strokeWidth + '</SvgParameter>' +
+        '</Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></StyledLayerDescriptor>';
+}
+
+function serializeMeasurementGeometryForPrint(geometry, projectionCode) {
+    if (!geometry) {
+        return null;
+    }
+
+    var geometryToPrint = geometry.clone();
+    var mapProjection = geoExtMap && geoExtMap.map && geoExtMap.map.getProjectionObject ? geoExtMap.map.getProjectionObject() : null;
+    var printProjection = projectionCode ? new OpenLayers.Projection(projectionCode) : null;
+
+    if (mapProjection && printProjection && mapProjection.projCode !== printProjection.projCode && typeof geometryToPrint.transform === 'function') {
+        geometryToPrint.transform(mapProjection, printProjection);
+    }
+
+    return new OpenLayers.Format.WKT().write(new OpenLayers.Feature.Vector(geometryToPrint));
+}
+
+function createMeasurementPrintEntry(feature, record, projectionCode, symbol, labelStyle) {
+    if (!feature || !feature.geometry || !record) {
+        return null;
+    }
+
+    var geometryWkt = serializeMeasurementGeometryForPrint(feature.geometry, projectionCode);
+    if (!geometryWkt) {
+        return null;
+    }
+
+    labelStyle = labelStyle || {};
+    return {
+        geometry: geometryWkt,
+        label: sanitizeMeasurementPrintLabel(record.get('name')),
+        symbol: symbol,
+        labelFont: getMeasurementPrintFont(labelStyle),
+        labelSize: getMeasurementPrintLabelSize(labelStyle),
+        labelColor: labelStyle.fontColor || '#7A241D',
+        labelBufferColor: labelStyle.labelOutlineColor || '#ffffff',
+        labelBufferSize: getMeasurementPrintLabelBufferSize(labelStyle)
+    };
+}
+
+function getMeasurementPrintParams(mapId, projectionCode) {
+    var entries = [];
+    var prefix = mapId ? mapId + ':' : '';
+
+    if (measurementStore) {
+        var lineSymbol = createMeasurementLineHighlightSymbol(getMeasurementLineStyle());
+        var lineLabelStyle = getMeasurementLabelStyle();
+
+        measurementStore.each(function (record) {
+            var lineFeature = getMeasurementLineFeature(record);
+            var entry = createMeasurementPrintEntry(lineFeature, record, projectionCode, lineSymbol, lineLabelStyle);
+            if (entry) {
+                entries.push(entry);
+            }
+        });
+    }
+
+    if (measurementAreaStore) {
+        var areaSymbol = createMeasurementAreaHighlightSymbol(getMeasurementAreaStyle());
+        var areaLabelStyle = getMeasurementAreaLabelStyle();
+
+        measurementAreaStore.each(function (record) {
+            var polygonFeature = getMeasurementPolygonFeature(record);
+            var entry = createMeasurementPrintEntry(polygonFeature, record, projectionCode, areaSymbol, areaLabelStyle);
+            if (entry) {
+                entries.push(entry);
+            }
+        });
+    }
+
+    if (entries.length === 0) {
+        return null;
+    }
+
+    var params = {};
+    params[prefix + 'HIGHLIGHT_GEOM'] = entries.map(function (entry) {
+        return entry.geometry;
+    }).join(';');
+    params[prefix + 'HIGHLIGHT_SYMBOL'] = entries.map(function (entry) {
+        return entry.symbol;
+    }).join(';');
+    params[prefix + 'HIGHLIGHT_LABELSTRING'] = entries.map(function (entry) {
+        return entry.label;
+    }).join(';');
+    params[prefix + 'HIGHLIGHT_LABELFONT'] = entries.map(function (entry) {
+        return entry.labelFont;
+    }).join(';');
+    params[prefix + 'HIGHLIGHT_LABELSIZE'] = entries.map(function (entry) {
+        return entry.labelSize;
+    }).join(';');
+    params[prefix + 'HIGHLIGHT_LABELCOLOR'] = entries.map(function (entry) {
+        return entry.labelColor;
+    }).join(';');
+    params[prefix + 'HIGHLIGHT_LABELBUFFERCOLOR'] = entries.map(function (entry) {
+        return entry.labelBufferColor;
+    }).join(';');
+    params[prefix + 'HIGHLIGHT_LABELBUFFERSIZE'] = entries.map(function (entry) {
+        return entry.labelBufferSize;
+    }).join(';');
+
+    return params;
+}
+
+function showMeasurementPopup(geometry, text) {
+    var map = geoExtMap.map;
     removeMeasurePopup();
     measurePopup = new OpenLayers.Popup.Anchored(
-        "measurePopup", // id
-        geometry.getBounds().getCenterLonLat(), // lonlat
-        null, // new OpenLayers.Size(1,1), // contentSize
-        out , //contentHTML
-        null, // anchor
-        false, // closeBox
-        null // closeBoxCallback
+        "measurePopup",
+        geometry.getBounds().getCenterLonLat(),
+        null,
+        text,
+        null,
+        false,
+        null
     );
     measurePopup.autoSize = true;
     measurePopup.keepInMap = true;
     measurePopup.panMapIfOutOfView = true;
     map.addPopup(measurePopup);
-    //measurePopup.setBackgroundColor("gray");
     measurePopup.setOpacity(0.8);
+}
+
+function measurementToMeters(measure, units) {
+    switch (units) {
+        case 'km':
+            return measure * 1000;
+        case 'm':
+            return measure;
+        case 'mi':
+            return measure * 1609.344;
+        case 'ft':
+            return measure * 0.3048;
+        case 'in':
+            return measure * 0.0254;
+        default:
+            return measure;
+    }
+}
+
+function formatMeasurementSummary(totalMeters) {
+    if (Eqwc.settings.measurementsUnitSystem === 'english') {
+        var totalFeet = totalMeters / 0.3048;
+        if (totalFeet >= 5280) {
+            return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number((totalFeet / 5280).toFixed(2)), null) + 'mi';
+        }
+        return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number(totalFeet.toFixed(2)), null) + 'ft';
+    }
+
+    if (totalMeters >= 1000) {
+        return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number((totalMeters / 1000).toFixed(2)), null) + 'km';
+    }
+    return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number(totalMeters.toFixed(2)), null) + 'm';
+}
+
+function updateMeasurementSummary() {
+    var summaryText = Ext.getCmp('measurementSummaryText');
+    if (!summaryText || !measurementStore) {
+        return;
+    }
+
+    var totalMeters = 0;
+    measurementStore.each(function (record) {
+        totalMeters += measurementToMeters(record.get('distance'), record.get('units'));
+    });
+
+    summaryText.setText(formatMeasurementSummary(totalMeters));
+}
+
+function measurementAreaToSquareMeters(area, units) {
+    switch (units) {
+        case 'km':
+        case 'km<sup>2</sup>':
+        case 'km²':
+            return area * 1000000;
+        case 'm':
+        case 'm<sup>2</sup>':
+        case 'm²':
+            return area;
+        case 'mi':
+        case 'mi<sup>2</sup>':
+        case 'mi²':
+            return area * 2589988.110336;
+        case 'ft':
+        case 'ft<sup>2</sup>':
+        case 'ft²':
+            return area * 0.09290304;
+        case 'ac':
+            return area * 4046.8564224;
+        default:
+            return area;
+    }
+}
+
+function formatMeasurementAreaSummary(totalSquareMeters) {
+    if (Eqwc.settings.measurementsUnitSystem === 'english') {
+        var totalAcres = totalSquareMeters / 4046.8564224;
+        if (totalAcres >= 640) {
+            return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number((totalAcres / 640).toFixed(2)), null) + 'mi²';
+        }
+        return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number(totalAcres.toFixed(2)), null) + 'ac';
+    }
+
+    if (totalSquareMeters >= 1000000) {
+        return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number((totalSquareMeters / 1000000).toFixed(2)), null) + 'km²';
+    }
+    return getMeasurementsTotalLabel() + ': ' + OpenLayers.Number.format(Number(totalSquareMeters.toFixed(2)), null) + 'm²';
+}
+
+function updateMeasurementAreaSummary() {
+    var summaryText = Ext.getCmp('measurementAreaSummaryText');
+    if (!summaryText || !measurementAreaStore) {
+        return;
+    }
+
+    var totalSquareMeters = 0;
+    measurementAreaStore.each(function (record) {
+        totalSquareMeters += measurementAreaToSquareMeters(record.get('area'), record.get('units'));
+    });
+
+    summaryText.setText(formatMeasurementAreaSummary(totalSquareMeters));
+}
+
+function redrawMeasurementAreaGrid() {
+    if (measurementAreaWindow && measurementAreaWindow.items && measurementAreaWindow.items.length > 0) {
+        var measurementGrid = measurementAreaWindow.items.itemAt(0);
+        if (measurementGrid && measurementGrid.getView) {
+            measurementGrid.getView().refresh();
+        }
+    }
+}
+
+function getMeasurementAreaRecordById(recordId) {
+    if (!measurementAreaStore) {
+        return null;
+    }
+    return measurementAreaStore.getById(recordId);
+}
+
+function getMeasurementPolygonFeature(record) {
+    if (!measurementAreaLayer || !record) {
+        return null;
+    }
+    return measurementAreaLayer.getFeatureById(record.get('polygonFeatureId'));
+}
+
+function getMeasurementAreaLabelFeature(record) {
+    if (!measurementAreaLayer || !record) {
+        return null;
+    }
+    return measurementAreaLayer.getFeatureById(record.get('labelFeatureId'));
+}
+
+function getMeasurementAreaLabelPoint(geometry) {
+    if (!geometry) {
+        return null;
+    }
+
+    if (geometry.getCentroid) {
+        return geometry.getCentroid();
+    }
+
+    if (geometry.getBounds) {
+        return geometry.getBounds().getCenterLonLat();
+    }
+
+    return null;
+}
+
+function updateMeasurementAreaFeatureLabel(record) {
+    if (!measurementAreaLayer) {
+        return;
+    }
+
+    var labelFeature = getMeasurementAreaLabelFeature(record);
+    if (!labelFeature) {
+        return;
+    }
+
+    labelFeature.attributes.label = record.get('name');
+    if (!labelFeature.style) {
+        labelFeature.style = getMeasurementAreaLabelStyle();
+    }
+    labelFeature.style.label = record.get('name');
+    measurementAreaLayer.drawFeature(labelFeature);
+}
+
+function storeAreaMeasurement(event) {
+    if (!event || event.order == 1 || event.type !== 'measure' || !event.geometry) {
+        return;
+    }
+
+    if (!(event.measure > 0) || !(event.geometry.getArea && event.geometry.getArea() > 0)) {
+        return;
+    }
+
+    ensureMeasurementAreaUi();
+
+    measurementAreaSequence += 1;
+    var areaPrefix = (window.measurementsAreaPrefixString && window.measurementsAreaPrefixString[lang])
+        ? window.measurementsAreaPrefixString[lang]
+        : 'area';
+    var measurementName = areaPrefix + measurementAreaSequence;
+
+    var polygonFeature = new OpenLayers.Feature.Vector(event.geometry.clone(), {
+        measurementId: 'measurement-area-' + measurementAreaSequence
+    }, getMeasurementAreaStyle());
+    var labelStyle = getMeasurementAreaLabelStyle();
+    labelStyle.label = measurementName;
+    var labelFeature = new OpenLayers.Feature.Vector(getMeasurementAreaLabelPoint(event.geometry), {
+        label: measurementName,
+        measurementId: 'measurement-area-' + measurementAreaSequence
+    }, labelStyle);
+
+    measurementAreaLayer.addFeatures([polygonFeature, labelFeature]);
+
+    measurementAreaStore.add(new measurementAreaStore.recordType({
+        id: 'measurement-area-' + measurementAreaSequence,
+        name: labelFeature.attributes.label,
+        area: event.measure,
+        units: event.units,
+        areaDisplay: formatMeasurementDistance(event.measure, event.units),
+        polygonFeatureId: polygonFeature.id,
+        labelFeatureId: labelFeature.id
+    }));
+
+    if (measurementAreaWindow.hidden) {
+        measurementAreaWindow.show();
+    }
+    positionMeasurementAreaWindow();
+
+    if (event.object && event.object.handler && event.object.handler.layer) {
+        event.object.handler.layer.removeAllFeatures();
+    }
+}
+
+function deleteMeasurementAreaRecord(record) {
+    if (!record) {
+        return;
+    }
+
+    if (measurementAreaLayer) {
+        var featuresToRemove = [];
+        var polygonFeature = getMeasurementPolygonFeature(record);
+        var labelFeature = getMeasurementAreaLabelFeature(record);
+
+        if (polygonFeature) {
+            featuresToRemove.push(polygonFeature);
+        }
+        if (labelFeature) {
+            featuresToRemove.push(labelFeature);
+        }
+        if (featuresToRemove.length > 0) {
+            measurementAreaLayer.removeFeatures(featuresToRemove);
+        }
+    }
+
+    measurementAreaStore.remove(record);
+}
+
+function clearAllMeasurementAreas() {
+    removeMeasurePopup();
+
+    if (measurementAreaLayer && measurementAreaLayer.features && measurementAreaLayer.features.length > 0) {
+        measurementAreaLayer.removeAllFeatures();
+    }
+
+    if (measurementAreaStore) {
+        measurementAreaStore.removeAll();
+    }
+}
+
+function redrawMeasurementGrid() {
+    if (measurementWindow && measurementWindow.items && measurementWindow.items.length > 0) {
+        var measurementGrid = measurementWindow.items.itemAt(0);
+        if (measurementGrid && measurementGrid.getView) {
+            measurementGrid.getView().refresh();
+        }
+    }
+}
+
+function clearMeasurementEditState() {
+    if (!measurementModifyControl) {
+        activeMeasurementEditId = null;
+        redrawMeasurementGrid();
+        return;
+    }
+
+    if (measurementModifyControl.feature) {
+        measurementModifyControl.unselectFeature(measurementModifyControl.feature);
+    }
+    measurementModifyControl.deactivate();
+    activeMeasurementEditId = null;
+    redrawMeasurementGrid();
+}
+
+function toggleMeasurementEdit(record) {
+    if (!record) {
+        return;
+    }
+
+    ensureMeasurementUi();
+
+    if (activeMeasurementEditId === record.get('id')) {
+        clearMeasurementEditState();
+        return;
+    }
+
+    clearMeasurementEditState();
+
+    var lineFeature = getMeasurementLineFeature(record);
+    if (!lineFeature || !measurementModifyControl) {
+        return;
+    }
+
+    measurementModifyControl.activate();
+    measurementModifyControl.selectFeature(lineFeature);
+    activeMeasurementEditId = record.get('id');
+    redrawMeasurementGrid();
+}
+
+function syncMeasurementRecordAfterModify(lineFeature) {
+    if (!lineFeature || !lineFeature.attributes || !lineFeature.attributes.measurementId) {
+        return;
+    }
+
+    var record = getMeasurementRecordById(lineFeature.attributes.measurementId);
+    if (!record) {
+        return;
+    }
+
+    var labelFeature = getMeasurementLabelFeature(record);
+    if (labelFeature) {
+        labelFeature.geometry = getMeasurementLabelPoint(lineFeature.geometry);
+        measurementLayer.drawFeature(labelFeature);
+    }
+
+    var measureValue = lineFeature.geometry.getLength();
+    var units = record.get('units');
+
+    if (measureControls && measureControls.line && typeof measureControls.line.getBestLength === 'function') {
+        var bestLength = measureControls.line.getBestLength(lineFeature.geometry);
+        measureValue = bestLength[0];
+        units = bestLength[1];
+    }
+
+    record.set('distance', measureValue);
+    record.set('units', units);
+    record.set('distanceDisplay', formatMeasurementDistance(measureValue, units));
+    record.commit();
+    updateMeasurementSummary();
+}
+
+function storeLineMeasurement(event) {
+    if (!isValidCompletedMeasurement(event)) {
+        return;
+    }
+
+    ensureMeasurementUi();
+
+    measurementSequence += 1;
+    var linePrefix = (window.measurementsLinePrefixString && window.measurementsLinePrefixString[lang])
+        ? window.measurementsLinePrefixString[lang]
+        : 'line';
+    var measurementName = linePrefix + measurementSequence;
+
+    var lineFeature = new OpenLayers.Feature.Vector(event.geometry.clone(), {
+        measurementId: 'measurement-' + measurementSequence
+    }, getMeasurementLineStyle());
+    var labelStyle = getMeasurementLabelStyle();
+    labelStyle.label = measurementName;
+    var labelFeature = new OpenLayers.Feature.Vector(getMeasurementLabelPoint(event.geometry), {
+        label: measurementName,
+        measurementId: 'measurement-' + measurementSequence
+    }, labelStyle);
+
+    measurementLayer.addFeatures([lineFeature, labelFeature]);
+
+    measurementStore.add(new measurementStore.recordType({
+        id: 'measurement-' + measurementSequence,
+        name: labelFeature.attributes.label,
+        distance: event.measure,
+        units: event.units,
+        distanceDisplay: formatMeasurementDistance(event.measure, event.units),
+        lineFeatureId: lineFeature.id,
+        labelFeatureId: labelFeature.id
+    }));
+
+    if (measurementWindow.hidden) {
+        measurementWindow.show();
+    }
+    positionMeasurementWindow();
+
+    if (event.object && event.object.handler && event.object.handler.layer) {
+        event.object.handler.layer.removeAllFeatures();
+    }
+}
+
+function updateMeasurementFeatureLabel(record) {
+    if (!measurementLayer) {
+        return;
+    }
+
+    var labelFeature = getMeasurementLabelFeature(record);
+    if (!labelFeature) {
+        return;
+    }
+
+    labelFeature.attributes.label = record.get('name');
+    if (!labelFeature.style) {
+        labelFeature.style = getMeasurementLabelStyle();
+    }
+    labelFeature.style.label = record.get('name');
+    measurementLayer.drawFeature(labelFeature);
+}
+
+function deleteMeasurementRecord(record) {
+    if (!record) {
+        return;
+    }
+
+    if (record.get('id') === activeMeasurementEditId) {
+        clearMeasurementEditState();
+    }
+
+    if (measurementLayer) {
+        var featuresToRemove = [];
+        var lineFeature = getMeasurementLineFeature(record);
+        var labelFeature = getMeasurementLabelFeature(record);
+
+        if (lineFeature) {
+            featuresToRemove.push(lineFeature);
+        }
+        if (labelFeature) {
+            featuresToRemove.push(labelFeature);
+        }
+        if (featuresToRemove.length > 0) {
+            measurementLayer.removeFeatures(featuresToRemove);
+        }
+    }
+
+    measurementStore.remove(record);
+}
+
+function clearAllMeasurements() {
+    removeMeasurePopup();
+    clearMeasurementEditState();
+
+    if (measurementLayer && measurementLayer.features && measurementLayer.features.length > 0) {
+        measurementLayer.removeAllFeatures();
+    }
+
+    if (measurementStore) {
+        measurementStore.removeAll();
+    }
+}
+
+function handleMeasurements(event) {
+    if (event.order == 1) {
+        if (event.type == 'measure') {
+            removeMeasurePopup();
+            if (isValidCompletedMeasurement(event)) {
+                storeLineMeasurement(event);
+            }
+        } else {
+            var lineText = measureDistanceResultPrefixString[lang] + ': ' + formatMeasurementDistance(event.measure, event.units);
+            showMeasurementPopup(event.geometry, lineText);
+        }
+        return;
+    }
+
+    if (event.type == 'measure') {
+        removeMeasurePopup();
+        storeAreaMeasurement(event);
+        return;
+    }
+
+    var geometry = event.geometry;
+    var units = event.units;
+    var measure = event.measure;
+    var measureFormat = OpenLayers.Number.format(Number(measure.toFixed(2)), null);
+    var out = measureAreaResultPrefixString[lang] + ": " + measureFormat + units;
+    showMeasurementPopup(geometry, out);
 }
 
 // function to display a loadMask during lengthy load operations

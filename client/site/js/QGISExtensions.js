@@ -545,11 +545,10 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
                 printUrl += '&' + baseDefinition;
             }
 
-            // add highlight
-            //var highlightParams = highlighter.printParams("map0");
-            //if (highlightParams != null) {
-            //  printUrl += "&" + Ext.urlEncode(highlightParams);
-            //}
+            var measurementPrintParams = typeof getMeasurementPrintParams === 'function' ? getMeasurementPrintParams('map0', authid) : null;
+            if (measurementPrintParams) {
+                printUrl += '&' + Ext.urlEncode(measurementPrintParams);
+            }
 
             // makes spatial query from map to use the attributes in the print template (more in README chap 4.5)
             // UROS DISABLED,found no reason for it. Looks like to read some values from layer print in qgis project

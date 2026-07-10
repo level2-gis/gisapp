@@ -35,6 +35,21 @@ p {
     font-weight: normal;
 }
 
+:root {
+    --measurement-line-color: #c43d32;
+    --measurement-line-dashstyle: solid;
+    --measurement-label-color: #7a241d;
+    --measurement-label-outline-color: #ffffff;
+    --measurement-label-outline-width: 3;
+    --measurement-area-stroke-color: #c43d32;
+    --measurement-area-stroke-dashstyle: solid;
+    --measurement-area-fill-color: #c43d32;
+    --measurement-area-fill-opacity: 0.15;
+    --measurement-area-label-color: #7a241d;
+    --measurement-area-label-outline-color: #ffffff;
+    --measurement-area-label-outline-width: 3;
+}
+
 .x-panel-header {
     border-right: 0 solid;
 }
