@@ -1825,6 +1825,16 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                             coords: this.locationToString()
                         };
                         break;
+                    case "level2" :
+                        serviceData.url = config.url ? config.url : "/gisportal/index.php/modules/level2/proxy/terrain/height";
+                        serviceData.resultNode = "";
+                        serviceData.resultField = "height_m";
+                        serviceData.displayTemplate = config.template ? config.template : '<tr><td>{height_m}m ' + TR.fiElevation + '</td></tr>';
+                        serviceData.params = {
+                            x: this.location.lon,
+                            y: this.location.lat
+                        };
+                        break;
 
                     //this service is not running anymore
                     // case "mapbox" :
@@ -1862,6 +1872,19 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
             case "address" :
                 switch
                     (config.provider.toLowerCase()) {
+                    case "level2" :
+                        serviceData.url = config.url ? config.url : "/gisportal/index.php/modules/level2/proxy/geocode/reverse";
+                        serviceData.resultNode = "results";
+                        serviceData.resultField = "";
+                        serviceData.displayTemplate = config.template ? config.template : '<tr><td>{full_address}</td></tr>';
+                        serviceData.displayTemplateMinimum = config.templateMin ? config.templateMin : '<tr><td>{settlement_name}</td></tr>';
+                        serviceData.factor = 1;
+                        serviceData.params = {
+                            x: this.location.lon,
+                            y: this.location.lat,
+                            max_distance: minimumAddressRange
+                        };
+                        break;
                     //MApZen service shutdown on 2018/02/01
                     case "mapzen" :
                         serviceData.url = "https://search.mapzen.com/v1/reverse";
@@ -1907,12 +1930,18 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                 var result = Ext.util.JSON.decode(response.responseText);
 
                 if (serviceData.resultNode == "") {
-                    if (result.length > 0) {
+                    if (result && result.length > 0) {
                         this.fireEvent(config.name, result[0], this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
+                    } else if (result && typeof result === 'object') {
+                        this.fireEvent(config.name, result, this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
                     }
                 } else {
                     if (result[serviceData.resultNode].length > 0) {
-                        this.fireEvent(config.name, result[serviceData.resultNode][0], this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
+                        var firstResult = result[serviceData.resultNode][0];
+                        if (firstResult && typeof firstResult === 'object') {
+                            firstResult.match = result.match;
+                        }
+                        this.fireEvent(config.name, firstResult, this.locationToString(), serviceData.resultField, serviceData.displayTemplate, serviceData.displayTemplateMinimum, serviceData.factor);
                     }
                 }
             },

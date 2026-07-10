@@ -535,7 +535,7 @@ var useGeoCodeSearchBox = projectData.geoCode != null;
 var iconDirectory = 'client/site/gis_icons/';
 var coordinatePrecision = 2;    //precision of coordinates decimal places in GetFeatureInfo result window
 var elevationPrecision = 1;     //precision of height in GetFeatureInfo result window
-var minimumAddressRange = 1000;  //range in meters within address is displayed with GetFeatureInfo, if outside than only regional info is displayed
+var minimumAddressRange = 200;  //range in meters within address is displayed with GetFeatureInfo, if outside than only regional info is displayed
 
 //URL for custom search scripts
 var searchBoxQueryURL = projectData.wsgi ? "/wsgi/search.wsgi?query=" : null;

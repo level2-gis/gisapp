@@ -21,6 +21,35 @@
  * to click by changing to "hand".
  */
 
+var addressDistanceMarkerFeature = null;
+
+function clearAddressDistanceMarker() {
+    if (addressDistanceMarkerFeature && featureInfoHighlightLayer) {
+        featureInfoHighlightLayer.removeFeatures([addressDistanceMarkerFeature]);
+    }
+    addressDistanceMarkerFeature = null;
+}
+
+function showAddressDistanceMarker(x, y) {
+    if (!featureInfoHighlightLayer) {
+        return false;
+    }
+
+    var pointX = parseFloat(x);
+    var pointY = parseFloat(y);
+    if (isNaN(pointX) || isNaN(pointY)) {
+        return false;
+    }
+
+    clearAddressDistanceMarker();
+
+    addressDistanceMarkerFeature = new OpenLayers.Feature.Vector(
+        new OpenLayers.Geometry.Point(pointX, pointY)
+    );
+    featureInfoHighlightLayer.addFeatures([addressDistanceMarkerFeature]);
+    return false;
+}
+
 function showFeatureInfo(evt) {
     removeClickPopup();
     if (hoverPopup) {
@@ -40,42 +69,22 @@ function showFeatureInfo(evt) {
 
         //start locationservices
         var text = "";
-        var locationText = "<h2>" + TR.fiLocation + "</h2>";
         var locationUnits = map.getLonLatFromPixel(evt.xy);
         var locationProj = projectData.crs == Eqwc.currentMapProjection[0] ? null : Eqwc.currentMapProjection[2];
         var locationObj = new QGIS.LocationService({location: locationUnits, language: projectData.lang, projection: locationProj});
         var popupItems = [];
 
-        if (Eqwc.settings.showCoordinatesIdentify) {
-            text = "</br>";
-            popupItems.push(
-                {
-                    xtype: 'box',
-                    html: locationText
-                }, {
-                    id: "fi_location",
-                    //margins: '5 5 5 5',
-                    xtype: 'box',
-                    html: '<tr><td>' + locationObj.locationToString() + '</td></tr>'
-                });
-        }
+        var hasLocationRows = Eqwc.settings.showCoordinatesIdentify || (projectData.locationServices != null && projectData.locationServices.length > 0);
 
         if (projectData.locationServices != null) {
-            text = "</br>";
             for (var l = 0; l < projectData.locationServices.length; l++) {
                 locationObj.getService({
                     name: projectData.locationServices[l].name,
                     key: projectData.locationServices[l].key,
                     provider: projectData.locationServices[l].provider,
                     url: projectData.locationServices[l].url ? projectData.locationServices[l].url : null,
-                    template: projectData.locationServices[l].template ? projectData.locationServices[l].template : null
-                });
-
-                popupItems.push({
-                    id: "fi_" + projectData.locationServices[l].name,
-                    //margins: '5 5 5 5',
-                    xtype: 'box',
-                    html: '</br>'
+                    template: projectData.locationServices[l].template ? projectData.locationServices[l].template : null,
+                    templateMin: projectData.locationServices[l].templateMin ? projectData.locationServices[l].templateMin : null
                 });
             }
         }
@@ -124,6 +133,30 @@ function showFeatureInfo(evt) {
             }
         }
 
+        if (hasLocationRows) {
+            var locationTableId = 'location_table_' + Math.random().toString(36).substr(2, 9);
+            var locationTableClass = (featureInfoResultLayers.length > 0) ? ' class="collapsed"' : '';
+            var locationHtml = '<div class="collapsible-table"><table id="' + locationTableId + '"' + locationTableClass + '>';
+            locationHtml += '<thead><tr><th colspan="2" onclick="toggleTable(\'' + locationTableId + '\')">' + TR.fiLocation + '</th></tr></thead><tbody>';
+
+            if (Eqwc.settings.showCoordinatesIdentify) {
+                locationHtml += '<tr><td colspan="2" id="fi_location_value">' + locationObj.locationToString() + '</td></tr>';
+            }
+            if (projectData.locationServices != null) {
+                for (var s = 0; s < projectData.locationServices.length; s++) {
+                    locationHtml += '<tr><td colspan="2" id="fi_' + projectData.locationServices[s].name + '_value"></td></tr>';
+                }
+            }
+
+            locationHtml += '</tbody></table></div></br>';
+
+            popupItems.push({
+                id: 'fi_location_group',
+                xtype: 'box',
+                html: locationHtml
+            });
+        }
+
         popupItems.push({
             id: "fi_qgis",
             xtype: 'box',
@@ -144,6 +177,7 @@ function showFeatureInfo(evt) {
             collapsible: true,
             resizable: true,
             minWidth: 300,
+            minHeight: 200,
             panMapIfOutOfView: false,  // Prevent automatic map panning
             keepInMap: true,           // Keep popup within map bounds
             listeners: {
@@ -215,10 +249,11 @@ function showFeatureInfo(evt) {
                     var maxHeight = geoExtMap.getHeight() * 0.7;
                     var maxWidth = popup.maxWidth || (geoExtMap.getWidth() * 0.4);
                     var minWidth = popup.minWidth;
+                    var minHeight = popup.minHeight || 200;
                     
                     // Set fixed dimensions and let content scroll
                     popup.setWidth(Math.max(minWidth, Math.min(popup.getWidth(), maxWidth)));
-                    popup.setHeight(Math.min(popup.getHeight(), maxHeight));
+                    popup.setHeight(Math.max(minHeight, Math.min(popup.getHeight(), maxHeight)));
                     
                     // Apply overflow styling to popup body for scrolling
                     if (popup.body && popup.body.dom) {
@@ -464,6 +499,7 @@ function onHoverPopupClick(evt) {
 
 function onClickPopupClosed(evt) {
     removeClickPopup();
+    clearAddressDistanceMarker();
     // enable the hover popup for the curent mosue position
     if (Eqwc.settings.enableHoverPopup)
         WMSGetFInfoHover.activate();
@@ -479,6 +515,7 @@ function removeClickPopup() {
         clickPopup.destroy();
     }
     clickPopup = null;
+    clearAddressDistanceMarker();
     //featureInfoHighlightLayer.removeAllFeatures();
 }
 
@@ -826,8 +863,8 @@ function getFeatures(layerName, node) {
 
 function updateElevation(data, location, field, template) {
 
-    var pan = Ext.getCmp('fi_elevation');
-    if (pan == undefined) {
+    var pan = Ext.get('fi_elevation_value');
+    if (!pan) {
         return;
     }
     var tem = new Ext.Template(template);
@@ -842,6 +879,7 @@ function updateElevation(data, location, field, template) {
             }
 
             var label = tem.apply(data);
+            label = label.replace(/^\s*<tr[^>]*>\s*<td[^>]*>/i, '').replace(/<\/td>\s*<\/tr>\s*$/i, '');
 
             pan.update(label);
         }
@@ -852,8 +890,8 @@ function updateElevation(data, location, field, template) {
 
 function updateAddress(data, location, field, template, templateMin, factor) {
 
-    var pan = Ext.getCmp('fi_address');
-    if (pan == undefined) {
+    var pan = Ext.get('fi_address_value');
+    if (!pan) {
         return;
     }
 
@@ -867,9 +905,15 @@ function updateAddress(data, location, field, template, templateMin, factor) {
 
     if (results.distance != null) {
         distance = results.distance;
-        results.distance = distance * factor;
+        results.distance = Math.round(distance * factor);
+        distance = results.distance;
     }
-    if (distance * factor > minimumAddressRange) {
+
+    var hasFullAddressField = results && Object.prototype.hasOwnProperty.call(results, 'full_address');
+    var missingFullAddress = hasFullAddressField && !results.full_address;
+    var isAreaMatch = results && results.match === 'area';
+
+    if (isAreaMatch || missingFullAddress || distance * factor > minimumAddressRange) {
         tem = new Ext.Template(templateMin);
     }
     else {
@@ -877,6 +921,21 @@ function updateAddress(data, location, field, template, templateMin, factor) {
     }
 
     var label = tem.apply(results);
+
+    if (results.distance != null && results.distance > 10) {
+        var distanceSuffix = ' (razdalja ' + results.distance + 'm)';
+        var hasAddressCoordinates = results.x != null && results.y != null && !isNaN(parseFloat(results.x)) && !isNaN(parseFloat(results.y));
+        if (hasAddressCoordinates) {
+            distanceSuffix = ' <a href="#" ext:qtip="prikaži lokacijo" onclick="return showAddressDistanceMarker(' + parseFloat(results.x) + ', ' + parseFloat(results.y) + ');">(razdalja ' + results.distance + 'm)</a>';
+        }
+        if (label.indexOf('</td></tr>') > -1) {
+            label = label.replace('</td></tr>', distanceSuffix + '</td></tr>');
+        } else {
+            label += distanceSuffix;
+        }
+    }
+
+    label = label.replace(/^\s*<tr[^>]*>\s*<td[^>]*>/i, '').replace(/<\/td>\s*<\/tr>\s*$/i, '');
 
     pan.update(label);
 
