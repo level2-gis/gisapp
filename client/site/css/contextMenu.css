@@ -55,11 +55,16 @@
 }
 
 .x-measurement-filter-icon {
+    background-image: url(../gis_icons/mAlgorithmIntersect.svg);
+}
+
+.x-measurement-tool-icon {
     width: 16px;
     height: 16px;
-    margin: 0 auto;
+    margin: 0 2px;
+    display: inline-block;
+    vertical-align: middle;
     cursor: pointer;
-    background-image: url(../gis_icons/mAlgorithmIntersect.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -68,6 +73,19 @@
 .x-measurement-filter-icon-disabled {
     opacity: 0.4;
     cursor: default;
+}
+
+.x-measurement-zoom-icon {
+    background-image: url(../gis_icons/contextmenu/zoom.svg);
+}
+
+.x-measurement-delete-x-icon {
+    width: 15px;
+    height: 15px;
+    background-image: url(../libs/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: auto;
 }
 
 .icon-save { background-image: url(../gis_icons/save.gif) !important; background-repeat: no-repeat; }

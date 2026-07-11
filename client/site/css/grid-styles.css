@@ -81,6 +81,19 @@
     box-sizing: border-box !important;
 }
 
+/* Measurement grids: disable selected row/cell visuals. */
+.x-measurement-grid-no-selection .x-grid3-row-selected,
+.x-measurement-grid-no-selection .x-grid3-cell-selected {
+    background-color: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+}
+
+.x-measurement-grid-no-selection .x-grid3-cell-selected .x-grid3-cell-inner,
+.x-measurement-grid-no-selection .x-grid3-cell-selected span {
+    color: inherit !important;
+}
+
 /* Handle selection with conditional coloring */
 .x-grid3-row-selected.grid-row-red {
     border-left: 3px solid #d32f2f !important; /* darker red for selection */
@@ -102,39 +115,6 @@
     border-left: 3px solid #f57c00 !important; /* darker orange for selection */
 }
 
-/* Conditional tooltip for grid cells - only shows when text is truncated */
-.overflow-tooltip {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: default;
-}
-
-/* Use a different approach - create tooltip outside the grid structure */
-.overflow-tooltip.text-overflowing {
-    position: relative;
-}
-
-/* Create tooltip using a separate overlay element instead of modifying grid structure */
-.grid-tooltip-overlay {
-    position: fixed;
-    background: #ffffe1;
-    border: 1px solid #a3bad9;
-    color: #2e2e2e;
-    padding: 2px 5px;
-    font-family: tahoma, arial, verdana, sans-serif;
-    font-size: 11px;
-    line-height: 16px;
-    white-space: normal;
-    word-wrap: break-word;
-    max-width: 300px;
-    min-width: 40px;
-    box-shadow: 2px 2px 3px rgba(0,0,0,0.2);
-    pointer-events: none;
-    z-index: 50000;
-    opacity: 1;
-    display: none;
-}
 
 /* Conditional tooltip for grid cells - only shows when text is truncated */
 .overflow-tooltip {

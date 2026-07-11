@@ -2858,10 +2858,20 @@ function ensureMeasurementWindow() {
 
     var showMeasurementEditButton = false;
     var editColumnId = 'editMeasurement';
-    var deleteColumnId = 'deleteMeasurement';
+    var measurementZoomTitle = (typeof TR !== 'undefined' && TR.measurementZoomTooltip) ? TR.measurementZoomTooltip : 'Zoom to element';
+    var measurementRemoveTitle = (typeof TR !== 'undefined' && TR.measurementRemoveTooltip) ? TR.measurementRemoveTooltip : ((typeof TR !== 'undefined' && TR.editDelete) ? TR.editDelete : 'Remove');
+    var measurementSelectionModel = new Ext.grid.CellSelectionModel({
+        listeners: {
+            beforecellselect: function () {
+                return false;
+            }
+        }
+    });
     var measurementGrid = new Ext.grid.EditorGridPanel({
+        cls: 'x-measurement-grid-no-selection',
         border: false,
         store: measurementStore,
+        sm: measurementSelectionModel,
         clicksToEdit: 1,
         disableSelection: true,
         columns: [{
@@ -2889,14 +2899,26 @@ function ensureMeasurementWindow() {
                 return '<div style="margin: 0 auto; width: 26px; text-align: center; cursor: pointer; font-size: 10px; border: 1px solid #b5b8c8; background: ' + (isEditing ? '#d9e8fb' : '#f6f6f6') + ';">' + text + '</div>';
             }
         }, {
-            id: deleteColumnId,
+            xtype: 'actioncolumn',
             header: '',
-            width: 28,
+            width: 56,
             sortable: false,
             menuDisabled: true,
-            renderer: function () {
-                return '<div class="x-tool x-tool-close" style="margin: 0 auto; cursor: pointer;"></div>';
-            }
+            align: 'center',
+            items: [{
+                iconCls: 'x-measurement-tool-icon x-measurement-zoom-icon',
+                tooltip: measurementZoomTitle,
+                handler: function (grid, rowIndex) {
+                    var lineRecord = grid.getStore().getAt(rowIndex);
+                    zoomToMeasurementFeature(getMeasurementLineFeature(lineRecord));
+                }
+            }, {
+                iconCls: 'x-measurement-tool-icon x-measurement-delete-x-icon',
+                tooltip: measurementRemoveTitle,
+                handler: function (grid, rowIndex) {
+                    deleteMeasurementRecord(grid.getStore().getAt(rowIndex));
+                }
+            }]
         }],
         viewConfig: {
             forceFit: true,
@@ -2913,10 +2935,6 @@ function ensureMeasurementWindow() {
                 var columnId = grid.getColumnModel().getColumnId(columnIndex);
                 if (columnId === editColumnId) {
                     toggleMeasurementEdit(grid.getStore().getAt(rowIndex));
-                    evt.stopEvent();
-                }
-                if (columnId === deleteColumnId) {
-                    deleteMeasurementRecord(grid.getStore().getAt(rowIndex));
                     evt.stopEvent();
                 }
             },
@@ -2936,8 +2954,8 @@ function ensureMeasurementWindow() {
 
     measurementWindow = new Ext.Window({
         title: getMeasurementsWindowTitle(),
-        width: 280,
-        height: 220,
+        width: 360,
+        height: 230,
         layout: 'fit',
         closeAction: 'hide',
         closable: true,
@@ -2949,7 +2967,7 @@ function ensureMeasurementWindow() {
         renderTo: 'geoExtMapPanel',
         hidden: true,
         bbar: [{
-            text: getMeasurementsClearButtonLabel(),
+            text: TR.measurementRemoveAllTooltip,
             handler: clearAllMeasurements
         }, '->', {
             xtype: 'tbtext',
@@ -2980,11 +2998,22 @@ function ensureMeasurementAreaWindow() {
         return;
     }
 
-    var filterColumnId = 'filterMeasurementArea';
-    var deleteColumnId = 'deleteMeasurementArea';
+    var measurementAreaActionsColumnId = 'measurementAreaActions';
+    var measurementAreaZoomTitle = (typeof TR !== 'undefined' && TR.measurementZoomTooltip) ? TR.measurementZoomTooltip : 'Zoom to element';
+    var measurementAreaFilterTitle = (typeof TR !== 'undefined' && TR.tableMeasurementFilterCurrentTable) ? TR.tableMeasurementFilterCurrentTable : ((typeof TR !== 'undefined' && TR.exportUseTableFilter) ? TR.exportUseTableFilter : 'Filter current table');
+    var measurementAreaRemoveTitle = (typeof TR !== 'undefined' && TR.measurementRemoveTooltip) ? TR.measurementRemoveTooltip : ((typeof TR !== 'undefined' && TR.editDelete) ? TR.editDelete : 'Remove');
+    var measurementAreaSelectionModel = new Ext.grid.CellSelectionModel({
+        listeners: {
+            beforecellselect: function () {
+                return false;
+            }
+        }
+    });
     var measurementAreaGrid = new Ext.grid.EditorGridPanel({
+        cls: 'x-measurement-grid-no-selection',
         border: false,
         store: measurementAreaStore,
+        sm: measurementAreaSelectionModel,
         clicksToEdit: 1,
         disableSelection: true,
         columns: [{
@@ -3000,25 +3029,39 @@ function ensureMeasurementAreaWindow() {
             dataIndex: 'areaDisplay',
             width: 120
         }, {
-            id: filterColumnId,
+            xtype: 'actioncolumn',
+            id: measurementAreaActionsColumnId,
             header: '',
-            width: 38,
+            width: 96,
             sortable: false,
             menuDisabled: true,
-            renderer: function () {
-                var canApply = !!getActiveBottomSearchPanel();
-                var cls = canApply ? 'x-measurement-filter-icon' : 'x-measurement-filter-icon x-measurement-filter-icon-disabled';
-                return '<div class="' + cls + '"></div>';
-            }
-        }, {
-            id: deleteColumnId,
-            header: '',
-            width: 28,
-            sortable: false,
-            menuDisabled: true,
-            renderer: function () {
-                return '<div class="x-tool x-tool-close" style="margin: 0 auto; cursor: pointer;"></div>';
-            }
+            align: 'center',
+            items: [{
+                tooltip: measurementAreaFilterTitle,
+                getClass: function () {
+                    var canApply = !!getActiveBottomSearchPanel();
+                    return canApply ? 'x-measurement-tool-icon x-measurement-filter-icon' : 'x-measurement-tool-icon x-measurement-filter-icon x-measurement-filter-icon-disabled';
+                },
+                handler: function (grid, rowIndex) {
+                    if (!getActiveBottomSearchPanel()) {
+                        return;
+                    }
+                    applyMeasurementAreaFilterToActiveTable(grid.getStore().getAt(rowIndex));
+                }
+            }, {
+                iconCls: 'x-measurement-tool-icon x-measurement-zoom-icon',
+                tooltip: measurementAreaZoomTitle,
+                handler: function (grid, rowIndex) {
+                    var areaRecord = grid.getStore().getAt(rowIndex);
+                    zoomToMeasurementFeature(getMeasurementPolygonFeature(areaRecord));
+                }
+            }, {
+                iconCls: 'x-measurement-tool-icon x-measurement-delete-x-icon',
+                tooltip: measurementAreaRemoveTitle,
+                handler: function (grid, rowIndex) {
+                    deleteMeasurementAreaRecord(grid.getStore().getAt(rowIndex));
+                }
+            }]
         }],
         viewConfig: {
             forceFit: true,
@@ -3031,21 +3074,6 @@ function ensureMeasurementAreaWindow() {
             }
         },
         listeners: {
-            cellclick: function (grid, rowIndex, columnIndex, evt) {
-                var columnId = grid.getColumnModel().getColumnId(columnIndex);
-                if (columnId === filterColumnId) {
-                    if (!getActiveBottomSearchPanel()) {
-                        evt.stopEvent();
-                        return;
-                    }
-                    applyMeasurementAreaFilterToActiveTable(grid.getStore().getAt(rowIndex));
-                    evt.stopEvent();
-                }
-                if (columnId === deleteColumnId) {
-                    deleteMeasurementAreaRecord(grid.getStore().getAt(rowIndex));
-                    evt.stopEvent();
-                }
-            },
             afteredit: function (editEvent) {
                 if (editEvent.field !== 'name') {
                     return;
@@ -3063,8 +3091,8 @@ function ensureMeasurementAreaWindow() {
 
     measurementAreaWindow = new Ext.Window({
         title: getMeasurementsWindowTitle(),
-        width: 280,
-        height: 220,
+        width: 360,
+        height: 230,
         layout: 'fit',
         closeAction: 'hide',
         closable: true,
@@ -3076,7 +3104,7 @@ function ensureMeasurementAreaWindow() {
         renderTo: 'geoExtMapPanel',
         hidden: true,
         bbar: [{
-            text: getMeasurementsClearButtonLabel(),
+            text: TR.measurementRemoveAllTooltip,
             handler: clearAllMeasurementAreas
         }, '->', {
             xtype: 'tbtext',
@@ -3137,13 +3165,6 @@ function getMeasurementsTotalLabel() {
     return 'Total';
 }
 
-function getMeasurementsClearButtonLabel() {
-    if (window.resetButtonString && window.resetButtonString[lang]) {
-        return window.resetButtonString[lang];
-    }
-    return 'Clear';
-}
-
 function getMeasurementCssVariable(name, fallback) {
     var rootElement = document.documentElement;
     if (!rootElement || !window.getComputedStyle) {
@@ -3187,6 +3208,30 @@ function getMeasurementLabelFeature(record) {
         return null;
     }
     return measurementLayer.getFeatureById(record.get('labelFeatureId'));
+}
+
+function zoomToMeasurementFeature(feature) {
+    if (!geoExtMap || !geoExtMap.map || !feature || !feature.geometry || !feature.geometry.getBounds) {
+        return;
+    }
+
+    var bounds = feature.geometry.getBounds();
+    if (!bounds) {
+        return;
+    }
+
+    var targetBounds = bounds.clone();
+    var map = geoExtMap.map;
+    if (targetBounds.getWidth() === 0 || targetBounds.getHeight() === 0) {
+        var resolution = map.getResolution ? map.getResolution() : null;
+        var padding = (resolution && resolution > 0) ? (resolution * 80) : 1;
+        targetBounds.left -= padding;
+        targetBounds.right += padding;
+        targetBounds.bottom -= padding;
+        targetBounds.top += padding;
+    }
+
+    map.zoomToExtent(targetBounds);
 }
 
 function getMeasurementRecordById(recordId) {
