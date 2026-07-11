@@ -1829,7 +1829,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                         };
                         break;
                     case "level2" :
-                        serviceData.url = config.url ? config.url : "/gisportal/index.php/modules/level2/proxy/terrain/height";
+                        serviceData.url = config.url ? config.url : "/modules/level2/proxy/terrain/height";
                         serviceData.resultNode = "";
                         serviceData.resultField = "height_m";
                         serviceData.displayTemplate = config.template ? config.template : '<tr><td>{height_m}m ' + TR.fiElevation + '</td></tr>';
@@ -1876,7 +1876,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                 switch
                     (config.provider.toLowerCase()) {
                     case "level2" :
-                        serviceData.url = config.url ? config.url : "/gisportal/index.php/modules/level2/proxy/geocode/reverse";
+                        serviceData.url = config.url ? config.url : "/modules/level2/proxy/geocode/reverse";
                         serviceData.resultNode = "results";
                         serviceData.resultField = "";
                         serviceData.displayTemplate = config.template ? config.template : '<tr><td>{full_address}</td></tr>';
