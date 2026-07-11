@@ -276,8 +276,14 @@ function customActionOnZoomEvent() {
 function customActionOnMoveEvent() {
 	// ... action to do on call
     var btm = Ext.getCmp('BottomPanel');
+    if (!btm) {
+        return;
+    }
     var tab = btm.getActiveTab();
     if(tab == null) {
+        return;
+    }
+    if(tab.panel.measurementFilterWkt) {
         return;
     }
     if(tab.panel.useBbox) {

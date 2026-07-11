@@ -1115,9 +1115,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             }
             filter = layerId + ":" + filter.join(' AND ');
         }
-        else {
-            filter = layerId + ":" + storedFilter;
-        }
+        //else {
+        //    filter = layerId + ":" + storedFilter;
+        //}
         var params={
             'SERVICE': 'WMS',
             'VERSION': '1.3.0',
@@ -1130,27 +1130,31 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             'CRS': authid
             //'FILTER': filter
         };
-        if (this.useBbox) {
+        if (this.measurementFilterWkt) {
+            params.FILTER_GEOM = this.measurementFilterWkt;
+            //params.FILTER = filter;
+        } else if (this.useBbox) {
             //qgis3 workaround
-            if(Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2) {
+            //if(Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2) {
                 var xx = geoExtMap.map.getExtent().toGeometry();
                 params.FILTER_GEOM = xx.toString();
-            } else {
-                var bounds = geoExtMap.map.calculateBounds();
-                params.FILTER = filter;
-                params.BBOX = bounds.left + "," + bounds.bottom + "," + bounds.right + "," + bounds.top;
-            }
+            //} else {
+            //    var bounds = geoExtMap.map.calculateBounds();
+            //    params.FILTER = filter;
+            //    params.BBOX = bounds.left + "," + bounds.bottom + "," + bounds.right + "," + bounds.top;
+            //}
 
-        } else {
-            //qgis 3.22 doesn't work with empty filter in case of sql definition for layer in qgis project. Bug should be reported.
-            //only for empty filters
-            if (filter == layerId+":" && Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
-                var yy = geoExtMap.map.getMaxExtent().toGeometry();
-                params.FILTER_GEOM = yy.toString();
-            } else {
-                params.FILTER = filter;
-            }
         }
+        // else {
+        //     //qgis 3.22 doesn't work with empty filter in case of sql definition for layer in qgis project. Bug should be reported.
+        //     //only for empty filters
+        //     if (filter == layerId+":" && Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
+        //         var yy = geoExtMap.map.getMaxExtent().toGeometry();
+        //         params.FILTER_GEOM = yy.toString();
+        //     } else {
+        //         params.FILTER = filter;
+        //     }
+        // }
 
         if (fieldsValidate) {
             Ext.Ajax.request({

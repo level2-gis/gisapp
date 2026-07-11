@@ -858,6 +858,9 @@ function loadMore() {
 function switchBbox(btn,state) {
     var grid = this;
     grid.useBbox = state;
+    if (typeof refreshMeasurementFilterToolbar === 'function') {
+        refreshMeasurementFilterToolbar(grid);
+    }
     grid.onSubmit(true);
 }
 

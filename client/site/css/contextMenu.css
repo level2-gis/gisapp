@@ -54,6 +54,22 @@
     background-position:center right;
 }
 
+.x-measurement-filter-icon {
+    width: 16px;
+    height: 16px;
+    margin: 0 auto;
+    cursor: pointer;
+    background-image: url(../gis_icons/mAlgorithmIntersect.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.x-measurement-filter-icon-disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
 .icon-save { background-image: url(../gis_icons/save.gif) !important; background-repeat: no-repeat; }
 
 .icon-delete { background-image: url(../gis_icons/editor_delete.png) !important; background-repeat: no-repeat; }

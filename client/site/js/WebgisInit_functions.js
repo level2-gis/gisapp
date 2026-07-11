@@ -2222,6 +2222,7 @@ function showSearchPanelResults(searchPanelInstance, features) {
 
             if (searchPanelInstance.useBbox) {
                 toolBar.push({
+                    itemId: 'useBboxToggle',
                     iconCls: 'x-extent-icon',
                     tooltip: TR.tableUseExtent,
                     pressed: Eqwc.settings.syncAttributeTableWithView,
@@ -2232,6 +2233,33 @@ function showSearchPanelResults(searchPanelInstance, features) {
                     scope: searchPanelInstance
                 });
             }
+
+            toolBar.push({
+                xtype: 'tbspacer',
+                itemId: 'measurementFilterSpacer',
+                hidden: !searchPanelInstance.measurementFilterWkt,
+                width: 6
+            });
+            toolBar.push({
+                xtype: 'tbseparator',
+                itemId: 'measurementFilterSeparator',
+                hidden: !searchPanelInstance.measurementFilterWkt
+            });
+            toolBar.push({
+                xtype: 'tbtext',
+                itemId: 'measurementFilterStatus',
+                hidden: !searchPanelInstance.measurementFilterWkt,
+                text: getMeasurementFilterStatusText(searchPanelInstance)
+            });
+            toolBar.push({
+                itemId: 'clearMeasurementFilter',
+                iconCls: 'x-clear-icon',
+                hidden: !searchPanelInstance.measurementFilterWkt,
+                tooltip: TR.tableMeasurementFilterClear,
+                handler: function () {
+                    clearMeasurementFilterForSearchPanel(searchPanelInstance, true);
+                }
+            });
             if (!searchPanelInstance.hasGeom && searchPanelInstance.gridEditable && (typeof (prepareEdit) == 'function')) {
                 //always allow to add new record for relations (showing in popup window)
                 if (searchPanelInstance.gridLocation == 'popup') {
@@ -2284,6 +2312,8 @@ function showSearchPanelResults(searchPanelInstance, features) {
         targetComponent.doLayout();
         // Always make sure it's shown and expanded
         searchPanelInstance.resultsGrid.show();
+        refreshMeasurementFilterToolbar(searchPanelInstance);
+        redrawMeasurementAreaGrid();
         //searchPanelInstance.resultsGrid.collapsible && searchPanelInstance.resultsGrid.expand();
 
         //zoom to the extent from GetFeatureInfo results
@@ -2311,6 +2341,138 @@ function showSearchPanelResults(searchPanelInstance, features) {
     //    //searchPanelInstance.resultsGrid = null;
     //}
     return true;
+}
+
+function getActiveBottomSearchPanel() {
+    var btm = Ext.getCmp('BottomPanel');
+    if (!btm) {
+        return null;
+    }
+
+    var activeTab = btm.getActiveTab();
+    if (!activeTab || !activeTab.panel) {
+        return null;
+    }
+
+    return activeTab.panel;
+}
+
+function getMeasurementFilterStatusText(searchPanelInstance) {
+    if (!searchPanelInstance || !searchPanelInstance.measurementFilterName) {
+        return '';
+    }
+
+    return TR.tableMeasurementFilterActive + ': ' + searchPanelInstance.measurementFilterName;
+}
+
+function refreshMeasurementFilterToolbar(searchPanelInstance) {
+    if (!searchPanelInstance || !searchPanelInstance.resultsGrid || !searchPanelInstance.resultsGrid.getBottomToolbar) {
+        return;
+    }
+
+    var bbar = searchPanelInstance.resultsGrid.getBottomToolbar();
+    if (!bbar) {
+        return;
+    }
+
+    var spacer = bbar.getComponent('measurementFilterSpacer');
+    var separator = bbar.getComponent('measurementFilterSeparator');
+    var statusText = bbar.getComponent('measurementFilterStatus');
+    var clearButton = bbar.getComponent('clearMeasurementFilter');
+    var bboxToggle = bbar.getComponent('useBboxToggle');
+
+    if (!spacer || !separator || !statusText || !clearButton) {
+        return;
+    }
+
+    if (searchPanelInstance.measurementFilterWkt) {
+        spacer.setVisible(true);
+        separator.setVisible(true);
+        statusText.setText(getMeasurementFilterStatusText(searchPanelInstance));
+        statusText.setVisible(true);
+        clearButton.setVisible(true);
+        if (bboxToggle) {
+            bboxToggle.disable();
+        }
+    } else {
+        spacer.setVisible(false);
+        separator.setVisible(false);
+        statusText.setVisible(false);
+        clearButton.setVisible(false);
+        if (bboxToggle) {
+            bboxToggle.enable();
+        }
+    }
+
+    if (bbar.doLayout) {
+        bbar.doLayout();
+    }
+}
+
+function clearMeasurementFilterForSearchPanel(searchPanelInstance, submitReload) {
+    if (!searchPanelInstance) {
+        return;
+    }
+
+    searchPanelInstance.measurementFilterWkt = null;
+    searchPanelInstance.measurementFilterId = null;
+    searchPanelInstance.measurementFilterName = null;
+
+    refreshMeasurementFilterToolbar(searchPanelInstance);
+
+    if (submitReload) {
+        searchPanelInstance.onSubmit(true);
+    }
+}
+
+function applyMeasurementAreaFilterToActiveTable(record) {
+    if (!record) {
+        return;
+    }
+
+    var searchPanelInstance = getActiveBottomSearchPanel();
+    if (!searchPanelInstance) {
+        return;
+    }
+
+    var polygonFeature = getMeasurementPolygonFeature(record);
+    if (!polygonFeature || !polygonFeature.geometry) {
+        return;
+    }
+
+    searchPanelInstance.measurementFilterWkt = polygonFeature.geometry.toString();
+    searchPanelInstance.measurementFilterId = record.get('id');
+    searchPanelInstance.measurementFilterName = record.get('name');
+
+    refreshMeasurementFilterToolbar(searchPanelInstance);
+    searchPanelInstance.onSubmit(true);
+}
+
+function refreshActiveMeasurementFilterLabel(record) {
+    if (!record) {
+        return;
+    }
+
+    var searchPanelInstance = getActiveBottomSearchPanel();
+    if (!searchPanelInstance || searchPanelInstance.measurementFilterId !== record.get('id')) {
+        return;
+    }
+
+    searchPanelInstance.measurementFilterName = record.get('name');
+    refreshMeasurementFilterToolbar(searchPanelInstance);
+}
+
+function clearActiveTableMeasurementFilterById(recordId) {
+    if (!recordId) {
+        return;
+    }
+
+    var searchPanelInstance = getActiveBottomSearchPanel();
+    if (!searchPanelInstance || searchPanelInstance.measurementFilterId !== recordId) {
+        return;
+    }
+
+    clearMeasurementFilterForSearchPanel(searchPanelInstance, true);
 }
 
 // function getVisibleLayers(visibleLayers, currentNode){
@@ -2818,6 +2980,7 @@ function ensureMeasurementAreaWindow() {
         return;
     }
 
+    var filterColumnId = 'filterMeasurementArea';
     var deleteColumnId = 'deleteMeasurementArea';
     var measurementAreaGrid = new Ext.grid.EditorGridPanel({
         border: false,
@@ -2836,6 +2999,17 @@ function ensureMeasurementAreaWindow() {
             header: measureAreaResultPrefixString[lang],
             dataIndex: 'areaDisplay',
             width: 120
+        }, {
+            id: filterColumnId,
+            header: '',
+            width: 38,
+            sortable: false,
+            menuDisabled: true,
+            renderer: function () {
+                var canApply = !!getActiveBottomSearchPanel();
+                var cls = canApply ? 'x-measurement-filter-icon' : 'x-measurement-filter-icon x-measurement-filter-icon-disabled';
+                return '<div class="' + cls + '"></div>';
+            }
         }, {
             id: deleteColumnId,
             header: '',
@@ -2859,6 +3033,14 @@ function ensureMeasurementAreaWindow() {
         listeners: {
             cellclick: function (grid, rowIndex, columnIndex, evt) {
                 var columnId = grid.getColumnModel().getColumnId(columnIndex);
+                if (columnId === filterColumnId) {
+                    if (!getActiveBottomSearchPanel()) {
+                        evt.stopEvent();
+                        return;
+                    }
+                    applyMeasurementAreaFilterToActiveTable(grid.getStore().getAt(rowIndex));
+                    evt.stopEvent();
+                }
                 if (columnId === deleteColumnId) {
                     deleteMeasurementAreaRecord(grid.getStore().getAt(rowIndex));
                     evt.stopEvent();
@@ -2873,6 +3055,7 @@ function ensureMeasurementAreaWindow() {
                 editEvent.record.set('name', nextName);
 
                 updateMeasurementAreaFeatureLabel(editEvent.record);
+                refreshActiveMeasurementFilterLabel(editEvent.record);
                 editEvent.record.commit();
             }
         }
@@ -3491,6 +3674,8 @@ function deleteMeasurementAreaRecord(record) {
         return;
     }
 
+    var recordId = record.get('id');
+
     if (measurementAreaLayer) {
         var featuresToRemove = [];
         var polygonFeature = getMeasurementPolygonFeature(record);
@@ -3508,6 +3693,7 @@ function deleteMeasurementAreaRecord(record) {
     }
 
     measurementAreaStore.remove(record);
+    clearActiveTableMeasurementFilterById(recordId);
 }
 
 function clearAllMeasurementAreas() {
@@ -3520,6 +3706,8 @@ function clearAllMeasurementAreas() {
     if (measurementAreaStore) {
         measurementAreaStore.removeAll();
     }
+
+    clearMeasurementFilterForSearchPanel(getActiveBottomSearchPanel(), true);
 }
 
 function redrawMeasurementGrid() {
