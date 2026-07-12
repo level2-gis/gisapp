@@ -685,6 +685,14 @@ function exportData(layername, format, useBbox, crs, filter) {
     var layerId = wmsLoader.layerTitleNameMapping[layername];
     var layerCrs = projectData.layers[layerId].crs;
     var layerFields = "";   //layerId.indexOf("_view")>-1 ? "" : joinObj(wmsLoader.layerProperties[layerId].attributes,'name'); //workaround for ogr issue when selecting field names with specific language characters. In case of view export all fields
+    var clipGeometry = '';
+
+    if (useBbox && typeof getActiveBottomSearchPanel === 'function') {
+        var activeSearchPanel = getActiveBottomSearchPanel();
+        if (activeSearchPanel && activeSearchPanel.measurementFilterWkt && activeSearchPanel.queryLayer === layername) {
+            clipGeometry = activeSearchPanel.measurementFilterWkt;
+        }
+    }
 
     var exportUrl = "./admin/export.php?";
 
@@ -719,7 +727,7 @@ function exportData(layername, format, useBbox, crs, filter) {
         }
 
         exportUrl = "./admin/text_export.php?";
-        exportUrl+= Ext.urlEncode({
+        var textExportParams = {
             map: projectData.project,
             SRS: crs,
             layer_extent: layCrsBbox,
@@ -728,11 +736,15 @@ function exportData(layername, format, useBbox, crs, filter) {
             z: zField,
             format: format,
             filter: filter
-        });
+        };
+        if (clipGeometry) {
+            textExportParams.clip_geometry = clipGeometry;
+        }
+        exportUrl+= Ext.urlEncode(textExportParams);
 
     } else {
 
-        exportUrl += Ext.urlEncode({
+        var exportParams = {
             map: projectData.project,
             SRS: crs,
             //map0_extent: mapCrsBbox,
@@ -741,7 +753,11 @@ function exportData(layername, format, useBbox, crs, filter) {
             fields: layerFields,
             format: format,
             filter: filter
-        });
+        };
+        if (clipGeometry) {
+            exportParams.clip_geometry = clipGeometry;
+        }
+        exportUrl += Ext.urlEncode(exportParams);
     }
 
     Ext.Ajax.request({

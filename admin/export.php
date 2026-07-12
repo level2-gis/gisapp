@@ -103,14 +103,25 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     $srid = substr(strrchr($query_arr['SRS'], ':'), 1);
     $options = " ";
     $filter = html_entity_decode($query_arr['filter'], ENT_QUOTES);
+    $clipGeometry = '';
+    if (isset($query_arr['clip_geometry'])) {
+        $clipGeometry = normalizeClipGeometryWkt(html_entity_decode($query_arr['clip_geometry'], ENT_QUOTES));
+        if ($clipGeometry === false) {
+            throw new Exception('Invalid clip geometry');
+        }
+    }
     $options .= "-preserve_fid ";
 
     //only check export if mask_wkt is empty
     if (empty(Helpers::getMaskWktFromSession())) {
+        if ($clipGeometry !== '') {
+            $options .= '-clipsrc ' . escapeshellarg($clipGeometry) . ' ';
+        }
+
         //export only selection inside bounding box if provided
         //we have to transform extent to layers CRS on client side
         //if using gdal 2.0 this will not be necessary, just use -spat_srs
-        if ($query_arr['layer_extent'] != '') {
+        if ($clipGeometry === '' && $query_arr['layer_extent'] != '') {
             $extent = explode(",", $query_arr['layer_extent']);
             $xmin = $extent[0];
             $ymin = $extent[1];
@@ -132,11 +143,15 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
         $fields = array_diff(explode(',', $query_arr['fields']), [$key]);
         $options .= '-select "' . implode(',',$fields) . '" ';
 
-        //sql filter from qgis project layer properties combine with table filter from request
+        //sql filter from qgis project layer properties combined with table/request filter
         if ($sql>'') {
-            $options = " -where \"".$sql."\" ";
+            $where = '(' . $sql . ')';
+            if ($filter!='') {
+                $where .= ' AND ' . $filter;
+            }
+            $options .= ' -where "' . $where . '" ';
         } elseif ($filter!='') {
-            $options = " -where \"".$filter."\" ";
+            $options .= ' -where "'.$filter.'" ';
         }
 
     } else {
@@ -264,6 +279,34 @@ function prepareFile($layername, $map, $query_arr, $destinationFormat)
     }
 
     return $fullFileNameZip;
+}
+
+/**
+ * Normalizes and validates clip WKT used by ogr2ogr -clipsrc.
+ * Returns empty string if no geometry was provided.
+ * Returns false when geometry is invalid.
+ *
+ * @param string $wkt
+ * @return string|false
+ */
+function normalizeClipGeometryWkt($wkt)
+{
+    $wkt = trim((string)$wkt);
+    if ($wkt === '') {
+        return '';
+    }
+
+    $wkt = preg_replace('/\s+/', ' ', strtoupper($wkt));
+    if (!preg_match('/^(POLYGON|MULTIPOLYGON)\s*\(/', $wkt)) {
+        return false;
+    }
+
+    // Allow only safe WKT characters.
+    if (preg_match('/[^A-Z0-9\(\),\.\-\+\s]/', $wkt)) {
+        return false;
+    }
+
+    return $wkt;
 }
 
 /**
