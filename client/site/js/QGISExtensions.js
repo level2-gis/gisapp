@@ -1130,6 +1130,11 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             'CRS': authid
             //'FILTER': filter
         };
+
+        if (filter.length > 0) {
+            params.FILTER = filter;
+        }
+
         if (this.measurementFilterWkt) {
             params.FILTER_GEOM = this.measurementFilterWkt;
             //params.FILTER = filter;
