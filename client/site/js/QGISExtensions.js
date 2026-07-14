@@ -1842,8 +1842,8 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                         serviceData.resultField = "height_m";
                         serviceData.displayTemplate = config.template ? config.template : '<tr><td>{height_m}m ' + TR.fiElevation + '</td></tr>';
                         serviceData.params = {
-                            x: this.location.lon,
-                            y: this.location.lat
+                            x: this.location.lon.toFixed(coordinatePrecision),
+                            y: this.location.lat.toFixed(coordinatePrecision)
                         };
                         break;
 
@@ -1891,8 +1891,8 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                         serviceData.displayTemplateMinimum = config.templateMin ? config.templateMin : '<tr><td>{settlement_name}</td></tr>';
                         serviceData.factor = 1;
                         serviceData.params = {
-                            x: this.location.lon,
-                            y: this.location.lat,
+                            x: this.location.lon.toFixed(coordinatePrecision),
+                            y: this.location.lat.toFixed(coordinatePrecision),
                             max_distance: minimumAddressRange
                         };
                         break;
