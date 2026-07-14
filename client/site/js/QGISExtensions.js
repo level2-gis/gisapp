@@ -1114,9 +1114,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     fieldsValidate &= field.validate();
                 }
             }
-            if (filter.length > 0) {
-                filterStr = layerId + ":" + filter.join(' AND ');
-            }
+            filterStr = layerId + ":" + filter.join(' AND ');
         }
         else {
             filterStr = layerId + ":" + storedFilter;
@@ -1134,13 +1132,9 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             //'FILTER': filter
         };
 
-        if (filterStr > '') {
-            params.FILTER = filterStr;
-        }
-
         if (this.measurementFilterWkt) {
             params.FILTER_GEOM = this.measurementFilterWkt;
-            //params.FILTER = filter;
+            params.FILTER = filterStr;
         } else if (this.useBbox) {
             //qgis3 workaround
             //if(Eqwc.settings.qgisVersion && parseInt(Eqwc.settings.qgisVersion)>2) {
@@ -1153,16 +1147,16 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             //}
 
         }
-        // else {
-        //     //qgis 3.22 doesn't work with empty filter in case of sql definition for layer in qgis project. Bug should be reported.
-        //     //only for empty filters
-        //     if (filter == layerId+":" && Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
-        //         var yy = geoExtMap.map.getMaxExtent().toGeometry();
-        //         params.FILTER_GEOM = yy.toString();
-        //     } else {
-        //         params.FILTER = filter;
-        //     }
-        // }
+        else {
+            //qgis 3.22 doesn't work with empty filter in case of sql definition for layer in qgis project. Bug should be reported.
+            //only for empty filters
+            if (filterStr === layerId+":" && Eqwc.common.compareQgisVersionWithInteger(322) == 'equal' && projectData.layers[layerId] && projectData.layers[layerId].sql > '') {
+                 var yy = geoExtMap.map.getMaxExtent().toGeometry();
+                 params.FILTER_GEOM = yy.toString();
+            } else {
+                params.FILTER = filterStr;
+            }
+        }
 
         if (fieldsValidate) {
             Ext.Ajax.request({
