@@ -1086,6 +1086,7 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
         var layerId = wmsLoader.layerTitleNameMapping[this.queryLayer];
         var fieldsValidate = true;
         var filter = [];
+        var filterStr;
 
         if (storedFilter == "") {
             var fieldValues = this.form.getForm().getFieldValues();
@@ -1113,11 +1114,13 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
                     fieldsValidate &= field.validate();
                 }
             }
-            filter = layerId + ":" + filter.join(' AND ');
+            if (filter.length > 0) {
+                filterStr = layerId + ":" + filter.join(' AND ');
+            }
         }
-        //else {
-        //    filter = layerId + ":" + storedFilter;
-        //}
+        else {
+            filterStr = layerId + ":" + storedFilter;
+        }
         var params={
             'SERVICE': 'WMS',
             'VERSION': '1.3.0',
@@ -1131,8 +1134,8 @@ QGIS.SearchPanel = Ext.extend(Ext.Panel, {
             //'FILTER': filter
         };
 
-        if (filter.length > 0) {
-            params.FILTER = filter;
+        if (filterStr > '') {
+            params.FILTER = filterStr;
         }
 
         if (this.measurementFilterWkt) {
