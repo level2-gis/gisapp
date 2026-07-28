@@ -1793,6 +1793,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
         this.location = config.location; //units
         this.language = config.language;
         this.projection = config.projection;
+        this.pendingRequests = [];
 
         this.addEvents(['elevation', 'address']);
 
@@ -1924,7 +1925,7 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
 
         }
 
-        Ext.Ajax.request({
+        var request = Ext.Ajax.request({
             url: serviceData.url,
             params: serviceData.params,
             method: 'GET',
@@ -1932,6 +1933,10 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
             disableCaching: false,
             timeout: 5000,
             success: function (response) {
+                this.pendingRequests = this.pendingRequests.filter(function (pending) {
+                    return pending !== request;
+                });
+
                 var result = Ext.util.JSON.decode(response.responseText);
 
                 if (serviceData.resultNode == "") {
@@ -1951,9 +1956,27 @@ QGIS.LocationService = Ext.extend(Ext.util.Observable, {
                 }
             },
             failure: function (response) {
+                this.pendingRequests = this.pendingRequests.filter(function (pending) {
+                    return pending !== request;
+                });
                 //return {success: false, message: "not available"};
             }
         });
+
+        this.pendingRequests.push(request);
+        return request;
+    },
+
+    cancelPendingRequests: function () {
+        if (!this.pendingRequests || this.pendingRequests.length === 0) {
+            return;
+        }
+
+        for (var i = 0; i < this.pendingRequests.length; i++) {
+            Ext.Ajax.abort(this.pendingRequests[i]);
+        }
+
+        this.pendingRequests = [];
     }
 
 });

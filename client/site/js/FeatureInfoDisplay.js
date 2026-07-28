@@ -22,53 +22,7 @@
  */
 
 var addressDistanceMarkerFeature = null;
-var activeIdentifyRequestToken = 0;
-var pendingIdentifyLocationRequest = null;
-var suppressClickPopupCloseHandler = false;
-
-function startIdentifyLocationServices(locationUnits) {
-    var locationProj = projectData.crs == Eqwc.currentMapProjection[0] ? null : Eqwc.currentMapProjection[2];
-    var locationObj = new QGIS.LocationService({location: locationUnits, language: projectData.lang, projection: locationProj});
-    var identifyRequest = {
-        token: ++activeIdentifyRequestToken,
-        locationObj: locationObj,
-        latestElevationArgs: null,
-        latestAddressArgs: null
-    };
-
-    // Cache latest service payloads so we can render them even if responses
-    // arrive before popup containers are in the DOM.
-    locationObj.on("elevation", function() {
-        if (identifyRequest.token !== activeIdentifyRequestToken) {
-            return;
-        }
-        identifyRequest.latestElevationArgs = Array.prototype.slice.call(arguments);
-        updateElevation.apply(this, identifyRequest.latestElevationArgs);
-    });
-
-    locationObj.on("address", function() {
-        if (identifyRequest.token !== activeIdentifyRequestToken) {
-            return;
-        }
-        identifyRequest.latestAddressArgs = Array.prototype.slice.call(arguments);
-        updateAddress.apply(this, identifyRequest.latestAddressArgs);
-    });
-
-    if (projectData.locationServices != null) {
-        for (var l = 0; l < projectData.locationServices.length; l++) {
-            locationObj.getService({
-                name: projectData.locationServices[l].name,
-                key: projectData.locationServices[l].key,
-                provider: projectData.locationServices[l].provider,
-                url: projectData.locationServices[l].url ? projectData.locationServices[l].url : null,
-                template: projectData.locationServices[l].template ? projectData.locationServices[l].template : null,
-                templateMin: projectData.locationServices[l].templateMin ? projectData.locationServices[l].templateMin : null
-            });
-        }
-    }
-
-    return identifyRequest;
-}
+var activeIdentifyLocationService = null;
 
 function clearAddressDistanceMarker() {
     if (addressDistanceMarkerFeature && featureInfoHighlightLayer) {
@@ -98,7 +52,12 @@ function showAddressDistanceMarker(x, y) {
 }
 
 function showFeatureInfo(evt) {
-    removeClickPopup(true);
+    if (activeIdentifyLocationService && activeIdentifyLocationService.cancelPendingRequests) {
+        activeIdentifyLocationService.cancelPendingRequests();
+    }
+    activeIdentifyLocationService = null;
+
+    removeClickPopup();
     if (hoverPopup) {
         removeHoverPopup();
     }
@@ -117,20 +76,40 @@ function showFeatureInfo(evt) {
         //start locationservices
         var text = "";
         var locationUnits = map.getLonLatFromPixel(evt.xy);
+        var locationProj = projectData.crs == Eqwc.currentMapProjection[0] ? null : Eqwc.currentMapProjection[2];
+        var locationObj = new QGIS.LocationService({location: locationUnits, language: projectData.lang, projection: locationProj});
+        activeIdentifyLocationService = locationObj;
         var popupItems = [];
-        var identifyRequest = pendingIdentifyLocationRequest;
-
-        // Reuse click-time request if available; fallback to immediate start here
-        // for any non-standard invocation path.
-        if (!identifyRequest || identifyRequest.token !== activeIdentifyRequestToken) {
-            identifyRequest = startIdentifyLocationServices(locationUnits);
-            pendingIdentifyLocationRequest = identifyRequest;
-        }
-
-        var locationObj = identifyRequest.locationObj;
-        var identifyRequestToken = identifyRequest.token;
 
         var hasLocationRows = Eqwc.settings.showCoordinatesIdentify || (projectData.locationServices != null && projectData.locationServices.length > 0);
+
+        locationObj.on("elevation", function () {
+            if (activeIdentifyLocationService !== locationObj) {
+                return;
+            }
+            updateElevation.apply(this, arguments);
+        });
+        locationObj.on("address", function () {
+            if (activeIdentifyLocationService !== locationObj) {
+                return;
+            }
+            updateAddress.apply(this, arguments);
+        });
+
+        function requestLocationServices() {
+            if (projectData.locationServices != null) {
+                for (var l = 0; l < projectData.locationServices.length; l++) {
+                    locationObj.getService({
+                        name: projectData.locationServices[l].name,
+                        key: projectData.locationServices[l].key,
+                        provider: projectData.locationServices[l].provider,
+                        url: projectData.locationServices[l].url ? projectData.locationServices[l].url : null,
+                        template: projectData.locationServices[l].template ? projectData.locationServices[l].template : null,
+                        templateMin: projectData.locationServices[l].templateMin ? projectData.locationServices[l].templateMin : null
+                    });
+                }
+            }
+        }
 
         // open AttributeTree panel
         featureInfoResultLayers = [];
@@ -284,6 +263,11 @@ function showFeatureInfo(evt) {
                     Ext.iterate(Eqwc._temp_ids, set, Eqwc.settings.fieldTemplates);
                 },
                 afterrender: function() {
+                    if (!this._locationServicesRequested) {
+                        this._locationServicesRequested = true;
+                        requestLocationServices();
+                    }
+
                     // Apply fixed sizing constraints with overflow handling
                     var popup = this;
                     var maxHeight = geoExtMap.getHeight() * 0.7;
@@ -338,14 +322,6 @@ function showFeatureInfo(evt) {
         });
         if (popupItems.length>0) {
             clickPopup.show();
-
-            // Replay any early responses that arrived before popup DOM was ready.
-            if (identifyRequestToken === activeIdentifyRequestToken && identifyRequest.latestElevationArgs) {
-                updateElevation.apply(locationObj, identifyRequest.latestElevationArgs);
-            }
-            if (identifyRequestToken === activeIdentifyRequestToken && identifyRequest.latestAddressArgs) {
-                updateAddress.apply(locationObj, identifyRequest.latestAddressArgs);
-            }
         }
 
         //old way with OpenLayers.Popup
@@ -509,10 +485,12 @@ function showFeatureInfoHover(evt) {
 // disable all GetFeatureInfoRequest until we have a reponse
 function onBeforeGetFeatureInfoClick(evt) {
 
-    if (identifyToolActive && evt.xy) {
-        var map = geoExtMap.map;
-        var locationUnits = map.getLonLatFromPixel(evt.xy);
-        pendingIdentifyLocationRequest = startIdentifyLocationServices(locationUnits);
+    // End previous identify UI/request cycle immediately on a new click.
+    if (clickPopup) {
+        removeClickPopup();
+    } else if (activeIdentifyLocationService && activeIdentifyLocationService.cancelPendingRequests) {
+        activeIdentifyLocationService.cancelPendingRequests();
+        activeIdentifyLocationService = null;
     }
 
     evt.object.layers[0].setVisibility(thematicLayer.getVisibility());
@@ -552,11 +530,6 @@ function onHoverPopupClick(evt) {
 }
 
 function onClickPopupClosed(evt) {
-    if (suppressClickPopupCloseHandler) {
-        suppressClickPopupCloseHandler = false;
-        return;
-    }
-
     removeClickPopup();
     clearAddressDistanceMarker();
     // enable the hover popup for the curent mosue position
@@ -567,24 +540,18 @@ function onClickPopupClosed(evt) {
     map.events.triggerEvent("mousemove", evt);
 }
 
-function removeClickPopup(preserveLocationRequest) {
-    preserveLocationRequest = preserveLocationRequest === true;
-
+function removeClickPopup() {
     //var map = geoExtMap.map; // gets OL map object
     //map.removePopup(clickPopup);
+    if (activeIdentifyLocationService && activeIdentifyLocationService.cancelPendingRequests) {
+        activeIdentifyLocationService.cancelPendingRequests();
+    }
+    activeIdentifyLocationService = null;
+
     if (clickPopup) {
-        if (preserveLocationRequest) {
-            suppressClickPopupCloseHandler = true;
-        }
         clickPopup.destroy();
     }
     clickPopup = null;
-
-    if (!preserveLocationRequest) {
-        activeIdentifyRequestToken++;
-        pendingIdentifyLocationRequest = null;
-    }
-
     clearAddressDistanceMarker();
     //featureInfoHighlightLayer.removeAllFeatures();
 }
@@ -939,16 +906,13 @@ function updateElevation(data, location, field, template) {
     }
     var tem = new Ext.Template(template);
 
-    if (data !== undefined && data !== null && field) {
-        var rawValue = data[field];
-        // Accept both numbers and numeric strings; guard against malformed payloads.
-        var numericValue = (typeof rawValue === 'number') ? rawValue : parseFloat(String(rawValue).replace(',', '.'));
-        if (isFinite(numericValue)) {
-            if (numericValue === parseInt(numericValue, 10)) {
-                data[field] = numericValue;
+    if (data !== undefined) {
+        if (!(isNaN(data[field])) && data[field] !== null) {
+            if (data[field] === parseInt(data[field])) {
+                //
             }
             else {
-                data[field] = numericValue.toFixed(elevationPrecision);
+                data[field] = data[field].toFixed(elevationPrecision);
             }
 
             var label = tem.apply(data);
