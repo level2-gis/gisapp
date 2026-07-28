@@ -939,13 +939,16 @@ function updateElevation(data, location, field, template) {
     }
     var tem = new Ext.Template(template);
 
-    if (data !== undefined) {
-        if (!(isNaN(data[field])) && data[field] !== null) {
-            if (data[field] === parseInt(data[field])) {
-                //
+    if (data !== undefined && data !== null && field) {
+        var rawValue = data[field];
+        // Accept both numbers and numeric strings; guard against malformed payloads.
+        var numericValue = (typeof rawValue === 'number') ? rawValue : parseFloat(String(rawValue).replace(',', '.'));
+        if (isFinite(numericValue)) {
+            if (numericValue === parseInt(numericValue, 10)) {
+                data[field] = numericValue;
             }
             else {
-                data[field] = data[field].toFixed(elevationPrecision);
+                data[field] = numericValue.toFixed(elevationPrecision);
             }
 
             var label = tem.apply(data);
