@@ -501,7 +501,9 @@ function onBeforeGetFeatureInfoClick(evt) {
     }
     WMSGetFInfo.vendorParams['QUERY_LAYERS'] = queryLayers;
 
-    activateGetFeatureInfo(false);
+    // Keep click identify active so a new click can preempt a slow request.
+    if (Eqwc.settings.enableHoverPopup)
+        WMSGetFInfoHover.deactivate();
 }
 
 //function onBeforeGetExtraFeatureInfoClick(evt) {

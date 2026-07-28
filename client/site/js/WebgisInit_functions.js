@@ -1087,6 +1087,53 @@ function postLoading() {
             WITH_GEOMETRY: true
         }
     });
+
+    // Track and preempt slow click requests so new clicks are not blocked by stale responses.
+    (function attachGetFeatureInfoPreemption(control) {
+        var originalRequest = control.request;
+        var originalTriggerGetFeatureInfo = control.triggerGetFeatureInfo;
+
+        control.request = function(clickPosition, options) {
+            options = options || {};
+            var isHoverRequest = (options.hover === true);
+
+            if (!isHoverRequest && this._activeClickRequest && this._activeClickRequest.abort) {
+                this._activeClickRequest.abort();
+                this._activeClickRequest = null;
+                OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            }
+
+            var requestFactory = OpenLayers.Request.GET;
+            var capturedRequest = null;
+
+            OpenLayers.Request.GET = function(wmsOptions) {
+                var req = requestFactory.apply(this, arguments);
+                if (!isHoverRequest && !capturedRequest) {
+                    capturedRequest = req;
+                }
+                return req;
+            };
+
+            try {
+                originalRequest.apply(this, arguments);
+            } finally {
+                OpenLayers.Request.GET = requestFactory;
+            }
+
+            if (!isHoverRequest) {
+                this._activeClickRequest = capturedRequest || null;
+            }
+        };
+
+        control.triggerGetFeatureInfo = function(request, xy, features) {
+            if (this._activeClickRequest && request !== this._activeClickRequest) {
+                return;
+            }
+            this._activeClickRequest = null;
+            originalTriggerGetFeatureInfo.apply(this, arguments);
+        };
+    })(WMSGetFInfo);
+
     WMSGetFInfo.events.register("getfeatureinfo", this, showFeatureInfo);
     WMSGetFInfo.events.register("beforegetfeatureinfo", this, onBeforeGetFeatureInfoClick);
     WMSGetFInfo.events.register("nogetfeatureinfo", this, noFeatureInfoClick);
