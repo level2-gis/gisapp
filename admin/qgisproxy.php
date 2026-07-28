@@ -336,10 +336,17 @@ try {
 
     $query_arr["map"] = $projectPath;
 
+    // Read session-backed mask data once, then release the session lock so
+    // concurrent requests (e.g. level2 proxy calls) are not serialized.
+    $maskWkt = Helpers::getMaskWktFromSession();
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+
     $client = new Client();
 
-    if (!empty(Helpers::getMaskWktFromSession()) && array_key_exists('REQUEST', $query_arr) && $query_arr["REQUEST"] == 'GetFeatureInfo') {
-        $query_arr["FILTER_GEOM"] = Helpers::getMaskWktFromSession();
+    if (!empty($maskWkt) && array_key_exists('REQUEST', $query_arr) && $query_arr["REQUEST"] == 'GetFeatureInfo') {
+        $query_arr["FILTER_GEOM"] = $maskWkt;
         unset($query_arr["FILTER"]);
         doPostRequest($query_arr, $client, $http_ver);
         return;
