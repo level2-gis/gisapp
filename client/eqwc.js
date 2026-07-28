@@ -2,8 +2,8 @@
  *
  * eqwc.js -- build of Extended QGIS Web Client
  *
- * version: 1.14.6
- * buildDate: Tue 28 Jul 2026 05:20:37 PM CEST
+ * version: 1.14.7
+ * buildDate: Tue 28 Jul 2026 05:30:51 PM CEST
  *
  * Copyright (2014-2026), Level2, All rights reserved.
  * More information at https://level2.si
@@ -209,7 +209,7 @@ this.push(a)},v);q=x?v.join(""):v.join("</br>")}}else Eqwc.settings.fieldTemplat
 q&&(q=TR.trueText),"false"===q&&(q=TR.falseText);showFieldNamesInClickPopup&&"MAPTIP"!==l&&l!==b&&-1==l.indexOf("LGS_IMG")&&(d+="<td>"+s+":</td>");d="MAPTIP"==l||l==b||-1<l.indexOf("LGS_IMG")?d+("<td colspan='2'>"+q+"</td></tr>"):d+("<td>"+q+"</td></tr>");b=!0;0<k&&projectData.relations[f][0].display_field&&l==projectData.relations[f][0].display_field.toUpperCase()&&(projectData.relations[f][0].display_array[n]=q)}}u=u.nextSibling}d+="\n  </tbody>\n </table></div></br>"}else"Attribute"===e.nodeName&&
 (!1==c&&(a++,c="raster_table_"+g+"_"+Math.random().toString(36).substr(2,9),n=p,1<m&&(n+=" "+a+"/"+m),d+="\n <p></p>\n <div class='collapsible-table'><table id='"+c+"'>",d+="<thead><tr><th colspan='2' onclick=\"toggleTable('"+c+"')\">"+n+"</th></tr></thead><tbody>"),d+="\n<tr><td>"+Eqwc.common.getRasterFieldName(p,e.getAttribute("name"))+"</td><td>"+e.getAttribute("value")+"</td></tr>",c=b=!0);e=e.nextSibling}b&&(c&&(d+="\n  </tbody>\n </table></div></br>"),featureInfoResultLayers.push(d))}else for(d=
 a.firstChild;d;)parseFIResult(d),d=d.nextSibling}function listLayersWithFeatures(a){if(a.hasChildNodes())if("Layer"==a.nodeName)featureInfoResultLayers.push(a.getAttribute("name"));else for(a=a.firstChild;a;)listLayersWithFeatures(a),a=a.nextSibling}function getFeatures(a,b){if(b.hasChildNodes()){if("Layer"==b.nodeName&&b.getAttribute("name")==a)return b.firstChild;for(var c=b.firstChild;c;)getFeatures(a,c),c=c.nextSibling}}
-function updateElevation(a,b,c,d){if(b=Ext.get("fi_elevation_value"))d=new Ext.Template(d),void 0===a||isNaN(a[c])||null===a[c]||(a[c]!==parseInt(a[c])&&(a[c]=a[c].toFixed(elevationPrecision)),a=d.apply(a),a=a.replace(/^\s*<tr[^>]*>\s*<td[^>]*>/i,"").replace(/<\/td>\s*<\/tr>\s*$/i,""),b.update(a))}
+function updateElevation(a,b,c,d){if(b=Ext.get("fi_elevation_value"))if(d=new Ext.Template(d),void 0!==a&&null!==a&&c){var e=a[c],e="number"===typeof e?e:parseFloat(String(e).replace(",","."));isFinite(e)&&(e===parseInt(e,10)?a[c]=e:a[c]=e.toFixed(elevationPrecision),a=d.apply(a),a=a.replace(/^\s*<tr[^>]*>\s*<td[^>]*>/i,"").replace(/<\/td>\s*<\/tr>\s*$/i,""),b.update(a))}}
 function updateAddress(a,b,c,d,e,f){if(b=Ext.get("fi_address_value")){var g=0;a=""==c||null==c?a:a[c];null!=a.distance&&(g=a.distance,a.distance=Math.round(g*f),g=a.distance);c=a&&Object.prototype.hasOwnProperty.call(a,"full_address")&&!a.full_address;tem=a&&"area"===a.match||c||g*f>minimumAddressRange?new Ext.Template(e):new Ext.Template(d);d=tem.apply(a);null!=a.distance&&10<a.distance&&(e=" (razdalja "+a.distance+"m)",null==a.x||null==a.y||isNaN(parseFloat(a.x))||isNaN(parseFloat(a.y))||(e=' <a href="#" ext:qtip="prikaži lokacijo" onclick="return showAddressDistanceMarker('+
 parseFloat(a.x)+", "+parseFloat(a.y)+');">(razdalja '+a.distance+"m)</a>"),d=-1<d.indexOf("</td></tr>")?d.replace("</td></tr>",e+"</td></tr>"):d+e);d=d.replace(/^\s*<tr[^>]*>\s*<td[^>]*>/i,"").replace(/<\/td>\s*<\/tr>\s*$/i,"");b.update(d)}}
 function showRelations(a,b){var c=projectData.layers[a].layername,d=Ext.getCmp("window_"+c);d&&d.destroy();for(var d=(d=projectData.relations[c][0].display_array[b])?c+": "+d:c+": "+b,e=0;e<projectData.relations[c].length;e++){var f=projectData.relations[c][e].relate_layer,g='"'+projectData.relations[c][e].join_field+"\" = '"+b+"'",h=Eqwc.common.getLayerId(f),h=projectData.layers[h],f=new QGIS.SearchPanel({hasGeom:"No geometry"==h.geom_type?!1:!0,useWmsRequest:!0,useBbox:!1,wmsFilter:g,queryLayer:f,
