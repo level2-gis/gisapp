@@ -1,0 +1,146 @@
+{
+    "_comment": "Example configuration for cadastre area search with type-ahead combo box using data.wsgi",
+    "_note": "ArrayStore with explicit field definitions. Server returns [[code, description], ...] format.",
+    "search": [
+        {
+            "title": "Parcele",
+            "useWmsRequest": true,
+            "queryLayer": "Parcele",
+            "formItems": [
+                {
+                    "xtype": "combo",
+                    "name": "ko_id",
+                    "fieldLabel": "KO",
+                    "displayField": "text",
+                    "valueField": "value",
+                    "allowBlank": true,
+                    "emptyText": "Izberi kat. občino",
+                    "editable": true,
+                    "typeAhead": true,
+                    "forceSelection": true,
+                    "selectOnFocus": true,
+                    "mode": "remote",
+                    "triggerAction": "all",
+                    "minChars": 2,
+                    "queryDelay": 100,
+                    "filterOp": "=",
+                    "store": {
+                        "xtype": "arraystore",
+                        "url": "wsgi/data.wsgi",
+                        "baseParams": {
+                            "table": "lookup.ko",
+                            "gtype": ""
+                        },
+                        "root": "results",
+                        "id": 0,
+                        "fields": [
+                            "value",
+                            "text"
+                        ]
+                    }
+                },
+                {
+                    "xtype": "textfield",
+                    "name": "st_parcele",
+                    "fieldLabel": "Parcela",
+                    "allowBlank": false,
+                    "blankText": "Vnesi številko parcele",
+                    "filterOp": "ILIKE"
+                }
+            ],
+            "gridColumns": [
+                {
+                    "header": "KO",
+                    "dataIndex": "ko_id",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                },
+                {
+                    "header": "IME",
+                    "dataIndex": "imeko",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                },
+                {
+                    "header": "Parcela",
+                    "dataIndex": "st_parcele",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                }
+            ],
+            "selectionLayer": "Parcele",
+            "selectionZoom": 10,
+            "doZoomToExtent": true
+        },
+        {
+            "title": "Stavbe",
+            "useWmsRequest": true,
+            "queryLayer": "stavbe_layer",
+            "formItems": [
+                {
+                    "xtype": "combo",
+                    "name": "ko_id",
+                    "fieldLabel": "KO",
+                    "displayField": "text",
+                    "valueField": "value",
+                    "allowBlank": true,
+                    "emptyText": "Izberi kat. občino",
+                    "editable": true,
+                    "typeAhead": true,
+                    "forceSelection": true,
+                    "selectOnFocus": true,
+                    "mode": "remote",
+                    "triggerAction": "all",
+                    "minChars": 2,
+                    "queryDelay": 100,
+                    "filterOp": "=",
+                    "store": {
+                        "xtype": "arraystore",
+                        "url": "wsgi/data.wsgi",
+                        "baseParams": {
+                            "table": "lookup.ko",
+                            "gtype": ""
+                        },
+                        "root": "results",
+                        "id": 0,
+                        "fields": [
+                            "value",
+                            "text"
+                        ]
+                    }
+                },
+                {
+                    "xtype": "textfield",
+                    "name": "st_parcele",
+                    "fieldLabel": "Parcela",
+                    "allowBlank": false,
+                    "blankText": "Vnesi številko parcele",
+                    "filterOp": "ILIKE"
+                }
+            ],
+            "gridColumns": [
+                {
+                    "header": "KO",
+                    "dataIndex": "ko_id",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                },
+                {
+                    "header": "IME",
+                    "dataIndex": "imeko",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                },
+                {
+                    "header": "Parcela",
+                    "dataIndex": "st_parcele",
+                    "menuDisabled": true,
+                    "renderer": "customURLFormatter"
+                }
+            ],
+            "selectionLayer": "stavbe_layer",
+            "selectionZoom": 10,
+            "doZoomToExtent": true
+        }
+    ]
+}
