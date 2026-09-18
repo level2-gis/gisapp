@@ -195,7 +195,7 @@ function postLoading() {
         selectedLayers = layersInDrawingOrder(selectedLayers);
         selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
 
-        if (selectedQueryableLayers.length == 0) {
+        if (selectedLayers.length == 0) {
             thematicLayer.setVisibility(false);
         } else {
             thematicLayer.setVisibility(true);
