@@ -1470,6 +1470,7 @@ function postLoading() {
             var searchPanel = Ext.getCmp('SearchPanel');
             searchPanel.removeAll();
             searchPanel.hide();
+            searchPanel.ownerCt.doLayout();
         }
 
         leftPanel.setTitle('<span class="left-panel-title">' + Ext.decode(Eqwc.settings.title) + '</span>');
@@ -4967,13 +4968,28 @@ function updateLayerContextMenuStyle(layerNode, layerId, styleName) {
 }
 
 function addBookmarks() {
-    if (Ext.decode(projectData.bookmarks).length == 0) {
-        return;
-    }
-
     if (Eqwc.settings.bookmarkPanelHeight == 0) {
         return;
     }
+
+    var projectBookmarks = Ext.decode(projectData.bookmarks || '[]');
+    var localBookmarks = loadLocalBookmarks();
+    var bookmarkData = [];
+
+    Ext.each(projectBookmarks, function (bookmark) {
+        bookmarkData.push(bookmark.concat([false, null]));
+    });
+    Ext.each(localBookmarks, function (bookmark) {
+        bookmarkData.push([
+            bookmark.name,
+            bookmark.group,
+            bookmark.extent,
+            bookmark.id,
+            bookmark.crs,
+            true,
+            bookmark.layers || []
+        ]);
+    });
 
     // shared reader
     var reader = new Ext.data.ArrayReader({}, [
@@ -4981,21 +4997,43 @@ function addBookmarks() {
         {name: 'group'},
         {name: 'extent'},
         {name: 'id'},
-        {name: 'crs'}
+        {name: 'crs'},
+        {name: 'isLocal'},
+        {name: 'layers'}
     ]);
 
     var store = new Ext.data.GroupingStore({
         reader: reader,
-        data: Ext.decode(projectData.bookmarks),
+        data: bookmarkData,
         sortInfo:{field: 'name', direction: "ASC"},
         groupField:'group'
+    });
+
+    var editButton;
+    var removeButton;
+    var selectionModel = new Ext.grid.RowSelectionModel({singleSelect: true});
+    selectionModel.on('selectionchange', function (model) {
+        var selected = model.getSelected();
+        var canModify = !!(selected && selected.get('isLocal'));
+        editButton.setDisabled(!canModify);
+        removeButton.setDisabled(!canModify);
     });
 
     var grid = new Ext.grid.GridPanel({
         //title: TR.bookmarks,
         store: store,
+        sm: selectionModel,
         columns: [
-            {id: 'name', header: TR.bookmarkName, sortable: true, dataIndex: 'name'},
+            {
+                id: 'name',
+                header: TR.bookmarkName,
+                sortable: true,
+                dataIndex: 'name',
+                renderer: function (value, metadata) {
+                    metadata.style = 'cursor: pointer;';
+                    return value;
+                }
+            },
             {
                 header: TR.bookmarkGroup,
                 hidden: true,
@@ -5010,14 +5048,237 @@ function addBookmarks() {
             showGroupName: false
         }),
         listeners: {
-            rowclick: showBookmark
+            rowclick: function (bookmarkGrid, rowIndex) {
+                var bookmark = bookmarkGrid.getStore().getAt(rowIndex);
+                if (bookmark.get('isLocal')) {
+                    selectionModel.selectRow(rowIndex);
+                } else {
+                    selectionModel.clearSelections();
+                }
+                showBookmark(bookmarkGrid, rowIndex);
+            }
+        },
+        tbar: [{
+            iconCls: 'x-add-icon',
+            text: TR.bookmarkAdd,
+            handler: function () {
+                showLocalBookmarkDialog(grid, null);
+            }
+        }, {
+            iconCls: 'x-edit-icon',
+            text: TR.bookmarkEdit,
+            disabled: true,
+            ref: '../editBookmarkButton',
+            handler: function () {
+                showLocalBookmarkDialog(grid, selectionModel.getSelected());
+            }
+        }, {
+            iconCls: 'x-clear-icon',
+            text: TR.bookmarkRemove,
+            disabled: true,
+            ref: '../removeBookmarkButton',
+            handler: function () {
+                var record = selectionModel.getSelected();
+                if (!record || !record.get('isLocal')) {
+                    return;
+                }
+                Ext.Msg.confirm(
+                    TR.bookmarks,
+                    TR.bookmarkRemoveConfirm,
+                    function (answer) {
+                        if (answer === 'yes') {
+                            store.remove(record);
+                            saveLocalBookmarks(store);
+                        }
+                    }
+                );
+            }
+        }]
+    });
+
+    editButton = grid.editBookmarkButton;
+    removeButton = grid.removeBookmarkButton;
+
+    var panel = Ext.getCmp('BookmarkPanel');
+    var hasBookmarks = bookmarkData.length > 0;
+    panel.setVisible(true);
+    panel.setTitle(TR.bookmarks);
+    panel.removeAll(true);
+    panel.add(grid);
+    panel.doLayout();
+
+    if (hasBookmarks) {
+        if (!initialLoadDone) {
+            panel.expand(false);
+        }
+    }
+
+    var bookmarkRegion = panel.ownerCt && panel.ownerCt.layout ? panel.ownerCt.layout.south : null;
+    var collapsedElement = bookmarkRegion && bookmarkRegion.getCollapsedEl ? bookmarkRegion.getCollapsedEl() : null;
+    if (collapsedElement) {
+        if (!collapsedElement.titleEl) {
+            collapsedElement.titleEl = collapsedElement.createChild({
+                cls: 'x-collapsed-title',
+                cn: panel.title
+            });
+        } else {
+            collapsedElement.titleEl.update(panel.title);
+        }
+
+        if (panel.header) {
+            Ext.each([
+                'color',
+                'font-family',
+                'font-size',
+                'font-style',
+                'font-weight',
+                'letter-spacing',
+                'line-height',
+                'text-decoration',
+                'text-transform'
+            ], function (styleName) {
+                collapsedElement.titleEl.setStyle(styleName, panel.header.getStyle(styleName));
+            });
+        }
+
+    }
+    panel.ownerCt.doLayout();
+}
+
+function getLocalBookmarksStorageKey() {
+    return 'eqwc.bookmarks.' + encodeURIComponent(String(projectData.user)) + '.' + encodeURIComponent(String(projectData.project));
+}
+
+function loadLocalBookmarks() {
+    try {
+        var stored = window.localStorage.getItem(getLocalBookmarksStorageKey());
+        return stored ? Ext.decode(stored) : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function saveLocalBookmarks(store) {
+    var bookmarks = [];
+    store.each(function (record) {
+        if (record.get('isLocal')) {
+            bookmarks.push({
+                id: record.get('id'),
+                name: record.get('name'),
+                group: record.get('group'),
+                extent: record.get('extent'),
+                crs: record.get('crs'),
+                layers: record.get('layers') || []
+            });
         }
     });
 
-    var panel = Ext.getCmp('BookmarkPanel');
-    panel.setVisible(true);
-    panel.add(grid);
-    panel.doLayout();
+    try {
+        window.localStorage.setItem(getLocalBookmarksStorageKey(), Ext.encode(bookmarks));
+    } catch (error) {
+        Ext.Msg.alert(
+            TR.bookmarks,
+            TR.bookmarkStorageError
+        );
+    }
+}
+
+function getCurrentBookmarkLayers() {
+    var layers = thematicLayer && thematicLayer.params ? thematicLayer.params.LAYERS : [];
+    if (Ext.isArray(layers)) {
+        return layers.slice(0);
+    }
+    return layers ? String(layers).split(',') : [];
+}
+
+function showLocalBookmarkDialog(grid, record) {
+    var isEditing = !!record;
+    var form = new Ext.form.FormPanel({
+        border: false,
+        bodyStyle: 'padding: 10px;',
+        labelWidth: 70,
+        items: [{
+            xtype: 'textfield',
+            fieldLabel: TR.bookmarkName,
+            name: 'name',
+            anchor: '100%',
+            allowBlank: false,
+            value: isEditing ? record.get('name') : ''
+        }, {
+            xtype: 'textfield',
+            fieldLabel: TR.bookmarkGroup,
+            name: 'group',
+            anchor: '100%',
+            value: isEditing ? record.get('group') : ''
+        }]
+    });
+    var dialog = new Ext.Window({
+        title: isEditing ? TR.bookmarkEdit : TR.bookmarkAdd,
+        width: 340,
+        height: 145,
+        modal: true,
+        resizable: false,
+        layout: 'fit',
+        items: [form],
+        buttons: [{
+            text: TR.bookmarkSave,
+            handler: function () {
+                if (!form.getForm().isValid()) {
+                    return;
+                }
+
+                var values = form.getForm().getValues();
+                if (isEditing) {
+                    record.set('name', values.name);
+                    record.set('group', values.group);
+                    record.commit();
+                } else {
+                    var extent = geoExtMap.map.getExtent();
+                    var extentFeature = new OpenLayers.Feature.Vector(extent.toGeometry());
+                    var extentWkt = new OpenLayers.Format.WKT().write(extentFeature);
+                    var newRecord = new grid.store.recordType({
+                        id: 'local-' + new Date().getTime(),
+                        name: values.name,
+                        group: values.group,
+                        extent: extentWkt,
+                        crs: projectData.crs,
+                        isLocal: true,
+                        layers: getCurrentBookmarkLayers()
+                    });
+                    grid.store.add(newRecord);
+                    grid.getSelectionModel().selectRecords([newRecord]);
+                }
+
+                saveLocalBookmarks(grid.store);
+                grid.store.sort('name', 'ASC');
+                dialog.close();
+            }
+        }, {
+            text: TR.cancel,
+            handler: function () {
+                dialog.close();
+            }
+        }]
+    });
+    dialog.show();
+    form.getForm().findField('name').focus(false, 100);
+}
+
+function restoreBookmarkLayers(layers) {
+    if (!Ext.isArray(layers)) {
+        return;
+    }
+
+    layerTree.root.firstChild.cascade(function (node) {
+        if (!node.isLeaf()) {
+            return;
+        }
+        var layerId = wmsLoader.layerTitleNameMapping[node.text];
+        var shouldBeVisible = layers.indexOf(layerId) !== -1;
+        if (!!node.attributes.checked !== shouldBeVisible) {
+            node.getUI().toggleCheck(shouldBeVisible);
+        }
+    });
 }
 
 function showBookmark(grid, index) {
@@ -5038,4 +5299,5 @@ function showBookmark(grid, index) {
     }
 
     geoExtMap.map.zoomToExtent(feature.geometry.bounds);
+    restoreBookmarkLayers(row.get('layers'));
 }

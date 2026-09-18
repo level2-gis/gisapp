@@ -54,6 +54,10 @@ p {
     border-right: 0 solid;
 }
 
+.x-collapsed-title {
+    padding: 3px 5px;
+}
+
 .x-tool-user {
     background-image: url(../img/user_gray.png);
     /*background-position: center;*/
