@@ -691,7 +691,10 @@ function parseFIResult(node) {
                         if (projectData.layers[layerId].wfs && Eqwc.plugins["editing"] !== undefined) {
                             edit = '<a class="i-edit" ext:qtip="' + TR.editData + '" href="javascript:;" onclick="identifyAction(\'edit\',\'' + fid + '\');"></a>';
                         }
-                        htmlText +=  select + clear + edit;
+                        htmlText += select + clear + edit;
+                    }
+                    if (projectData.user != 'guest' && projectData.layers[layerId].layername && projectData.layers[layerId].key) {
+                        htmlText += '<a class="i-report" ext:qtip="Generate Word report" href="javascript:;" onclick="generateFeatureReport(\'' + layerId + '\',\'' + id + '\');"></a>';
                     }
                     if (countRelations > 0) {
                         var add = '';
@@ -811,7 +814,7 @@ function parseFIResult(node) {
                                     }
 
                                     if (showFieldNamesInClickPopup && attNameCase !== "MAPTIP" && attNameCase!== filesAlias && attNameCase.indexOf('LGS_IMG')==-1) {
-                                        htmlText += "<td>" + newName + ":</td>";
+                                        htmlText += "<td>" + newName + "</td>";
                                     }
 
                                     if (attNameCase == 'MAPTIP' || attNameCase == filesAlias || attNameCase.indexOf('LGS_IMG')>-1) {
@@ -1029,6 +1032,67 @@ function showRelations(layerId, id) {
         //relations.on("featureselectioncleared", clearFeatureSelected);
         relations.on("beforesearchdataloaded", showSearchPanelResults);
     }
+}
+
+function generateFeatureReport(layerId, featureId) {
+    var layer = projectData.layers[layerId];
+    if (!layer || !layer.layername || !layer.key) {
+        Ext.Msg.alert('Report error', 'The layer is missing report configuration.');
+        return;
+    }
+
+    var params = Ext.urlEncode({
+        project: projectData.project,
+        layer_id: layerId,
+        feature_field: layer.key,
+        feature_id: featureId,
+        include_map: true
+    });
+    //fixed for now
+    params += '&external_layers[]=' + encodeURIComponent('dof');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', Eqwc.settings.gisPortalRoot + 'documents/feature_report?' + params, true);
+    xhr.setRequestHeader('Accept', 'application/xml');
+    xhr.responseType = 'blob';
+    xhr.withCredentials = true;
+    function clearReportLoadingIndicator() {
+        Ext.getBody().unmask();
+    }
+    xhr.onload = function () {
+        clearReportLoadingIndicator();
+        if (xhr.status < 200 || xhr.status >= 300) {
+            Ext.Msg.alert('Report error', 'The report could not be generated (' + xhr.status + ').');
+            return;
+        }
+
+        var contentType = (xhr.getResponseHeader('Content-Type') || '').toLowerCase();
+        if (contentType.indexOf('xml') === -1) {
+            Ext.Msg.alert('Report error', 'The report response is not XML.');
+            return;
+        }
+
+        var disposition = xhr.getResponseHeader('Content-Disposition') || '';
+        var filenameMatch = disposition.match(/filename\*?=(?:UTF-8''|["']?)([^"';]+)/i);
+        var filename = filenameMatch ? decodeURIComponent(filenameMatch[1]) : layer.layername + '-' + featureId + '.xml';
+        var url = window.URL.createObjectURL(xhr.response);
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.setTimeout(function () {
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    };
+    xhr.onerror = function () {
+        clearReportLoadingIndicator();
+        Ext.Msg.alert('Report error', 'The report request failed.');
+    };
+    xhr.onabort = clearReportLoadingIndicator;
+    Ext.getBody().mask(pleaseWaitString[lang], 'x-mask-loading');
+    xhr.send();
 }
 
 function identifyAction(type, id, extra) {

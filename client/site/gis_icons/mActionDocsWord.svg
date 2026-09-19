@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- document -->
+  <path d="M7 2.5H15.2L20 7.3V21H7C5.9 21 5 20.1 5 19V4.5C5 3.4 5.9 2.5 7 2.5Z" fill="white" stroke="#B8BDC5" stroke-width="1"/>
+  <path d="M15 2.8V7.5H19.7" stroke="#B8BDC5" stroke-width="1" fill="none"/>
+  <!-- Word mark -->
+  <path d="M3 8.2L11.8 6.7V18.5L3 17V8.2Z" fill="#185ABD"/>
+  <text x="7.35" y="15.8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="7.6" font-weight="700" fill="white">W</text>
+  <!-- text lines -->
+  <path d="M13.2 10H18.2M13.2 12.4H18.2M13.2 14.8H18.2" stroke="#185ABD" stroke-width="1.15" stroke-linecap="round"/>
+</svg>

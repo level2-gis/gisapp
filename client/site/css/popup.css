@@ -17,9 +17,9 @@
     display: inline-block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    height: 16px;
-    width: 16px;
-    padding-top: 16px;
+    height: 20px;
+    width: 20px;
+    /*padding-top: 16px;*/
     overflow: hidden;
     background: url(../gis_icons/mActionSelect.svg);
     background-size: contain;
@@ -29,9 +29,9 @@
     display: inline-block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    height: 16px;
-    width: 16px;
-    padding-top: 16px;
+    height: 20px;
+    width: 20px;
+    /*padding-top: 16px;*/
     overflow: hidden;
     background: url(../gis_icons/mActionToggleEditing.svg);
     background-size: contain;
@@ -41,12 +41,25 @@
     display: inline-block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    height: 16px;
-    width: 16px;
-    padding-top: 16px;
+    height: 20px;
+    width: 20px;
+    /*padding-top: 16px;*/
     overflow: hidden;
     background: url(../gis_icons/mActionClear.svg);
     background-size: contain;
+}
+
+.i-report {
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 24px;
+    width: 24px;
+    /*padding-top: 16px;*/
+    overflow: hidden;
+    background: url(../gis_icons/mActionDocsWord.svg);
+    background-size: contain;
+    vertical-align: bottom;
 }
 
 .i-add {
@@ -245,7 +258,7 @@
 .gx-popup .x-window-body td:first-child {
     width: 30%;
     /* font-weight: bold; */
-    background-color: #f5f5f5;
+    background-color: inherit;
 }
 
 /* Second column (values) takes remaining space */
