@@ -693,9 +693,6 @@ function parseFIResult(node) {
                         }
                         htmlText += select + clear + edit;
                     }
-                    if (projectData.user != 'guest' && projectData.layers[layerId].layername && projectData.layers[layerId].key) {
-                        htmlText += '<a class="i-report" ext:qtip="Generate Word report" href="javascript:;" onclick="generateFeatureReport(\'' + layerId + '\',\'' + id + '\');"></a>';
-                    }
                     if (countRelations > 0) {
                         var add = '';
                         var show = '<a class="i-table" ext:qtip="' + TR.relations + '" href="javascript:;" onclick="showRelations(\'' + layerId + '\',\'' + id + '\');"></a>';
@@ -711,6 +708,9 @@ function parseFIResult(node) {
                         if (show > '' || add > '') {
                             htmlText += show + add;
                         }
+                    }
+                    if (projectData.user != 'guest' && projectData.layers[layerId].layername && projectData.layers[layerId].key) {
+                        htmlText += '<a class="i-report" ext:qtip="' + TR.generateReport + '" href="javascript:;" onclick="generateFeatureReport(\'' + layerId + '\',\'' + id + '\');"></a>';
                     }
                     htmlText += "</td></tr>";
 

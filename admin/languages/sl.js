@@ -31,6 +31,7 @@ var TR = {
     select: 'Izberi element za prikaz geometrije',
     menuFilterText: 'Filtri',
     editData: 'Uredi podatke',
+    generateReport: 'Izdelaj poročilo (MS Word format)',
     editMode: 'Urejanje',
     editDisabled: 'Urejanje onemogočeno',
     editAdd: 'Dodaj',

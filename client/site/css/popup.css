@@ -93,9 +93,9 @@
     display: inline-block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    height: 16px;
-    width: 16px;
-    padding-top: 16px;
+    height: 18px;
+    width: 18px;
+    /*padding-top: 16px;*/
     overflow: hidden;
     background: url(../gis_icons/contextmenu/table.svg);
     background-size: contain;

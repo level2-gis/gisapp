@@ -31,6 +31,7 @@ var TR = {
     select: 'Select element to display its geometry',
     menuFilterText: 'Filter',
     editData: 'Editera data',
+    generateReport: 'Generera Word-rapport',
     editMode: 'Editeringsläge',
     editDisabled: 'Editering inaktiverad',
     editAdd: 'Add',
