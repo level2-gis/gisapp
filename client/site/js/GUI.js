@@ -234,6 +234,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 								collapsible: true,
 								floatable: false,
 								collapsed: true,
+								animCollapse: false,
 								cmargins: '0 0 0 0',
 								titleCollapse: false,
 								//autoScroll: true,
