@@ -1043,6 +1043,7 @@ function generateFeatureReport(layerId, featureId) {
 
     var params = Ext.urlEncode({
         project: projectData.project,
+        client: projectData.client_name,
         layer_id: layerId,
         feature_field: layer.key,
         feature_id: featureId,
