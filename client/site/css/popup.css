@@ -154,7 +154,7 @@
 
 /* Collapse/Expand arrow */
 .gx-popup .x-window-body table thead th:first-child::before {
-    content: '▼';
+    content: '\25BC';
     position: absolute;
     left: 8px;
     top: 50%;
@@ -166,7 +166,7 @@
 
 /* Collapsed state arrow */
 .gx-popup .x-window-body table.collapsed thead th:first-child::before {
-    content: '▶';
+    content: '\25B6';
     transform: translateY(-50%) rotate(0deg);
 }
 
