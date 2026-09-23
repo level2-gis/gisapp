@@ -333,7 +333,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
 <!--    <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>-->
     <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20260919"/>
 <!--    <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>-->
-    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20260711"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20260923"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/style-gray.css?v=20260918"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/grid-styles.css?v=20260711">
 
@@ -361,6 +361,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
 
 
     <script type="text/javascript" src="client/site/libs/geoext/script/GeoExt.js?v=20160303"></script>
+    <script type="text/javascript" src="client/site/libs/line-profile.js?v=20260920"></script>
     <!--                DEBUG-->
     <!--                <script type="text/javascript" src="../geoext/lib/GeoExt.js"></script>-->
 

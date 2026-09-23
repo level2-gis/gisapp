@@ -413,7 +413,7 @@ MyViewportUi = Ext.extend(Ext.Viewport, {
 							xtype: 'textfield',
 							width: 120,
 							//regex: /^\d{6}\.?\d{0,2},\d{6}\.?\d{0,2}$/,
-							maskRe: /[0-9]/,
+							maskRe: /[0-9.,\-]/,
                             enableKeyEvents: true,
 							id: 'CoordinateTextField'
 						}, {

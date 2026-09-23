@@ -51,6 +51,26 @@ function showAddressDistanceMarker(x, y) {
     return false;
 }
 
+// marker for the identify click location, kept in highlightLayer so it survives closing the identify popup
+function showIdentifyClickMarker(pixel) {
+    if (!highlightLayer || !geoExtMap || !geoExtMap.map || !pixel) {
+        return;
+    }
+
+    var position = geoExtMap.map.getLonLatFromPixel(pixel);
+    if (!position) {
+        return;
+    }
+
+    var marker = new OpenLayers.Feature.Vector(
+        new OpenLayers.Geometry.Point(position.lon, position.lat),
+        {},
+        Eqwc.settings.symbolizersHighLightLayer.Point
+    );
+    highlightLayer.removeAllFeatures();
+    highlightLayer.addFeatures(marker);
+}
+
 function showFeatureInfo(evt) {
     if (activeIdentifyLocationService && activeIdentifyLocationService.cancelPendingRequests) {
         activeIdentifyLocationService.cancelPendingRequests();
@@ -492,6 +512,8 @@ function onBeforeGetFeatureInfoClick(evt) {
         activeIdentifyLocationService.cancelPendingRequests();
         activeIdentifyLocationService = null;
     }
+
+    showIdentifyClickMarker(evt.xy);
 
     evt.object.layers[0].setVisibility(thematicLayer.getVisibility());
 

@@ -79,6 +79,27 @@
     background-image: url(../gis_icons/contextmenu/zoom.svg);
 }
 
+.x-measurement-profile-icon {
+    background-image: url(../gis_icons/actionLineProfile.svg);
+}
+
+.measurement-profile-chart {
+    height: 250px;
+    padding: 10px 10px 0;
+}
+
+.measurement-profile-chart .terrain-line-profile-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.measurement-profile-readout {
+    padding: 8px 12px;
+    border-top: 1px solid #d0d0d0;
+    font: 12px tahoma, arial, verdana, sans-serif;
+}
+
 .x-measurement-delete-x-icon {
     width: 15px;
     height: 15px;

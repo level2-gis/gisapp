@@ -1017,34 +1017,19 @@ function postLoading() {
 
         coordinateTextField.on('specialkey', function (textField, evt) {
             if (evt.getKey() == evt.ENTER) {
-                var projectCrs = projectData.crs;
-                var mapCrs = rightStatusText.getValue();
-                var coords = textField.getValue().split(",");
-                var newCenter = new OpenLayers.LonLat(parseFloat(coords[0]), parseFloat(coords[1]));
-                if(projectCrs != mapCrs) {
-                    newCenter.transform(Eqwc.currentMapProjection[2],geoExtMap.map.getProjectionObject());
-                }
-                geoExtMap.map.setCenter(newCenter);
+                zoomToCoordinateInput(textField.getValue());
             }
             //supress arrow keys propagation to underlying OpenLayers
             if (evt.getKey() > 36 && evt.getKey() < 41) {
                 evt.stopPropagation();
             }
         });
-        coordinateTextField.on('change', function (numberField, newValue, oldValue) {
-            var projectCrs = projectData.crs;
-            var mapCrs = rightStatusText.getValue();
-            var coords = newValue.split(",");
-            var newCenter = new OpenLayers.LonLat(parseFloat(coords[0]), parseFloat(coords[1]));
-            if(projectCrs != mapCrs) {
-                newCenter.transform(Eqwc.currentMapProjection[2],geoExtMap.map.getProjectionObject());
-            }
-            geoExtMap.map.setCenter(newCenter);
-        });
 
         //navigation history
         navHistoryCtrl = new OpenLayers.Control.NavigationHistory();
         geoExtMap.map.addControl(navHistoryCtrl);
+
+        setupMapContextMenu();
     }
 
     //controls for getfeatureinfo
@@ -2949,11 +2934,17 @@ function ensureMeasurementWindow() {
         }, {
             xtype: 'actioncolumn',
             header: '',
-            width: 56,
+            width: 76,
             sortable: false,
             menuDisabled: true,
             align: 'center',
             items: [{
+                iconCls: 'x-measurement-tool-icon x-measurement-profile-icon',
+                tooltip: TR.measurementProfileTitle,
+                handler: function (grid, rowIndex) {
+                    openMeasurementLineProfile(grid.getStore().getAt(rowIndex));
+                }
+            }, {
                 iconCls: 'x-measurement-tool-icon x-measurement-zoom-icon',
                 tooltip: measurementZoomTitle,
                 handler: function (grid, rowIndex) {
@@ -3258,6 +3249,202 @@ function getMeasurementLabelFeature(record) {
     return measurementLayer.getFeatureById(record.get('labelFeatureId'));
 }
 
+function ensureMeasurementProfileHoverLayer() {
+    if (!geoExtMap || !geoExtMap.map) {
+        return null;
+    }
+
+    if (!measurementProfileHoverLayer) {
+        measurementProfileHoverLayer = new OpenLayers.Layer.Vector(TR.measurementProfilePositionLayer, {
+            displayInLayerSwitcher: false,
+            style: {
+                pointRadius: 6,
+                fillColor: '#ffffff',
+                fillOpacity: 1,
+                strokeColor: '#c43d32',
+                strokeWidth: 3,
+                strokeOpacity: 1
+            }
+        });
+    }
+
+    if (!geoExtMap.map.getLayer(measurementProfileHoverLayer.id)) {
+        geoExtMap.map.addLayer(measurementProfileHoverLayer);
+    }
+    return measurementProfileHoverLayer;
+}
+
+function clearMeasurementProfileHoverPoint() {
+    if (measurementProfileHoverLayer) {
+        measurementProfileHoverLayer.removeAllFeatures();
+    }
+}
+
+function showMeasurementProfileHoverPoint(point) {
+    var hoverLayer = ensureMeasurementProfileHoverLayer();
+    if (!hoverLayer || !point || !isFinite(point.x) || !isFinite(point.y)) {
+        return;
+    }
+
+    var geometry = new OpenLayers.Geometry.Point(point.x, point.y);
+    var mapProjection = geoExtMap.map.getProjectionObject();
+    var profileProjection = new OpenLayers.Projection('EPSG:3794');
+    if (mapProjection && mapProjection.projCode !== profileProjection.projCode) {
+        geometry.transform(profileProjection, mapProjection);
+    }
+
+    hoverLayer.removeAllFeatures();
+    hoverLayer.addFeatures([new OpenLayers.Feature.Vector(geometry)]);
+}
+
+function measurementProfileWkt(record) {
+    var feature = getMeasurementLineFeature(record);
+    if (!feature || !feature.geometry) {
+        return null;
+    }
+
+    var geometry = feature.geometry.clone();
+    var mapProjection = geoExtMap.map.getProjectionObject();
+    var profileProjection = new OpenLayers.Projection('EPSG:3794');
+    if (mapProjection && mapProjection.projCode !== profileProjection.projCode) {
+        geometry.transform(mapProjection, profileProjection);
+    }
+    return new OpenLayers.Format.WKT().write(new OpenLayers.Feature.Vector(geometry));
+}
+
+function measurementProfileEndpoint() {
+    var root = Eqwc.settings.gisPortalRoot || '/gisportal/index.php/';
+    return root.replace(/\/?$/, '/') + 'modules/level2/proxy/geometry/drape';
+}
+
+function formatMeasurementProfileReadout(point, slope) {
+    if (!point) {
+        return TR.measurementProfileMoveHint;
+    }
+
+    var slopeText = isFinite(slope) ? GPLineProfile.formatWithUnit(slope, 2, '%') : TR.measurementProfileNoData;
+    return TR.measurementProfileDistance + ': ' + GPLineProfile.formatWithUnit(point.distance, 2, 'm') +
+        ' | ' + TR.measurementProfileElevation + ': ' + GPLineProfile.formatWithUnit(point.z, 2, 'm') +
+        ' | ' + TR.measurementProfileNextSlope + ': ' + slopeText;
+}
+
+function renderMeasurementLineProfile(profileWindow, data, chartId) {
+    var state = GPLineProfile.stateFromResponse(data);
+    if (!state || state.points.length < 2 || !profileWindow || profileWindow.isDestroyed) {
+        throw new Error(TR.measurementProfileUnavailable);
+    }
+
+    var chart = GPLineProfile.buildChart(state, {
+        idPrefix: chartId,
+        ariaLabel: TR.measurementProfileAriaLabel
+    });
+    var body = profileWindow.body.dom;
+    body.innerHTML = '<div class="measurement-profile-chart">' + chart.svg + '</div>' +
+        '<div class="measurement-profile-readout">' + Ext.util.Format.htmlEncode(TR.measurementProfileMoveHint) + '</div>';
+    var chartElement = body.querySelector('.measurement-profile-chart');
+    var readoutElement = body.querySelector('.measurement-profile-readout');
+
+    measurementProfileHoverDetach = GPLineProfile.attachHover(chartElement, state, chart.layout, {
+        onHover: function (point, slope) {
+            readoutElement.innerHTML = Ext.util.Format.htmlEncode(formatMeasurementProfileReadout(point, slope));
+            showMeasurementProfileHoverPoint(point);
+        },
+        onLeave: function () {
+            readoutElement.innerHTML = Ext.util.Format.htmlEncode(TR.measurementProfileMoveHint);
+            clearMeasurementProfileHoverPoint();
+        }
+    });
+}
+
+function positionMeasurementProfileWindow(profileWindow) {
+    var mapContainer = Ext.get('geoExtMapPanel');
+    if (!profileWindow || !mapContainer) {
+        return;
+    }
+
+    var box = mapContainer.getBox();
+    profileWindow.setPagePosition(
+        box.x + box.width - profileWindow.getWidth() - 12,
+        box.y + box.height - profileWindow.getHeight() - 12
+    );
+}
+
+function openMeasurementLineProfile(record) {
+    var geometryWkt = measurementProfileWkt(record);
+    if (!geometryWkt || typeof GPLineProfile === 'undefined') {
+        Ext.Msg.alert(TR.measurementProfileTitle, TR.measurementProfileCreateError);
+        return;
+    }
+
+    var measurementFeature = getMeasurementLineFeature(record);
+    var measurementLength = measurementFeature && measurementFeature.geometry ? measurementFeature.geometry.getLength() : 0;
+    if (!GPLineProfile.isProfileLengthAllowed(measurementLength)) {
+        Ext.Msg.alert(TR.measurementProfileTitle, TR.measurementProfileCreateError + ' (maximum ' + GPLineProfile.maxProfileLengthM.toLocaleString() + ' m)');
+        return;
+    }
+
+    if (measurementProfileWindow) {
+        measurementProfileWindow.close();
+    }
+
+    var chartId = 'measurement-profile-' + String(record.get('id')).replace(/[^a-z0-9_-]/gi, '-');
+    var profileWindow = new Ext.Window({
+        title: TR.measurementProfileTitle + ': ' + record.get('name'),
+        width: 700,
+        height: 340,
+        layout: 'fit',
+        html: '<div style="padding: 16px;">' + Ext.util.Format.htmlEncode(TR.measurementProfileLoading) + '</div>',
+        closeAction: 'close',
+        resizable: true,
+        constrain: true,
+        listeners: {
+            close: function () {
+                if (measurementProfileHoverDetach) {
+                    measurementProfileHoverDetach();
+                    measurementProfileHoverDetach = null;
+                }
+                clearMeasurementProfileHoverPoint();
+                if (measurementProfileWindow === profileWindow) {
+                    measurementProfileWindow = null;
+                }
+            }
+        }
+    });
+    profileWindow.measurementRecordId = record.get('id');
+    measurementProfileWindow = profileWindow;
+    profileWindow.show();
+    positionMeasurementProfileWindow(profileWindow);
+
+    Ext.Ajax.request({
+        url: measurementProfileEndpoint(),
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        jsonData: {
+            geometry: geometryWkt,
+            offset: 0,
+            segmentize_percent: 2
+        },
+        success: function (response) {
+            if (measurementProfileWindow !== profileWindow) {
+                return;
+            }
+            try {
+                renderMeasurementLineProfile(profileWindow, Ext.decode(response.responseText), chartId);
+            } catch (error) {
+                if (!profileWindow.isDestroyed) {
+                    profileWindow.body.update('<div style="padding: 16px;">' + Ext.util.Format.htmlEncode(error.message) + '</div>');
+                }
+            }
+        },
+        failure: function (response) {
+            if (measurementProfileWindow !== profileWindow || profileWindow.isDestroyed) {
+                return;
+            }
+            profileWindow.body.update('<div style="padding: 16px;">' + Ext.util.Format.htmlEncode(TR.measurementProfileRequestFailed) + '</div>');
+        }
+    });
+}
+
 function zoomToMeasurementFeature(feature) {
     if (!geoExtMap || !geoExtMap.map || !feature || !feature.geometry || !feature.geometry.getBounds) {
         return;
@@ -3280,6 +3467,70 @@ function zoomToMeasurementFeature(feature) {
     }
 
     map.zoomToExtent(targetBounds);
+}
+
+function zoomToCoordinateInput(rawValue) {
+    if (!geoExtMap || !geoExtMap.map || !rawValue) {
+        return;
+    }
+
+    var coords = rawValue.split(",");
+    if (coords.length < 2) {
+        return;
+    }
+
+    var lon = parseFloat(coords[0]);
+    var lat = parseFloat(coords[1]);
+    if (isNaN(lon) || isNaN(lat)) {
+        return;
+    }
+
+    var projectCrs = projectData.crs;
+    var mapCrs = rightStatusText.getValue();
+    var position = new OpenLayers.LonLat(lon, lat);
+    if (projectCrs != mapCrs) {
+        position.transform(Eqwc.currentMapProjection[2], geoExtMap.map.getProjectionObject());
+    }
+
+    //same default zoom level used by the geocoding search combo
+    var zoom = (projectData.geoCode && projectData.geoCode.zoom) ? projectData.geoCode.zoom : 18;
+    geoExtMap.map.setCenter(position, zoom);
+
+    if (highlightLayer) {
+        var marker = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(position.lon, position.lat),
+            {},
+            Eqwc.settings.symbolizersHighLightLayer.Point
+        );
+        highlightLayer.removeAllFeatures();
+        highlightLayer.addFeatures(marker);
+    }
+}
+
+function setupMapContextMenu() {
+    if (!geoExtMap || !geoExtMap.map || !geoExtMap.map.div) {
+        return;
+    }
+
+    var mapContextMenu = new Ext.menu.Menu({
+        items: [{
+            text: resetButtonString[lang],
+            iconCls: 'x-clear-icon',
+            handler: function () {
+                if (highlightLayer) {
+                    highlightLayer.removeAllFeatures();
+                }
+                if (typeof clearFeatureSelected == 'function') {
+                    clearFeatureSelected();
+                }
+            }
+        }]
+    });
+
+    Ext.get(geoExtMap.map.div).on('contextmenu', function (e) {
+        e.preventDefault();
+        mapContextMenu.showAt(e.getXY());
+    });
 }
 
 function getMeasurementRecordById(recordId) {
@@ -3956,6 +4207,10 @@ function deleteMeasurementRecord(record) {
         clearMeasurementEditState();
     }
 
+    if (measurementProfileWindow && measurementProfileWindow.measurementRecordId === record.get('id')) {
+        measurementProfileWindow.close();
+    }
+
     if (measurementLayer) {
         var featuresToRemove = [];
         var lineFeature = getMeasurementLineFeature(record);
@@ -3978,6 +4233,10 @@ function deleteMeasurementRecord(record) {
 function clearAllMeasurements() {
     removeMeasurePopup();
     clearMeasurementEditState();
+
+    if (measurementProfileWindow) {
+        measurementProfileWindow.close();
+    }
 
     if (measurementLayer && measurementLayer.features && measurementLayer.features.length > 0) {
         measurementLayer.removeAllFeatures();
