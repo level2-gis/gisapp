@@ -100,7 +100,7 @@ img.x-tree-ec-icon.x-tree-elbow {
 
 /* Branch states */
 .x-tree-checkbox.x-tree-branch-checked {
-	background: var(--checkbox-checked-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="3" y="11.5" font-family="Arial" font-size="11" font-weight="bold" fill="%238B4513">✓</text></svg>') no-repeat center !important;
+	background: var(--checkbox-checked-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.5 3.5L6 11l-3.5-3.5" stroke="%238B4513" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat center !important;
 	border-color: var(--checkbox-border) !important;
 }
 
