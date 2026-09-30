@@ -5,6 +5,14 @@ require_once("../admin/settings.php");
 
 session_start();
 
+if (empty($_SESSION['user_is_logged_in'])) {
+    http_response_code(403);
+    exit;
+}
+
+header('Cache-Control: private, no-store');
+header('X-Content-Type-Options: nosniff');
+
 $version = \GisApp\Helpers::getEqwcVersion();
 $lang = [];
 $plugins = [];

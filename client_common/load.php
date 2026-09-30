@@ -2,6 +2,14 @@
 
 session_start();
 
+if (empty($_SESSION['user_is_logged_in'])) {
+    http_response_code(403);
+    exit;
+}
+
+header('Cache-Control: private, no-store');
+header('X-Content-Type-Options: nosniff');
+
 //Setting some global variables
 $user = "" . $_SESSION['user_name'];
 $old_last_login = isset($_SESSION['old_last_login']) ? $_SESSION['old_last_login'] : 0;

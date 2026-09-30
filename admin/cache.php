@@ -10,6 +10,16 @@
 require '../vendor/autoload.php';
 require_once("settings.php");
 
+session_start();
+
+if (empty($_SESSION['user_is_logged_in'])) {
+    http_response_code(403);
+    exit;
+}
+
+header('Cache-Control: private, no-store');
+header('X-Content-Type-Options: nosniff');
+
 header('Content-type: text/html; charset=utf-8');
 
 $config = array(
