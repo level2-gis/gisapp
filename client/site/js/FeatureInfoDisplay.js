@@ -22,9 +22,14 @@
  */
 
 var addressDistanceMarkerFeature = null;
+var addressDistanceFlashTimer = null;
 var activeIdentifyLocationService = null;
 
 function clearAddressDistanceMarker() {
+    if (addressDistanceFlashTimer) {
+        window.clearInterval(addressDistanceFlashTimer);
+        addressDistanceFlashTimer = null;
+    }
     if (addressDistanceMarkerFeature && featureInfoHighlightLayer) {
         featureInfoHighlightLayer.removeFeatures([addressDistanceMarkerFeature]);
     }
@@ -45,38 +50,53 @@ function showAddressDistanceMarker(x, y) {
     clearAddressDistanceMarker();
 
     addressDistanceMarkerFeature = new OpenLayers.Feature.Vector(
-        new OpenLayers.Geometry.Point(pointX, pointY)
+        new OpenLayers.Geometry.Point(pointX, pointY),
+        {},
+        {
+            pointRadius: 6,
+            fillColor: '#ff8c00',
+            fillOpacity: 0.5,
+            strokeColor: '#ffffff',
+            strokeWidth: 2
+        }
     );
     featureInfoHighlightLayer.addFeatures([addressDistanceMarkerFeature]);
+
+    // blink a few times, then remove the marker
+    var feature = addressDistanceMarkerFeature;
+    var ticks = 0;
+    addressDistanceFlashTimer = window.setInterval(function () {
+        ticks++;
+        if (ticks >= 6 || !feature.layer) {
+            clearAddressDistanceMarker();
+            return;
+        }
+        feature.style.display = (ticks % 2) ? 'none' : '';
+        feature.layer.drawFeature(feature);
+    }, 350);
     return false;
 }
 
-// marker for the identify click location, kept in highlightLayer so it survives closing the identify popup
-function showIdentifyClickMarker(pixel) {
-    if (!highlightLayer || !geoExtMap || !geoExtMap.map || !pixel) {
-        return;
-    }
-
-    var position = geoExtMap.map.getLonLatFromPixel(pixel);
-    if (!position) {
-        return;
+// marker for the identify click location, shares featureInfoHighlightLayer with selected feature geometry
+function showIdentifyClickMarker(x, y) {
+    var pointX = parseFloat(x);
+    var pointY = parseFloat(y);
+    if (!featureInfoHighlightLayer || isNaN(pointX) || isNaN(pointY)) {
+        return false;
     }
 
     var marker = new OpenLayers.Feature.Vector(
-        new OpenLayers.Geometry.Point(position.lon, position.lat),
+        new OpenLayers.Geometry.Point(pointX, pointY),
         {},
         Eqwc.settings.symbolizersHighLightLayer.Point
     );
-    highlightLayer.removeAllFeatures();
-    highlightLayer.addFeatures(marker);
+    clearAddressDistanceMarker();
+    featureInfoHighlightLayer.removeAllFeatures();
+    featureInfoHighlightLayer.addFeatures([marker]);
+    return false;
 }
 
 function showFeatureInfo(evt) {
-    if (activeIdentifyLocationService && activeIdentifyLocationService.cancelPendingRequests) {
-        activeIdentifyLocationService.cancelPendingRequests();
-    }
-    activeIdentifyLocationService = null;
-
     removeClickPopup();
     if (hoverPopup) {
         removeHoverPopup();
@@ -101,7 +121,7 @@ function showFeatureInfo(evt) {
         activeIdentifyLocationService = locationObj;
         var popupItems = [];
 
-        var hasLocationRows = Eqwc.settings.showCoordinatesIdentify || (projectData.locationServices != null && projectData.locationServices.length > 0);
+        var hasLocationRows = !!locationUnits;
 
         locationObj.on("elevation", function () {
             if (activeIdentifyLocationService !== locationObj) {
@@ -186,6 +206,7 @@ function showFeatureInfo(evt) {
                     locationHtml += '<tr><td colspan="2" id="fi_' + projectData.locationServices[s].name + '_value"></td></tr>';
                 }
             }
+            locationHtml += '<tr><td colspan="2"><a class="i-select" ext:qtip="' + TR.select + '" href="javascript:;" onclick="return showIdentifyClickMarker(' + parseFloat(locationUnits.lon) + ', ' + parseFloat(locationUnits.lat) + ');"></a><a class="i-clear" ext:qtip="' + TR.clearSelection + '" href="javascript:;" onclick="identifyAction(\'clear\',\'\');"></a></td></tr>';
 
             locationHtml += '</tbody></table></div></br>';
 
@@ -506,14 +527,7 @@ function showFeatureInfoHover(evt) {
 function onBeforeGetFeatureInfoClick(evt) {
 
     // End previous identify UI/request cycle immediately on a new click.
-    if (clickPopup) {
-        removeClickPopup();
-    } else if (activeIdentifyLocationService && activeIdentifyLocationService.cancelPendingRequests) {
-        activeIdentifyLocationService.cancelPendingRequests();
-        activeIdentifyLocationService = null;
-    }
-
-    showIdentifyClickMarker(evt.xy);
+    removeClickPopup();
 
     evt.object.layers[0].setVisibility(thematicLayer.getVisibility());
 
@@ -555,7 +569,6 @@ function onHoverPopupClick(evt) {
 
 function onClickPopupClosed(evt) {
     removeClickPopup();
-    clearAddressDistanceMarker();
     // enable the hover popup for the curent mosue position
     if (Eqwc.settings.enableHoverPopup)
         WMSGetFInfoHover.activate();
