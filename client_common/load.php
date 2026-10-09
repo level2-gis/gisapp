@@ -156,7 +156,7 @@ projectData.use_mask_wkt = <?php echo json_encode($mask_wkt) ?>;
 projectData.add_geom = <?php echo json_encode($qgs->add_geom_to_fi) ?>;
 projectData.bookmarks = '<?php echo json_encode($qgs->bookmarks) ?>';
 
-projectData.uploadDir = '<?php echo $upload ?>'+projectData.client_name+'/'+projectData.project+'/';
+projectData.uploadDir = <?php echo json_encode($upload) ?> + <?php echo isset($settings->filesDir) ? json_encode($settings->filesDir) : "projectData.client_name+'/'+projectData.project+'/'" ?>;
 
 projectData.baseLayers = function () {
 var bl = eval(<?php echo json_encode($data->base_layers) ?>);
