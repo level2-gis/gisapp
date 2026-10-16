@@ -80,6 +80,7 @@ var TR = {
     measurementZoomTooltip: "Zoom til element",
     measurementRemoveTooltip: "Slett",
     measurementRemoveAllTooltip: "Slett alle",
+    mapContextClearAll: "Fjern alt",
     measurementProfileTitle: "Høydeprofil",
     measurementProfilePositionLayer: "Posisjon i høydeprofil",
     measurementProfileMoveHint: "Flytt pekeren over profilen for å vise detaljer.",

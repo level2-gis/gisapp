@@ -79,6 +79,7 @@ var TR = {
     measurementZoomTooltip: "Приблизить к объекту",
     measurementRemoveTooltip: "Удалить",
     measurementRemoveAllTooltip: "Удалить все",
+    mapContextClearAll: "Очистить всё",
     measurementProfileTitle: "Профиль высот",
     measurementProfilePositionLayer: "Положение на профиле высот",
     measurementProfileMoveHint: "Перемещайте указатель по профилю для просмотра подробностей.",

@@ -3567,7 +3567,7 @@ function setupMapContextMenu() {
 
     var mapContextMenu = new Ext.menu.Menu({
         items: [{
-            text: resetButtonString[lang],
+            text: (typeof TR !== 'undefined' && TR.mapContextClearAll) ? TR.mapContextClearAll : resetButtonString[lang],
             iconCls: 'x-clear-icon',
             handler: function () {
                 if (highlightLayer) {
@@ -3576,6 +3576,17 @@ function setupMapContextMenu() {
                 if (typeof clearFeatureSelected == 'function') {
                     clearFeatureSelected();
                 }
+
+                if (measureControls) {
+                    var controls = [measureControls.line, measureControls.polygon];
+                    for (var i = 0; i < controls.length; i++) {
+                        if (controls[i] && controls[i].active) {
+                            controls[i].cancel();
+                        }
+                    }
+                }
+                clearAllMeasurements();
+                clearAllMeasurementAreas();
             }
         }]
     });
@@ -3799,6 +3810,112 @@ function createMeasurementAreaHighlightSymbol(style) {
         '</Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></StyledLayerDescriptor>';
 }
 
+function escapePrintXmlValue(value) {
+    return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+function getHighlightGeometryTypes(geometry, types) {
+    if (!geometry) {
+        return types;
+    }
+
+    var className = geometry.CLASS_NAME || '';
+    var type = null;
+    if (className.indexOf('Point') !== -1) {
+        type = 'Point';
+    } else if (className.indexOf('LineString') !== -1 || className.indexOf('LinearRing') !== -1) {
+        type = 'Line';
+    } else if (className.indexOf('Polygon') !== -1) {
+        type = 'Polygon';
+    }
+
+    if (type) {
+        if (types.indexOf(type) === -1) {
+            types.push(type);
+        }
+    } else if (geometry.components) {
+        for (var i = 0; i < geometry.components.length; i++) {
+            getHighlightGeometryTypes(geometry.components[i], types);
+        }
+    }
+    return types;
+}
+
+function createHighlightPrintStroke(style) {
+    style = style || {};
+    var strokeColor = style.strokeColor != null ? style.strokeColor : '#ee9900';
+    var strokeOpacity = style.strokeOpacity != null ? style.strokeOpacity : 1;
+    var strokeWidth = style.strokeWidth != null ? style.strokeWidth : 1;
+    if (strokeColor === 'none') {
+        strokeColor = '#000000';
+        strokeOpacity = 0;
+    }
+    var stroke = '<Stroke><SvgParameter name="stroke">' + escapePrintXmlValue(strokeColor) + '</SvgParameter>' +
+        '<SvgParameter name="stroke-opacity">' + strokeOpacity + '</SvgParameter>' +
+        '<SvgParameter name="stroke-width">' + strokeWidth + '</SvgParameter>';
+    var dashStyles = {
+        dash: '4 4',
+        dot: '1 4',
+        dashdot: '4 4 1 4',
+        longdash: '8 4',
+        longdashdot: '8 4 1 4'
+    };
+    var dashStyle = style.strokeDashstyle && style.strokeDashstyle.toLowerCase();
+    if (dashStyle && dashStyles[dashStyle]) {
+        stroke += '<SvgParameter name="stroke-dasharray">' + dashStyles[dashStyle] + '</SvgParameter>';
+    }
+    if (style.strokeLinecap) {
+        stroke += '<SvgParameter name="stroke-linecap">' + escapePrintXmlValue(style.strokeLinecap) + '</SvgParameter>';
+    }
+    if (style.strokeLinejoin) {
+        stroke += '<SvgParameter name="stroke-linejoin">' + escapePrintXmlValue(style.strokeLinejoin) + '</SvgParameter>';
+    }
+    return stroke + '</Stroke>';
+}
+
+function createHighlightPrintFill(style, defaultOpacity) {
+    style = style || {};
+    var fillColor = style.fillColor != null ? style.fillColor : '#ee9900';
+    var fillOpacity = style.fillOpacity != null ? style.fillOpacity : defaultOpacity;
+    if (fillColor === 'none') {
+        fillOpacity = 0;
+    }
+    return '<Fill><SvgParameter name="fill">' + escapePrintXmlValue(fillColor === 'none' ? '#000000' : fillColor) + '</SvgParameter>' +
+        '<SvgParameter name="fill-opacity">' + fillOpacity + '</SvgParameter></Fill>';
+}
+
+function createFeatureHighlightPrintSymbol(geometry, featureStyle) {
+    var symbolizers = [];
+    var geometryTypes = getHighlightGeometryTypes(geometry, []);
+    var highlightStyles = Eqwc.settings.symbolizersHighLightLayer || {};
+
+    for (var i = 0; i < geometryTypes.length; i++) {
+        var type = geometryTypes[i];
+        var style = featureStyle || highlightStyles[type] || {};
+        if (type === 'Point') {
+            var graphicName = style.graphicName || 'circle';
+            var pointRadius = style.pointRadius != null ? style.pointRadius : 6;
+            symbolizers.push('<PointSymbolizer><Graphic><Mark><WellKnownName>' +
+                escapePrintXmlValue(graphicName) + '</WellKnownName>' +
+                createHighlightPrintFill(style, 0.4) + createHighlightPrintStroke(style) +
+                '</Mark><Size>' + (pointRadius * 3) + '</Size></Graphic></PointSymbolizer>');
+        } else if (type === 'Line') {
+            symbolizers.push('<LineSymbolizer>' + createHighlightPrintStroke(style) + '</LineSymbolizer>');
+        } else if (type === 'Polygon') {
+            symbolizers.push('<PolygonSymbolizer>' + createHighlightPrintFill(style, 0.4) +
+                createHighlightPrintStroke(style) + '</PolygonSymbolizer>');
+        }
+    }
+
+    if (symbolizers.length === 0) {
+        return null;
+    }
+    return '<StyledLayerDescriptor><UserStyle><FeatureTypeStyle><Rule>' +
+        symbolizers.join('') +
+        '</Rule></FeatureTypeStyle></UserStyle></StyledLayerDescriptor>';
+}
+
 function serializeMeasurementGeometryForPrint(geometry, projectionCode) {
     if (!geometry) {
         return null;
@@ -3902,6 +4019,33 @@ function getMeasurementPrintParams(mapId, projectionCode) {
                     areaEdgeSymbol, areaLabelStyle);
             }
         });
+    }
+
+    if (typeof featureInfoHighlightLayer !== 'undefined' && featureInfoHighlightLayer && featureInfoHighlightLayer.features) {
+        for (var i = 0; i < featureInfoHighlightLayer.features.length; i++) {
+            var feature = featureInfoHighlightLayer.features[i];
+            if (!feature || !feature.geometry) {
+                continue;
+            }
+            if (feature.geometry.CLASS_NAME !== 'OpenLayers.Geometry.Point' &&
+                feature.geometry.CLASS_NAME !== 'OpenLayers.Geometry.MultiPoint') {
+                continue;
+            }
+            var symbol = createFeatureHighlightPrintSymbol(feature.geometry, feature.style);
+            var geometry = serializeMeasurementGeometryForPrint(feature.geometry, projectionCode);
+            if (symbol && geometry) {
+                entries.push({
+                    geometry: geometry,
+                    symbol: symbol,
+                    label: '',
+                    labelFont: '',
+                    labelSize: '',
+                    labelColor: '',
+                    labelBufferColor: '',
+                    labelBufferSize: ''
+                });
+            }
+        }
     }
 
     if (entries.length === 0) {

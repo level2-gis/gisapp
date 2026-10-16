@@ -80,6 +80,7 @@ var TR = {
     measurementZoomTooltip: "Powieksz do elementu",
     measurementRemoveTooltip: "Usuń",
     measurementRemoveAllTooltip: "Usuń wszystkie",
+    mapContextClearAll: "Wyczyść wszystko",
     measurementProfileTitle: "Profil wysokościowy",
     measurementProfilePositionLayer: "Pozycja na profilu wysokościowym",
     measurementProfileMoveHint: "Przesuń kursor nad profilem, aby wyświetlić szczegóły.",

@@ -80,6 +80,7 @@ var TR = {
     measurementZoomTooltip: "Prikaži element",
     measurementRemoveTooltip: "Odstrani",
     measurementRemoveAllTooltip: "Odstrani vse",
+    mapContextClearAll: "Pobriši vse",
     measurementProfileTitle: "Profil terena",
     measurementProfilePositionLayer: "Položaj na profilu terena",
     measurementProfileMoveHint: "Premakni kazalec po profilu za prikaz podrobnosti.",

@@ -80,6 +80,7 @@ var TR = {
     measurementZoomTooltip: "Zoom la element",
     measurementRemoveTooltip: "Sterge",
     measurementRemoveAllTooltip: "Sterge toate masuratorile",
+    mapContextClearAll: "Șterge tot",
     measurementProfileTitle: "Profil de elevație",
     measurementProfilePositionLayer: "Poziție pe profilul de elevație",
     measurementProfileMoveHint: "Deplasați cursorul peste profil pentru detalii.",

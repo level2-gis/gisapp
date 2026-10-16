@@ -80,6 +80,7 @@ var TR = {
     measurementZoomTooltip: "Priblizit na prvok",
     measurementRemoveTooltip: "Odstranit",
     measurementRemoveAllTooltip: "Odstranit",
+    mapContextClearAll: "Vymazať všetko",
     measurementProfileTitle: "Výškový profil",
     measurementProfilePositionLayer: "Poloha na výškovom profile",
     measurementProfileMoveHint: "Presuňte kurzor po profile pre zobrazenie podrobností.",

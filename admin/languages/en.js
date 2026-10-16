@@ -80,6 +80,7 @@ var TR = {
     measurementZoomTooltip: "Zoom to element",
     measurementRemoveTooltip: "Remove",
     measurementRemoveAllTooltip: "Remove all",
+    mapContextClearAll: "Clear all",
     measurementProfileTitle: "Elevation profile",
     measurementProfilePositionLayer: "Elevation profile position",
     measurementProfileMoveHint: "Move over the profile to show details.",
