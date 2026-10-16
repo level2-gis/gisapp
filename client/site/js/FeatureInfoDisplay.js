@@ -304,6 +304,9 @@ function showFeatureInfo(evt) {
                     Ext.iterate(Eqwc._temp_ids, set, Eqwc.settings.fieldTemplates);
                 },
                 afterrender: function() {
+                    // Keep keyboard events inside the popup when its non-interactive content is clicked.
+                    this.el.dom.tabIndex = -1;
+
                     if (!this._locationServicesRequested) {
                         this._locationServicesRequested = true;
                         requestLocationServices();
@@ -314,32 +317,32 @@ function showFeatureInfo(evt) {
                     var maxHeight = geoExtMap.getHeight() * 0.7;
                     var maxWidth = popup.maxWidth || (geoExtMap.getWidth() * 0.4);
                     var minWidth = popup.minWidth;
-                    var minHeight = popup.minHeight || 200;
-                    
+                    var minHeight = popup.minHeight;
+
                     // Set fixed dimensions and let content scroll
                     popup.setWidth(Math.max(minWidth, Math.min(popup.getWidth(), maxWidth)));
-                    popup.setHeight(Math.max(minHeight, Math.min(popup.getHeight(), maxHeight)));
-                    
+                    // GeoExt subtracts the anchor height, so compensate to preserve minHeight.
+                    popup.setHeight(Math.max(minHeight, Math.min(popup.getHeight(), maxHeight)) + (popup.anc ? popup.anc.getHeight() : 0));
+
                     // Apply overflow styling to popup body for scrolling
                     if (popup.body && popup.body.dom) {
                         popup.body.setStyle({
                             'overflow-y': 'auto',
-                            'overflow-x': 'hidden',
-                            'max-height': (maxHeight - 60) + 'px' // Account for header/borders
+                            'overflow-x': 'hidden'
                         });
                     }
-                    
+
                     popup.doLayout();
-                    
+
                     // Ensure popup stays within map bounds
                     var popupBox = popup.getBox();
                     var mapSize = popup.map.getSize();
                     var mapDiv = popup.map.div;
                     var mapPos = Ext.fly(mapDiv).getXY();
-                    
+
                     var newX = popup.getPosition()[0];
                     var newY = popup.getPosition()[1];
-                    
+
                     // Adjust position if popup goes outside map bounds
                     if (popupBox.x + popupBox.width > mapPos[0] + mapSize.w) {
                         newX = mapPos[0] + mapSize.w - popupBox.width - 10;
@@ -353,7 +356,7 @@ function showFeatureInfo(evt) {
                     if (popupBox.y < mapPos[1]) {
                         newY = mapPos[1] + 10;
                     }
-                    
+
                     // Reposition if necessary
                     if (newX !== popup.getPosition()[0] || newY !== popup.getPosition()[1]) {
                         popup.setPosition(newX, newY);
