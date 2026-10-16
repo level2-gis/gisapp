@@ -1467,7 +1467,11 @@ function postLoading() {
         var styleMeasureControls = new OpenLayers.Style();
         styleMeasureControls.addRules([
             new OpenLayers.Rule({
-                symbolizer: sketchSymbolizersMeasureControls
+                symbolizer: {
+                    Point: sketchSymbolizersMeasureControls.Point,
+                    Line: getMeasurementLineStyle(),
+                    Polygon: getMeasurementAreaStyle()
+                }
             })]);
         var styleMapMeasureControls = new OpenLayers.StyleMap({
             "default": styleMeasureControls
@@ -1477,6 +1481,11 @@ function postLoading() {
             line: new OpenLayers.Control.Measure(
                 OpenLayers.Handler.Path, {
                     persist: false,
+                    callbacks: {
+                        cancel: function () {
+                            clearMeasurementSegmentLabels(this);
+                        }
+                    },
                     handlerOptions: {
                         layerOptions: {
                             styleMap: styleMapMeasureControls
@@ -1486,6 +1495,11 @@ function postLoading() {
             polygon: new OpenLayers.Control.Measure(
                 OpenLayers.Handler.Polygon, {
                     persist: true,
+                    callbacks: {
+                        cancel: function () {
+                            clearMeasurementSegmentLabels(this);
+                        }
+                    },
                     handlerOptions: {
                         layerOptions: {
                             styleMap: styleMapMeasureControls
@@ -1520,6 +1534,17 @@ function postLoading() {
                 })
         };
 
+        measureControls.line.events.on({
+            deactivate: function () {
+                clearMeasurementSegmentLabels(this);
+            }
+        });
+        measureControls.polygon.events.on({
+            deactivate: function () {
+                clearMeasurementSegmentLabels(this);
+            }
+        });
+
         var control;
         for (var key in measureControls) {
             control = measureControls[key];
@@ -1532,6 +1557,7 @@ function postLoading() {
             control.displaySystem = Eqwc.settings.measurementsUnitSystem ? Eqwc.settings.measurementsUnitSystem : 'metric';
             geoExtMap.map.addControl(control);
         }
+        document.addEventListener('keydown', cancelMeasurementOnEscape, true);
     }
 
     //if (initialLoadDone) {
@@ -2826,6 +2852,24 @@ function hideMeasurementAreaWindow() {
     }
 }
 
+function enableMeasurementLabelRotation(layer) {
+    var renderer = layer.renderer;
+    if (renderer instanceof OpenLayers.Renderer.SVG) {
+        var drawText = renderer.drawText;
+        renderer.drawText = function (featureId, style, location) {
+            drawText.call(this, featureId, style, location);
+            var suffix = style.labelOutlineWidth ? this.LABEL_OUTLINE_SUFFIX : this.LABEL_ID_SUFFIX;
+            var label = this.nodeFactory(featureId + suffix, "text");
+            if (style.labelRotation !== undefined) {
+                label.setAttribute("transform", "rotate(" + style.labelRotation + " " +
+                    label.getAttribute("x") + " " + label.getAttribute("y") + ") translate(0 -12)");
+            } else {
+                label.removeAttribute("transform");
+            }
+        };
+    }
+}
+
 function ensureMeasurementLayer() {
     if (!geoExtMap || !geoExtMap.map) {
         return;
@@ -2835,6 +2879,7 @@ function ensureMeasurementLayer() {
         measurementLayer = new OpenLayers.Layer.Vector("Measurements", {
             displayInLayerSwitcher: false
         });
+        enableMeasurementLabelRotation(measurementLayer);
     }
 
     if (!geoExtMap.map.getLayer(measurementLayer.id)) {
@@ -2853,6 +2898,7 @@ function ensureMeasurementAreaLayer() {
         measurementAreaLayer = new OpenLayers.Layer.Vector("Measurement Areas", {
             displayInLayerSwitcher: false
         });
+        enableMeasurementLabelRotation(measurementAreaLayer);
     }
 
     if (!geoExtMap.map.getLayer(measurementAreaLayer.id)) {
@@ -2887,7 +2933,7 @@ function ensureMeasurementWindow() {
     if (!measurementStore) {
         measurementStore = new Ext.data.JsonStore({
             idProperty: 'id',
-            fields: ['id', 'name', 'distance', 'units', 'distanceDisplay', 'lineFeatureId', 'labelFeatureId'],
+            fields: ['id', 'name', 'distance', 'units', 'distanceDisplay', 'lineFeatureId'],
             data: [],
             listeners: {
                 datachanged: updateMeasurementSummary,
@@ -2999,7 +3045,7 @@ function ensureMeasurementWindow() {
                 var nextName = Ext.util.Format.trim(editEvent.value || '');
                 editEvent.record.set('name', nextName);
 
-                updateMeasurementFeatureLabel(editEvent.record);
+                updateMeasurementTitleLabel(editEvent.record);
                 editEvent.record.commit();
             }
         }
@@ -3254,13 +3300,6 @@ function getMeasurementLineFeature(record) {
         return null;
     }
     return measurementLayer.getFeatureById(record.get('lineFeatureId'));
-}
-
-function getMeasurementLabelFeature(record) {
-    if (!measurementLayer || !record) {
-        return null;
-    }
-    return measurementLayer.getFeatureById(record.get('labelFeatureId'));
 }
 
 function ensureMeasurementProfileHoverLayer() {
@@ -3554,39 +3593,6 @@ function getMeasurementRecordById(recordId) {
     return measurementStore.getById(recordId);
 }
 
-function getMeasurementLabelPoint(geometry) {
-    if (!geometry || !geometry.components || geometry.components.length < 2) {
-        return geometry && geometry.getBounds ? geometry.getBounds().getCenterLonLat() : null;
-    }
-
-    var totalLength = geometry.getLength();
-    if (!totalLength || totalLength <= 0) {
-        return geometry.components[0].clone();
-    }
-
-    var halfLength = totalLength / 2;
-    var accumulatedLength = 0;
-
-    for (var i = 1; i < geometry.components.length; i++) {
-        var startPoint = geometry.components[i - 1];
-        var endPoint = geometry.components[i];
-        var segmentLength = startPoint.distanceTo(endPoint);
-
-        if (accumulatedLength + segmentLength >= halfLength) {
-            var distanceIntoSegment = halfLength - accumulatedLength;
-            var ratio = segmentLength === 0 ? 0 : distanceIntoSegment / segmentLength;
-            return new OpenLayers.Geometry.Point(
-                startPoint.x + ((endPoint.x - startPoint.x) * ratio),
-                startPoint.y + ((endPoint.y - startPoint.y) * ratio)
-            );
-        }
-
-        accumulatedLength += segmentLength;
-    }
-
-    return geometry.components[geometry.components.length - 1].clone();
-}
-
 function getMeasurementLineStyle() {
     var style = Ext.apply({}, sketchSymbolizersMeasureControls.Line || {});
     style.strokeColor = getMeasurementCssVariable('--measurement-line-color', '#C43D32');
@@ -3602,10 +3608,10 @@ function getMeasurementLineEditStyle() {
 
 function getMeasurementLabelStyle() {
     return {
-        fontColor: getMeasurementCssVariable('--measurement-label-color', '#7A241D'),
+        fontColor: getMeasurementLineStyle().strokeColor,
         fontSize: "12px",
         fontFamily: "tahoma,arial,verdana,sans-serif",
-        fontWeight: "bold",
+        fontWeight: "normal",
         labelAlign: "cm",
         labelOutlineColor: getMeasurementCssVariable('--measurement-label-outline-color', '#ffffff'),
         labelOutlineWidth: parseInt(getMeasurementCssVariable('--measurement-label-outline-width', '3'), 10),
@@ -3613,6 +3619,106 @@ function getMeasurementLabelStyle() {
         fillOpacity: 0,
         strokeOpacity: 0
     };
+}
+
+function clearMeasurementSegmentLabels(owner) {
+    if (owner && owner.measurementSegmentLabels) {
+        var layer = owner.measurementSegmentLabelLayer;
+        if (layer) {
+            layer.destroyFeatures(owner.measurementSegmentLabels);
+        }
+        owner.measurementSegmentLabels = [];
+    }
+}
+
+function updateMeasurementSegmentLabels(geometry, owner, layer) {
+    layer = layer || measurementLayer;
+    var labels = owner.measurementSegmentLabels || [];
+    var count = 0;
+    var points = geometry.components;
+    var isArea = points.length > 0 && !!points[0].components;
+    if (isArea) {
+        points = points[0].components;
+    }
+    for (var i = 1; i < points.length; i++) {
+        var start = points[i - 1];
+        var end = points[i];
+        if (start.equals(end)) {
+            continue;
+        }
+        var segment = new OpenLayers.Geometry.LineString([start.clone(), end.clone()]);
+        var length = measureControls.line.getBestLength(segment);
+        var text = formatMeasurementDistance(length[0], length[1]);
+        var x = (start.x + end.x) / 2;
+        var y = (start.y + end.y) / 2;
+        var rotation = -Math.atan2(end.y - start.y, end.x - start.x) * 180 / Math.PI;
+        if (rotation > 90) {
+            rotation -= 180;
+        } else if (rotation < -90) {
+            rotation += 180;
+        }
+        var label = labels[count];
+        if (!label) {
+            var style = isArea ? getMeasurementAreaLabelStyle() : getMeasurementLabelStyle();
+            style.label = text;
+            style.labelRotation = rotation;
+            label = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(x, y), {}, style);
+            labels.push(label);
+            layer.addFeatures([label]);
+        } else if (label.geometry.x !== x || label.geometry.y !== y || label.style.label !== text ||
+            label.style.labelRotation !== rotation) {
+            label.geometry.x = x;
+            label.geometry.y = y;
+            label.geometry.clearBounds();
+            label.style.label = text;
+            label.style.labelRotation = rotation;
+            layer.drawFeature(label);
+        }
+        count++;
+    }
+    if (labels.length > count) {
+        layer.destroyFeatures(labels.splice(count));
+    }
+    owner.measurementSegmentLabels = labels;
+    owner.measurementSegmentLabelLayer = layer;
+}
+
+function updateMeasurementTitleLabel(record) {
+    var lineFeature = getMeasurementLineFeature(record);
+    if (!lineFeature) {
+        return;
+    }
+    var points = lineFeature.geometry.components;
+    var remainingLength = lineFeature.geometry.getLength() / 2;
+    var point = points[0];
+    for (var i = 1; i < points.length; i++) {
+        var segmentLength = points[i - 1].distanceTo(points[i]);
+        if (segmentLength > 0 && remainingLength <= segmentLength) {
+            var ratio = remainingLength / segmentLength;
+            point = new OpenLayers.Geometry.Point(
+                points[i - 1].x + (points[i].x - points[i - 1].x) * ratio,
+                points[i - 1].y + (points[i].y - points[i - 1].y) * ratio
+            );
+            break;
+        }
+        remainingLength -= segmentLength;
+    }
+    var title = lineFeature.measurementTitleLabel;
+    if (!title) {
+        var style = getMeasurementLabelStyle();
+        style.label = record.get('name');
+        style.labelAlign = "ct";
+        style.labelYOffset = -20;
+        title = new OpenLayers.Feature.Vector(point.clone(), {}, style);
+        lineFeature.measurementTitleLabel = title;
+        measurementLayer.addFeatures([title]);
+    } else {
+        title.geometry.x = point.x;
+        title.geometry.y = point.y;
+        title.geometry.clearBounds();
+        title.style.label = record.get('name');
+        measurementLayer.drawFeature(title);
+    }
 }
 
 function getMeasurementAreaStyle() {
@@ -3626,10 +3732,10 @@ function getMeasurementAreaStyle() {
 
 function getMeasurementAreaLabelStyle() {
     return {
-        fontColor: getMeasurementCssVariable('--measurement-area-label-color', '#7A241D'),
+        fontColor: getMeasurementAreaStyle().strokeColor,
         fontSize: "12px",
         fontFamily: "tahoma,arial,verdana,sans-serif",
-        fontWeight: "bold",
+        fontWeight: "normal",
         labelAlign: "cm",
         labelOutlineColor: getMeasurementCssVariable('--measurement-area-label-outline-color', '#ffffff'),
         labelOutlineWidth: parseInt(getMeasurementCssVariable('--measurement-area-label-outline-width', '3'), 10),
@@ -3651,7 +3757,7 @@ function getMeasurementPrintFont(labelStyle) {
 
 function getMeasurementPrintLabelSize(labelStyle) {
     var fontSize = labelStyle && labelStyle.fontSize ? parseInt(labelStyle.fontSize, 10) : NaN;
-    return isNaN(fontSize) ? 12 : fontSize;
+    return Math.max(1, Math.round((isNaN(fontSize) ? 12 : fontSize) * 0.75));
 }
 
 function getMeasurementPrintLabelBufferSize(labelStyle) {
@@ -3709,7 +3815,7 @@ function serializeMeasurementGeometryForPrint(geometry, projectionCode) {
     return new OpenLayers.Format.WKT().write(new OpenLayers.Feature.Vector(geometryToPrint));
 }
 
-function createMeasurementPrintEntry(feature, record, projectionCode, symbol, labelStyle) {
+function createMeasurementPrintEntry(feature, record, projectionCode, symbol, labelStyle, label) {
     if (!feature || !feature.geometry || !record) {
         return null;
     }
@@ -3722,7 +3828,7 @@ function createMeasurementPrintEntry(feature, record, projectionCode, symbol, la
     labelStyle = labelStyle || {};
     return {
         geometry: geometryWkt,
-        label: sanitizeMeasurementPrintLabel(record.get('name')),
+        label: sanitizeMeasurementPrintLabel(label === undefined ? record.get('name') : label),
         symbol: symbol,
         labelFont: getMeasurementPrintFont(labelStyle),
         labelSize: getMeasurementPrintLabelSize(labelStyle),
@@ -3732,6 +3838,27 @@ function createMeasurementPrintEntry(feature, record, projectionCode, symbol, la
     };
 }
 
+function appendMeasurementSegmentPrintEntries(entries, geometry, record, projectionCode, symbol, labelStyle) {
+    var points = geometry.components;
+    if (points.length > 0 && points[0].components) {
+        points = points[0].components;
+    }
+    for (var i = 1; i < points.length; i++) {
+        if (points[i - 1].equals(points[i])) {
+            continue;
+        }
+        var segment = new OpenLayers.Geometry.LineString([points[i - 1].clone(), points[i].clone()]);
+        var length = measureControls.line.getBestLength(segment);
+        var feature = new OpenLayers.Feature.Vector(segment);
+        var entry = createMeasurementPrintEntry(feature, record, projectionCode, symbol, labelStyle,
+            formatMeasurementDistance(length[0], length[1]));
+        if (entry) {
+            entries.push(entry);
+        }
+        feature.destroy();
+    }
+}
+
 function getMeasurementPrintParams(mapId, projectionCode) {
     var entries = [];
     var prefix = mapId ? mapId + ':' : '';
@@ -3739,12 +3866,24 @@ function getMeasurementPrintParams(mapId, projectionCode) {
     if (measurementStore) {
         var lineSymbol = createMeasurementLineHighlightSymbol(getMeasurementLineStyle());
         var lineLabelStyle = getMeasurementLabelStyle();
+        var titleSymbol = '<StyledLayerDescriptor><UserStyle><FeatureTypeStyle><Rule>' +
+            '<PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName>' +
+            '<Fill><SvgParameter name="fill-opacity">0</SvgParameter></Fill>' +
+            '<Stroke><SvgParameter name="stroke-opacity">0</SvgParameter></Stroke>' +
+            '</Mark><Size>0</Size></Graphic></PointSymbolizer>' +
+            '</Rule></FeatureTypeStyle></UserStyle></StyledLayerDescriptor>';
 
         measurementStore.each(function (record) {
             var lineFeature = getMeasurementLineFeature(record);
-            var entry = createMeasurementPrintEntry(lineFeature, record, projectionCode, lineSymbol, lineLabelStyle);
-            if (entry) {
-                entries.push(entry);
+            if (!lineFeature) {
+                return;
+            }
+            appendMeasurementSegmentPrintEntries(entries, lineFeature.geometry, record, projectionCode,
+                lineSymbol, lineLabelStyle);
+            var titleEntry = createMeasurementPrintEntry(lineFeature.measurementTitleLabel, record,
+                projectionCode, titleSymbol, lineLabelStyle);
+            if (titleEntry) {
+                entries.push(titleEntry);
             }
         });
     }
@@ -3752,12 +3891,15 @@ function getMeasurementPrintParams(mapId, projectionCode) {
     if (measurementAreaStore) {
         var areaSymbol = createMeasurementAreaHighlightSymbol(getMeasurementAreaStyle());
         var areaLabelStyle = getMeasurementAreaLabelStyle();
+        var areaEdgeSymbol = createMeasurementLineHighlightSymbol(getMeasurementAreaStyle());
 
         measurementAreaStore.each(function (record) {
             var polygonFeature = getMeasurementPolygonFeature(record);
             var entry = createMeasurementPrintEntry(polygonFeature, record, projectionCode, areaSymbol, areaLabelStyle);
             if (entry) {
                 entries.push(entry);
+                appendMeasurementSegmentPrintEntries(entries, polygonFeature.geometry, record, projectionCode,
+                    areaEdgeSymbol, areaLabelStyle);
             }
         });
     }
@@ -4006,6 +4148,7 @@ function storeAreaMeasurement(event) {
     }, labelStyle);
 
     measurementAreaLayer.addFeatures([polygonFeature, labelFeature]);
+    updateMeasurementSegmentLabels(polygonFeature.geometry, polygonFeature, measurementAreaLayer);
 
     measurementAreaStore.add(new measurementAreaStore.recordType({
         id: 'measurement-area-' + measurementAreaSequence,
@@ -4040,6 +4183,7 @@ function deleteMeasurementAreaRecord(record) {
         var labelFeature = getMeasurementAreaLabelFeature(record);
 
         if (polygonFeature) {
+            clearMeasurementSegmentLabels(polygonFeature);
             featuresToRemove.push(polygonFeature);
         }
         if (labelFeature) {
@@ -4056,6 +4200,9 @@ function deleteMeasurementAreaRecord(record) {
 
 function clearAllMeasurementAreas() {
     removeMeasurePopup();
+    if (measureControls && measureControls.polygon) {
+        clearMeasurementSegmentLabels(measureControls.polygon);
+    }
 
     if (measurementAreaLayer && measurementAreaLayer.features && measurementAreaLayer.features.length > 0) {
         measurementAreaLayer.removeAllFeatures();
@@ -4127,11 +4274,8 @@ function syncMeasurementRecordAfterModify(lineFeature) {
         return;
     }
 
-    var labelFeature = getMeasurementLabelFeature(record);
-    if (labelFeature) {
-        labelFeature.geometry = getMeasurementLabelPoint(lineFeature.geometry);
-        measurementLayer.drawFeature(labelFeature);
-    }
+    updateMeasurementSegmentLabels(lineFeature.geometry, lineFeature);
+    updateMeasurementTitleLabel(record);
 
     var measureValue = lineFeature.geometry.getLength();
     var units = record.get('units');
@@ -4165,24 +4309,19 @@ function storeLineMeasurement(event) {
     var lineFeature = new OpenLayers.Feature.Vector(event.geometry.clone(), {
         measurementId: 'measurement-' + measurementSequence
     }, getMeasurementLineStyle());
-    var labelStyle = getMeasurementLabelStyle();
-    labelStyle.label = measurementName;
-    var labelFeature = new OpenLayers.Feature.Vector(getMeasurementLabelPoint(event.geometry), {
-        label: measurementName,
-        measurementId: 'measurement-' + measurementSequence
-    }, labelStyle);
+    measurementLayer.addFeatures([lineFeature]);
+    updateMeasurementSegmentLabels(lineFeature.geometry, lineFeature);
 
-    measurementLayer.addFeatures([lineFeature, labelFeature]);
-
-    measurementStore.add(new measurementStore.recordType({
+    var record = new measurementStore.recordType({
         id: 'measurement-' + measurementSequence,
-        name: labelFeature.attributes.label,
+        name: measurementName,
         distance: event.measure,
         units: event.units,
         distanceDisplay: formatMeasurementDistance(event.measure, event.units),
-        lineFeatureId: lineFeature.id,
-        labelFeatureId: labelFeature.id
-    }));
+        lineFeatureId: lineFeature.id
+    });
+    measurementStore.add(record);
+    updateMeasurementTitleLabel(record);
 
     if (measurementWindow.hidden) {
         measurementWindow.show();
@@ -4192,24 +4331,6 @@ function storeLineMeasurement(event) {
     if (event.object && event.object.handler && event.object.handler.layer) {
         event.object.handler.layer.removeAllFeatures();
     }
-}
-
-function updateMeasurementFeatureLabel(record) {
-    if (!measurementLayer) {
-        return;
-    }
-
-    var labelFeature = getMeasurementLabelFeature(record);
-    if (!labelFeature) {
-        return;
-    }
-
-    labelFeature.attributes.label = record.get('name');
-    if (!labelFeature.style) {
-        labelFeature.style = getMeasurementLabelStyle();
-    }
-    labelFeature.style.label = record.get('name');
-    measurementLayer.drawFeature(labelFeature);
 }
 
 function deleteMeasurementRecord(record) {
@@ -4228,13 +4349,13 @@ function deleteMeasurementRecord(record) {
     if (measurementLayer) {
         var featuresToRemove = [];
         var lineFeature = getMeasurementLineFeature(record);
-        var labelFeature = getMeasurementLabelFeature(record);
 
         if (lineFeature) {
+            clearMeasurementSegmentLabels(lineFeature);
+            if (lineFeature.measurementTitleLabel) {
+                measurementLayer.destroyFeatures([lineFeature.measurementTitleLabel]);
+            }
             featuresToRemove.push(lineFeature);
-        }
-        if (labelFeature) {
-            featuresToRemove.push(labelFeature);
         }
         if (featuresToRemove.length > 0) {
             measurementLayer.removeFeatures(featuresToRemove);
@@ -4246,6 +4367,9 @@ function deleteMeasurementRecord(record) {
 
 function clearAllMeasurements() {
     removeMeasurePopup();
+    if (measureControls && measureControls.line) {
+        clearMeasurementSegmentLabels(measureControls.line);
+    }
     clearMeasurementEditState();
 
     if (measurementProfileWindow) {
@@ -4261,32 +4385,47 @@ function clearAllMeasurements() {
     }
 }
 
+function cancelMeasurementOnEscape(event) {
+    if (event.keyCode !== 27 || !measureControls) {
+        return;
+    }
+    var controls = [measureControls.line, measureControls.polygon];
+    for (var i = 0; i < controls.length; i++) {
+        var control = controls[i];
+        var sketch = control && control.handler && control.handler.line;
+        if (control && control.active && sketch && sketch.geometry.components.length > 1) {
+            // Handle Escape before a focused measurement window can close itself.
+            event.preventDefault();
+            event.stopPropagation();
+            control.cancel();
+            removeMeasurePopup();
+            return;
+        }
+    }
+}
+
 function handleMeasurements(event) {
     if (event.order == 1) {
         if (event.type == 'measure') {
             removeMeasurePopup();
+            clearMeasurementSegmentLabels(event.object);
             if (isValidCompletedMeasurement(event)) {
                 storeLineMeasurement(event);
             }
         } else {
-            var lineText = measureDistanceResultPrefixString[lang] + ': ' + formatMeasurementDistance(event.measure, event.units);
-            showMeasurementPopup(event.geometry, lineText);
+            updateMeasurementSegmentLabels(event.geometry, event.object);
         }
         return;
     }
 
     if (event.type == 'measure') {
         removeMeasurePopup();
+        clearMeasurementSegmentLabels(event.object);
         storeAreaMeasurement(event);
         return;
     }
 
-    var geometry = event.geometry;
-    var units = event.units;
-    var measure = event.measure;
-    var measureFormat = OpenLayers.Number.format(Number(measure.toFixed(2)), null);
-    var out = measureAreaResultPrefixString[lang] + ": " + measureFormat + units;
-    showMeasurementPopup(geometry, out);
+    updateMeasurementSegmentLabels(event.geometry, event.object, measurementAreaLayer);
 }
 
 // function to display a loadMask during lengthy load operations
