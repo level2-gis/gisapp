@@ -2933,7 +2933,7 @@ function ensureMeasurementWindow() {
     if (!measurementStore) {
         measurementStore = new Ext.data.JsonStore({
             idProperty: 'id',
-            fields: ['id', 'name', 'distance', 'units', 'distanceDisplay', 'lineFeatureId'],
+            fields: ['id', 'name', 'distance', 'units', 'distanceDisplay', 'lineFeatureId', 'showSegmentLengths'],
             data: [],
             listeners: {
                 datachanged: updateMeasurementSummary,
@@ -2994,11 +2994,24 @@ function ensureMeasurementWindow() {
         }, {
             xtype: 'actioncolumn',
             header: '',
-            width: 76,
+            width: 96,
             sortable: false,
             menuDisabled: true,
             align: 'center',
             items: [{
+                getClass: function (value, metadata, record) {
+                    var isVisible = record.get('showSegmentLengths') !== false;
+                    this.items[0].tooltip = isVisible
+                        ? measurementSegmentLengthsHideTooltipString[lang]
+                        : measurementSegmentLengthsShowTooltipString[lang];
+                    return isVisible
+                        ? 'x-measurement-tool-icon x-measurement-segment-lengths-checkbox x-measurement-segment-lengths-checkbox-checked'
+                        : 'x-measurement-tool-icon x-measurement-segment-lengths-checkbox';
+                },
+                handler: function (grid, rowIndex) {
+                    toggleMeasurementSegmentLengths(grid.getStore().getAt(rowIndex));
+                }
+            }, {
                 iconCls: 'x-measurement-tool-icon x-measurement-profile-icon',
                 tooltip: TR.measurementProfileTitle,
                 handler: function (grid, rowIndex) {
@@ -3081,7 +3094,7 @@ function ensureMeasurementAreaWindow() {
     if (!measurementAreaStore) {
         measurementAreaStore = new Ext.data.JsonStore({
             idProperty: 'id',
-            fields: ['id', 'name', 'area', 'units', 'areaDisplay', 'polygonFeatureId', 'labelFeatureId'],
+            fields: ['id', 'name', 'area', 'units', 'areaDisplay', 'polygonFeatureId', 'labelFeatureId', 'showSegmentLengths'],
             data: [],
             listeners: {
                 datachanged: updateMeasurementAreaSummary,
@@ -3136,6 +3149,19 @@ function ensureMeasurementAreaWindow() {
             menuDisabled: true,
             align: 'center',
             items: [{
+                getClass: function (value, metadata, record) {
+                    var isVisible = record.get('showSegmentLengths') !== false;
+                    this.items[0].tooltip = isVisible
+                        ? measurementSegmentLengthsHideTooltipString[lang]
+                        : measurementSegmentLengthsShowTooltipString[lang];
+                    return isVisible
+                        ? 'x-measurement-tool-icon x-measurement-segment-lengths-checkbox x-measurement-segment-lengths-checkbox-checked'
+                        : 'x-measurement-tool-icon x-measurement-segment-lengths-checkbox';
+                },
+                handler: function (grid, rowIndex) {
+                    toggleMeasurementAreaSegmentLengths(grid.getStore().getAt(rowIndex));
+                }
+            }, {
                 tooltip: measurementAreaFilterTitle,
                 getClass: function () {
                     var canApply = !!getActiveBottomSearchPanel();
@@ -3644,6 +3670,11 @@ function clearMeasurementSegmentLabels(owner) {
 
 function updateMeasurementSegmentLabels(geometry, owner, layer) {
     layer = layer || measurementLayer;
+    if (owner.measurementShowSegmentLengths === false) {
+        clearMeasurementSegmentLabels(owner);
+        owner.measurementSegmentLabelLayer = layer;
+        return;
+    }
     var labels = owner.measurementSegmentLabels || [];
     var count = 0;
     var points = geometry.components;
@@ -3995,8 +4026,16 @@ function getMeasurementPrintParams(mapId, projectionCode) {
             if (!lineFeature) {
                 return;
             }
-            appendMeasurementSegmentPrintEntries(entries, lineFeature.geometry, record, projectionCode,
-                lineSymbol, lineLabelStyle);
+            if (record.get('showSegmentLengths') !== false) {
+                appendMeasurementSegmentPrintEntries(entries, lineFeature.geometry, record, projectionCode,
+                    lineSymbol, lineLabelStyle);
+            } else {
+                var lineEntry = createMeasurementPrintEntry(lineFeature, record, projectionCode,
+                    lineSymbol, lineLabelStyle, '');
+                if (lineEntry) {
+                    entries.push(lineEntry);
+                }
+            }
             var titleEntry = createMeasurementPrintEntry(lineFeature.measurementTitleLabel, record,
                 projectionCode, titleSymbol, lineLabelStyle);
             if (titleEntry) {
@@ -4015,8 +4054,10 @@ function getMeasurementPrintParams(mapId, projectionCode) {
             var entry = createMeasurementPrintEntry(polygonFeature, record, projectionCode, areaSymbol, areaLabelStyle);
             if (entry) {
                 entries.push(entry);
-                appendMeasurementSegmentPrintEntries(entries, polygonFeature.geometry, record, projectionCode,
-                    areaEdgeSymbol, areaLabelStyle);
+                if (record.get('showSegmentLengths') !== false) {
+                    appendMeasurementSegmentPrintEntries(entries, polygonFeature.geometry, record, projectionCode,
+                        areaEdgeSymbol, areaLabelStyle);
+                }
             }
         });
     }
@@ -4284,6 +4325,7 @@ function storeAreaMeasurement(event) {
     var polygonFeature = new OpenLayers.Feature.Vector(event.geometry.clone(), {
         measurementId: 'measurement-area-' + measurementAreaSequence
     }, getMeasurementAreaStyle());
+    polygonFeature.measurementShowSegmentLengths = true;
     var labelStyle = getMeasurementAreaLabelStyle();
     labelStyle.label = measurementName;
     var labelFeature = new OpenLayers.Feature.Vector(getMeasurementAreaLabelPoint(event.geometry), {
@@ -4301,9 +4343,9 @@ function storeAreaMeasurement(event) {
         units: event.units,
         areaDisplay: formatMeasurementDistance(event.measure, event.units),
         polygonFeatureId: polygonFeature.id,
-        labelFeatureId: labelFeature.id
+        labelFeatureId: labelFeature.id,
+        showSegmentLengths: true
     }));
-
     if (measurementAreaWindow.hidden) {
         measurementAreaWindow.show();
     }
@@ -4437,6 +4479,38 @@ function syncMeasurementRecordAfterModify(lineFeature) {
     updateMeasurementSummary();
 }
 
+function toggleMeasurementSegmentLengths(record) {
+    if (!record) {
+        return;
+    }
+
+    var showSegmentLengths = record.get('showSegmentLengths') === false;
+    record.set('showSegmentLengths', showSegmentLengths);
+    var lineFeature = getMeasurementLineFeature(record);
+    if (lineFeature) {
+        lineFeature.measurementShowSegmentLengths = showSegmentLengths;
+        updateMeasurementSegmentLabels(lineFeature.geometry, lineFeature);
+    }
+    record.commit();
+    redrawMeasurementGrid();
+}
+
+function toggleMeasurementAreaSegmentLengths(record) {
+    if (!record) {
+        return;
+    }
+
+    var showSegmentLengths = record.get('showSegmentLengths') === false;
+    record.set('showSegmentLengths', showSegmentLengths);
+    var polygonFeature = getMeasurementPolygonFeature(record);
+    if (polygonFeature) {
+        polygonFeature.measurementShowSegmentLengths = showSegmentLengths;
+        updateMeasurementSegmentLabels(polygonFeature.geometry, polygonFeature, measurementAreaLayer);
+    }
+    record.commit();
+    redrawMeasurementAreaGrid();
+}
+
 function storeLineMeasurement(event) {
     if (!isValidCompletedMeasurement(event)) {
         return;
@@ -4453,6 +4527,7 @@ function storeLineMeasurement(event) {
     var lineFeature = new OpenLayers.Feature.Vector(event.geometry.clone(), {
         measurementId: 'measurement-' + measurementSequence
     }, getMeasurementLineStyle());
+    lineFeature.measurementShowSegmentLengths = true;
     measurementLayer.addFeatures([lineFeature]);
     updateMeasurementSegmentLabels(lineFeature.geometry, lineFeature);
 
@@ -4462,7 +4537,8 @@ function storeLineMeasurement(event) {
         distance: event.measure,
         units: event.units,
         distanceDisplay: formatMeasurementDistance(event.measure, event.units),
-        lineFeatureId: lineFeature.id
+        lineFeatureId: lineFeature.id,
+        showSegmentLengths: true
     });
     measurementStore.add(record);
     updateMeasurementTitleLabel(record);

@@ -83,6 +83,22 @@
     background-image: url(../gis_icons/actionLineProfile.svg);
 }
 
+.x-measurement-segment-lengths-checkbox {
+    box-sizing: border-box;
+    border: 1px solid var(--checkbox-unchecked-border, #5b5b5b);
+    border-radius: 4px;
+    background: var(--checkbox-unchecked-bg, #fff);
+}
+
+.x-measurement-segment-lengths-checkbox-checked {
+    border-color: var(--checkbox-border, #5b5b5b);
+    background: var(--checkbox-checked-bg, rgb(109, 151, 196)) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.5 3.5L6 11l-3.5-3.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat center;
+}
+
+.x-measurement-segment-lengths-checkbox:hover {
+    opacity: 0.8;
+}
+
 .measurement-profile-chart {
     height: 250px;
     padding: 10px 10px 0;

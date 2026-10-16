@@ -333,7 +333,7 @@ if ($login_check->setUserProj($helpers->getMapFromUrl())) {
 <!--    <link rel="stylesheet" type="text/css" href="client/site/css/ThemeSwitcherDataView.css"/>-->
     <link rel="stylesheet" type="text/css" href="client/site/css/popup.css?v=20260923"/>
 <!--    <link rel="stylesheet" type="text/css" href="client/site/css/layerOrderTab.css?v=20200405"/>-->
-    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20260923"/>
+    <link rel="stylesheet" type="text/css" href="client/site/css/contextMenu.css?v=20261016"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/style-gray.css?v=20260918"/>
     <link rel="stylesheet" type="text/css" href="client/site/css/grid-styles.css?v=20260711">
 
