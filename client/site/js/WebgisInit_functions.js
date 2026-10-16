@@ -2568,6 +2568,12 @@ function getVisibleBackgroundLayer() {
 function mapToolbarHandler(btn, evt) {
     removeMeasurePopup();
 
+    // Toggle groups release the previous tool before calling PrintMap's handler.
+    if (printWindow && btn.toggleGroup == 'mapTools' && btn.id != 'PrintMap' &&
+        !btn.pressed && Ext.getCmp('PrintMap').pressed) {
+        printWindow.previousMapToolId = btn.id;
+    }
+
     // Call custom toolbar handler in Customizations.js
     customMapToolbarHandler(btn, evt);
 
@@ -2659,6 +2665,14 @@ function mapToolbarHandler(btn, evt) {
             printWindow.hide();
             printExtent.hide();
             mainStatusText.setText(modeNavigationString[lang]);
+            var previousMapTool = Ext.getCmp(printWindow.previousMapToolId);
+            delete printWindow.previousMapToolId;
+            if (!Ext.ButtonToggleMgr.getPressed('mapTools')) {
+                if (!previousMapTool || previousMapTool.disabled || previousMapTool.hidden) {
+                    previousMapTool = Ext.getCmp('IdentifyTool');
+                }
+                previousMapTool.toggle(true);
+            }
         }
     }
     if (btn.id == "navZoomBoxButton") {
