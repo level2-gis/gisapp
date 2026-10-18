@@ -4079,11 +4079,11 @@ function getMeasurementPrintParams(mapId, projectionCode) {
                     geometry: geometry,
                     symbol: symbol,
                     label: '',
-                    labelFont: '',
-                    labelSize: '',
-                    labelColor: '',
-                    labelBufferColor: '',
-                    labelBufferSize: ''
+                    labelFont: getMeasurementPrintFont(),
+                    labelSize: getMeasurementPrintLabelSize(),
+                    labelColor: '#7A241D',
+                    labelBufferColor: '#ffffff',
+                    labelBufferSize: getMeasurementPrintLabelBufferSize()
                 });
             }
         }
