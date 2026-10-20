@@ -39,6 +39,58 @@ Visit **<a target="_blank" href="http://test.level2.si">Demo by Level2</a>**
 * **[Wiki](../../wiki)**
 * **[Client settings](https://test.level2.si/gisapp/docs/Eqwc.settings.html)**
 
+### Identify location reports
+
+Add `locationReport` to the project JSON to enable a report icon in the desktop
+Identify location section. The icon is shown only when `enabled` is `true`.
+
+```json
+{
+  "locationReport": {
+    "enabled": true,
+    "label": "Location report",
+    "query": {
+      "layers": ["Parcels", "buildings_7f3a2c1e", "Spatial plan"]
+    },
+    "maps": [
+      {
+        "id": "overview",
+        "title": "Overview",
+        "template": "A4 portrait",
+        "layers": ["Parcels", "roads_91bc"],
+        "external_layers": ["osm"]
+      },
+      {
+        "id": "plan",
+        "title": "Spatial plan",
+        "template": "A3 landscape",
+        "layers": ["Spatial plan", "Parcels"],
+        "external_layers": []
+      }
+    ]
+  }
+}
+```
+
+Before the request is sent, a dialog lists every configured map (by `title`,
+falling back to `id` or `template`) with a checkbox; all maps are checked by
+default. Only the selected maps are sent. The query part is always included, so
+the report can also be generated with no maps selected. `maps` is optional; when
+it is missing or empty, the dialog is skipped and the report is generated directly.
+
+The action sends a form-encoded POST to `documents/location_report` under the
+configured GIS portal root. It includes `project`, comma-separated `QUERY_LAYERS`,
+the Identify-time `bbox`, `width`, `height`, `i`, `j`, and `crs`, and `address`
+as plain text from the displayed Identify address (empty when unavailable).
+Each selected map is sent as `maps[n][template]`, `maps[n][layers]`,
+`maps[n][external_layers]`, and `maps[n][title]`; layer lists are comma-separated.
+When `projectData.use_ids === true`, layer names in `query.layers` and each map's
+`layers` are resolved to project layer IDs. Group names, existing IDs, and
+external layer names are kept unchanged.
+Map IDs are configuration identifiers and are not sent.
+Like feature reports, successful XML responses are downloaded using the server
+filename when supplied, and request errors are displayed in an alert.
+
 ## Contributing
 
 Support this project by [**DONATING**](http://level2.si/product/donation-extended-qgis-web-client/).

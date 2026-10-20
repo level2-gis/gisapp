@@ -3586,6 +3586,23 @@ function zoomToCoordinateInput(rawValue) {
     }
 }
 
+function getHighlightedMapPoint() {
+    var layers = [highlightLayer, featureInfoHighlightLayer];
+    for (var i = 0; i < layers.length; i++) {
+        var layer = layers[i];
+        if (!layer || !layer.getVisibility()) {
+            continue;
+        }
+        for (var j = 0; j < layer.features.length; j++) {
+            var geometry = layer.features[j].geometry;
+            if (geometry && geometry.CLASS_NAME == "OpenLayers.Geometry.Point") {
+                return geometry;
+            }
+        }
+    }
+    return null;
+}
+
 function setupMapContextMenu() {
     if (!geoExtMap || !geoExtMap.map || !geoExtMap.map.div) {
         return;
@@ -3593,6 +3610,19 @@ function setupMapContextMenu() {
 
     var mapContextMenu = new Ext.menu.Menu({
         items: [{
+            itemId: 'identifyHighlightedPoint',
+            text: TR.mapContextLocationQuery,
+            icon: iconDirectory + 'mActionIdentify.svg',
+            disabled: true,
+            handler: function () {
+                var point = getHighlightedMapPoint();
+                if (point) {
+                    var xy = geoExtMap.map.getPixelFromLonLat(new OpenLayers.LonLat(point.x, point.y));
+                    Ext.getCmp('IdentifyTool').toggle(true);
+                    WMSGetFInfo.getInfoForClick({xy: xy});
+                }
+            }
+        }, {
             text: (typeof TR !== 'undefined' && TR.mapContextClearAll) ? TR.mapContextClearAll : resetButtonString[lang],
             iconCls: 'x-clear-icon',
             handler: function () {
@@ -3614,7 +3644,12 @@ function setupMapContextMenu() {
                 clearAllMeasurements();
                 clearAllMeasurementAreas();
             }
-        }]
+        }],
+        listeners: {
+            beforeshow: function (menu) {
+                menu.getComponent('identifyHighlightedPoint').setDisabled(!getHighlightedMapPoint());
+            }
+        }
     });
 
     Ext.get(geoExtMap.map.div).on('contextmenu', function (e) {

@@ -123,6 +123,18 @@ function showFeatureInfo(evt) {
 
         var hasLocationRows = !!locationUnits;
 
+        if (hasLocationRows && projectData.locationReport && projectData.locationReport.enabled === true) {
+            var reportSize = map.getSize();
+            locationObj.reportContext = {
+                bbox: map.getExtent().toBBOX(),
+                width: reportSize.w,
+                height: reportSize.h,
+                i: evt.xy.x,
+                j: evt.xy.y,
+                crs: map.getProjection()
+            };
+        }
+
         locationObj.on("elevation", function () {
             if (activeIdentifyLocationService !== locationObj) {
                 return;
@@ -206,7 +218,11 @@ function showFeatureInfo(evt) {
                     locationHtml += '<tr><td colspan="2" id="fi_' + projectData.locationServices[s].name + '_value"></td></tr>';
                 }
             }
-            locationHtml += '<tr><td colspan="2"><a class="i-select" ext:qtip="' + TR.select + '" href="javascript:;" onclick="return showIdentifyClickMarker(' + parseFloat(locationUnits.lon) + ', ' + parseFloat(locationUnits.lat) + ');"></a><a class="i-clear" ext:qtip="' + TR.clearSelection + '" href="javascript:;" onclick="identifyAction(\'clear\',\'\');"></a></td></tr>';
+            locationHtml += '<tr><td colspan="2"><a class="i-select" ext:qtip="' + TR.select + '" href="javascript:;" onclick="return showIdentifyClickMarker(' + parseFloat(locationUnits.lon) + ', ' + parseFloat(locationUnits.lat) + ');"></a><a class="i-clear" ext:qtip="' + TR.clearSelection + '" href="javascript:;" onclick="identifyAction(\'clear\',\'\');"></a>';
+            if (projectData.locationReport && projectData.locationReport.enabled === true) {
+                locationHtml += '<a class="i-report" ext:qtip="' + Ext.util.Format.htmlEncode(projectData.locationReport.label) + '" href="javascript:;" onclick="generateLocationReport();"></a>';
+            }
+            locationHtml += '</td></tr>';
 
             locationHtml += '</tbody></table></div></br>';
 
@@ -1090,9 +1106,108 @@ function generateFeatureReport(layerId, featureId) {
     //fixed for now
     params += '&external_layers[]=' + encodeURIComponent('dof');
 
+    downloadIdentifyReport('GET', 'documents/feature_report', params, layer.layername + '-' + featureId + '.xml');
+}
+
+function generateLocationReport() {
+    var report = projectData.locationReport;
+    if (!report || report.enabled !== true) {
+        Ext.Msg.alert('Report error', 'Location reports are not enabled for this project.');
+        return;
+    }
+    if (!report.query || !Array.isArray(report.query.layers) || !report.query.layers.length ||
+        (report.maps != null && !Array.isArray(report.maps)) ||
+        (report.maps || []).some(function(map) {
+            return !map || !map.template || !Array.isArray(map.layers) ||
+                (map.external_layers != null && !Array.isArray(map.external_layers));
+        })) {
+        Ext.Msg.alert('Report error', 'The project is missing location report configuration.');
+        return;
+    }
+    if (!activeIdentifyLocationService || !activeIdentifyLocationService.reportContext) {
+        Ext.Msg.alert('Report error', 'Identify a location before generating a location report.');
+        return;
+    }
+
+    var context = activeIdentifyLocationService.reportContext;
+    var addressElement = Ext.get('fi_address_value');
+    var address = addressElement ? addressElement.dom.textContent.trim() : '';
+    var generate = function (maps) {
+        var params = Eqwc.common.getLocationReportParams(context, address, maps);
+        downloadIdentifyReport('POST', 'documents/location_report', Ext.urlEncode(params), projectData.project + '-location.xml');
+    };
+    if (report.maps && report.maps.length) {
+        showLocationReportMapsWindow(report.maps, generate);
+    } else {
+        generate([]);
+    }
+}
+
+var locationReportMapsWindow = null;
+
+function showLocationReportMapsWindow(maps, onConfirm) {
+    if (locationReportMapsWindow) {
+        locationReportMapsWindow.destroy();
+    }
+
+    var generateButton = new Ext.Button({
+        text: TR.locationReportGenerate,
+        handler: function () {
+            var selected = getSelectedMaps();
+            locationReportMapsWindow.destroy();
+            onConfirm(selected);
+        }
+    });
+
+    var checkboxes = maps.map(function (map, index) {
+        return new Ext.form.Checkbox({
+            name: 'locationReportMap',
+            inputValue: map.id != null ? String(map.id) : String(index),
+            boxLabel: Ext.util.Format.htmlEncode(String(map.title || map.id || map.template)),
+            checked: true
+        });
+    });
+
+    function getSelectedMaps() {
+        return maps.filter(function (map, index) {
+            return checkboxes[index].getValue();
+        });
+    }
+
+    locationReportMapsWindow = new Ext.Window({
+        title: Ext.util.Format.htmlEncode(projectData.locationReport.label),
+        width: 350,
+        modal: true,
+        resizable: false,
+        autoScroll: true,
+        bodyStyle: 'padding:5px',
+        items: [{
+            xtype: 'box',
+            html: Ext.util.Format.htmlEncode(TR.locationReportSelectMaps),
+            style: 'margin-bottom:5px'
+        }].concat(checkboxes),
+        buttons: [generateButton, {
+            text: TR.cancel,
+            handler: function () {
+                locationReportMapsWindow.destroy();
+            }
+        }],
+        listeners: {
+            destroy: function () {
+                locationReportMapsWindow = null;
+            }
+        }
+    });
+    locationReportMapsWindow.show();
+}
+
+function downloadIdentifyReport(method, path, params, defaultFilename) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', Eqwc.settings.gisPortalRoot + 'documents/feature_report?' + params, true);
+    xhr.open(method, Eqwc.settings.gisPortalRoot + path + (method === 'GET' ? '?' + params : ''), true);
     xhr.setRequestHeader('Accept', 'application/xml');
+    if (method === 'POST') {
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    }
     xhr.responseType = 'blob';
     xhr.withCredentials = true;
     function clearReportLoadingIndicator() {
@@ -1113,7 +1228,7 @@ function generateFeatureReport(layerId, featureId) {
 
         var disposition = xhr.getResponseHeader('Content-Disposition') || '';
         var filenameMatch = disposition.match(/filename\*?=(?:UTF-8''|["']?)([^"';]+)/i);
-        var filename = filenameMatch ? decodeURIComponent(filenameMatch[1]) : layer.layername + '-' + featureId + '.xml';
+        var filename = filenameMatch ? decodeURIComponent(filenameMatch[1]) : defaultFilename;
         var url = window.URL.createObjectURL(xhr.response);
         var link = document.createElement('a');
         link.href = url;
@@ -1131,7 +1246,7 @@ function generateFeatureReport(layerId, featureId) {
     };
     xhr.onabort = clearReportLoadingIndicator;
     Ext.getBody().mask(pleaseWaitString[lang], 'x-mask-loading');
-    xhr.send();
+    xhr.send(method === 'POST' ? params : null);
 }
 
 function identifyAction(type, id, extra) {

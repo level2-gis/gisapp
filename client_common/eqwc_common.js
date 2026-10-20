@@ -34,6 +34,36 @@ Eqwc.geolocationErrors = {
 Eqwc.tooltips = {};
 Eqwc.common = {};
 
+Eqwc.common.getLocationReportParams = function(context, address, maps) {
+    var report = projectData.locationReport;
+    maps = maps || report.maps || [];
+    function reportLayers(layers) {
+        return layers.map(function(name) {
+            return projectData.use_ids === true ? Eqwc.common.getLayerId(name) || name : name;
+        }).join(',');
+    }
+    var params = {
+        project: projectData.project,
+        QUERY_LAYERS: reportLayers(report.query.layers),
+        bbox: context.bbox,
+        width: context.width,
+        height: context.height,
+        i: context.i,
+        j: context.j,
+        crs: context.crs,
+        address: address
+    };
+    for (var i = 0; i < maps.length; i++) {
+        var map = maps[i];
+        var prefix = 'maps[' + i + ']';
+        params[prefix + '[template]'] = map.template;
+        params[prefix + '[layers]'] = reportLayers(map.layers);
+        params[prefix + '[external_layers]'] = (map.external_layers || []).join(',');
+        params[prefix + '[title]'] = map.title || '';
+    }
+    return params;
+};
+
 Eqwc.common.createHyperlink = function(att, val, pattern, createTooltips) {
     if(att == null || att == '' || typeof att == 'number') {
         return att;

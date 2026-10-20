@@ -44,6 +44,9 @@ if (!property_exists($settings, "relations")) {
 if (!property_exists($settings, "locationServices")) {
     $settings->locationServices = null;
 }
+if (!property_exists($settings, "locationReport")) {
+    $settings->locationReport = null;
+}
 if (!property_exists($settings, "defaultCoordinatesCrsCode")) {
     $settings->defaultCoordinatesCrsCode = null;
 }
@@ -126,6 +129,7 @@ projectData.geoCode = eval(<?php echo json_encode($settings->geoCode) ?>);
 projectData.wsgi = eval(<?php echo json_encode($settings->wsgi) ?>);
 projectData.relations = eval(<?php echo json_encode($settings->relations) ?>);
 projectData.locationServices = eval(<?php echo json_encode($settings->locationServices) ?>);
+projectData.locationReport = <?php echo json_encode($settings->locationReport) ?>;
 projectData.defaultCoordinatesCrsCode = eval(<?php echo json_encode($settings->defaultCoordinatesCrsCode) ?>);
 projectData.editor = eval(<?php echo json_encode($settings->editor) ?>);
 projectData.expandAllGroups = <?php echo json_encode($settings->expandAllGroups) ?>;
