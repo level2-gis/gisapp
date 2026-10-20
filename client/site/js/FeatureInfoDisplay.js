@@ -1210,6 +1210,54 @@ function showLocationReportMapsWindow(maps, onConfirm) {
 }
 
 function downloadIdentifyReport(method, path, params, defaultFilename) {
+    Ext.getBody().mask(pleaseWaitString[lang], 'x-mask-loading');
+    if (method !== 'POST') {
+        sendIdentifyReport(method, path, params, defaultFilename);
+        return;
+    }
+
+    // Fetch immediately before each POST: CI can rotate the token after a submission.
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', Eqwc.settings.gisPortalRoot + 'documents/csrf_token', true);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.withCredentials = true;
+    function fail(message) {
+        Ext.getBody().unmask();
+        Ext.Msg.alert('Report error', message);
+    }
+    xhr.onload = function () {
+        if (xhr.status < 200 || xhr.status >= 300) {
+            fail('The report security token could not be loaded (' + xhr.status + ').');
+            return;
+        }
+        var token;
+        try {
+            token = JSON.parse(xhr.responseText);
+        } catch (e) {
+            fail('The report security token response is invalid.');
+            return;
+        }
+        if (!token || (token.enabled !== true && token.enabled !== false) ||
+            (token.enabled && (typeof token.name !== 'string' || !token.name ||
+                typeof token.hash !== 'string' || !token.hash))) {
+            fail('The report security token response is invalid.');
+            return;
+        }
+        if (token.enabled) {
+            params += (params ? '&' : '') + encodeURIComponent(token.name) + '=' + encodeURIComponent(token.hash);
+        }
+        sendIdentifyReport(method, path, params, defaultFilename);
+    };
+    xhr.onerror = function () {
+        fail('The report security token request failed.');
+    };
+    xhr.onabort = function () {
+        Ext.getBody().unmask();
+    };
+    xhr.send(null);
+}
+
+function sendIdentifyReport(method, path, params, defaultFilename) {
     var xhr = new XMLHttpRequest();
     xhr.open(method, Eqwc.settings.gisPortalRoot + path + (method === 'GET' ? '?' + params : ''), true);
     xhr.setRequestHeader('Accept', 'application/xml');
@@ -1253,7 +1301,6 @@ function downloadIdentifyReport(method, path, params, defaultFilename) {
         Ext.Msg.alert('Report error', 'The report request failed.');
     };
     xhr.onabort = clearReportLoadingIndicator;
-    Ext.getBody().mask(pleaseWaitString[lang], 'x-mask-loading');
     xhr.send(method === 'POST' ? params : null);
 }
 
