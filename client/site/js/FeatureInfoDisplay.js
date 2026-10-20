@@ -125,12 +125,20 @@ function showFeatureInfo(evt) {
 
         if (hasLocationRows && projectData.locationReport && projectData.locationReport.enabled === true) {
             var reportSize = map.getSize();
+            var reportExtent = map.getExtent();
+            var halfWidth = reportExtent.getWidth() / 2;
+            var halfHeight = reportExtent.getHeight() / 2;
             locationObj.reportContext = {
-                bbox: map.getExtent().toBBOX(),
+                bbox: [
+                    locationUnits.lon - halfWidth,
+                    locationUnits.lat - halfHeight,
+                    locationUnits.lon + halfWidth,
+                    locationUnits.lat + halfHeight
+                ].join(','),
                 width: reportSize.w,
                 height: reportSize.h,
-                i: evt.xy.x,
-                j: evt.xy.y,
+                i: Math.floor(reportSize.w / 2),
+                j: Math.floor(reportSize.h / 2),
                 crs: map.getProjection()
             };
         }
