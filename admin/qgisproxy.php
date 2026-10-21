@@ -20,6 +20,9 @@ require_once("settings.php");
 
 function handleGetPrint($data, $project, $user)
 {
+    if (!array_key_exists('title', $data) && !array_key_exists('description', $data)) {
+        return true;
+    }
 
     if (empty($data["description"])) {
         $data["description"] = "";
