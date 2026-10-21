@@ -51,7 +51,9 @@ Eqwc.common.getLocationReportParams = function(context, address, maps) {
         i: context.i,
         j: context.j,
         crs: context.crs,
-        address: address
+        address: address,
+        title: '',
+        description: ''
     };
     for (var i = 0; i < maps.length; i++) {
         var map = maps[i];
@@ -59,7 +61,8 @@ Eqwc.common.getLocationReportParams = function(context, address, maps) {
         params[prefix + '[template]'] = map.template;
         params[prefix + '[layers]'] = reportLayers(map.layers);
         params[prefix + '[external_layers]'] = (map.external_layers || []).join(',');
-        params[prefix + '[title]'] = map.title || '';
+        //params[prefix + '[title]'] = '';
+        //params[prefix + '[description]'] = '';
     }
     return params;
 };

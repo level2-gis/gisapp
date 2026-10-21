@@ -139,6 +139,7 @@ function showFeatureInfo(evt) {
                 height: reportSize.h,
                 i: Math.floor(reportSize.w / 2),
                 j: Math.floor(reportSize.h / 2),
+                units: map.getUnits(),
                 crs: map.getProjection()
             };
         }
@@ -1141,7 +1142,38 @@ function generateLocationReport() {
     var addressElement = Ext.get('fi_address_value');
     var address = addressElement ? addressElement.dom.textContent.trim() : '';
     var generate = function (maps) {
-        var params = Eqwc.common.getLocationReportParams(context, address, maps);
+        var reportContext = Ext.apply({}, context);
+        if (maps.length) {
+            var layoutIndex = printProvider && printProvider.layouts ?
+                printProvider.layouts.findExact('name', maps[0].template) : -1;
+            if (layoutIndex === -1 || !printProvider.scales.getCount()) {
+                Ext.Msg.alert('Report error', 'The location report template or print scales are unavailable.');
+                return;
+            }
+            var layout = printProvider.layouts.getAt(layoutIndex);
+            var capabilities = Ext.apply({}, printProvider.capabilities);
+            capabilities.layouts = [{
+                name: layout.get('name'),
+                map: layout.get('size'),
+                rotation: false
+            }];
+            var provider = new GeoExt.data.PrintProvider({capabilities: capabilities});
+            var page = new GeoExt.data.PrintPage({printProvider: provider});
+            var extent = OpenLayers.Bounds.fromString(context.bbox);
+            var map = {
+                getExtent: function () { return extent; },
+                getUnits: function () { return context.units; }
+            };
+            page.fit(map, {mode: 'screen'});
+            var printBounds = page.getPrintExtent(map);
+            page.destroy();
+            reportContext.bbox = printBounds.toBBOX();
+            reportContext.width = Math.max(1, Math.round(context.width * printBounds.getWidth() / extent.getWidth()));
+            reportContext.height = Math.max(1, Math.round(context.height * printBounds.getHeight() / extent.getHeight()));
+            reportContext.i = Math.floor(reportContext.width / 2);
+            reportContext.j = Math.floor(reportContext.height / 2);
+        }
+        var params = Eqwc.common.getLocationReportParams(reportContext, address, maps);
         downloadIdentifyReport('POST', 'documents/location_report', Ext.urlEncode(params), projectData.project + '-location.xml');
     };
     if (report.maps && report.maps.length) {
