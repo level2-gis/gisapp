@@ -1035,9 +1035,16 @@ function postLoading() {
     //controls for getfeatureinfo
     selectedQueryableLayers = layersInDrawingOrder(selectedQueryableLayers);
 
+    var getFeatureInfoWasActive = false;
     if (initialLoadDone) {
-        if (Eqwc.settings.enableHoverPopup)
+        // removeControl alone leaves the old click handlers listening, which sends duplicate requests.
+        // The replacement control takes over the active state instead.
+        getFeatureInfoWasActive = WMSGetFInfo.active;
+        if (Eqwc.settings.enableHoverPopup) {
+            WMSGetFInfoHover.deactivate();
             geoExtMap.map.removeControl(WMSGetFInfoHover);
+        }
+        WMSGetFInfo.deactivate();
         geoExtMap.map.removeControl(WMSGetFInfo);
         //geoExtMap.map.removeControl(ExtraFInfo);
     }
@@ -1136,6 +1143,10 @@ function postLoading() {
         });
         WMSGetFInfoHover.events.register("getfeatureinfo", this, showFeatureInfoHover);
         geoExtMap.map.addControl(WMSGetFInfoHover);
+    }
+
+    if (getFeatureInfoWasActive) {
+        activateGetFeatureInfo(true);
     }
 
     //overview map
